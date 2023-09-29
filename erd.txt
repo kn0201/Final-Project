@@ -1,0 +1,159 @@
+# Visualize on https://erd.surge.sh
+# or https://quick-erd.surge.sh
+#
+# Relationship Types
+#  -    - one to one
+#  -<   - one to many
+#  >-   - many to one
+#  >-<  - many to many
+#  -0   - one to zero or one
+#  0-   - zero or one to one
+#  0-0  - zero or one to zero or one
+#  -0<  - one to zero or many
+#  >0-  - zero or many to one
+#
+////////////////////////////////////
+
+
+users
+-----
+id integer PK
+username varchar(255) unique
+email varchar(255) unique
+password varchar(255)
+gender boolean
+birthday timestamptz
+country varchar(255)
+language varchar(255) NULL
+skill varchar(255) NULL
+hobby varchar(255) NULL
+countries_travelled varchar(255) NULL
+role varchar(255)
+is_delete boolean
+
+
+comment
+-------
+id integer PK
+post_id integer FK >- post.id
+user_id integer FK - users.id
+is_delete boolean
+
+
+chatroom
+--------
+id integer PK
+user_id integer FK - users.id
+location varchar(255)
+is_delete boolean
+
+
+chat_record
+-----------
+id integer PK
+chatroom_id integer FK >0- chatroom.id
+user_id integer FK >- users.id
+message varchar(255)
+
+
+image
+-----
+id integer PK
+post_id integer NULL FK >0- post.id
+user_id integer FK >- users.id
+comment_id integer NULL FK >- comment.id
+path text
+is_delete boolean
+
+
+post
+----
+id integer PK
+user_id integer FK >- users.id
+privacy boolean
+type varchar(255)
+title varchar(255)
+content varchar(255)
+location varchar(255) NULL
+time varchar(255) NULL
+headcount varchar NULL
+budget varchar NULL
+view integer
+is_delete boolean
+
+
+hashtags
+--------
+id integer PK
+name varchar(255)
+post_id integer FK >- post.id
+
+
+like
+----
+id integer PK
+post_id integer FK >- post.id
+user_id integer FK >- users.id
+
+
+bookmark
+--------
+id integer PK
+post_id integer FK >- post.id
+user_id integer FK >- users.id
+
+
+complaint
+---------
+id integer PK
+user_id integer FK >- users.id
+title varchar(255)
+content text
+is_finish boolean
+
+
+planing
+-------
+id integer PK
+user_id integer FK >- users.id
+privacy boolean
+title varchar
+
+
+plan_detail
+-----------
+id integer PK
+planing_id integer FK >0- planing.id
+date timestamptz
+
+
+daily_event
+-----------
+id integer PK
+detail_id integer FK >- plan_detail.id
+time timestamptz
+location varchar(255)
+remark varchar(255)
+
+
+# zoom: 0.478
+# view: (51, -45)
+# text-bg: #6495ed
+# text-color: #000000
+# diagram-bg: #f5f5f5
+# diagram-text: #f5f5f5
+# table-bg: #ffffff
+# table-text: #000000
+# users (269, 703, #3a4e1f)
+# comment (885, 307, #261810)
+# chatroom (-19, 796, #120300)
+# chat_record (-20, 647, #20635e)
+# image (863, 110, #0b2439)
+# post (305, 293, #0e0962)
+# hashtags (325, 154, #29280e)
+# like (246, 547, #5a3555)
+# bookmark (445, 545, #1e2e3b)
+# complaint (330, 1000, #071153)
+# planing (648, 671, #40342a)
+# plan_detail (831, 643, #295002)
+# daily_event (1081, 615, #470652)
