@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import * as React from "react";
 
-function BuddiesPage() {
+export default function BuddiesPage() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Find Buddies</Text>
@@ -22,5 +22,3 @@ const styles = StyleSheet.create({
     fontSize: 48,
   },
 });
-
-export default BuddiesPage;
