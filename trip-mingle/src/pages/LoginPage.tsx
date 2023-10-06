@@ -1,4 +1,3 @@
-import { StyleSheet, Text, View } from "react-native";
 import * as React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Login from "../screen/login";
@@ -9,25 +8,11 @@ const Stack = createStackNavigator();
 export default function UserPage() {
   return (
     <Stack.Navigator
-      initialRouteName="Test1"
+      initialRouteName="LoginPage"
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="login" component={Login} />
-      <Stack.Screen name="Register" component={Register} />
+      <Stack.Screen name="register" component={Register} />
     </Stack.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    display: "flex",
-    flexDirection: "row",
-    fontSize: 48,
-  },
-});

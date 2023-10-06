@@ -1,10 +1,16 @@
 import * as React from "react";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
+import { Button } from "react-native-paper";
 
-export default function Test3() {
+//@ts-ignore
+export default function Register({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Details Screen</Text>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text>test2!</Text>
+      <Button onPress={() => navigation.navigate("Test3")}>Login</Button>
+      <Button mode="contained" onPress={() => navigation.goBack("Test1")}>
+        Go Back
+      </Button>
     </View>
   );
 }
