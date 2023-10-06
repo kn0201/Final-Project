@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import HomeScreen from "../pages/Homepage";
-import BuddiesPage from "../pages/FindBuddiesPage"; //
+import BuddiesPage from "../pages/FindBuddiesPage";
 import PlanningPage from "../pages/planning";
 import UserPage from "../pages/users";
 import MapPage from "../pages/MapPage";
