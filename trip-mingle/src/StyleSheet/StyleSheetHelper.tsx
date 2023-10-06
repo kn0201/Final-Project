@@ -16,3 +16,4 @@ export const absolute = "absolute";
 
 export const white = "#FFFFFF";
 export const textColor = "#313432";
+export const iosBlue = "#0E7AFE";
