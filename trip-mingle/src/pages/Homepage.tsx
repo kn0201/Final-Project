@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import * as React from "react";
 
-function HomeScreen() {
+export default function HomePage() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Trip Mingle</Text>
@@ -24,5 +24,3 @@ const styles = StyleSheet.create({
     fontSize: 48,
   },
 });
-
-export default HomeScreen;
