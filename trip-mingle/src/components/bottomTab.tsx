@@ -8,7 +8,7 @@ import BuddiesPage from "../pages/buddies";
 import PlanningPage from "../pages/planning";
 import UserPage from "../pages/users";
 import MapPage from "../pages/MapPage";
-
+import Searchpage from "../pages/search";
 const Tab = createBottomTabNavigator();
 
 function MyTab() {
@@ -61,6 +61,16 @@ function MyTab() {
           tabBarLabel: "Map",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="map" color={color} size={size} />
+          ),
+        }}
+      />
+            <Tab.Screen
+        name="Search"
+        component={Searchpage}
+        options={{
+          tabBarLabel: "search",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="search" color={color} size={size} />
           ),
         }}
       />

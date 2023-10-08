@@ -1,7 +1,11 @@
 import React, { useState } from "react";
-import MapView, { Details, Marker, Region } from "react-native-maps";
+import MapView, { Details, Marker, Region,PROVIDER_GOOGLE} from "react-native-maps";
 import { StyleSheet, View } from "react-native";
-
+import {
+  GooglePlaceDetail,
+  GooglePlacesAutocomplete,
+} from "react-native-google-places-autocomplete";
+import { GOOGLE_API_KEY } from "../utils/environments";
 export default function MapPage() {
   let latitude = 22.316668;
   let longitude = 114.183334;
@@ -56,3 +60,4 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 });
+
