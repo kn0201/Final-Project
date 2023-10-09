@@ -152,7 +152,7 @@ export default function MapPage() {
 
   const fetchPlacesFromGoogleMaps = async (
     location: LocationObject,
-    placeType: string
+    placeType: string,
   ) => {
     let radius = 4 * 1000;
     const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location?.coords.latitude},${location?.coords.longitude}&radius=${radius}&type=${placeType}&key=${GOOGLE_API_KEY}`;
@@ -271,20 +271,21 @@ const styles = StyleSheet.create({
     zIndex: 1,
     width: "95%",
     position: "absolute",
-    shadowColor: "black",
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 4,
-    elevation: 4,
+    // shadowColor: "black",
+    // shadowOffset: { width: 2, height: 2 },
+    // shadowOpacity: 0.5,
+    // shadowRadius: 4,
+    // elevation: 4,
     borderRadius: 8,
     margin: 8,
+    top: Constants.statusBarHeight / 2,
   },
   list: {
     width: "95%",
     opacity: 0.8,
     borderRadius: 8,
     position: "relative",
-    top: 60,
+    top: 60 + Constants.statusBarHeight / 2,
     left: 8,
   },
 });
