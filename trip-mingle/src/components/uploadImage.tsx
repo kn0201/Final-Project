@@ -24,7 +24,7 @@ export default function UploadImage() {
   return (
     <View style={imageUploaderStyles.container}>
       {image && (
-        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+        <Image source={{ uri: image }} style={{ width: 150, height: 150 }} />
       )}
       <View style={imageUploaderStyles.uploadBtnContainer}>
         <TouchableOpacity
@@ -41,12 +41,13 @@ export default function UploadImage() {
 const imageUploaderStyles = StyleSheet.create({
   container: {
     elevation: 2,
-    height: 200,
-    width: 200,
+    height: 150,
+    width: 150,
     backgroundColor: "#efefef",
     position: "relative",
     borderRadius: 999,
     overflow: "hidden",
+    marginBottom: 12,
   },
   uploadBtnContainer: {
     opacity: 0.7,
