@@ -4,8 +4,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import HomePage from "../pages/Homepage";
-import BuddiesPage from "../pages/BuddiesPage";
+import HomeScreen from "../pages/Homepage";
+import BuddiesPage from "../pages/FindBuddiesPage";
 import MapPage from "../pages/MapPage";
 import PlanningPage from "../pages/PlanningPage";
 import UserPage from "../pages/UserPage";
@@ -13,12 +13,12 @@ import LoginPage from "../pages/LoginPage";
 
 const Tab = createBottomTabNavigator();
 
-export default function MyBottomTab() {
+function MyTab() {
   return (
     <Tab.Navigator>
       <Tab.Screen
         name="Home"
-        component={HomePage}
+        component={HomeScreen}
         options={{
           tabBarLabel: "Home",
           tabBarIcon: ({ color, size }) => (
@@ -93,3 +93,5 @@ const styles = StyleSheet.create({
     fontSize: 48,
   },
 });
+
+export default MyTab;
