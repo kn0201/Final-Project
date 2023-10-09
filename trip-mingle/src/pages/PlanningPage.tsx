@@ -31,7 +31,8 @@ const PlanningPage = () => {
         value={search}
         inputStyle={{ color: "white" }}
          />
-    </View></><Calendar
+    </View></>
+    <Calendar
         onDayPress={day => {
           setSelected(day.dateString);
         } }
@@ -58,3 +59,5 @@ const PlanningPage = () => {
 
 
 export default PlanningPage
+
+
