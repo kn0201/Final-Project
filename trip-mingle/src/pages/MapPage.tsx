@@ -9,10 +9,18 @@ import {
   GooglePlacesAutocomplete,
   GooglePlaceDetail,
 } from "react-native-google-places-autocomplete";
-import { StyleSheet, View, Text, Image, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  Dimensions,
+  SafeAreaView,
+} from "react-native";
 import * as Location from "expo-location";
 import { GOOGLE_API_KEY, placeType } from "../environments";
 import { LocationObject } from "expo-location";
+import Constants from "expo-constants";
 
 const { width, height } = Dimensions.get("window");
 const aspect_ratio = width / height;
@@ -267,13 +275,14 @@ const styles = StyleSheet.create({
     elevation: 4,
     borderRadius: 8,
     margin: 8,
+    top: Constants.statusBarHeight / 2,
   },
   list: {
     width: "95%",
     opacity: 0.8,
     borderRadius: 8,
     position: "relative",
-    top: 60,
+    top: 60 + Constants.statusBarHeight / 2,
     left: 8,
   },
 });
