@@ -19,7 +19,7 @@ import {
   Keyboard,
 } from "react-native";
 import * as Location from "expo-location";
-import { GOOGLE_API_KEY, placeType } from "../environments";
+import { GOOGLE_API_KEY, placeType } from "../utils/environments";
 import { LocationObject } from "expo-location";
 import Constants from "expo-constants";
 
