@@ -15,7 +15,8 @@ import {
   Text,
   Image,
   Dimensions,
-  SafeAreaView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import * as Location from "expo-location";
 import { GOOGLE_API_KEY, placeType } from "../environments";
@@ -183,66 +184,68 @@ export default function MapPage() {
   // Display
   if (location != null) {
     return (
-      <View style={styles.container}>
-        <View style={styles.search}>
-          <InputAutocomplete
-            placeholder="Search"
-            onPlaceSelected={(details) => {
-              onPlaceSelected(details);
-            }}
-          />
-        </View>
-        <MapView
-          ref={mapRef}
-          provider={PROVIDER_GOOGLE}
-          style={styles.map}
-          initialRegion={{
-            latitude: location?.coords.latitude,
-            longitude: location?.coords.longitude,
-            latitudeDelta: latitudeDelta,
-            longitudeDelta: longitudeDelta,
-          }}
-        >
-          {bookmark?.map((position, index) => (
-            <Marker key={index} coordinate={position} />
-          ))}
-          {places.map((place, index) => (
-            <Marker
-              key={index}
-              coordinate={place.coordinate}
-              title={place.placeName}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <View style={styles.search}>
+            <InputAutocomplete
+              placeholder="Search"
+              onPlaceSelected={(details) => {
+                onPlaceSelected(details);
+              }}
             />
-          ))}
-          {markersList.map((marker) => {
-            return (
-              <Marker
-                key={marker.id}
-                coordinate={{
-                  latitude: marker.latitude,
-                  longitude: marker.longitude,
-                }}
-                title={marker.title ? marker.title : undefined}
-                description={
-                  marker.description ? marker.description : undefined
-                }
-              />
-            );
-          })}
-          <Marker
-            draggable
-            coordinate={{
+          </View>
+          <MapView
+            ref={mapRef}
+            provider={PROVIDER_GOOGLE}
+            style={styles.map}
+            initialRegion={{
               latitude: location?.coords.latitude,
               longitude: location?.coords.longitude,
+              latitudeDelta: latitudeDelta,
+              longitudeDelta: longitudeDelta,
             }}
-            onDragEnd={(e) => setState({ x: e.nativeEvent.coordinate })}
           >
-            <MyCustomMarkerView />
-            <Callout>
-              <MyCustomCalloutView />
-            </Callout>
-          </Marker>
-        </MapView>
-      </View>
+            {bookmark?.map((position, index) => (
+              <Marker key={index} coordinate={position} />
+            ))}
+            {places.map((place, index) => (
+              <Marker
+                key={index}
+                coordinate={place.coordinate}
+                title={place.placeName}
+              />
+            ))}
+            {markersList.map((marker) => {
+              return (
+                <Marker
+                  key={marker.id}
+                  coordinate={{
+                    latitude: marker.latitude,
+                    longitude: marker.longitude,
+                  }}
+                  title={marker.title ? marker.title : undefined}
+                  description={
+                    marker.description ? marker.description : undefined
+                  }
+                />
+              );
+            })}
+            <Marker
+              draggable
+              coordinate={{
+                latitude: location?.coords.latitude,
+                longitude: location?.coords.longitude,
+              }}
+              onDragEnd={(e) => setState({ x: e.nativeEvent.coordinate })}
+            >
+              <MyCustomMarkerView />
+              <Callout>
+                <MyCustomCalloutView />
+              </Callout>
+            </Marker>
+          </MapView>
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
   if (location == null) {
@@ -266,13 +269,13 @@ const styles = StyleSheet.create({
   },
   search: {
     zIndex: 1,
-    width: "95%",
+    width: "96%",
     position: "absolute",
-    shadowColor: "black",
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 4,
-    elevation: 4,
+    // shadowColor: "black",
+    // shadowOffset: { width: 2, height: 2 },
+    // shadowOpacity: 0.5,
+    // shadowRadius: 4,
+    // elevation: 4,
     borderRadius: 8,
     margin: 8,
     top: Constants.statusBarHeight / 2,
