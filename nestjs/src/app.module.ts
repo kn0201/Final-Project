@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { KnexModule } from 'nestjs-knex';
 import { env } from './env';
+import { LoginModule } from './login/login.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { env } from './env';
         },
       },
     }),
+    LoginModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from "react-native";
 import * as React from "react";
 
-function UserPage() {
+export default function PlanningPage() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Users Page</Text>
+      <Text style={styles.title}>Planning</Text>
     </View>
   );
 }
@@ -22,5 +22,3 @@ const styles = StyleSheet.create({
     fontSize: 48,
   },
 });
-
-export default UserPage;

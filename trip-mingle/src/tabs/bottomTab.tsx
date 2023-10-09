@@ -3,11 +3,13 @@ import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Fontisto from "react-native-vector-icons/Fontisto";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import HomeScreen from "../pages/Homepage";
-import BuddiesPage from "../pages/buddies";
-import PlanningPage from "../pages/planning";
-import UserPage from "../pages/users";
+import BuddiesPage from "../pages/FindBuddiesPage";
 import MapPage from "../pages/MapPage";
+import PlanningPage from "../pages/PlanningPage";
+import UserPage from "../pages/UserPage";
+import LoginPage from "../pages/LoginPage";
 
 const Tab = createBottomTabNavigator();
 
@@ -51,6 +53,16 @@ function MyTab() {
           tabBarLabel: "Users",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Login"
+        component={LoginPage}
+        options={{
+          tabBarLabel: "Login",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="login" color={color} size={size} />
           ),
         }}
       />

@@ -1,10 +1,16 @@
 import { StyleSheet, Text, View } from "react-native";
 import * as React from "react";
+import MyTopTab from "../tabs/topTab";
+import { createStackNavigator } from "@react-navigation/stack";
+import Test1 from "../screen/login";
+import Test2 from "../screen/register";
 
-export default function BuddiesPage() {
+const Stack = createStackNavigator();
+
+export default function UserPage() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Find Buddies</Text>
+      <Text style={styles.title}>User Page</Text>
     </View>
   );
 }
