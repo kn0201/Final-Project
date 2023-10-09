@@ -76,16 +76,6 @@ export default function MyBottomTab() {
           ),
         }}
       />
-            <Tab.Screen
-        name="Search"
-        component={Searchpage}
-        options={{
-          tabBarLabel: "search",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="search" color={color} size={size} />
-          ),
-        }}
-      />
     </Tab.Navigator>
   );
 }
