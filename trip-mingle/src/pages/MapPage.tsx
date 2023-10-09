@@ -19,7 +19,7 @@ import {
   Keyboard,
 } from "react-native";
 import * as Location from "expo-location";
-import { GOOGLE_API_KEY, placeType } from "../environments";
+import { GOOGLE_API_KEY, placeType } from "../../environments";
 import { LocationObject } from "expo-location";
 import Constants from "expo-constants";
 
@@ -152,7 +152,7 @@ export default function MapPage() {
 
   const fetchPlacesFromGoogleMaps = async (
     location: LocationObject,
-    placeType: string,
+    placeType: string
   ) => {
     let radius = 4 * 1000;
     const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location?.coords.latitude},${location?.coords.longitude}&radius=${radius}&type=${placeType}&key=${GOOGLE_API_KEY}`;
