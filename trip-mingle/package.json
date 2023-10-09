@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo/webpack-config": "^19.0.0",
+    "@react-native-community/checkbox": "^0.5.16",
     "@react-navigation/bottom-tabs": "^6.5.9",
     "@react-navigation/material-top-tabs": "^6.6.4",
     "@react-navigation/native": "^6.1.8",
@@ -37,7 +38,10 @@
     "react-native-screens": "~3.22.0",
     "react-native-tab-view": "^3.5.2",
     "react-native-vector-icons": "^10.0.0",
-    "react-native-web": "~0.19.6"
+    "react-native-web": "~0.19.6",
+    "expo-image-picker": "~14.3.2",
+    "expo-calendar": "~11.3.2",
+    "expo-constants": "~14.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   Pressable,
   TextInput,
+  TouchableOpacity,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Avatar } from "@rneui/themed";
@@ -129,9 +130,9 @@ export default function Login({ navigation }) {
         </View>
 
         <View style={LoginPageStyleSheet.center}>
-          <Pressable style={LoginPageStyleSheet.login} onPress={login}>
+          <TouchableOpacity style={LoginPageStyleSheet.login} onPress={login}>
             <Text style={LoginPageStyleSheet.loginText}>Continue</Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
 
         <View style={{ width: "100%" }}>

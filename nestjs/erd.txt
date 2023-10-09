@@ -62,6 +62,7 @@ id integer PK
 post_id integer NULL FK >0- post.id
 user_id integer FK >- users.id
 comment_id integer NULL FK >- comment.id
+user_location_id integer NULL FK >0- user_location.id
 path text
 is_delete boolean
 
@@ -74,7 +75,7 @@ privacy boolean
 type varchar(255)
 title varchar(255)
 content varchar(255)
-location varchar(255) NULL
+location_id integer NULL FK >- system_location.id
 time varchar(255) NULL
 headcount varchar NULL
 budget varchar NULL
@@ -136,24 +137,43 @@ location varchar(255)
 remark varchar(255)
 
 
-# zoom: 0.478
-# view: (51, -45)
+user_location
+-------------
+id integer PK
+user_id integer FK >- users.id
+post_id integer NULL FK >- post.id 
+image_id integer NULL FK >- image.id 
+system_location_id integer FK >- system_location.id
+is_delete boolean
+
+
+system_location
+---------------
+id integer PK
+name varchar(255)
+location point
+
+
+# zoom: 0.430
+# view: (142, -90)
 # text-bg: #6495ed
 # text-color: #000000
 # diagram-bg: #f5f5f5
 # diagram-text: #f5f5f5
 # table-bg: #ffffff
 # table-text: #000000
-# users (269, 703, #3a4e1f)
-# comment (885, 307, #261810)
-# chatroom (-19, 796, #120300)
-# chat_record (-20, 647, #20635e)
-# image (863, 110, #0b2439)
-# post (305, 293, #0e0962)
-# hashtags (325, 154, #29280e)
-# like (246, 547, #5a3555)
-# bookmark (445, 545, #1e2e3b)
-# complaint (330, 1000, #071153)
-# planing (648, 671, #40342a)
-# plan_detail (831, 643, #295002)
-# daily_event (1081, 615, #470652)
+# users (265, 670, #30131d)
+# comment (925, 266, #0f0645)
+# chatroom (-19, 796, #1e5a1f)
+# chat_record (-20, 647, #483222)
+# image (917, 109, #60084e)
+# post (305, 293, #33191d)
+# hashtags (325, 154, #325f00)
+# like (246, 547, #57423f)
+# bookmark (445, 545, #5e394c)
+# complaint (324, 986, #610055)
+# planing (1025, 411, #3b310e)
+# plan_detail (988, 527, #35215e)
+# daily_event (980, 661, #1d5034)
+# user_location (688, 512, #5a632e)
+# system_location (708, 715, #386360)
