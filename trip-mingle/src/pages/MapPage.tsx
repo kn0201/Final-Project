@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import MapView, {
   Callout,
-  Details,
   LatLng,
   Marker,
   PROVIDER_GOOGLE,
-  Region,
 } from "react-native-maps";
 import {
   GooglePlacesAutocomplete,
@@ -13,79 +11,28 @@ import {
 } from "react-native-google-places-autocomplete";
 import { StyleSheet, View, Text, Image, Dimensions } from "react-native";
 import * as Location from "expo-location";
-import { GOOGLE_API_KEY } from "../environments";
+import { GOOGLE_API_KEY, placeType } from "../environments";
+import { LocationObject } from "expo-location";
 
 const { width, height } = Dimensions.get("window");
 const aspect_ratio = width / height;
-const latitudeDelta = 0.01;
+const latitudeDelta = 0.05;
 const longitudeDelta = latitudeDelta * aspect_ratio;
 
 type InputAutocompleteProps = {
   placeholder?: string;
   onPlaceSelected: (details: GooglePlaceDetail | null) => void;
 };
-type Location = {
-  coords: {
-    accuracy: number;
-    altitude: number;
-    altitudeAccuracy: number;
-    heading: number;
-    latitude: number;
-    longitude: number;
-    speed: number;
-  };
-  timestamp: number;
+type Place = {
+  coordinate: LatLng;
+  placeId: number;
+  placeName: string;
 };
 
-function InputAutocomplete({
-  placeholder,
-  onPlaceSelected,
-}: InputAutocompleteProps) {
-  return (
-    <>
-      <View style={{ height: "100%" }}>
-        <GooglePlacesAutocomplete
-          styles={{ textInput: styles.search, listView: styles.list }}
-          placeholder={placeholder || ""}
-          fetchDetails
-          onPress={(data, details = null) => {
-            console.log(JSON.stringify(data));
-            console.log(JSON.stringify(details));
-            onPlaceSelected(details);
-          }}
-          query={{
-            key: GOOGLE_API_KEY,
-            language: ["en", "zh-CN", "zh-TW", "ja"],
-          }}
-          onFail={(error) => console.log(error)}
-        />
-      </View>
-    </>
-  );
-}
-
 export default function MapPage() {
-  const mapRef = useRef<MapView>(null);
-  const [markersList, setMarkersList] = useState([
-    {
-      id: 1,
-      latitude: 35.652832,
-      longitude: 139.839478,
-      title: "Tokyo",
-      description: "",
-    },
-    {
-      id: 2,
-      latitude: 34.672314,
-      longitude: 135.484802,
-      title: "Osaka",
-      description: "",
-    },
-  ]);
+  // Custom Marker
   const [state, setState] = useState({});
-  const [bookmark, setBookmark] = useState<LatLng[]>([]);
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
+
   const MyCustomMarkerView = () => {
     return (
       <Image
@@ -94,19 +41,6 @@ export default function MapPage() {
       />
     );
   };
-
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-    })();
-  }, []);
-
   const MyCustomCalloutView = () => {
     return (
       <View>
@@ -114,6 +48,37 @@ export default function MapPage() {
       </View>
     );
   };
+
+  // Move to search place
+  const mapRef = useRef<MapView>(null);
+  const [bookmark, setBookmark] = useState<LatLng[]>([]);
+
+  function InputAutocomplete({
+    placeholder,
+    onPlaceSelected,
+  }: InputAutocompleteProps) {
+    return (
+      <>
+        <View style={{ height: "100%" }}>
+          <GooglePlacesAutocomplete
+            styles={{ textInput: styles.search, listView: styles.list }}
+            placeholder={placeholder || ""}
+            fetchDetails
+            onPress={(data, details = null) => {
+              console.log(JSON.stringify(data));
+              console.log(JSON.stringify(details));
+              onPlaceSelected(details);
+            }}
+            query={{
+              key: GOOGLE_API_KEY,
+              language: ["en", "zh-CN", "zh-TW", "ja"],
+            }}
+            onFail={(error) => console.log(error)}
+          />
+        </View>
+      </>
+    );
+  }
   const moveTo = async (position: LatLng) => {
     const camera = await mapRef.current?.getCamera();
     if (camera) {
@@ -130,6 +95,84 @@ export default function MapPage() {
     moveTo(position);
   };
 
+  // Get current location
+  const [location, setLocation] = useState<LocationObject | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
+
+  // Fetch places from google map
+  const [places, setPlaces] = useState<Place[]>([]);
+  const [markersList, setMarkersList] = useState([
+    {
+      id: 1,
+      latitude: 35.652832,
+      longitude: 139.839478,
+      title: "Tokyo",
+      description: "",
+    },
+    {
+      id: 2,
+      latitude: 34.672314,
+      longitude: 135.484802,
+      title: "Osaka",
+      description: "",
+    },
+  ]);
+
+  useEffect(() => {
+    if (location) {
+      fetchPlacesFromGoogleMaps(location, placeType)
+        .then((placesData) => {
+          setPlaces(placesData);
+        })
+        .catch((error) => {
+          console.error("Error fetching places:", error);
+        });
+    }
+  }, [location, placeType]);
+
+  const fetchPlacesFromGoogleMaps = async (
+    location: LocationObject,
+    placeType: string,
+  ) => {
+    let radius = 4 * 1000;
+    const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location?.coords.latitude},${location?.coords.longitude}&radius=${radius}&type=${placeType}&key=${GOOGLE_API_KEY}`;
+    try {
+      const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await res.json();
+      const places = data.results.map((googlePlace: GooglePlaceDetail) => {
+        const { lat, lng } = googlePlace.geometry.location;
+        const coordinate = {
+          latitude: lat,
+          longitude: lng,
+        };
+        return {
+          coordinate,
+          placeId: googlePlace.place_id,
+          placeName: googlePlace.name,
+        };
+      });
+      return places;
+    } catch (error) {
+      console.error("Error fetching places:", error);
+      return [];
+    }
+  };
+
+  // Display
   if (location != null) {
     return (
       <View style={styles.container}>
@@ -155,19 +198,13 @@ export default function MapPage() {
           {bookmark?.map((position, index) => (
             <Marker key={index} coordinate={position} />
           ))}
-          <Marker
-            draggable
-            coordinate={{
-              latitude: location?.coords.latitude,
-              longitude: location?.coords.longitude,
-            }}
-            onDragEnd={(e) => setState({ x: e.nativeEvent.coordinate })}
-          >
-            <MyCustomMarkerView />
-            <Callout>
-              <MyCustomCalloutView />
-            </Callout>
-          </Marker>
+          {places.map((place, index) => (
+            <Marker
+              key={index}
+              coordinate={place.coordinate}
+              title={place.placeName}
+            />
+          ))}
           {markersList.map((marker) => {
             return (
               <Marker
@@ -183,6 +220,19 @@ export default function MapPage() {
               />
             );
           })}
+          <Marker
+            draggable
+            coordinate={{
+              latitude: location?.coords.latitude,
+              longitude: location?.coords.longitude,
+            }}
+            onDragEnd={(e) => setState({ x: e.nativeEvent.coordinate })}
+          >
+            <MyCustomMarkerView />
+            <Callout>
+              <MyCustomCalloutView />
+            </Callout>
+          </Marker>
         </MapView>
       </View>
     );
@@ -196,6 +246,7 @@ export default function MapPage() {
   }
 }
 
+// Stylesheet
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
