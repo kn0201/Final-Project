@@ -146,8 +146,8 @@ export default function MapPage() {
           provider={PROVIDER_GOOGLE}
           style={styles.map}
           initialRegion={{
-            latitude: location?.coords.latitude || 35.183334,
-            longitude: location?.coords.longitude || 136.899994,
+            latitude: location?.coords.latitude,
+            longitude: location?.coords.longitude,
             latitudeDelta: latitudeDelta,
             longitudeDelta: longitudeDelta,
           }}
@@ -158,8 +158,8 @@ export default function MapPage() {
           <Marker
             draggable
             coordinate={{
-              latitude: location?.coords.latitude || 35.183334,
-              longitude: location?.coords.longitude || 136.899994,
+              latitude: location?.coords.latitude,
+              longitude: location?.coords.longitude,
             }}
             onDragEnd={(e) => setState({ x: e.nativeEvent.coordinate })}
           >
