@@ -38,4 +38,4 @@ package-lock.json
 .DS_Store
 ios/
 android/
-.src/environments.ts
+environments.ts
