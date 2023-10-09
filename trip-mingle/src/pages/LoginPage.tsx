@@ -9,7 +9,7 @@ export default function UserPage() {
   return (
     <Stack.Navigator
       initialRouteName="LoginPage"
-      screenOptions={{ headerShown: false }}
+      // screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="login" component={Login} />
       <Stack.Screen name="register" component={Register} />
