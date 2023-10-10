@@ -22,7 +22,7 @@ username varchar(255) unique
 email varchar(255) unique
 password varchar(255)
 gender boolean
-birthday timestamptz
+age integer
 country varchar(255)
 language varchar(255) NULL
 skill varchar(255) NULL
@@ -43,9 +43,10 @@ is_delete boolean
 chatroom
 --------
 id integer PK
-user_id integer FK - users.id
-location varchar(255)
-is_delete boolean
+user1_id integer FK - users.id
+user2_id integer FK - users.id
+user1_is_delete boolean
+user2_is_delete boolean
 
 
 chat_record
@@ -141,9 +142,10 @@ user_location
 -------------
 id integer PK
 user_id integer FK >- users.id
-post_id integer NULL FK >- post.id 
-image_id integer NULL FK >- image.id 
+post_id integer NULL FK >- post.id
+image_id integer NULL FK >- image.id
 system_location_id integer FK >- system_location.id
+location point
 is_delete boolean
 
 
@@ -162,18 +164,18 @@ location point
 # diagram-text: #f5f5f5
 # table-bg: #ffffff
 # table-text: #000000
-# users (265, 670, #30131d)
-# comment (925, 266, #0f0645)
-# chatroom (-19, 796, #1e5a1f)
-# chat_record (-20, 647, #483222)
-# image (917, 109, #60084e)
-# post (305, 293, #33191d)
-# hashtags (325, 154, #325f00)
-# like (246, 547, #57423f)
-# bookmark (445, 545, #5e394c)
-# complaint (324, 986, #610055)
-# planing (1025, 411, #3b310e)
-# plan_detail (988, 527, #35215e)
-# daily_event (980, 661, #1d5034)
-# user_location (688, 512, #5a632e)
-# system_location (708, 715, #386360)
+# users (276, 646, #283006)
+# comment (840, 309, #18623c)
+# chatroom (-19, 796, #51144d)
+# chat_record (-20, 647, #0f1d59)
+# image (886, 105, #232e3a)
+# post (304, 257, #5a6233)
+# hashtags (325, 154, #3e4856)
+# like (246, 547, #124546)
+# bookmark (445, 545, #093a1f)
+# complaint (318, 959, #5f5730)
+# planing (1020, 371, #33325c)
+# plan_detail (947, 472, #424616)
+# daily_event (931, 595, #4c1003)
+# user_location (658, 709, #01081d)
+# system_location (681, 906, #391f3e)

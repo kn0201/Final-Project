@@ -1,10 +1,11 @@
 import * as React from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { SegmentedButtons } from 'react-native-paper';
+import { SegmentedButtons } from "react-native-paper";
+import MyTopTab from "../tabs/topTab";
 
 export default function BuddiesPage() {
-  const [value, setValue] = React.useState('');
-  
+  const [value, setValue] = React.useState("");
+
   return (
     <SafeAreaView style={styles.container}>
       <SegmentedButtons
@@ -12,14 +13,13 @@ export default function BuddiesPage() {
         onValueChange={setValue}
         buttons={[
           {
-            value: 'blog',
-            label: 'Blog',
+            value: "blog",
+            label: "Blog",
           },
-          { value: 'tour', label: 'Tour' },
+          { value: "tour", label: "Tour" },
         ]}
       />
     </SafeAreaView>
-
   );
 }
 
