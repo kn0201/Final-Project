@@ -22,7 +22,7 @@ export default function UploadImage() {
   };
 
   return (
-    <View style={imageUploaderStyles.container}>
+    <View style={imageUploaderStyles.uploadContainer}>
       {image && (
         <Image source={{ uri: image }} style={{ width: 150, height: 150 }} />
       )}
@@ -39,7 +39,7 @@ export default function UploadImage() {
   );
 }
 const imageUploaderStyles = StyleSheet.create({
-  container: {
+  uploadContainer: {
     elevation: 2,
     height: 150,
     width: 150,
