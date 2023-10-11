@@ -1,5 +1,5 @@
 import { useState, SetStateAction } from "react";
-import { SearchBar, SpeedDial } from "@rneui/themed";
+import { Input, SearchBar, SpeedDial } from "@rneui/themed";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Card, Avatar } from "react-native-paper";
 import {
@@ -27,10 +27,10 @@ const PlanningPage = () => {
   // };
   const [open, setOpen] = useState(false);
   const items: AgendaSchedule = {
-    "2023-10-01": [{ name: "123", height: 10, day: "Lundi" }],
-    "2023-10-02": [{ name: "234", height: 10, day: "Lundi" }],
-    "2023-10-03": [{ name: "345", height: 10, day: "Lundi" }],
-    "2023-10-04": [{ name: "456", height: 10, day: "Lundi" }],
+    "2023-10-11": [{ name: "Event", height: 10, day: "Lundi" }],
+    "2023-10-12": [{ name: "Event", height: 10, day: "Lundi" }],
+    "2023-10-13": [{ name: "Event", height: 10, day: "Lundi" }],
+    "2023-10-14": [{ name: "Event", height: 10, day: "Lundi" }],
     // '2023-10-02': [{ name: 'Event 2' }, { name: 'Event 3' }],
   };
 
@@ -57,7 +57,7 @@ const PlanningPage = () => {
               [selected]: {
                 selected: true,
                 disableTouchEvent: true,
-                selectedColor: "aqua",
+                selectedColor: "#30C0FE",
               },
             }}
             renderList={(listItem: ReservationListProps) => {
@@ -71,7 +71,7 @@ const PlanningPage = () => {
             //   );
             // }}
             showClosingKnob={true}
-            pastScrollRange={0}
+            pastScrollRange={1}
             futureScrollRange={18}
           />
         </View>
@@ -86,7 +86,13 @@ const PlanningPage = () => {
         <SpeedDial.Action
           icon={{ name: "add", color: "#fff" }}
           title="Add"
-          onPress={() => console.log("Add Something")}
+          onPress={() => (
+            <View>
+              <Input>Event</Input>
+              <Input>Date</Input>
+              <Input>Time</Input>
+            </View>
+          )}
         />
         <SpeedDial.Action
           icon={{ name: "delete", color: "#fff" }}
