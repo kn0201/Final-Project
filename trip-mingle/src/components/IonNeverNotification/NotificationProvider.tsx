@@ -135,6 +135,14 @@ function IonNeverNotificationRoot(props: { children: ReactNode }) {
       secondButtonFunction,
     } = dialogParams;
 
+    if (dialogHeight) {
+      if (typeof dialogHeight !== "number") {
+        throw new Error("dialogHeight must be of type 'number'");
+      } else if (dialogHeight < defaultValues.dialogHeight) {
+        throw new Error(`minimum dialogHeight = ${defaultValues.dialogHeight}`);
+      }
+    }
+    setDialogHeight(dialogHeight || defaultValues.dialogHeight);
     if (component) {
       setDialogComponent(() => component);
     } else {
@@ -192,7 +200,6 @@ function IonNeverNotificationRoot(props: { children: ReactNode }) {
     setTitle(title || "An Error Occurred");
     setMessage(message || null);
     setNotificationType(type || "success");
-    setDialogHeight(dialogHeight || defaultValues.dialogHeight);
     setBackgroundColor(backgroundColor || defaultValues.backgroundColor);
     leftButton.updateButtonColor(firstButtonColor);
     leftButton.updateButtonText(firstButtonText);
