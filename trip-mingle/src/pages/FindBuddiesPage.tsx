@@ -1,37 +1,66 @@
 import * as React from "react";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { SegmentedButtons } from "react-native-paper";
-import MyTopTab from "../tabs/topTab";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import Constants from "expo-constants";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import BlogScreen from "../screen/BlogScreen";
+import TourScreen from "../screen/PostScreen";
+import EnquireScreen from "../screen/EnquireScreen";
 
-export default function BuddiesPage() {
-  const [value, setValue] = React.useState("");
+const Tab = createMaterialTopTabNavigator();
 
+function MyTabs() {
   return (
-    <SafeAreaView style={styles.container}>
-      <SegmentedButtons
-        value={value}
-        onValueChange={setValue}
-        buttons={[
-          {
-            value: "blog",
-            label: "Blog",
-          },
-          { value: "tour", label: "Tour" },
-        ]}
+    <Tab.Navigator
+      initialRouteName="Blog"
+      screenOptions={{
+        tabBarActiveTintColor: "#0a1128",
+        tabBarLabelStyle: { fontSize: 10 },
+        tabBarStyle: { backgroundColor: "#c4ffdb" },
+      }}
+      style={{ top: Constants.statusBarHeight }}
+    >
+      <Tab.Screen
+        name="Blog"
+        component={BlogScreen}
+        options={{
+          tabBarLabel: "Blog",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="post" color={color} size={26} />
+          ),
+        }}
       />
-    </SafeAreaView>
+      <Tab.Screen
+        name="Tour"
+        component={TourScreen}
+        options={{
+          tabBarLabel: "Tour",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name="transit-detour"
+              color={color}
+              size={26}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Enquire"
+        component={EnquireScreen}
+        options={{
+          tabBarLabel: "Enquire",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name="chat-question"
+              color={color}
+              size={26}
+            />
+          ),
+        }}
+      />
+    </Tab.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-  },
-  title: {
-    display: "flex",
-    flexDirection: "row",
-    fontSize: 48,
-  },
-});
+export default function BuddiesPage() {
+  return <MyTabs />;
+}

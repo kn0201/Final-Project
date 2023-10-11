@@ -1,3 +1,5 @@
+import { AgendaEntry } from "react-native-calendars";
+
 // Buffer Line
 export type LoginInfo = {
   username: string;
@@ -13,3 +15,11 @@ export type RegisInfo = {
   country: string;
   avatar: string;
 };
+
+export type AgendaEventListItem = {
+  date: string;
+} & AgendaEntry;
+
+/** AgendaEntry
+ * name: string, height: number, day:string
+ */
