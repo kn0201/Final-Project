@@ -23,3 +23,5 @@ export type AgendaEventListItem = {
 /** AgendaEntry
  * name: string, height: number, day:string
  */
+
+export type NewType = AgendaEntry & { id: number };

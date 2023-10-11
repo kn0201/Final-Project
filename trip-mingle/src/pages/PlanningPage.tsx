@@ -11,11 +11,15 @@ import {
 import { ReservationListProps } from "react-native-calendars/src/agenda/reservation-list";
 import AgendaListItem from "../components/AgendaLIstItem";
 import { Entypo } from "@expo/vector-icons";
+import { NewType } from "../utils/types";
+import Constants from "expo-constants";
 
 const styles = StyleSheet.create({
   view: {
     margin: 7,
     backgroundColor: "#FFF",
+    top: Constants.statusBarHeight,
+    borderRadius: 8,
   },
 });
 
@@ -27,11 +31,18 @@ const PlanningPage = () => {
   // };
   const [open, setOpen] = useState(false);
   const items: AgendaSchedule = {
-    "2023-10-11": [{ name: "Event", height: 10, day: "Lundi" }],
-    "2023-10-12": [{ name: "Event", height: 10, day: "Lundi" }],
-    "2023-10-13": [{ name: "Event", height: 10, day: "Lundi" }],
-    "2023-10-14": [{ name: "Event", height: 10, day: "Lundi" }],
-    // '2023-10-02': [{ name: 'Event 2' }, { name: 'Event 3' }],
+    "2023-10-11": [
+      { name: "Event", height: 10, day: "Lundi", id: 1 } as NewType,
+    ],
+    "2023-10-12": [
+      { name: "Event", height: 10, day: "Lundi", id: 2 } as NewType,
+    ],
+    "2023-10-13": [
+      { name: "Event", height: 10, day: "Lundi", id: 3 } as NewType,
+    ],
+    "2023-10-14": [
+      { name: "Event", height: 10, day: "Lundi", id: 4 } as NewType,
+    ],
   };
 
   return (

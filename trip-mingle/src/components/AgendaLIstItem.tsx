@@ -1,8 +1,15 @@
 // Buffer Line
 import { useState, useEffect } from "react";
-import { View, Text, FlatList, ListRenderItemInfo } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  ListRenderItemInfo,
+  TouchableOpacity,
+} from "react-native";
 import { AgendaEventListItem } from "../utils/types";
 import { AgendaSchedule } from "react-native-calendars";
+import { Avatar, Card } from "react-native-paper";
 
 function AgendaListItem(props: {
   data?: AgendaSchedule;
@@ -11,18 +18,27 @@ function AgendaListItem(props: {
   const [eventList, setEventList] = useState<AgendaEventListItem[]>([]);
 
   const renderItem = (listItem: ListRenderItemInfo<AgendaEventListItem>) => {
-    const { date, name } = listItem.item;
-    return (
-      <View>
-        <View>
-          <Text>Date :</Text>
-          <Text>{date}</Text>
+    const index = listItem.index;
+    const { date, name, day } = listItem.item;
 
-          <View>
-            <Text>{name}</Text>
-          </View>
-        </View>
-      </View>
+    return (
+      <TouchableOpacity style={{ marginRight: 10, marginTop: 17 }}>
+        <Card>
+          <Card.Content>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Text>{date}</Text>
+              <Text>{name}</Text>
+              <Avatar.Text label={day} />
+            </View>
+          </Card.Content>
+        </Card>
+      </TouchableOpacity>
     );
   };
 
