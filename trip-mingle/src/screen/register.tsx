@@ -8,13 +8,14 @@ import {
   ScrollView,
   Modal,
   Image,
+  FlatList,
 } from "react-native";
 
 import LoginPageStyleSheet from "../StyleSheet/LoginPageCss";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { flex } from "../StyleSheet/StyleSheetHelper";
-import { useRef, useState, useEffect } from "react";
-import { CheckBox } from "@rneui/themed";
+import { useRef, useState, useEffect, SetStateAction } from "react";
+import { CheckBox, SearchBar } from "@rneui/themed";
 import RegisterPageStyleSheet from "../StyleSheet/RegisterPageCss";
 import { RegisInfo } from "../utils/types";
 import { AntDesign } from "@expo/vector-icons";
@@ -78,6 +79,7 @@ export default function Register({ navigation }) {
   const toggleCountryDialog = () => {
     setVisibleCountry(!visibleCountry);
   };
+  let countriesListData = countriesList;
 
   const addImage = async () => {
     let _image = await ImagePicker.launchImageLibraryAsync({
@@ -116,8 +118,6 @@ export default function Register({ navigation }) {
     console.log(regisInfo);
     navigation.navigate("Users");
   };
-
-  useEffect(() => console.log({ age }), [age]);
 
   return (
     <TouchableWithoutFeedback
@@ -348,82 +348,120 @@ export default function Register({ navigation }) {
                 justifyContent: "flex-start",
                 marginEnd: 4,
               }}
-              name={birthdayIcon ? "cake-variant-outline" : ""}
+              name={age === "" ? "cake-variant-outline" : ""}
               size={20}
             />
             <Text>{selectedAge}</Text>
           </TouchableOpacity>
-
-          {/* <TouchableWithoutFeedback onPress={toggleCountryDialog}>
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={visibleBirthday}
-              onRequestClose={toggleBirthdayDialog}
-            >
-              <View style={RegisterPageStyleSheet.BirthdayModalContainer}>
-                <ScrollView
-                  horizontal={false}
-                  style={RegisterPageStyleSheet.BirthdayScrollViewContainer}
-                >
-                  {[
-                    "18-24",
-                    "25-30",
-                    "31-36",
-                    "37-42",
-                    "42-48",
-                    "48-54",
-                    ">55",
-                  ].map((label, index) => (
-                    <CheckBox
-                      key={index + 1}
-                      title={label}
-                      containerStyle={{
-                        backgroundColor: "white",
-                        borderWidth: 0,
-                      }}
-                      checkedIcon="dot-circle-o"
-                      uncheckedIcon="circle-o"
-                      checked={age === label}
-                      onPress={() => setAge(label)}
-                    />
-                  ))}
-                </ScrollView>
-                <View style={RegisterPageStyleSheet.ModalButtonContainer}>
-                  <TouchableOpacity>
-                    <Text
-                      onPress={() => {
-                        setAge(selectedAge);
-                        toggleBirthdayDialog();
-                      }}
-                      style={RegisterPageStyleSheet.ModalText}
-                    >
-                      Cancel
-                    </Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity>
-                    <Text
-                      onPress={() => {
-                        setSelectedAge(age);
-                        setBirthdayIcon(!birthdayIcon);
-                        toggleBirthdayDialog();
-                        updateInputText("age", age);
-                      }}
-                      style={RegisterPageStyleSheet.ModalText}
-                    >
-                      Confirm
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </Modal>
-          </TouchableWithoutFeedback> */}
         </View>
         <View style={RegisterPageStyleSheet.center}>
           <TouchableOpacity
             style={RegisterPageStyleSheet.countryContainer}
-            onPress={toggleCountryDialog}
+            onPress={() => {
+              IonNeverDialog.show({
+                dialogHeight: 800,
+                component: () => {
+                  const [localCountry, setLocalCountry] =
+                    useState<string>(country);
+                  const [search, setSearch] = useState("");
+
+                  const [countryList, setCountryList] =
+                    useState(countriesListData);
+
+                  const [matchedCountryList, setMatchedCountryList] =
+                    useState(countriesListData);
+
+                  useEffect(() => {
+                    setMatchedCountryList(
+                      countryList.filter((country) =>
+                        country.name
+                          .toLocaleLowerCase()
+                          .includes(search.toLocaleLowerCase())
+                      )
+                    );
+                  }, [search, countryList]);
+
+                  const updateSearch = (search: string) => {
+                    setSearch(search);
+                  };
+                  type CountryProps = { name: string };
+                  const Country = ({ name }: CountryProps) => (
+                    <View style={RegisterPageStyleSheet.item}>
+                      <CheckBox
+                        title={name}
+                        containerStyle={{
+                          backgroundColor: "transparent",
+                          borderWidth: 0,
+                        }}
+                        checkedIcon="dot-circle-o"
+                        uncheckedIcon="circle-o"
+                        checked={localCountry === name}
+                        onPress={() => {
+                          setCountry(name);
+                          setLocalCountry(name);
+                        }}
+                      />
+                    </View>
+                  );
+                  return (
+                    <>
+                      <SearchBar
+                        placeholder="Type Here..."
+                        onChangeText={updateSearch}
+                        value={search}
+                        containerStyle={{ borderRadius: 10 }}
+                        inputContainerStyle={{ backgroundColor: "white" }}
+                        lightTheme={true}
+                      />
+                      <Text>Result : {search}</Text>
+                      <FlatList
+                        data={matchedCountryList}
+                        renderItem={({ item }) => <Country name={item.name} />}
+                      />
+                      {/* <ScrollView
+                        horizontal={false}
+                        style={
+                          RegisterPageStyleSheet.CountryScrollViewContainer
+                        }
+                      >
+                        {countryList.map((name, index) => (
+                          <CheckBox
+                            key={index + 1}
+                            title={name}
+                            containerStyle={{
+                              backgroundColor: "transparent",
+                              borderWidth: 0,
+                            }}
+                            checkedIcon="dot-circle-o"
+                            uncheckedIcon="circle-o"
+                            checked={localCountry === name}
+                            onPress={() => {
+                              setCountry(name);
+                              setLocalCountry(name);
+                            }}
+                          />
+                        ))}
+                      </ScrollView> */}
+                      <View style={RegisterPageStyleSheet.ModalButtonContainer}>
+                        <TouchableOpacity
+                          disabled={localCountry === ""}
+                          onPress={() => {
+                            setSelectedCountry(localCountry);
+                            setCountryIcon(!countryIcon);
+                            IonNeverDialog.dismiss();
+                            updateInputText("country", country);
+                          }}
+                        >
+                          <Text style={RegisterPageStyleSheet.ModalText}>
+                            Confirm
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    </>
+                  );
+                },
+              });
+            }}
           >
             <Icon
               style={{
@@ -431,7 +469,7 @@ export default function Register({ navigation }) {
                 justifyContent: "flex-start",
                 marginEnd: 4,
               }}
-              name={countryIcon ? "earth" : ""}
+              name={country === "" ? "earth" : ""}
               size={20}
             />
             <Text>{selectedCountry}</Text>
@@ -443,54 +481,7 @@ export default function Register({ navigation }) {
               visible={visibleCountry}
               onRequestClose={toggleCountryDialog}
             >
-              <View style={RegisterPageStyleSheet.ModalContainer}>
-                <ScrollView
-                  horizontal={false}
-                  style={RegisterPageStyleSheet.CountryScrollViewContainer}
-                >
-                  {countriesList.map((name, index) => (
-                    <CheckBox
-                      key={index + 1}
-                      title={name}
-                      containerStyle={{
-                        backgroundColor: "white",
-                        borderWidth: 0,
-                      }}
-                      checkedIcon="dot-circle-o"
-                      uncheckedIcon="circle-o"
-                      checked={country === name}
-                      onPress={() => setCountry(name)}
-                    />
-                  ))}
-                </ScrollView>
-                <View style={RegisterPageStyleSheet.ModalButtonContainer}>
-                  <TouchableOpacity>
-                    <Text
-                      onPress={() => {
-                        setCountry(selectedCountry);
-                        toggleCountryDialog();
-                      }}
-                      style={RegisterPageStyleSheet.ModalText}
-                    >
-                      Cancel
-                    </Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity>
-                    <Text
-                      onPress={() => {
-                        setSelectedCountry(country);
-                        setCountryIcon(!countryIcon);
-                        toggleCountryDialog();
-                        updateInputText("country", country);
-                      }}
-                      style={RegisterPageStyleSheet.ModalText}
-                    >
-                      Confirm
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
+              <View style={RegisterPageStyleSheet.ModalContainer}></View>
             </Modal>
           </TouchableWithoutFeedback>
         </View>
