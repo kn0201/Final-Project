@@ -1,26 +1,26 @@
 import * as React from "react";
 import {
-  Pressable,
   Text,
   TouchableOpacity,
   View,
-  Image,
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
-  Button,
   ScrollView,
+  Modal,
+  Image,
 } from "react-native";
 
 import LoginPageStyleSheet from "../StyleSheet/LoginPageCss";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { center, flex, full, row } from "../StyleSheet/StyleSheetHelper";
+import { flex } from "../StyleSheet/StyleSheetHelper";
 import { useRef, useState } from "react";
 import { CheckBox } from "@rneui/themed";
 import RegisterPageStyleSheet from "../StyleSheet/RegisterPageCss";
-import UploadImage from "../components/uploadImage";
+
 import { RegisInfo } from "../utils/types";
-import { Dialog } from "@rneui/themed";
+import { AntDesign } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 import { countriesList } from "../source/countries";
 import { api } from "../apis/api";
 
@@ -38,6 +38,8 @@ export default function Register({ navigation }) {
   const [countryIcon, setCountryIcon] = useState(true);
   const [visibleCountry, setVisibleCountry] = useState(false);
 
+  const [image, setImage] = useState(null);
+
   const regisInfo = useRef<RegisInfo>({
     username: "",
     email: "",
@@ -45,6 +47,7 @@ export default function Register({ navigation }) {
     gender: checkGender,
     age: "",
     country: "",
+    avatar: "",
   }).current;
 
   const clearInputs = useRef({
@@ -80,6 +83,23 @@ export default function Register({ navigation }) {
     setVisibleCountry(!visibleCountry);
   };
 
+  const addImage = async () => {
+    let _image = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    // @ts-ignore
+    console.log(JSON.stringify(_image.assets[0].uri));
+    //@ts-ignore
+    if (!_image.canceled) {
+      //@ts-ignore
+      setImage(_image.assets[0].uri);
+      updateInputText("avatar", _image.assets[0].uri);
+    }
+  };
+
   const register = async () => {
     // try {
     //   let json = await api.post("/login", regisInfo, loginResult);
@@ -89,12 +109,34 @@ export default function Register({ navigation }) {
     //   console.log(errorObject);
     // }
     console.log(regisInfo);
+    navigation.navigate("Users");
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss;
+        toggleCountryDialog;
+      }}
+    >
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <UploadImage />
+        <View style={RegisterPageStyleSheet.uploadContainer}>
+          {image && (
+            <Image
+              source={{ uri: image }}
+              style={{ width: 150, height: 150 }}
+            />
+          )}
+          <View style={RegisterPageStyleSheet.uploadBtnContainer}>
+            <TouchableOpacity
+              onPress={addImage}
+              style={RegisterPageStyleSheet.uploadBtn}
+            >
+              <Text>{image ? "Edit" : "Upload"} Image</Text>
+              <AntDesign name="camera" size={20} color="black" />
+            </TouchableOpacity>
+          </View>
+        </View>
 
         <View style={RegisterPageStyleSheet.inputContainer}>
           <Icon
@@ -247,52 +289,72 @@ export default function Register({ navigation }) {
             />
             <Text>{selectedAge}</Text>
           </TouchableOpacity>
-          <Dialog
-            isVisible={visibleBirthday}
-            onBackdropPress={toggleBirthdayDialog}
-          >
-            <ScrollView>
-              <Dialog.Title title="Your Age" />
-              {[
-                "18-24",
-                "25-30",
-                "31-36",
-                "37-42",
-                "42-48",
-                "48-54",
-                ">55",
-              ].map((label, index) => (
-                <CheckBox
-                  key={index + 1}
-                  title={label}
-                  containerStyle={{ backgroundColor: "white", borderWidth: 0 }}
-                  checkedIcon="dot-circle-o"
-                  uncheckedIcon="circle-o"
-                  checked={age === label}
-                  onPress={() => setAge(label)}
-                />
-              ))}
 
-              <Dialog.Actions>
-                <Dialog.Button
-                  title="CONFIRM"
-                  onPress={() => {
-                    setSelectedAge(age);
-                    setBirthdayIcon(!birthdayIcon);
-                    toggleBirthdayDialog();
-                    updateInputText("age", age);
-                  }}
-                />
-                <Dialog.Button
-                  title="CANCEL"
-                  onPress={() => {
-                    setAge(selectedAge);
-                    toggleBirthdayDialog();
-                  }}
-                />
-              </Dialog.Actions>
-            </ScrollView>
-          </Dialog>
+          <TouchableWithoutFeedback onPress={toggleCountryDialog}>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={visibleBirthday}
+              onRequestClose={toggleBirthdayDialog}
+            >
+              <View style={RegisterPageStyleSheet.ModalContainer}>
+                <View style={RegisterPageStyleSheet.ModalButtonContainer}>
+                  <TouchableOpacity>
+                    <Text
+                      onPress={() => {
+                        setAge(selectedAge);
+                        toggleBirthdayDialog();
+                      }}
+                      style={RegisterPageStyleSheet.ModalText}
+                    >
+                      Cancel
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity>
+                    <Text
+                      onPress={() => {
+                        setSelectedAge(age);
+                        setBirthdayIcon(!birthdayIcon);
+                        toggleBirthdayDialog();
+                        updateInputText("age", age);
+                      }}
+                      style={RegisterPageStyleSheet.ModalText}
+                    >
+                      Confirm
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <ScrollView
+                  horizontal={false}
+                  style={RegisterPageStyleSheet.BirthdayScrollViewContainer}
+                >
+                  {[
+                    "18-24",
+                    "25-30",
+                    "31-36",
+                    "37-42",
+                    "42-48",
+                    "48-54",
+                    ">55",
+                  ].map((label, index) => (
+                    <CheckBox
+                      key={index + 1}
+                      title={label}
+                      containerStyle={{
+                        backgroundColor: "white",
+                        borderWidth: 0,
+                      }}
+                      checkedIcon="dot-circle-o"
+                      uncheckedIcon="circle-o"
+                      checked={age === label}
+                      onPress={() => setAge(label)}
+                    />
+                  ))}
+                </ScrollView>
+              </View>
+            </Modal>
+          </TouchableWithoutFeedback>
         </View>
         <View style={RegisterPageStyleSheet.center}>
           <TouchableOpacity
@@ -310,41 +372,63 @@ export default function Register({ navigation }) {
             />
             <Text>{selectedCountry}</Text>
           </TouchableOpacity>
-          <Dialog
-            isVisible={visibleCountry}
-            onBackdropPress={toggleCountryDialog}
-          >
-            <Dialog.Title title="Your Age" />
-            {countriesList.map((name, index) => (
-              <CheckBox
-                key={index + 1}
-                title={name}
-                containerStyle={{ backgroundColor: "white", borderWidth: 0 }}
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checked={country === name}
-                onPress={() => setCountry(name)}
-              />
-            ))}
+          <TouchableWithoutFeedback onPress={toggleCountryDialog}>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={visibleCountry}
+              onRequestClose={toggleCountryDialog}
+            >
+              <View style={RegisterPageStyleSheet.ModalContainer}>
+                <View style={RegisterPageStyleSheet.ModalButtonContainer}>
+                  <TouchableOpacity>
+                    <Text
+                      onPress={() => {
+                        setCountry(selectedCountry);
+                        toggleCountryDialog();
+                      }}
+                      style={RegisterPageStyleSheet.ModalText}
+                    >
+                      Cancel
+                    </Text>
+                  </TouchableOpacity>
 
-            <Dialog.Actions>
-              <Dialog.Button
-                title="CONFIRM"
-                onPress={() => {
-                  setSelectedCountry(country);
-                  setCountryIcon(!countryIcon);
-                  toggleCountryDialog();
-                }}
-              />
-              <Dialog.Button
-                title="CANCEL"
-                onPress={() => {
-                  setCountry(selectedCountry);
-                  toggleCountryDialog();
-                }}
-              />
-            </Dialog.Actions>
-          </Dialog>
+                  <TouchableOpacity>
+                    <Text
+                      onPress={() => {
+                        setSelectedCountry(country);
+                        setCountryIcon(!countryIcon);
+                        toggleCountryDialog();
+                        updateInputText("country", country);
+                      }}
+                      style={RegisterPageStyleSheet.ModalText}
+                    >
+                      Confirm
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <ScrollView
+                  horizontal={false}
+                  style={RegisterPageStyleSheet.CountryScrollViewContainer}
+                >
+                  {countriesList.map((name, index) => (
+                    <CheckBox
+                      key={index + 1}
+                      title={name}
+                      containerStyle={{
+                        backgroundColor: "white",
+                        borderWidth: 0,
+                      }}
+                      checkedIcon="dot-circle-o"
+                      uncheckedIcon="circle-o"
+                      checked={country === name}
+                      onPress={() => setCountry(name)}
+                    />
+                  ))}
+                </ScrollView>
+              </View>
+            </Modal>
+          </TouchableWithoutFeedback>
         </View>
         <View style={LoginPageStyleSheet.center}>
           <TouchableOpacity

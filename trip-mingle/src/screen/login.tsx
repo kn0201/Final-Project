@@ -140,7 +140,7 @@ export default function Login({ navigation }) {
             Don't have an account?{" "}
             <Text
               style={LoginPageStyleSheet.signUp}
-              onPress={() => navigation.navigate("register")}
+              onPress={() => navigation.navigate("Register")}
             >
               Sign up
             </Text>

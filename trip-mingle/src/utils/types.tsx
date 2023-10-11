@@ -11,4 +11,5 @@ export type RegisInfo = {
   gender: boolean;
   age: string;
   country: string;
+  avatar: string;
 };
