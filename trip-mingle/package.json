@@ -11,6 +11,7 @@
   "dependencies": {
     "@expo/webpack-config": "^19.0.0",
     "@react-native-community/checkbox": "^0.5.16",
+    "@react-native-picker/picker": "2.4.10",
     "@react-navigation/bottom-tabs": "^6.5.9",
     "@react-navigation/material-top-tabs": "^6.6.4",
     "@react-navigation/native": "^6.1.8",
@@ -35,6 +36,7 @@
     "react-native-google-places-autocomplete": "^2.5.5",
     "react-native-maps": "^1.7.1",
     "react-native-maps-directions": "^1.9.0",
+    "react-native-modal-selector": "^2.1.2",
     "react-native-pager-view": "6.2.0",
     "react-native-paper": "^5.10.6",
     "react-native-screens": "~3.22.0",

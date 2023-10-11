@@ -39,3 +39,4 @@ package-lock.json
 ios/
 android/
 environments.ts
+eas.json

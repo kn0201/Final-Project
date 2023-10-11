@@ -57,7 +57,7 @@ function MyTab() {
         }}
       />
       <Tab.Screen
-        name="Login"
+        name="login"
         component={LoginPage}
         options={{
           tabBarLabel: "Login",
