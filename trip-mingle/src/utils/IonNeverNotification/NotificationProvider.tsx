@@ -6,6 +6,7 @@ import React, {
   createContext,
   ReactNode,
   Fragment,
+  useEffect,
 } from "react";
 import { View, Text, Animated, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
@@ -16,7 +17,9 @@ import {
   ShowToastParams,
 } from "./utils/type";
 import iconInfo from "./utils/iconInfo";
-import providerStyleSheet from "./utils/NotificationProviderStyleSheet";
+import providerStyleSheet, {
+  dialogDivPositioning,
+} from "./utils/NotificationProviderStyleSheet";
 import useButton from "./utils/useButton";
 
 const NotificationContext = createContext<NotificationContextInfo>({} as any);
@@ -27,12 +30,13 @@ export const useIonNeverNotification = () => {
 function IonNeverNotificationRoot(props: { children: ReactNode }) {
   const defaultValues = {
     backgroundColor: "#F8FAFC",
-    displayTime: 2500,
-    leftButtonColor: "#0EA5E9",
+    leftButtonColor: "#2FD0FD",
     rightButtonColor: "#FD0050",
+    displayTime: 2500,
+    dialogHeight: 300,
   };
-  // const [dummyDivVisible, setDummyDivVisible] = useState<boolean>(false);
-  // const [dummyDivDisabled, setDummyDivDisabled] = useState<boolean>(true);
+  const [dummyDivVisible, setDummyDivVisible] = useState<boolean>(false);
+  const [dummyDivDisabled, setDummyDivDisabled] = useState<boolean>(true);
   const [notificationType, setNotificationType] =
     useState<NotificationChoices>("success");
   const [title, setTitle] = useState<string>("Successfully Showed");
@@ -40,9 +44,12 @@ function IonNeverNotificationRoot(props: { children: ReactNode }) {
   const [backgroundColor, setBackgroundColor] = useState<string>(
     defaultValues.backgroundColor
   );
-  // const [DialogComponent, setDialogComponent] = useState<
-  //   (() => JSX.Element) | null
-  // >(null);
+  const [dialogHeight, setDialogHeight] = useState<number>(
+    defaultValues.dialogHeight
+  );
+  const [DialogComponent, setDialogComponent] = useState<
+    (() => JSX.Element) | null
+  >(null);
 
   let displayTime = useRef<number>(defaultValues.displayTime).current;
 
@@ -51,21 +58,29 @@ function IonNeverNotificationRoot(props: { children: ReactNode }) {
 
   const dismissDialog = () => {
     setBackgroundColor(defaultValues.backgroundColor);
-    // setDialogComponent(null);
-    // setDummyDivVisible(false);
+    setDialogComponent(null);
     displayTime = defaultValues.displayTime;
+
+    setDummyDivDisabled(true);
+    Animated.timing(dialogTransformAnim, {
+      toValue: 0,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start(() => setDummyDivVisible(false));
+
+    dialogTransformAnim.resetAnimation();
   };
 
-  // const leftButton = useButton(
-  //   "OK",
-  //   defaultValues.leftButtonColor,
-  //   dismissDialog
-  // );
-  // const rightButton = useButton(
-  //   "Cancel",
-  //   defaultValues.rightButtonColor,
-  //   dismissDialog
-  // );
+  const leftButton = useButton(
+    "OK",
+    defaultValues.leftButtonColor,
+    dismissDialog
+  );
+  const rightButton = useButton(
+    "Cancel",
+    defaultValues.rightButtonColor,
+    dismissDialog
+  );
 
   const showToast = (toastParams: ShowToastParams) => {
     const { type, title, backgroundColor, autoClose } = toastParams;
@@ -74,11 +89,11 @@ function IonNeverNotificationRoot(props: { children: ReactNode }) {
       case ["success", "warning", "danger", "info"].indexOf(type) === -1:
         throw new Error("Notification Type undefined");
       case !title:
-        throw new Error("No Title Received");
+        throw new Error("title is required");
       case backgroundColor !== undefined && typeof backgroundColor !== "string":
-        throw new Error("Background Color Input Invalid");
+        throw new Error("backgroundColor must be of type 'string'");
       case autoClose !== undefined && typeof autoClose !== "number":
-        throw new Error("Invalid Auto-Close Time");
+        throw new Error("autoClose must be of type 'number'");
     }
 
     setTitle(title);
@@ -101,78 +116,107 @@ function IonNeverNotificationRoot(props: { children: ReactNode }) {
     ]).start();
   };
 
-  // const showDialog = (dialogParams: ShowDialogParams) => {
-  //   const {
-  //     type,
-  //     title,
-  //     backgroundColor,
-  //     autoClose,
-  //     component,
-  //     message,
-  //     leftButtonColor,
-  //     leftButtonText,
-  //     leftButtonVisible,
-  //     leftButtonFunction,
-  //     rightButtonColor,
-  //     rightButtonText,
-  //     rightButtonVisible,
-  //     rightButtonFunction,
-  //   } = dialogParams;
-
-  //   if (component) return;
-
-  //   switch (true) {
-  //     case ["success", "warning", "danger", "info"].indexOf(type) === -1:
-  //       throw new Error("Notification Type undefined");
-  //     case !title:
-  //       throw new Error("No Title Received");
-  //     case backgroundColor !== undefined && typeof backgroundColor !== "string":
-  //       throw new Error("Background Color Input Invalid");
-  //     case autoClose !== undefined && typeof autoClose !== "number":
-  //       throw new Error("Invalid Auto-Close Time");
-  //     case message !== undefined && typeof message !== "string":
-  //       throw new Error("Invalid Message Submitted");
-  //     case leftButtonVisible:
-  //       switch (true) {
-  //         case leftButtonColor !== undefined &&
-  //           typeof leftButtonColor !== "string":
-  //           throw new Error("Button Color Invalid Input");
-  //         case leftButtonText !== undefined &&
-  //           typeof leftButtonText !== "string":
-  //           throw new Error("Button Text Invalid");
-  //       }
-
-  //       leftButton.updateButtonColor(leftButtonColor || "#");
-  //       break;
-  //     case rightButtonVisible:
-  //       switch (true) {
-  //         case rightButtonColor !== undefined &&
-  //           typeof rightButtonColor !== "string":
-  //           throw new Error("Button Color Invalid Input");
-  //         case rightButtonText !== undefined &&
-  //           typeof rightButtonText !== "string":
-  //           throw new Error("Button Text Invalid");
-  //       }
-
-  //       break;
-  //   }
-
-  //   setDialogComponent(null);
-  //   setTitle(title);
-  //   setMessage(message || null);
-  //   setNotificationType(type);
-  //   leftButton.updateButtonColor(leftButtonColor);
-  //   leftButton.updateButtonText(leftButtonText);
-  //   leftButton.updateButtonVisible(leftButtonVisible);
-  //   leftButton.updateButtonFunction(leftButtonFunction);
-  //   rightButton.updateButtonColor(rightButtonColor);
-  //   rightButton.updateButtonText(rightButtonText);
-  //   rightButton.updateButtonVisible(rightButtonVisible);
-  //   rightButton.updateButtonFunction(rightButtonFunction);
-  //   setDummyDivVisible(true);
-  // };
   const showDialog = (dialogParams: ShowDialogParams) => {
-    console.log("Unavailable at the moment");
+    const {
+      type,
+      title,
+      backgroundColor,
+      dialogHeight,
+      autoClose,
+      component,
+      message,
+      firstButtonColor,
+      firstButtonText,
+      firstButtonVisible,
+      firstButtonFunction,
+      secondButtonColor,
+      secondButtonText,
+      secondButtonVisible,
+      secondButtonFunction,
+    } = dialogParams;
+
+    if (component) {
+      setDialogComponent(() => component);
+    } else {
+      switch (true) {
+        case ["success", "warning", "danger", "info"].indexOf(
+          type || "undefined"
+        ) === -1:
+          throw new Error("Notification Type undefined");
+        case !title:
+          throw new Error("title is required");
+        case backgroundColor !== undefined &&
+          typeof backgroundColor !== "string":
+          throw new Error("backgroundColor must be of type 'string'");
+        case autoClose !== undefined && typeof autoClose !== "number":
+          throw new Error("autoClose must be of type 'number'");
+        case dialogHeight !== undefined:
+          if (typeof dialogHeight !== "number") {
+            throw new Error("dialogHeight must be of type 'number'");
+          } else if (dialogHeight < defaultValues.dialogHeight) {
+            throw new Error(
+              `minimum dialogHeight = ${defaultValues.dialogHeight}`
+            );
+          }
+        case message !== undefined && typeof message !== "string":
+          throw new Error("message must be of type 'string' if provided");
+        case firstButtonVisible:
+          switch (true) {
+            case firstButtonColor !== undefined &&
+              typeof firstButtonColor !== "string":
+              throw new Error("buttonColor must be of type 'string'");
+            case firstButtonText !== undefined &&
+              typeof firstButtonText !== "string":
+              throw new Error("buttonText must be of type 'string'");
+          }
+
+          leftButton.updateButtonColor(
+            firstButtonColor || defaultValues.leftButtonColor
+          );
+
+          if (secondButtonVisible) {
+            switch (true) {
+              case secondButtonColor !== undefined &&
+                typeof secondButtonColor !== "string":
+                throw new Error("buttonColor must be of type 'string'");
+              case secondButtonText !== undefined &&
+                typeof secondButtonText !== "string":
+                throw new Error("buttonText must be of type 'string'");
+            }
+          }
+          break;
+      }
+      setDialogComponent(null);
+    }
+
+    setTitle(title || "An Error Occurred");
+    setMessage(message || null);
+    setNotificationType(type || "success");
+    setDialogHeight(dialogHeight || defaultValues.dialogHeight);
+    setBackgroundColor(backgroundColor || defaultValues.backgroundColor);
+    leftButton.updateButtonColor(firstButtonColor);
+    leftButton.updateButtonText(firstButtonText);
+    leftButton.updateButtonVisible(firstButtonVisible);
+    leftButton.updateButtonFunction(firstButtonFunction);
+    rightButton.updateButtonColor(secondButtonColor);
+    rightButton.updateButtonText(secondButtonText);
+    rightButton.updateButtonVisible(secondButtonVisible);
+    rightButton.updateButtonFunction(secondButtonFunction);
+
+    Animated.timing(dialogTransformAnim, {
+      toValue: 0.5,
+      duration: 250,
+      useNativeDriver: true,
+    }).start(() => {
+      setDummyDivVisible(true);
+    });
+    Animated.timing(dialogTransformAnim, {
+      toValue: 1,
+      duration: 250,
+      useNativeDriver: true,
+    }).start(() => {
+      setDummyDivDisabled(false);
+    });
   };
 
   function IconDiv(props: { iconType: NotificationChoices; iconSize: number }) {
@@ -181,32 +225,40 @@ function IonNeverNotificationRoot(props: { children: ReactNode }) {
     return <AntDesign name={iconName as any} size={iconSize} color={color} />;
   }
 
-  // function ButtonDiv(props: {
-  //   largeButton: boolean;
-  //   buttonColor: string;
-  //   buttonText: string;
-  //   // buttonFunction: () => void;
-  // }) {
-  //   const { largeButton, buttonColor, buttonText } = props;
+  function ButtonDiv(props: {
+    largeButton: boolean;
+    buttonColor: string;
+    buttonText: string;
+    buttonFunction: () => void;
+  }) {
+    const { largeButton, buttonColor, buttonText, buttonFunction } = props;
 
-  //   const buttonAction = () => {
-  //     // buttonFunction();
-  //     dismissDialog();
-  //   };
-  //   return (
-  //     <View style={{ width: largeButton ? "80%" : "45%" }}>
-  //       <TouchableOpacity
-  //         onPress={() => buttonAction()}
-  //         style={[
-  //           { backgroundColor: buttonColor },
-  //           providerStyleSheet.buttonDiv,
-  //         ]}
-  //       >
-  //         <Text>{buttonText}</Text>
-  //       </TouchableOpacity>
-  //     </View>
-  //   );
-  // }
+    const buttonAction = () => {
+      buttonFunction();
+      dismissDialog();
+    };
+
+    return (
+      <View
+        style={[
+          {
+            width: largeButton ? "80%" : "65%",
+          },
+          providerStyleSheet.buttonOuterDiv,
+        ]}
+      >
+        <TouchableOpacity
+          onPress={buttonAction}
+          style={[
+            { backgroundColor: buttonColor },
+            providerStyleSheet.buttonDiv,
+          ]}
+        >
+          <Text style={providerStyleSheet.dialogButtonText}>{buttonText}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   const IonNeverToast = { show: showToast };
   const IonNeverDialog = { show: showDialog, dismiss: dismissDialog };
@@ -245,60 +297,84 @@ function IonNeverNotificationRoot(props: { children: ReactNode }) {
         </View>
         <Text style={providerStyleSheet.titleText}>{title}</Text>
       </Animated.View>
-      {/* {dummyDivVisible ? (
+      {dummyDivVisible ? (
         <Fragment>
           <TouchableOpacity
             style={providerStyleSheet.dummyDiv}
+            disabled={dummyDivDisabled}
+            activeOpacity={0.6}
             onPress={dismissDialog}
           />
           <Animated.View
-            style={[{ backgroundColor }, providerStyleSheet.dialogDiv]}
+            style={[
+              { backgroundColor, height: dialogHeight },
+              providerStyleSheet.dialogDiv,
+              dialogDivPositioning(dialogHeight),
+              {
+                transform: [
+                  {
+                    scale: dialogTransformAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0, 1],
+                    }),
+                  },
+                ],
+              },
+            ]}
           >
             {DialogComponent ? (
-              <Fragment>
-                <View style={{ zIndex: 1 }}>
-                  <Text>Showed Component</Text>
-                </View>
+              <>
                 <DialogComponent />
-              </Fragment>
+              </>
             ) : (
-              <Fragment>
-                <View>
-                  <IconDiv iconType={notificationType} iconSize={60} />
-                  <View style={providerStyleSheet.dialogTextDiv}>
-                    <Text>{title}</Text>
+              <View style={providerStyleSheet.dialogInnerDiv}>
+                <View style={{ width: "100%" }}>
+                  <View style={providerStyleSheet.dialogIconDiv}>
+                    <IconDiv iconType={notificationType} iconSize={72} />
+                  </View>
+                  <View
+                    style={[
+                      providerStyleSheet.dialogTextDiv,
+                      { marginVertical: 10 },
+                    ]}
+                  >
+                    <Text style={providerStyleSheet.dialogTitleText}>
+                      {title}
+                    </Text>
                   </View>
                   {message ? (
                     <View style={providerStyleSheet.dialogTextDiv}>
-                      <Text>{message}</Text>
+                      <Text style={providerStyleSheet.dialogMessageText}>
+                        {message}
+                      </Text>
                     </View>
                   ) : null}
-                  <View style={providerStyleSheet.dialogButtonDiv}>
-                    {leftButton.buttonVisible ? (
-                      <ButtonDiv
-                        largeButton={!rightButton.buttonVisible}
-                        buttonColor={leftButton.buttonColor}
-                        buttonText={leftButton.buttonText}
-                        // buttonFunction={leftButton.buttonFunction}
-                      />
-                    ) : null}
-                    {rightButton.buttonVisible ? (
-                      <ButtonDiv
-                        largeButton={false}
-                        buttonColor={rightButton.buttonColor}
-                        buttonText={rightButton.buttonText}
-                        // buttonFunction={rightButton.buttonFunction}
-                      />
-                    ) : null}
-                  </View>
                 </View>
-              </Fragment>
+                <View style={providerStyleSheet.dialogButtonDiv}>
+                  {leftButton.buttonVisible ? (
+                    <ButtonDiv
+                      largeButton={!rightButton.buttonVisible}
+                      buttonColor={leftButton.buttonColor}
+                      buttonText={leftButton.buttonText}
+                      buttonFunction={leftButton.buttonFunction}
+                    />
+                  ) : null}
+                  {rightButton.buttonVisible ? (
+                    <ButtonDiv
+                      largeButton={false}
+                      buttonColor={rightButton.buttonColor}
+                      buttonText={rightButton.buttonText}
+                      buttonFunction={rightButton.buttonFunction}
+                    />
+                  ) : null}
+                </View>
+              </View>
             )}
           </Animated.View>
         </Fragment>
       ) : (
         <View />
-      )} */}
+      )}
     </NotificationContext.Provider>
   );
 }

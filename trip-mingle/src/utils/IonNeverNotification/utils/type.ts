@@ -2,25 +2,30 @@
 export type NotificationChoices = "success" | "warning" | "danger" | "info";
 
 type CommonParameters = {
-  type: NotificationChoices;
-  title: string;
   backgroundColor?: string;
   autoClose?: number;
 };
 
-export type ShowToastParams = CommonParameters;
+export type ShowToastParams = CommonParameters & {
+  type: NotificationChoices;
+  title: string;
+};
 
 export type ShowDialogParams = CommonParameters & {
+  type?: NotificationChoices;
+  title?: string;
+} & {
   component?: () => JSX.Element;
   message?: string;
-  leftButtonColor?: string;
-  leftButtonText?: string;
-  leftButtonVisible?: boolean;
-  leftButtonFunction?: () => void;
-  rightButtonColor?: string;
-  rightButtonText?: string;
-  rightButtonVisible?: boolean;
-  rightButtonFunction?: () => void;
+  dialogHeight?: number;
+  firstButtonColor?: string;
+  firstButtonText?: string;
+  firstButtonVisible?: boolean;
+  firstButtonFunction?: () => void;
+  secondButtonColor?: string;
+  secondButtonText?: string;
+  secondButtonVisible?: boolean;
+  secondButtonFunction?: () => void;
 };
 
 export type NotificationContextInfo = {
