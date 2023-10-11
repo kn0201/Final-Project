@@ -98,13 +98,30 @@ const RegisterPageStyleSheet = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  BirthdayModalContainer: {
+    display: flex,
+    marginTop: "45%",
+    marginBottom: "50%",
+    marginHorizontal: "10%",
+    backgroundColor: "white",
+    justifyContent: center,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
   CountryScrollViewContainer: {
     width: "100%",
     height: "80%",
   },
   BirthdayScrollViewContainer: {
     width: "100%",
-    height: "50%",
+    height: "80%",
   },
   ModalButtonContainer: {
     display: flex,
@@ -117,12 +134,14 @@ const RegisterPageStyleSheet = StyleSheet.create({
   ModalText: {
     paddingVertical: 10,
     paddingHorizontal: 20,
+    marginBottom: 8,
     color: iosBlue,
     fontWeight: "bold",
     fontSize: 16,
     textAlign: center,
     alignItems: center,
     justifyContent: center,
+    // backgroundColor: "red",
   },
   uploadContainer: {
     elevation: 2,

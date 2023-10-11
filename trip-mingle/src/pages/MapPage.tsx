@@ -19,7 +19,7 @@ import {
   Keyboard,
 } from "react-native";
 import * as Location from "expo-location";
-import { GOOGLE_API_KEY, placeType } from "../../environments";
+
 import { LocationObject } from "expo-location";
 import Constants from "expo-constants";
 
@@ -38,6 +38,9 @@ type Place = {
   placeName: string;
 };
 
+const GOOGLE_API_KEY = "AIzaSyDkl6HfJvmSSKDGWH0L0Y183PbBuY9fjdo";
+const placeType = "tourist_attraction";
+
 export default function MapPage() {
   // Custom Marker
   const [state, setState] = useState({});
@@ -45,7 +48,7 @@ export default function MapPage() {
   const MyCustomMarkerView = () => {
     return (
       <Image
-        source={require("../assets/Biglogo.webp")}
+        source={require("../assets/fav.png")}
         style={{ width: 30, height: 30 }}
       />
     );
