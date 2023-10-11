@@ -1,4 +1,5 @@
 // Buffer Line
+import { useEffect } from "react";
 import { View, Text, Button } from "react-native";
 import IonNeverNotificationRoot, {
   useIonNeverNotification,
@@ -6,6 +7,8 @@ import IonNeverNotificationRoot, {
 
 function TestingRootApp() {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
+
+  useEffect(() => console.log("re-rendered"), []);
 
   return (
     <IonNeverNotificationRoot>
@@ -59,10 +62,45 @@ function TestingRootApp() {
             IonNeverDialog.show({
               type: "success",
               title: "Shown Successfully",
-              // leftButtonVisible: true,
-              // leftButtonFunction: () => {
-              //   console.log("Left Button Pressed for No Reason");
-              // },
+              firstButtonVisible: true,
+              firstButtonFunction: () => {
+                console.log("Left Button Pressed for No Reason");
+              },
+              secondButtonVisible: true,
+            })
+          }
+        />
+        <View>
+          <Text>Break</Text>
+        </View>
+        <Button
+          title="See warning Dialog"
+          onPress={() =>
+            IonNeverDialog.show({
+              type: "warning",
+              title: "Showed Warning",
+              message: "This is a message",
+              firstButtonVisible: true,
+              firstButtonFunction: () => {
+                console.log("Left Button Pressed for No Reason in another Div");
+              },
+            })
+          }
+        />
+        <View>
+          <Text>Break</Text>
+        </View>
+        <Button
+          title="See Element Dialog"
+          onPress={() =>
+            IonNeverDialog.show({
+              component: function RandomElement() {
+                return (
+                  <View>
+                    <Text>This is a fake element</Text>
+                  </View>
+                );
+              },
             })
           }
         />

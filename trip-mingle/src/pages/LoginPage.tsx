@@ -11,8 +11,8 @@ export default function UserPage() {
       initialRouteName="LoginPage"
       screenOptions={{ headerShown: true }}
     >
-      <Stack.Screen name="login" component={Login} />
-      <Stack.Screen name="register" component={Register} />
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Register" component={Register} />
     </Stack.Navigator>
   );
 }

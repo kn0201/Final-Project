@@ -14,9 +14,7 @@
       
     },
     "owner": "final-project",
-    "assetBundlePatterns": [
-      "*/"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.trip-mingle"

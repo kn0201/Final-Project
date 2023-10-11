@@ -10,10 +10,7 @@ function useButton(
     buttonColor: defaultColor,
     buttonText: defaultText,
     buttonVisible: false,
-    buttonFunction: () => {
-      // console.log(`Pressed ${defaultText}`);
-      dismissFunction();
-    },
+    buttonFunction: () => dismissFunction,
   };
 
   const [buttonColor, setButtonColor] = useState<string>(
@@ -29,7 +26,7 @@ function useButton(
   );
 
   const [buttonFunction, setButtonFunction] = useState<() => void>(
-    defaultLeftButtonInfo.buttonFunction
+    () => defaultLeftButtonInfo.buttonFunction
   );
 
   const updateButtonColor = (buttonColor?: string) => {
@@ -41,11 +38,17 @@ function useButton(
   };
 
   const updateButtonVisible = (buttonVisible?: boolean) => {
-    if (buttonVisible) setButtonVisible(buttonVisible);
+    setButtonVisible(buttonVisible || false);
   };
 
   const updateButtonFunction = (clickFunction?: () => void) => {
-    if (clickFunction) setButtonFunction(clickFunction);
+    const updateFunction = () => {
+      if (clickFunction) clickFunction();
+      dismissFunction();
+      resetButton();
+
+      setButtonFunction(() => updateFunction);
+    };
   };
 
   const resetButton = () => {

@@ -40,5 +40,3 @@ ios/
 android/
 environments.ts
 eas.json
-app.json
-package.json

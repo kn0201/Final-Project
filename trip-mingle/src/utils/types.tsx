@@ -6,6 +6,16 @@ export type LoginInfo = {
   password: string;
 };
 
+export type RegisInfo = {
+  username: string;
+  email: string;
+  password: string;
+  gender: boolean;
+  age: string;
+  country: string;
+  avatar: string;
+};
+
 export type AgendaEventListItem = {
   date: string;
 } & AgendaEntry;

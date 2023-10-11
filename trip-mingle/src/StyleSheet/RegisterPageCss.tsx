@@ -1,6 +1,6 @@
 //Buffer Line
-import { StyleSheet } from "react-native";
-import { flex, center, row, full } from "./StyleSheetHelper";
+import { StatusBar, StyleSheet } from "react-native";
+import { flex, center, row, full, iosBlue } from "./StyleSheetHelper";
 
 const RegisterPageStyleSheet = StyleSheet.create({
   center: {
@@ -10,7 +10,7 @@ const RegisterPageStyleSheet = StyleSheet.create({
     width: "100%",
     flexDirection: row,
   },
-  input: {
+  inputContainer: {
     flexDirection: row,
     alignItems: center,
     height: "7%",
@@ -22,8 +22,8 @@ const RegisterPageStyleSheet = StyleSheet.create({
     textDecorationLine: "none",
   },
   textInput: {
-    width: full,
-    marginLeft: 8,
+    width: 320,
+    // marginLeft: 8,
   },
   passwordContainer: {
     display: flex,
@@ -46,16 +46,107 @@ const RegisterPageStyleSheet = StyleSheet.create({
   },
   genderContainer: {
     display: flex,
-
+    justifyContent: "space-evenly",
     alignItems: center,
     width: "90%",
     flexDirection: row,
-
     margin: 8,
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
     textDecorationLine: "none",
+  },
+  birthdayContainer: {
+    display: flex,
+    justifyContent: center,
+    alignItems: center,
+    height: 50,
+    width: "90%",
+    flexDirection: row,
+    margin: 8,
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    textDecorationLine: "none",
+  },
+  countryContainer: {
+    display: flex,
+    justifyContent: center,
+    alignItems: center,
+    height: 50,
+    width: "90%",
+    flexDirection: row,
+    margin: 8,
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    textDecorationLine: "none",
+  },
+  ModalContainer: {
+    display: flex,
+    marginVertical: "25%",
+    marginHorizontal: "10%",
+    backgroundColor: "white",
+    justifyContent: center,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  CountryScrollViewContainer: {
+    width: "100%",
+    height: "80%",
+  },
+  BirthdayScrollViewContainer: {
+    width: "100%",
+    height: "50%",
+  },
+  ModalButtonContainer: {
+    display: flex,
+    flexDirection: row,
+    width: "100%",
+    height: "10%",
+    justifyContent: "space-evenly",
+    alignItems: center,
+  },
+  ModalText: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    color: iosBlue,
+    fontWeight: "bold",
+    fontSize: 16,
+    textAlign: center,
+    alignItems: center,
+    justifyContent: center,
+  },
+  uploadContainer: {
+    elevation: 2,
+    height: 150,
+    width: 150,
+    backgroundColor: "#efefef",
+    position: "relative",
+    borderRadius: 999,
+    overflow: "hidden",
+    marginBottom: 12,
+  },
+  uploadBtnContainer: {
+    opacity: 0.7,
+    position: "absolute",
+    right: 0,
+    bottom: 0,
+    backgroundColor: "lightgrey",
+    width: "100%",
+    height: "25%",
+  },
+  uploadBtn: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
