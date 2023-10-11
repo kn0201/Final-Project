@@ -1,7 +1,7 @@
 import * as React from "react";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
-import MyBottomTab from "./tabs/bottomTab";
+import MyBottomTab from "./src/tabs/bottomTab";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const Stack = createNativeStackNavigator();
