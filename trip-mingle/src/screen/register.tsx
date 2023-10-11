@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
   Text,
   TouchableOpacity,
@@ -14,18 +13,19 @@ import {
 import LoginPageStyleSheet from "../StyleSheet/LoginPageCss";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { flex } from "../StyleSheet/StyleSheetHelper";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { CheckBox } from "@rneui/themed";
 import RegisterPageStyleSheet from "../StyleSheet/RegisterPageCss";
-
 import { RegisInfo } from "../utils/types";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { countriesList } from "../source/countries";
 import { api } from "../apis/api";
-
+import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 //@ts-ignore
 export default function Register({ navigation }) {
+  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
+
   const [checkGender, setCheck1] = useState(true);
 
   const [selectedAge, setSelectedAge] = useState("Select Your Age Group");
@@ -75,10 +75,6 @@ export default function Register({ navigation }) {
     regisInfo[field as keyof RegisInfo] = value;
   };
 
-  const toggleBirthdayDialog = () => {
-    setVisibleBirthday(!visibleBirthday);
-  };
-
   const toggleCountryDialog = () => {
     setVisibleCountry(!visibleCountry);
   };
@@ -108,9 +104,20 @@ export default function Register({ navigation }) {
     //   const errorObject: any = { ...(error as object) };
     //   console.log(errorObject);
     // }
+    IonNeverDialog.show({
+      type: "success",
+      title: "Shown Successfully",
+      firstButtonVisible: true,
+      firstButtonFunction: () => {
+        console.log("Left Button Pressed for No Reason");
+      },
+      secondButtonVisible: true,
+    });
     console.log(regisInfo);
     navigation.navigate("Users");
   };
+
+  useEffect(() => console.log({ age }), [age]);
 
   return (
     <TouchableWithoutFeedback
@@ -137,7 +144,6 @@ export default function Register({ navigation }) {
             </TouchableOpacity>
           </View>
         </View>
-
         <View style={RegisterPageStyleSheet.inputContainer}>
           <Icon
             style={{
@@ -276,7 +282,65 @@ export default function Register({ navigation }) {
         <View style={LoginPageStyleSheet.center}>
           <TouchableOpacity
             style={RegisterPageStyleSheet.birthdayContainer}
-            onPress={toggleBirthdayDialog}
+            onPress={() => {
+              IonNeverDialog.show({
+                dialogHeight: 500,
+                component: () => {
+                  const [localAge, setLocalAge] = useState<string>(age);
+                  return (
+                    <>
+                      <ScrollView
+                        horizontal={false}
+                        style={
+                          RegisterPageStyleSheet.BirthdayScrollViewContainer
+                        }
+                      >
+                        {[
+                          "18-24",
+                          "25-30",
+                          "31-36",
+                          "37-42",
+                          "42-48",
+                          "48-54",
+                          ">55",
+                        ].map((label, index) => (
+                          <CheckBox
+                            key={index + 1}
+                            title={label}
+                            containerStyle={{
+                              backgroundColor: "transparent",
+                              borderWidth: 0,
+                            }}
+                            checkedIcon="dot-circle-o"
+                            uncheckedIcon="circle-o"
+                            checked={localAge === label}
+                            onPress={() => {
+                              setAge(label);
+                              setLocalAge(label);
+                            }}
+                          />
+                        ))}
+                      </ScrollView>
+                      <View style={RegisterPageStyleSheet.ModalButtonContainer}>
+                        <TouchableOpacity
+                          disabled={localAge === ""}
+                          onPress={() => {
+                            setSelectedAge(localAge);
+                            setBirthdayIcon(!birthdayIcon);
+                            IonNeverDialog.dismiss();
+                            updateInputText("age", localAge);
+                          }}
+                        >
+                          <Text style={RegisterPageStyleSheet.ModalText}>
+                            Confirm
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    </>
+                  );
+                },
+              });
+            }}
           >
             <Icon
               style={{
@@ -290,41 +354,14 @@ export default function Register({ navigation }) {
             <Text>{selectedAge}</Text>
           </TouchableOpacity>
 
-          <TouchableWithoutFeedback onPress={toggleCountryDialog}>
+          {/* <TouchableWithoutFeedback onPress={toggleCountryDialog}>
             <Modal
               animationType="slide"
               transparent={true}
               visible={visibleBirthday}
               onRequestClose={toggleBirthdayDialog}
             >
-              <View style={RegisterPageStyleSheet.ModalContainer}>
-                <View style={RegisterPageStyleSheet.ModalButtonContainer}>
-                  <TouchableOpacity>
-                    <Text
-                      onPress={() => {
-                        setAge(selectedAge);
-                        toggleBirthdayDialog();
-                      }}
-                      style={RegisterPageStyleSheet.ModalText}
-                    >
-                      Cancel
-                    </Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity>
-                    <Text
-                      onPress={() => {
-                        setSelectedAge(age);
-                        setBirthdayIcon(!birthdayIcon);
-                        toggleBirthdayDialog();
-                        updateInputText("age", age);
-                      }}
-                      style={RegisterPageStyleSheet.ModalText}
-                    >
-                      Confirm
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+              <View style={RegisterPageStyleSheet.BirthdayModalContainer}>
                 <ScrollView
                   horizontal={false}
                   style={RegisterPageStyleSheet.BirthdayScrollViewContainer}
@@ -352,9 +389,36 @@ export default function Register({ navigation }) {
                     />
                   ))}
                 </ScrollView>
+                <View style={RegisterPageStyleSheet.ModalButtonContainer}>
+                  <TouchableOpacity>
+                    <Text
+                      onPress={() => {
+                        setAge(selectedAge);
+                        toggleBirthdayDialog();
+                      }}
+                      style={RegisterPageStyleSheet.ModalText}
+                    >
+                      Cancel
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity>
+                    <Text
+                      onPress={() => {
+                        setSelectedAge(age);
+                        setBirthdayIcon(!birthdayIcon);
+                        toggleBirthdayDialog();
+                        updateInputText("age", age);
+                      }}
+                      style={RegisterPageStyleSheet.ModalText}
+                    >
+                      Confirm
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </Modal>
-          </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback> */}
         </View>
         <View style={RegisterPageStyleSheet.center}>
           <TouchableOpacity
@@ -380,6 +444,25 @@ export default function Register({ navigation }) {
               onRequestClose={toggleCountryDialog}
             >
               <View style={RegisterPageStyleSheet.ModalContainer}>
+                <ScrollView
+                  horizontal={false}
+                  style={RegisterPageStyleSheet.CountryScrollViewContainer}
+                >
+                  {countriesList.map((name, index) => (
+                    <CheckBox
+                      key={index + 1}
+                      title={name}
+                      containerStyle={{
+                        backgroundColor: "white",
+                        borderWidth: 0,
+                      }}
+                      checkedIcon="dot-circle-o"
+                      uncheckedIcon="circle-o"
+                      checked={country === name}
+                      onPress={() => setCountry(name)}
+                    />
+                  ))}
+                </ScrollView>
                 <View style={RegisterPageStyleSheet.ModalButtonContainer}>
                   <TouchableOpacity>
                     <Text
@@ -407,25 +490,6 @@ export default function Register({ navigation }) {
                     </Text>
                   </TouchableOpacity>
                 </View>
-                <ScrollView
-                  horizontal={false}
-                  style={RegisterPageStyleSheet.CountryScrollViewContainer}
-                >
-                  {countriesList.map((name, index) => (
-                    <CheckBox
-                      key={index + 1}
-                      title={name}
-                      containerStyle={{
-                        backgroundColor: "white",
-                        borderWidth: 0,
-                      }}
-                      checkedIcon="dot-circle-o"
-                      uncheckedIcon="circle-o"
-                      checked={country === name}
-                      onPress={() => setCountry(name)}
-                    />
-                  ))}
-                </ScrollView>
               </View>
             </Modal>
           </TouchableWithoutFeedback>
