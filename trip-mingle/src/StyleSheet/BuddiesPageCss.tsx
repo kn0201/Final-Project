@@ -10,13 +10,12 @@ const BuddiesPageStyleSheet = StyleSheet.create({
   },
   textInputStyle: {
     height: 40,
-    flex: 1,
     borderWidth: 1,
     paddingLeft: 20,
     margin: 10,
     marginRight: 15,
     borderColor: "#009688",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#fff",
   },
 });
 

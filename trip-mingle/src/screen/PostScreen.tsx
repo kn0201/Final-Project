@@ -275,7 +275,7 @@ export default function TourScreen() {
 
   // Display
   return (
-    <ScrollView style={{ backgroundColor: "#fff" }}>
+    <>
       <TextInput
         style={BuddiesPageStyleSheet.textInputStyle}
         onChangeText={(text) => searchFilterFunction(text)}
@@ -291,6 +291,6 @@ export default function TourScreen() {
           renderItem={ItemView}
         />
       </View>
-    </ScrollView>
+    </>
   );
 }
