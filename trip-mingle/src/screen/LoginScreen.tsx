@@ -10,14 +10,14 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Avatar } from "@rneui/themed";
-import LoginPageStyleSheet from "../StyleSheet/LoginPageCss";
+import LoginScreenStyleSheet from "../StyleSheet/LoginScreenCss";
 import { LoginInfo } from "../utils/types";
 import { api } from "../apis/api";
 import { nullable, number, object, string } from "cast.ts";
 import { center, flex, iosBlue } from "../StyleSheet/StyleSheetHelper";
 
 //@ts-ignore
-export default function Login({ navigation }) {
+export default function LoginScreen({ navigation }) {
   let loginResult = object({
     // role: nullable(string()),
     // id: nullable(number()),
@@ -56,8 +56,8 @@ export default function Login({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={LoginPageStyleSheet.container}>
-        <View style={LoginPageStyleSheet.center}>
+      <View style={LoginScreenStyleSheet.container}>
+        <View style={LoginScreenStyleSheet.center}>
           <Avatar
             size={150}
             rounded
@@ -67,12 +67,12 @@ export default function Login({ navigation }) {
             source={require("../assets/yukimin.png")}
           />
 
-          <Text style={LoginPageStyleSheet.welcome}>Welcome</Text>
+          <Text style={LoginScreenStyleSheet.welcome}>Welcome</Text>
           <Text style={{ marginBottom: 16 }}>
             Log in to explore more feature
           </Text>
         </View>
-        <View style={LoginPageStyleSheet.input}>
+        <View style={LoginScreenStyleSheet.input}>
           <Icon
             style={{
               display: flex,
@@ -98,7 +98,7 @@ export default function Login({ navigation }) {
             onPress={() => clearInputs.username()}
           />
         </View>
-        <View style={LoginPageStyleSheet.input}>
+        <View style={LoginScreenStyleSheet.input}>
           <Icon
             style={{
               display: flex,
@@ -126,12 +126,12 @@ export default function Login({ navigation }) {
           />
         </View>
         <View style={{ width: "100%" }}>
-          <Text style={LoginPageStyleSheet.forgotPW}>Forgot Password?</Text>
+          <Text style={LoginScreenStyleSheet.forgotPW}>Forgot Password?</Text>
         </View>
 
-        <View style={LoginPageStyleSheet.center}>
-          <TouchableOpacity style={LoginPageStyleSheet.login} onPress={login}>
-            <Text style={LoginPageStyleSheet.loginText}>Continue</Text>
+        <View style={LoginScreenStyleSheet.center}>
+          <TouchableOpacity style={LoginScreenStyleSheet.login} onPress={login}>
+            <Text style={LoginScreenStyleSheet.loginText}>Continue</Text>
           </TouchableOpacity>
         </View>
 
@@ -139,7 +139,7 @@ export default function Login({ navigation }) {
           <Text style={{ width: "90%", margin: 12, padding: 10 }}>
             Don't have an account?{" "}
             <Text
-              style={LoginPageStyleSheet.signUp}
+              style={LoginScreenStyleSheet.signUp}
               onPress={() => navigation.navigate("Register")}
             >
               Sign up

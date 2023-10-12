@@ -1,5 +1,4 @@
 import { StyleSheet, Text, View } from "react-native";
-import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Fontisto from "react-native-vector-icons/Fontisto";
@@ -10,10 +9,12 @@ import MapPage from "../pages/MapPage";
 import PlanningPage from "../pages/PlanningPage";
 import UserPage from "../pages/UserPage";
 import LoginPage from "../pages/LoginPage";
+import { useEffect } from "react";
 
 const Tab = createBottomTabNavigator();
 
 function MyTab() {
+  useEffect;
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen
