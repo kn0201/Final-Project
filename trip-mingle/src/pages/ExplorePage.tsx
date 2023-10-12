@@ -1,5 +1,4 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import TourScreen from "../screen/PostScreen";
@@ -11,7 +10,8 @@ const Stack = createStackNavigator();
 export default function ExplorePage() {
   return (
     <Stack.Navigator
-      //   mode="modal"
+      //@ts-ignore
+      mode="modal"
       screenOptions={{
         cardStyle: {
           backgroundColor: "white",
