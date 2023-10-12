@@ -1,4 +1,10 @@
-import { StyleSheet, Text, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import * as React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import UserPageTopTab from "../tabs/UserPageTopTab";

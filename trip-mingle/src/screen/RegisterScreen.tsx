@@ -23,6 +23,7 @@ import * as ImagePicker from "expo-image-picker";
 import { countriesList } from "../source/countries";
 import { api } from "../apis/api";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
+
 //@ts-ignore
 export default function RegisterScreen({ navigation }) {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
