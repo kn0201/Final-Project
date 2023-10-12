@@ -23,7 +23,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import BuddiesPageStyleSheet from "../StyleSheet/BuddiesPageCss";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwt_decode from "jwt-decode";
-import AddPostNavigator from "../pages/AddPostNavigator";
+import AddPostNavigator from "../pages/ExplorePage";
 
 type Post = {
   id: number;
@@ -381,7 +381,7 @@ export default function TourScreen({ navigation }) {
           renderItem={ItemView}
         />
       </View>
-      <Button title="Add" onPress={() => navigation.navigate("AddPost")} />
+      <Button title="Add" onPress={() => navigation.navigate("Add Post")} />
     </>
   );
 }

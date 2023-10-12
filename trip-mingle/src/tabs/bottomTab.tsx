@@ -4,13 +4,13 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import HomeScreen from "../pages/Homepage";
-import BuddiesPage from "../pages/FindBuddiesPage";
+import BuddiesPage from "./ExplorePageTopTab";
 import MapPage from "../pages/MapPage";
 import PlanningPage from "../pages/PlanningPage";
 import UserPage from "../pages/UserPage";
 import LoginPage from "../pages/LoginPage";
 import { useEffect } from "react";
-import AddPostNavigator from "../pages/AddPostNavigator";
+import ExplorePage from "../pages/ExplorePage";
 
 const Tab = createBottomTabNavigator();
 
@@ -29,10 +29,10 @@ function MyTab() {
         }}
       />
       <Tab.Screen
-        name="Find Buddies"
-        component={AddPostNavigator}
+        name="Explore"
+        component={ExplorePage}
         options={{
-          tabBarLabel: "Find Buddies",
+          tabBarLabel: "Explore",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="search" color={color} size={size} />
           ),
