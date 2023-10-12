@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   FlatList,
   ListRenderItemInfo,
-  Button,
 } from "react-native";
 import {
   ContextType,
@@ -16,14 +15,12 @@ import {
   useEffect,
   useState,
 } from "react";
-import { SpeedDial } from "@rneui/themed";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import BuddiesPageStyleSheet from "../StyleSheet/BuddiesPageCss";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwt_decode from "jwt-decode";
-import AddPostNavigator from "../pages/ExplorePage";
 
 type Post = {
   id: number;
@@ -294,6 +291,7 @@ export default function TourScreen({ navigation }) {
             <Text
               style={{
                 marginRight: 10,
+                fontWeight: "600",
               }}
             >
               {item.username}
@@ -381,7 +379,12 @@ export default function TourScreen({ navigation }) {
           renderItem={ItemView}
         />
       </View>
-      <Button title="Add" onPress={() => navigation.navigate("Add Post")} />
+      <MaterialIcons
+        name="add-circle"
+        size={60}
+        style={{ position: "absolute", bottom: 10, right: 10 }}
+        onPress={() => navigation.navigate("Add Post")}
+      />
     </>
   );
 }
