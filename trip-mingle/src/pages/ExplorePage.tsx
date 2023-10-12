@@ -10,16 +10,15 @@ const Stack = createStackNavigator();
 export default function ExplorePage() {
   return (
     <Stack.Navigator
-      //@ts-ignore
-      mode="modal"
       screenOptions={{
+        presentation: "modal",
         cardStyle: {
           backgroundColor: "white",
         },
       }}
     >
       <Stack.Screen
-        name="Explore"
+        name="Cancel"
         component={BuddiesPage}
         options={{ headerShown: false }}
       />
