@@ -2,7 +2,7 @@
 import { StyleSheet } from "react-native";
 import { center, column, flex, full, iosBlue, row } from "./StyleSheetHelper";
 
-const LoginPageStyleSheet = StyleSheet.create({
+const LoginScreenStyleSheet = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: center,
@@ -69,4 +69,4 @@ const LoginPageStyleSheet = StyleSheet.create({
   },
 });
 
-export default LoginPageStyleSheet;
+export default LoginScreenStyleSheet;

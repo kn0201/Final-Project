@@ -1,20 +1,22 @@
 import { StyleSheet, Text, View } from "react-native";
-import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import HomeScreen from "../pages/Homepage";
-import BuddiesPage from "../pages/FindBuddiesPage";
+import BuddiesPage from "./ExplorePageTopTab";
 import MapPage from "../pages/MapPage";
 import PlanningPage from "../pages/SchedulePage";
 import UserPage from "../pages/UserPage";
 import LoginPage from "../pages/LoginPage";
+import { useEffect } from "react";
+import ExplorePage from "../pages/ExplorePage";
 import SchedulePage from "../pages/SchedulePage";
 
 const Tab = createBottomTabNavigator();
 
 function MyTab() {
+  useEffect;
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen
@@ -28,10 +30,10 @@ function MyTab() {
         }}
       />
       <Tab.Screen
-        name="Find Buddies"
-        component={BuddiesPage}
+        name="Explore"
+        component={ExplorePage}
         options={{
-          tabBarLabel: "Find Buddies",
+          tabBarLabel: "Explore",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="search" color={color} size={size} />
           ),
