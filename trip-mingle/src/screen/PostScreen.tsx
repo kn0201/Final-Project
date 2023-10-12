@@ -3,7 +3,6 @@ import {
   Text,
   Image,
   TextInput,
-  ScrollView,
   TouchableOpacity,
   FlatList,
   ListRenderItemInfo,
@@ -17,19 +16,23 @@ import {
   useEffect,
   useState,
 } from "react";
+import { SpeedDial } from "@rneui/themed";
+import Fontisto from "react-native-vector-icons/Fontisto";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import BuddiesPageStyleSheet from "../StyleSheet/BuddiesPageCss";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwt_decode from "jwt-decode";
-import Fontisto from "react-native-vector-icons/Fontisto";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import AddPostNavigator from "../pages/AddPostNavigator";
 
 type Post = {
   id: number;
   avatar_path: string;
   username: string;
+  rating: number;
   title: string;
   content: string;
-  trip_country: string[] | null;
+  trip_country: string;
   trip_location: string[] | null;
   trip_period: string | null;
   trip_headcount: number | null;
@@ -41,7 +44,18 @@ type Post = {
   preferred_hobby: string[] | null;
   status: string;
   created_at: string;
+  like: number[] | null;
+  reply: Reply[] | null;
   view: number;
+};
+
+type Reply = {
+  id: number;
+  avatar_path: string;
+  username: string;
+  content: string;
+  application: boolean;
+  created_at: string;
 };
 
 // type UserContextType = {
@@ -64,7 +78,8 @@ type Post = {
 //   );
 // };
 
-export default function TourScreen() {
+//@ts-ignore
+export default function TourScreen({ navigation }) {
   // Configure user
   // const [users, setUsers] = useState([]);
   // const userContext = useContext(UserType);
@@ -95,14 +110,32 @@ export default function TourScreen() {
   //   return null;
   // }
 
+  // Star rating
+  const setStarRating = (rating: number) => {
+    rating = Math.round(rating * 2) / 2;
+    let output = [];
+    for (var i = rating; i >= 1; i--) output.push(1);
+    if (i >= 0.5 && i < 1) output.push(0.5);
+    for (let i = 5 - rating; i >= 1; i--) output.push(0);
+    return output.map((star, index) => (
+      <MaterialCommunityIcons
+        key={index}
+        name={
+          star === 1 ? "star" : star === 0.5 ? "star-half-full" : "star-outline"
+        }
+        color={"#DEB934"}
+        size={16}
+      />
+    ));
+  };
+
   // Select post
   const [selectedPostID, setSelectedPostIDs] = useState(0);
-
   const handlePostClick = (id: number) => {
-    if (selectedPostID === 0) {
-      setSelectedPostIDs(id);
-    } else {
+    if (selectedPostID == id) {
       setSelectedPostIDs(0);
+    } else {
+      setSelectedPostIDs(id);
     }
   };
 
@@ -114,9 +147,10 @@ export default function TourScreen() {
       id: 1,
       avatar_path: "https://cdn-icons-png.flaticon.com/128/149/149071.png",
       username: "testuser",
+      rating: 3.6,
       title: "testtitle",
       content: "testcontent",
-      trip_country: ["Japan"],
+      trip_country: "Japan",
       trip_location: ["Disneyland Tokyo"],
       trip_period: "TODO",
       trip_headcount: 3,
@@ -125,18 +159,54 @@ export default function TourScreen() {
       preferred_age: ["20-30"],
       preferred_language: ["Chinese", "English"],
       preferred_skill: ["Driving"],
-      preferred_hobby: null,
+      preferred_hobby: [],
       status: "complete",
       created_at: "TODO",
+      like: [],
+      reply: [
+        {
+          id: 1,
+          avatar_path: "https://cdn-icons-png.flaticon.com/128/149/149071.png",
+          username: "testuser2",
+          content: "testcomment",
+          application: true,
+          created_at: "TODO1",
+        },
+        {
+          id: 2,
+          avatar_path: "https://cdn-icons-png.flaticon.com/128/149/149071.png",
+          username: "testuser3",
+          content: "testcomment1",
+          application: true,
+          created_at: "TODO1",
+        },
+        {
+          id: 3,
+          avatar_path: "https://cdn-icons-png.flaticon.com/128/149/149071.png",
+          username: "testuser4",
+          content: "testcomment2",
+          application: false,
+          created_at: "TODO1",
+        },
+        {
+          id: 4,
+          avatar_path: "https://cdn-icons-png.flaticon.com/128/149/149071.png",
+          username: "testuser4",
+          content: "testcomment3",
+          application: true,
+          created_at: "TODO1",
+        },
+      ],
       view: 0,
     },
     {
       id: 2,
       avatar_path: "https://cdn-icons-png.flaticon.com/128/149/149071.png",
       username: "testuser1",
+      rating: 4.2,
       title: "testtitle1",
       content: "testcontent1",
-      trip_country: ["Thailand"],
+      trip_country: "Thailand",
       trip_location: [],
       trip_period: "TODO1",
       trip_headcount: 2,
@@ -148,6 +218,8 @@ export default function TourScreen() {
       preferred_hobby: ["Hiking"],
       status: "open",
       created_at: "TODO",
+      like: [],
+      reply: [],
       view: 0,
     },
   ]);
@@ -171,9 +243,7 @@ export default function TourScreen() {
             (item.title && item.title.toUpperCase().includes(textData)) ||
             (item.content && item.content.toUpperCase().includes(textData)) ||
             (item.trip_country &&
-              item.trip_country.some((country) =>
-                country.toUpperCase().includes(textData),
-              )) ||
+              item.trip_country.toUpperCase().includes(textData)) ||
             (item.trip_location &&
               item.trip_location.some((location) =>
                 location.toUpperCase().includes(textData),
@@ -207,7 +277,6 @@ export default function TourScreen() {
             style={{
               flexDirection: "row",
               alignItems: "center",
-              gap: 10,
             }}
           >
             <Image
@@ -216,12 +285,20 @@ export default function TourScreen() {
                 height: 30,
                 borderRadius: 20,
                 resizeMode: "contain",
+                marginRight: 10,
               }}
               source={{
                 uri: item.avatar_path,
               }}
             />
-            <Text>{item.username}</Text>
+            <Text
+              style={{
+                marginRight: 10,
+              }}
+            >
+              {item.username}
+            </Text>
+            {setStarRating(item.rating)}
           </View>
           <View
             style={{
@@ -248,15 +325,28 @@ export default function TourScreen() {
         <View
           style={{
             flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
             marginLeft: 10,
             paddingBottom: 20,
           }}
         >
-          <Text style={{ fontWeight: "800" }}>#{item.id} </Text>
-          <Text style={{ fontWeight: "600" }}>Title: </Text>
-          <Text>{item.title} • </Text>
-          <Text style={{ fontWeight: "600" }}>Period: </Text>
-          <Text>{item.trip_period}</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            <Text style={{ fontWeight: "800" }}>#{item.id} </Text>
+            <Text style={{ fontWeight: "600" }}>Title: </Text>
+            <Text>{item.title} • </Text>
+            <Text style={{ fontWeight: "600" }}>Period: </Text>
+            <Text>{item.trip_period}</Text>
+          </View>
+          <View style={{ marginRight: 10 }}>
+            <MaterialCommunityIcons name="comment-plus" size={16} />
+          </View>
         </View>
       </TouchableOpacity>
     );
@@ -291,6 +381,7 @@ export default function TourScreen() {
           renderItem={ItemView}
         />
       </View>
+      <Button title="Add" onPress={() => navigation.navigate("AddPost")} />
     </>
   );
 }
