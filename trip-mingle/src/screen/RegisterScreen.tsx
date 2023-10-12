@@ -11,12 +11,12 @@ import {
   FlatList,
 } from "react-native";
 
-import LoginPageStyleSheet from "../StyleSheet/LoginPageCss";
+import LoginPageStyleSheet from "../StyleSheet/LoginScreenCss";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { flex } from "../StyleSheet/StyleSheetHelper";
 import { useRef, useState, useEffect, SetStateAction } from "react";
 import { CheckBox, SearchBar } from "@rneui/themed";
-import RegisterPageStyleSheet from "../StyleSheet/RegisterPageCss";
+import RegisterScreenStyleSheet from "../StyleSheet/RegisterScreenCss";
 import { RegisInfo } from "../utils/types";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
@@ -24,7 +24,7 @@ import { countriesList } from "../source/countries";
 import { api } from "../apis/api";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 //@ts-ignore
-export default function Register({ navigation }) {
+export default function RegisterScreen({ navigation }) {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
 
   const [checkGender, setCheck1] = useState(true);
@@ -127,24 +127,24 @@ export default function Register({ navigation }) {
       }}
     >
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <View style={RegisterPageStyleSheet.uploadContainer}>
+        <View style={RegisterScreenStyleSheet.uploadContainer}>
           {image && (
             <Image
               source={{ uri: image }}
               style={{ width: 150, height: 150 }}
             />
           )}
-          <View style={RegisterPageStyleSheet.uploadBtnContainer}>
+          <View style={RegisterScreenStyleSheet.uploadBtnContainer}>
             <TouchableOpacity
               onPress={addImage}
-              style={RegisterPageStyleSheet.uploadBtn}
+              style={RegisterScreenStyleSheet.uploadBtn}
             >
               <Text>{image ? "Edit" : "Upload"} Image</Text>
               <AntDesign name="camera" size={20} color="black" />
             </TouchableOpacity>
           </View>
         </View>
-        <View style={RegisterPageStyleSheet.inputContainer}>
+        <View style={RegisterScreenStyleSheet.inputContainer}>
           <Icon
             style={{
               display: flex,
@@ -162,7 +162,7 @@ export default function Register({ navigation }) {
             onChangeText={(text: string) => updateInputText("username", text)}
             onEndEditing={() => Keyboard.dismiss()}
             placeholder="Username"
-            style={RegisterPageStyleSheet.textInput}
+            style={RegisterScreenStyleSheet.textInput}
           ></TextInput>
           <Icon
             style={{ display: flex, justifyContent: "flex-end" }}
@@ -171,7 +171,7 @@ export default function Register({ navigation }) {
             onPress={() => clearInputs.username()}
           />
         </View>
-        <View style={RegisterPageStyleSheet.inputContainer}>
+        <View style={RegisterScreenStyleSheet.inputContainer}>
           <Icon
             style={{
               display: flex,
@@ -190,7 +190,7 @@ export default function Register({ navigation }) {
             onEndEditing={() => Keyboard.dismiss()}
             keyboardType="email-address"
             placeholder="Email"
-            style={RegisterPageStyleSheet.textInput}
+            style={RegisterScreenStyleSheet.textInput}
           ></TextInput>
           <Icon
             style={{ display: flex, justifyContent: "flex-end" }}
@@ -199,8 +199,8 @@ export default function Register({ navigation }) {
             onPress={() => clearInputs.email()}
           />
         </View>
-        <View style={RegisterPageStyleSheet.passwordContainer}>
-          <View style={RegisterPageStyleSheet.password}>
+        <View style={RegisterScreenStyleSheet.passwordContainer}>
+          <View style={RegisterScreenStyleSheet.password}>
             <Icon
               style={{
                 display: flex,
@@ -212,7 +212,7 @@ export default function Register({ navigation }) {
             />
 
             <TextInput
-              style={RegisterPageStyleSheet.textInput}
+              style={RegisterScreenStyleSheet.textInput}
               ref={(input: any) => {
                 clearInputs.password = () => input?.clear();
               }}
@@ -229,7 +229,7 @@ export default function Register({ navigation }) {
             />
           </View>
           <Text>─────────────────────────</Text>
-          <View style={RegisterPageStyleSheet.password}>
+          <View style={RegisterScreenStyleSheet.password}>
             <Icon
               style={{
                 display: flex,
@@ -241,7 +241,7 @@ export default function Register({ navigation }) {
             />
 
             <TextInput
-              style={RegisterPageStyleSheet.textInput}
+              style={RegisterScreenStyleSheet.textInput}
               ref={(input: any) => {
                 clearInputs.confirmPassword = () => input?.clear();
               }}
@@ -257,7 +257,7 @@ export default function Register({ navigation }) {
             />
           </View>
         </View>
-        <View style={RegisterPageStyleSheet.genderContainer}>
+        <View style={RegisterScreenStyleSheet.genderContainer}>
           <CheckBox
             center
             title="Male"
@@ -281,7 +281,7 @@ export default function Register({ navigation }) {
         </View>
         <View style={LoginPageStyleSheet.center}>
           <TouchableOpacity
-            style={RegisterPageStyleSheet.birthdayContainer}
+            style={RegisterScreenStyleSheet.birthdayContainer}
             onPress={() => {
               IonNeverDialog.show({
                 dialogHeight: 500,
@@ -292,7 +292,7 @@ export default function Register({ navigation }) {
                       <ScrollView
                         horizontal={false}
                         style={
-                          RegisterPageStyleSheet.BirthdayScrollViewContainer
+                          RegisterScreenStyleSheet.BirthdayScrollViewContainer
                         }
                       >
                         {[
@@ -321,7 +321,9 @@ export default function Register({ navigation }) {
                           />
                         ))}
                       </ScrollView>
-                      <View style={RegisterPageStyleSheet.ModalButtonContainer}>
+                      <View
+                        style={RegisterScreenStyleSheet.ModalButtonContainer}
+                      >
                         <TouchableOpacity
                           disabled={localAge === ""}
                           onPress={() => {
@@ -331,7 +333,7 @@ export default function Register({ navigation }) {
                             updateInputText("age", localAge);
                           }}
                         >
-                          <Text style={RegisterPageStyleSheet.ModalText}>
+                          <Text style={RegisterScreenStyleSheet.ModalText}>
                             Confirm
                           </Text>
                         </TouchableOpacity>
@@ -354,9 +356,9 @@ export default function Register({ navigation }) {
             <Text>{selectedAge}</Text>
           </TouchableOpacity>
         </View>
-        <View style={RegisterPageStyleSheet.center}>
+        <View style={RegisterScreenStyleSheet.center}>
           <TouchableOpacity
-            style={RegisterPageStyleSheet.countryContainer}
+            style={RegisterScreenStyleSheet.countryContainer}
             onPress={() => {
               IonNeverDialog.show({
                 dialogHeight: 800,
@@ -386,7 +388,7 @@ export default function Register({ navigation }) {
                   };
                   type CountryProps = { name: string };
                   const Country = ({ name }: CountryProps) => (
-                    <View style={RegisterPageStyleSheet.item}>
+                    <View>
                       <CheckBox
                         title={name}
                         containerStyle={{
@@ -418,31 +420,9 @@ export default function Register({ navigation }) {
                         data={matchedCountryList}
                         renderItem={({ item }) => <Country name={item.name} />}
                       />
-                      {/* <ScrollView
-                        horizontal={false}
-                        style={
-                          RegisterPageStyleSheet.CountryScrollViewContainer
-                        }
+                      <View
+                        style={RegisterScreenStyleSheet.ModalButtonContainer}
                       >
-                        {countryList.map((name, index) => (
-                          <CheckBox
-                            key={index + 1}
-                            title={name}
-                            containerStyle={{
-                              backgroundColor: "transparent",
-                              borderWidth: 0,
-                            }}
-                            checkedIcon="dot-circle-o"
-                            uncheckedIcon="circle-o"
-                            checked={localCountry === name}
-                            onPress={() => {
-                              setCountry(name);
-                              setLocalCountry(name);
-                            }}
-                          />
-                        ))}
-                      </ScrollView> */}
-                      <View style={RegisterPageStyleSheet.ModalButtonContainer}>
                         <TouchableOpacity
                           disabled={localCountry === ""}
                           onPress={() => {
@@ -452,7 +432,7 @@ export default function Register({ navigation }) {
                             updateInputText("country", country);
                           }}
                         >
-                          <Text style={RegisterPageStyleSheet.ModalText}>
+                          <Text style={RegisterScreenStyleSheet.ModalText}>
                             Confirm
                           </Text>
                         </TouchableOpacity>
@@ -481,7 +461,7 @@ export default function Register({ navigation }) {
               visible={visibleCountry}
               onRequestClose={toggleCountryDialog}
             >
-              <View style={RegisterPageStyleSheet.ModalContainer}></View>
+              <View style={RegisterScreenStyleSheet.ModalContainer}></View>
             </Modal>
           </TouchableWithoutFeedback>
         </View>

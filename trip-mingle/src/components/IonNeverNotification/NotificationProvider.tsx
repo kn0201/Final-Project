@@ -158,14 +158,6 @@ function IonNeverNotificationRoot(props: { children: ReactNode }) {
           throw new Error("backgroundColor must be of type 'string'");
         case autoClose !== undefined && typeof autoClose !== "number":
           throw new Error("autoClose must be of type 'number'");
-        case dialogHeight !== undefined:
-          if (typeof dialogHeight !== "number") {
-            throw new Error("dialogHeight must be of type 'number'");
-          } else if (dialogHeight < defaultValues.dialogHeight) {
-            throw new Error(
-              `minimum dialogHeight = ${defaultValues.dialogHeight}`
-            );
-          }
         case message !== undefined && typeof message !== "string":
           throw new Error("message must be of type 'string' if provided");
         case firstButtonVisible:

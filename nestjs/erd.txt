@@ -22,8 +22,9 @@ username varchar(255) unique
 email varchar(255) unique
 password varchar(255)
 gender boolean
-age integer
+age varchar(255)
 country varchar(255)
+rating decimal
 language varchar(255) NULL
 skill varchar(255) NULL
 hobby varchar(255) NULL
@@ -37,7 +38,16 @@ comment
 id integer PK
 post_id integer FK >- post.id
 user_id integer FK - users.id
+content text
 is_delete boolean
+
+
+application
+-----------
+id integer PK
+post_id integer FK >- post.id
+user_id integer FK >- users.id
+status boolean
 
 
 chatroom
@@ -52,7 +62,7 @@ user2_is_delete boolean
 chat_record
 -----------
 id integer PK
-chatroom_id integer FK >0- chatroom.id
+chatroom_id integer FK >- chatroom.id
 user_id integer FK >- users.id
 message varchar(255)
 
@@ -60,10 +70,9 @@ message varchar(255)
 image
 -----
 id integer PK
-post_id integer NULL FK >0- post.id
+post_id integer NULL FK >- post.id
 user_id integer FK >- users.id
 comment_id integer NULL FK >- comment.id
-user_location_id integer NULL FK >0- user_location.id
 path text
 is_delete boolean
 
@@ -78,8 +87,12 @@ title varchar(255)
 content varchar(255)
 location_id integer NULL FK >- system_location.id
 time varchar(255) NULL
-headcount varchar NULL
-budget varchar NULL
+headcount varchar(255) NULL
+budget varchar(255) NULL
+status varchar(255)
+age varchar(255) NULL
+gender boolean NULL
+country varchar(255)
 view integer
 is_delete boolean
 
@@ -119,21 +132,21 @@ planing
 id integer PK
 user_id integer FK >- users.id
 privacy boolean
-title varchar
+title varchar(255)
 
 
 plan_detail
 -----------
 id integer PK
-planing_id integer FK >0- planing.id
-date timestamptz
+planing_id integer FK >- planing.id
+date timestamp
 
 
 daily_event
 -----------
 id integer PK
 detail_id integer FK >- plan_detail.id
-time timestamptz
+time timestamp
 location varchar(255)
 remark varchar(255)
 
@@ -144,7 +157,7 @@ id integer PK
 user_id integer FK >- users.id
 post_id integer NULL FK >- post.id
 image_id integer NULL FK >- image.id
-system_location_id integer FK >- system_location.id
+system_location_id integer NULL FK >- system_location.id
 location point
 is_delete boolean
 
@@ -156,26 +169,27 @@ name varchar(255)
 location point
 
 
-# zoom: 0.430
-# view: (142, -90)
+# zoom: 0.838
+# view: (128, -86)
 # text-bg: #6495ed
 # text-color: #000000
 # diagram-bg: #f5f5f5
 # diagram-text: #f5f5f5
 # table-bg: #ffffff
 # table-text: #000000
-# users (276, 646, #283006)
-# comment (840, 309, #18623c)
-# chatroom (-19, 796, #51144d)
-# chat_record (-20, 647, #0f1d59)
-# image (886, 105, #232e3a)
-# post (304, 257, #5a6233)
-# hashtags (325, 154, #3e4856)
-# like (246, 547, #124546)
-# bookmark (445, 545, #093a1f)
-# complaint (318, 959, #5f5730)
-# planing (1020, 371, #33325c)
-# plan_detail (947, 472, #424616)
-# daily_event (931, 595, #4c1003)
-# user_location (658, 709, #01081d)
-# system_location (681, 906, #391f3e)
+# users (263, 533, #576129)
+# comment (-106, 91, #5b2b5e)
+# application (1110, 414, #0c1c2d)
+# chatroom (-110, 906, #4f1014)
+# chat_record (-108, 716, #342d33)
+# image (1074, 139, #0f5556)
+# post (285, 96, #4b6117)
+# hashtags (-120, 290, #0b151e)
+# like (-104, 442, #3c3e47)
+# bookmark (-102, 595, #1e2e46)
+# complaint (313, 930, #2b3601)
+# planing (1088, 585, #023d63)
+# plan_detail (1074, 760, #0d0500)
+# daily_event (1073, 910, #383902)
+# user_location (668, 715, #320c51)
+# system_location (702, 970, #3e191b)
