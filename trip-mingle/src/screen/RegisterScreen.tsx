@@ -23,6 +23,7 @@ import * as ImagePicker from "expo-image-picker";
 import { countriesList } from "../source/countries";
 import { api } from "../apis/api";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
+import SelectCountry from "../components/selectCountry";
 
 //@ts-ignore
 export default function RegisterScreen({ navigation }) {
@@ -32,13 +33,9 @@ export default function RegisterScreen({ navigation }) {
 
   const [selectedAge, setSelectedAge] = useState("Select Your Age Group");
   const [age, setAge] = useState("");
-  const [birthdayIcon, setBirthdayIcon] = useState(true);
-  const [visibleBirthday, setVisibleBirthday] = useState(false);
 
   const [selectedCountry, setSelectedCountry] = useState("Country");
   const [country, setCountry] = useState("");
-  const [countryIcon, setCountryIcon] = useState(true);
-  const [visibleCountry, setVisibleCountry] = useState(false);
 
   const [image, setImage] = useState(null);
 
@@ -77,9 +74,6 @@ export default function RegisterScreen({ navigation }) {
     regisInfo[field as keyof RegisInfo] = value;
   };
 
-  const toggleCountryDialog = () => {
-    setVisibleCountry(!visibleCountry);
-  };
   let countriesListData = countriesList;
 
   const addImage = async () => {
@@ -124,7 +118,6 @@ export default function RegisterScreen({ navigation }) {
     <TouchableWithoutFeedback
       onPress={() => {
         Keyboard.dismiss;
-        toggleCountryDialog;
       }}
     >
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -329,7 +322,6 @@ export default function RegisterScreen({ navigation }) {
                           disabled={localAge === ""}
                           onPress={() => {
                             setSelectedAge(localAge);
-                            setBirthdayIcon(!birthdayIcon);
                             IonNeverDialog.dismiss();
                             updateInputText("age", localAge);
                           }}
@@ -364,81 +356,11 @@ export default function RegisterScreen({ navigation }) {
               IonNeverDialog.show({
                 dialogHeight: 800,
                 component: () => {
-                  const [localCountry, setLocalCountry] =
-                    useState<string>(country);
-                  const [search, setSearch] = useState("");
-
-                  const [countryList, setCountryList] =
-                    useState(countriesListData);
-
-                  const [matchedCountryList, setMatchedCountryList] =
-                    useState(countriesListData);
-
-                  useEffect(() => {
-                    setMatchedCountryList(
-                      countryList.filter((country) =>
-                        country.name
-                          .toLocaleLowerCase()
-                          .includes(search.toLocaleLowerCase())
-                      )
-                    );
-                  }, [search, countryList]);
-
-                  const updateSearch = (search: string) => {
-                    setSearch(search);
-                  };
-                  type CountryProps = { name: string };
-                  const Country = ({ name }: CountryProps) => (
-                    <View>
-                      <CheckBox
-                        title={name}
-                        containerStyle={{
-                          backgroundColor: "transparent",
-                          borderWidth: 0,
-                        }}
-                        checkedIcon="dot-circle-o"
-                        uncheckedIcon="circle-o"
-                        checked={localCountry === name}
-                        onPress={() => {
-                          setCountry(name);
-                          setLocalCountry(name);
-                        }}
-                      />
-                    </View>
-                  );
                   return (
-                    <>
-                      <SearchBar
-                        placeholder="Type Here..."
-                        onChangeText={updateSearch}
-                        value={search}
-                        containerStyle={{ borderRadius: 10 }}
-                        inputContainerStyle={{ backgroundColor: "white" }}
-                        lightTheme={true}
-                      />
-                      <Text>Result : {search}</Text>
-                      <FlatList
-                        data={matchedCountryList}
-                        renderItem={({ item }) => <Country name={item.name} />}
-                      />
-                      <View
-                        style={RegisterScreenStyleSheet.ModalButtonContainer}
-                      >
-                        <TouchableOpacity
-                          disabled={localCountry === ""}
-                          onPress={() => {
-                            setSelectedCountry(localCountry);
-                            setCountryIcon(!countryIcon);
-                            IonNeverDialog.dismiss();
-                            updateInputText("country", country);
-                          }}
-                        >
-                          <Text style={RegisterScreenStyleSheet.ModalText}>
-                            Confirm
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-                    </>
+                    <SelectCountry
+                      setSelectedCountry={setSelectedCountry}
+                      updateInputText={updateInputText}
+                    />
                   );
                 },
               });
@@ -450,21 +372,11 @@ export default function RegisterScreen({ navigation }) {
                 justifyContent: "flex-start",
                 marginEnd: 4,
               }}
-              name={country === "" ? "earth" : ""}
+              name={selectedCountry === "" ? "earth" : ""}
               size={20}
             />
             <Text>{selectedCountry}</Text>
           </TouchableOpacity>
-          <TouchableWithoutFeedback onPress={toggleCountryDialog}>
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={visibleCountry}
-              onRequestClose={toggleCountryDialog}
-            >
-              <View style={RegisterScreenStyleSheet.ModalContainer}></View>
-            </Modal>
-          </TouchableWithoutFeedback>
         </View>
         <View style={LoginPageStyleSheet.center}>
           <TouchableOpacity

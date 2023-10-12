@@ -15,12 +15,14 @@ import {
 const Stack = createNativeStackNavigator();
 function App() {
   return (
-    <IonNeverNotificationRoot>
-      <NavigationContainer>
-        <MyBottomTab></MyBottomTab>
-        <Bar.StatusBar style="auto" />
-      </NavigationContainer>
-    </IonNeverNotificationRoot>
+    <KeyboardAvoidingView>
+      <IonNeverNotificationRoot>
+        <NavigationContainer>
+          <MyBottomTab></MyBottomTab>
+          <Bar.StatusBar style="auto" />
+        </NavigationContainer>
+      </IonNeverNotificationRoot>
+    </KeyboardAvoidingView>
   );
 }
 
