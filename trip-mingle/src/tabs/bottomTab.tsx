@@ -10,6 +10,7 @@ import PlanningPage from "../pages/PlanningPage";
 import UserPage from "../pages/UserPage";
 import LoginPage from "../pages/LoginPage";
 import { useEffect } from "react";
+import AddPostNavigator from "../pages/AddPostNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -29,7 +30,7 @@ function MyTab() {
       />
       <Tab.Screen
         name="Find Buddies"
-        component={BuddiesPage}
+        component={AddPostNavigator}
         options={{
           tabBarLabel: "Find Buddies",
           tabBarIcon: ({ color, size }) => (
