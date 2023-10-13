@@ -10,7 +10,6 @@ import {
   Platform,
   ScrollView,
   StatusBar,
-  View,
   Dimensions,
 } from "react-native";
 import TestingApp from "./src/components/IonNeverNotification/testingApp";
@@ -18,8 +17,6 @@ import TestingApp from "./src/components/IonNeverNotification/testingApp";
 const Stack = createNativeStackNavigator();
 
 function RootApp() {
-  const { width, height } = Dimensions.get("screen");
-
   return (
     <IonNeverNotificationRoot>
       <NavigationContainer>

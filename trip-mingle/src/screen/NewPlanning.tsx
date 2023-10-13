@@ -23,7 +23,6 @@ import * as ImagePicker from "expo-image-picker";
 import { AntDesign } from "@expo/vector-icons";
 import LoginPageStyleSheet from "../StyleSheet/LoginScreenCss";
 
-//@ts-ignore
 const NewPlanning = () => {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const [title, onChangeTitle] = useState("");
@@ -98,12 +97,6 @@ const NewPlanning = () => {
           onChangeText={onChangeTitle}
           value={title}
           placeholder="Title"
-        />
-        <TextInput
-          style={RegisterScreenStyleSheet.inputContainer}
-          onChangeText={onChangeContent}
-          value={content}
-          placeholder="Post content"
         />
 
         <TouchableOpacity

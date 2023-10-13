@@ -43,7 +43,7 @@ function MyTab() {
         name="Schedule"
         component={SchedulePage}
         options={{
-          tabBarLabel: "Planning",
+          tabBarLabel: "Schedule",
           tabBarIcon: ({ color, size }) => (
             <Fontisto name="suitcase" color={color} size={size} />
           ),
