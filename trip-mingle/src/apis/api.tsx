@@ -1,7 +1,7 @@
 import { Parser } from "cast.ts";
 
 export class ApiService {
-  apiOrigin = "http://192.168.80.71:8200";
+  apiOrigin = "http://116.49.88.105:8200";
 
   async get<T>(path: string, parser: Parser<T>) {
     let res = await fetch(this.apiOrigin + path, {

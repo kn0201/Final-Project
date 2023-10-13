@@ -15,16 +15,13 @@ import { LoginInfo } from "../utils/types";
 import { api } from "../apis/api";
 import { nullable, number, object, string } from "cast.ts";
 import { center, flex, iosBlue } from "../StyleSheet/StyleSheetHelper";
+import { loginResult } from "../utils/parser";
+import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 
 //@ts-ignore
 export default function LoginScreen({ navigation }) {
-  let loginResult = object({
-    // role: nullable(string()),
-    // id: nullable(number()),
-    // error: nullable(string()),
-    username: string(),
-    password: string(),
-  });
+  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
+
   const [showPassword, setPassword] = useState(true);
   const password = () => {
     setPassword(!showPassword);
@@ -48,6 +45,16 @@ export default function LoginScreen({ navigation }) {
     try {
       let json = await api.post("/login", loginInfo, loginResult);
       Object.entries(clearInputs).map(([_key, clear]) => clear());
+      IonNeverDialog.show({
+        type: "success",
+        title: "Welcome Back",
+        // message: json.username,
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          navigation.navigate("Users");
+        },
+        secondButtonVisible: false,
+      });
     } catch (error) {
       const errorObject: any = { ...(error as object) };
       console.log(errorObject);
