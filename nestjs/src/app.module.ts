@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { KnexModule } from 'nestjs-knex';
 import { env } from './env';
 import { LoginModule } from './login/login.module';
+import { JwtService } from './jwt/jwt.service';
+import { ServerTestingModule } from './server-testing/server-testing.module';
 
 @Module({
   imports: [
@@ -25,8 +27,9 @@ import { LoginModule } from './login/login.module';
       },
     }),
     LoginModule,
+    ServerTestingModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, JwtService],
 })
 export class AppModule {}

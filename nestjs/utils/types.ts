@@ -8,3 +8,7 @@ export type RequestLog = {
 export type DBProxy = {
   request_log: RequestLog[];
 };
+
+export type JWT_Payload = {
+  id: number;
+};

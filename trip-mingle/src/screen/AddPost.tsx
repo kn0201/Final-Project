@@ -9,7 +9,6 @@ import {
   Keyboard,
   FlatList,
   ScrollView,
-  StyleSheet,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
@@ -17,19 +16,8 @@ import { RegisInfo } from "../utils/types";
 import { countriesList } from "../source/countries";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
-import {
-  GooglePlaceDetail,
-  GooglePlacesAutocomplete,
-} from "react-native-google-places-autocomplete";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import LocationInput from "../components/locationInput";
-
-type InputAutocompleteProps = {
-  placeholder?: string;
-  onPlaceSelected: (details: GooglePlaceDetail | null) => void;
-};
-
-const GOOGLE_API_KEY = "AIzaSyDkl6HfJvmSSKDGWH0L0Y183PbBuY9fjdo";
 
 export default function AddPost() {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
@@ -40,13 +28,10 @@ export default function AddPost() {
   const [selectedAge, setSelectedAge] = useState("Preferred Age Group");
   const [age, setAge] = useState("");
   const [selectedCountry, setSelectedCountry] = useState(
-    "Destination Country *"
+    "Destination Country *",
   );
   const [country, setCountry] = useState("");
-
-  const [selectedLocationText, setSelectedLocationText] = useState(
-    "Destination Location"
-  );
+  const [code, setCode] = useState("");
 
   let countriesListData = countriesList;
 
@@ -60,6 +45,7 @@ export default function AddPost() {
     avatar: "",
   }).current;
 
+  // Update Input fields
   const updateInputText = (field: string, value: string) => {
     //@ts-ignore
     regisInfo[field as keyof RegisInfo] = value;
@@ -254,6 +240,7 @@ export default function AddPost() {
             dialogHeight: 560,
             component: () => {
               const [localCountry, setLocalCountry] = useState<string>(country);
+              const [localCode, setLocalCode] = useState<string>(code);
               const [search, setSearch] = useState("");
               const [countryList, setCountryList] = useState(countriesListData);
               const [matchedCountryList, setMatchedCountryList] =
@@ -263,15 +250,15 @@ export default function AddPost() {
                   countryList.filter((country) =>
                     country.name
                       .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase())
-                  )
+                      .includes(search.toLocaleLowerCase()),
+                  ),
                 );
               }, [search, countryList]);
               const updateSearch = (search: string) => {
                 setSearch(search);
               };
-              type CountryProps = { name: string };
-              const Country = ({ name }: CountryProps) => (
+              type CountryProps = { name: string; code: string };
+              const Country = ({ name, code }: CountryProps) => (
                 <View>
                   <CheckBox
                     title={name}
@@ -285,10 +272,14 @@ export default function AddPost() {
                     onPress={() => {
                       if (localCountry === name) {
                         setCountry("");
+                        setCode("");
                         setLocalCountry("");
+                        setLocalCode("");
                       } else {
                         setCountry(name);
+                        setCode(code);
                         setLocalCountry(name);
+                        setLocalCode(code);
                       }
                     }}
                   />
@@ -306,7 +297,9 @@ export default function AddPost() {
                   />
                   <FlatList
                     data={matchedCountryList}
-                    renderItem={({ item }) => <Country name={item.name} />}
+                    renderItem={({ item }) => (
+                      <Country name={item.name} code={item.code} />
+                    )}
                   />
                   <View style={AddPostPageStyleSheet.ModalButtonContainer}>
                     <TouchableOpacity
@@ -314,6 +307,7 @@ export default function AddPost() {
                         localCountry ? setSelectedCountry(localCountry) : null;
                         IonNeverDialog.dismiss();
                         updateInputText("country", country);
+                        // setCode(localCode);
                       }}
                     >
                       <Text style={AddPostPageStyleSheet.ModalText}>OK</Text>
@@ -331,8 +325,7 @@ export default function AddPost() {
     );
   };
 
-  // Location autocomplete
-
+  // Display
   return (
     <>
       <TouchableWithoutFeedback
@@ -347,7 +340,7 @@ export default function AddPost() {
           <View style={{ flex: 1, alignItems: "center" }}>
             {titleInput()}
             {countryCheckbox()}
-            <LocationInput />
+            <LocationInput code={code} />
             {contentInput()}
             {/* {genderCheckbox()} */}
             {ageCheckbox()}

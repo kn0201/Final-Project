@@ -135,15 +135,13 @@ export default function LoginScreen({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        <View style={{ width: "100%" }}>
-          <Text style={{ width: "90%", margin: 12, padding: 10 }}>
-            Don't have an account?{" "}
-            <Text
-              style={LoginScreenStyleSheet.signUp}
-              onPress={() => navigation.navigate("Register")}
-            >
-              Sign up
-            </Text>
+        <View style={LoginScreenStyleSheet.signUpContainer}>
+          <Text>Don't have an account?</Text>
+          <Text
+            style={LoginScreenStyleSheet.signUp}
+            onPress={() => navigation.navigate("Register")}
+          >
+            Sign up
           </Text>
         </View>
       </View>

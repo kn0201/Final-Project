@@ -5,14 +5,12 @@ import MemoryScreen from "../screen/MemoryScreen";
 import ProfileScreen from "../screen/ProfileScreen";
 import LikedScreen from "../screen/LikedScreen";
 
-import LocationInput from "../components/locationInput";
-
 const Tab = createMaterialTopTabNavigator();
 
 export default function UserPageTopTab() {
   return (
     <Tab.Navigator
-      initialRouteName="UserPageTopTab"
+      initialRouteName="Profile"
       screenOptions={{
         tabBarActiveTintColor: "#000000",
         tabBarLabelStyle: { fontSize: 12 },
@@ -36,7 +34,7 @@ export default function UserPageTopTab() {
       />
       <Tab.Screen
         name="Liked"
-        component={LocationInput}
+        component={LikedScreen}
         options={{ tabBarLabel: "Liked" }}
       />
     </Tab.Navigator>

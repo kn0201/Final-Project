@@ -8,7 +8,7 @@ const Stack = createStackNavigator();
 export default function UserPage() {
   return (
     <Stack.Navigator
-      initialRouteName="LoginPage"
+      // initialRouteName="Login"
       screenOptions={{ headerShown: true }}
     >
       <Stack.Screen name="Login" component={Login} />
