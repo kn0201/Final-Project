@@ -13,7 +13,9 @@ const RegisterPageStyleSheet = StyleSheet.create({
   inputContainer: {
     flexDirection: row,
     alignItems: center,
-    height: "7%",
+  },
+  outerContainer: {
+    height: 60,
     width: "90%",
     margin: 8,
     borderWidth: 1,
@@ -21,14 +23,15 @@ const RegisterPageStyleSheet = StyleSheet.create({
     padding: 10,
     textDecorationLine: "none",
   },
+
   textInput: {
     width: 320,
     // marginLeft: 8,
   },
   passwordContainer: {
-    display: flex,
-    justifyContent: center,
-    alignItems: center,
+    // display: flex,
+    // justifyContent: center,
+    // alignItems: center,
     width: "90%",
     flexDirection: row,
     flexWrap: "wrap",
@@ -41,8 +44,8 @@ const RegisterPageStyleSheet = StyleSheet.create({
   password: {
     flexDirection: row,
     alignItems: center,
-    width: "100%",
-    margin: 8,
+    // width: "100%",
+    // margin: 8,
   },
   genderContainer: {
     display: flex,

@@ -13,7 +13,7 @@ import {
 
 import LoginPageStyleSheet from "../StyleSheet/LoginScreenCss";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { flex } from "../StyleSheet/StyleSheetHelper";
+import { center, flex } from "../StyleSheet/StyleSheetHelper";
 import { useRef, useState, useEffect, SetStateAction } from "react";
 import { CheckBox, SearchBar } from "@rneui/themed";
 import RegisterScreenStyleSheet from "../StyleSheet/RegisterScreenCss";
@@ -37,7 +37,12 @@ export default function RegisterScreen({ navigation }) {
   const [selectedCountry, setSelectedCountry] = useState("Country");
   const [country, setCountry] = useState("");
 
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState<string>();
+
+  const [checkPassword, setCheckPassword] = useState("");
+  const [checkConfirmPassword, setCheckConfirmPassword] = useState("");
+
+  const errMsg = "Password Not Match!";
 
   const regisInfo = useRef<RegisInfo>({
     username: "",
@@ -83,9 +88,8 @@ export default function RegisterScreen({ navigation }) {
     });
     // @ts-ignore
     console.log(JSON.stringify(_image.assets[0].uri));
-    //@ts-ignore
+
     if (!_image.canceled) {
-      //@ts-ignore
       setImage(_image.assets[0].uri);
       updateInputText("avatar", _image.assets[0].uri);
     }
@@ -101,12 +105,12 @@ export default function RegisterScreen({ navigation }) {
     // }
     IonNeverDialog.show({
       type: "success",
-      title: "Shown Successfully",
+      title: "Welcome to TripMingle",
       firstButtonVisible: true,
       firstButtonFunction: () => {
-        console.log("Left Button Pressed for No Reason");
+        navigation.navigate("Users");
       },
-      secondButtonVisible: true,
+      secondButtonVisible: false,
     });
     console.log(regisInfo);
     navigation.navigate("Users");
@@ -136,62 +140,76 @@ export default function RegisterScreen({ navigation }) {
             </TouchableOpacity>
           </View>
         </View>
-        <View style={RegisterScreenStyleSheet.inputContainer}>
-          <Icon
-            style={{
-              display: flex,
-              justifyContent: "flex-start",
-              marginEnd: 4,
-            }}
-            name="account-outline"
-            size={20}
-          />
+        <View style={RegisterScreenStyleSheet.outerContainer}>
+          <Text>
+            Username* <Text style={{ fontSize: 10 }}> Max 10 letter</Text>
+          </Text>
+          <View style={RegisterScreenStyleSheet.inputContainer}>
+            <Icon
+              style={{
+                display: flex,
+                justifyContent: "flex-start",
+                marginEnd: 4,
+                // backgroundColor: "red",
+              }}
+              name="account-outline"
+              size={20}
+            />
 
-          <TextInput
-            ref={(input: any) => {
-              clearInputs.username = () => input?.clear();
-            }}
-            onChangeText={(text: string) => updateInputText("username", text)}
-            onEndEditing={() => Keyboard.dismiss()}
-            placeholder="Username"
-            style={RegisterScreenStyleSheet.textInput}
-          ></TextInput>
-          <Icon
-            style={{ display: flex, justifyContent: "flex-end" }}
-            name="close"
-            size={20}
-            onPress={() => clearInputs.username()}
-          />
+            <TextInput
+              ref={(input: any) => {
+                clearInputs.username = () => input?.clear();
+              }}
+              onChangeText={(text: string) => {
+                updateInputText("username", text);
+              }}
+              onEndEditing={() => Keyboard.dismiss()}
+              placeholder="Username"
+              maxLength={10}
+              style={RegisterScreenStyleSheet.textInput}
+            ></TextInput>
+            <Icon
+              style={{ display: flex, justifyContent: "flex-end" }}
+              name={"close"}
+              size={20}
+              onPress={() => clearInputs.username()}
+            />
+          </View>
         </View>
-        <View style={RegisterScreenStyleSheet.inputContainer}>
-          <Icon
-            style={{
-              display: flex,
-              justifyContent: "flex-start",
-              marginEnd: 4,
-            }}
-            name="email-outline"
-            size={20}
-          />
+        <View style={RegisterScreenStyleSheet.outerContainer}>
+          <Text>Email*</Text>
+          <View style={RegisterScreenStyleSheet.inputContainer}>
+            <Icon
+              style={{
+                display: flex,
+                justifyContent: "flex-start",
+                marginEnd: 4,
+              }}
+              name="email-outline"
+              size={20}
+            />
 
-          <TextInput
-            ref={(input: any) => {
-              clearInputs.email = () => input?.clear();
-            }}
-            onChangeText={(text: string) => updateInputText("email", text)}
-            onEndEditing={() => Keyboard.dismiss()}
-            keyboardType="email-address"
-            placeholder="Email"
-            style={RegisterScreenStyleSheet.textInput}
-          ></TextInput>
-          <Icon
-            style={{ display: flex, justifyContent: "flex-end" }}
-            name="close"
-            size={20}
-            onPress={() => clearInputs.email()}
-          />
+            <TextInput
+              ref={(input: any) => {
+                clearInputs.email = () => input?.clear();
+              }}
+              onChangeText={(text: string) => updateInputText("email", text)}
+              onEndEditing={() => Keyboard.dismiss()}
+              keyboardType="email-address"
+              placeholder="Email"
+              style={RegisterScreenStyleSheet.textInput}
+            ></TextInput>
+            <Icon name="close" size={20} onPress={() => clearInputs.email()} />
+          </View>
         </View>
         <View style={RegisterScreenStyleSheet.passwordContainer}>
+          <Text>
+            Password*
+            {/* <Text style={{ fontSize: 10 }}>
+              Required Digit Number include One Upper & Lower letter ,
+              minlength:8
+            </Text> */}
+          </Text>
           <View style={RegisterScreenStyleSheet.password}>
             <Icon
               style={{
@@ -208,19 +226,27 @@ export default function RegisterScreen({ navigation }) {
               ref={(input: any) => {
                 clearInputs.password = () => input?.clear();
               }}
-              onChangeText={(text: string) => updateInputText("password", text)}
+              onChangeText={(text: string) => {
+                updateInputText("password", text);
+                setCheckPassword(text);
+              }}
               placeholder="Password"
               secureTextEntry={showPassword}
+              // passwordRules={
+              //   "required: upper; required: lower; required: digit; minlength: 8;"
+              // }
               clearTextOnFocus={true}
             ></TextInput>
             <Icon
-              style={{ display: flex, justifyContent: "flex-end" }}
               name={showPassword ? "eye-outline" : "eye-off-outline"}
               size={20}
               onPress={password}
             />
           </View>
-          <Text>─────────────────────────</Text>
+          <View style={RegisterScreenStyleSheet.center}>
+            <Text>─────────────────────────</Text>
+          </View>
+
           <View style={RegisterScreenStyleSheet.password}>
             <Icon
               style={{
@@ -237,6 +263,7 @@ export default function RegisterScreen({ navigation }) {
               ref={(input: any) => {
                 clearInputs.confirmPassword = () => input?.clear();
               }}
+              onChangeText={(text: string) => setCheckConfirmPassword(text)}
               placeholder="Confirm Password"
               secureTextEntry={showConfirmPassword}
               clearTextOnFocus={true}
@@ -247,6 +274,11 @@ export default function RegisterScreen({ navigation }) {
               size={20}
               onPress={confirmPassword}
             />
+          </View>
+          <View style={RegisterScreenStyleSheet.center}>
+            <Text style={{ color: "red" }}>
+              {checkPassword === checkConfirmPassword ? "" : errMsg}
+            </Text>
           </View>
         </View>
         <View style={RegisterScreenStyleSheet.genderContainer}>
@@ -275,7 +307,6 @@ export default function RegisterScreen({ navigation }) {
           <TouchableOpacity
             style={RegisterScreenStyleSheet.birthdayContainer}
             onPress={() => {
-              console.log("load age select");
               IonNeverDialog.show({
                 dialogHeight: 500,
                 component: () => {
@@ -371,7 +402,7 @@ export default function RegisterScreen({ navigation }) {
                 justifyContent: "flex-start",
                 marginEnd: 4,
               }}
-              name={selectedCountry === "" ? "earth" : ""}
+              name={selectedCountry === "Country" ? "earth" : ""}
               size={20}
             />
             <Text>{selectedCountry}</Text>

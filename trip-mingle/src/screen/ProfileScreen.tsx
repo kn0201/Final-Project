@@ -49,6 +49,11 @@ export default function ProfileScreen({ navigation }) {
     profileInfo[field as keyof ProfileInfo] = value;
   };
 
+  const [editSubmit, setEditSubmit] = useState(true);
+
+  const editProfile = "Edit Profile";
+  const submitProfile = "Submit";
+
   const sendProfile = async () => {
     console.log(profileInfo);
   };
@@ -61,12 +66,24 @@ export default function ProfileScreen({ navigation }) {
               <TouchableOpacity
                 onPress={() => {
                   setEditableText(!editableText);
-                  sendProfile();
+                  if (editableText) {
+                    sendProfile();
+                  }
                 }}
-                style={ProfileScreenStyleSheet.editButton}
+                style={
+                  editableText
+                    ? ProfileScreenStyleSheet.submitButton
+                    : ProfileScreenStyleSheet.editButton
+                }
               >
-                <Text style={{ color: white }}>Edit Profile</Text>
-                <MaterialIcons name="edit" size={20} style={{ color: white }} />
+                <Text style={{ color: white }}>
+                  {editableText ? submitProfile : editProfile}
+                </Text>
+                <MaterialIcons
+                  name={editableText ? "check" : "edit"}
+                  size={20}
+                  style={{ color: white }}
+                />
               </TouchableOpacity>
             </View>
 
@@ -91,7 +108,6 @@ export default function ProfileScreen({ navigation }) {
             <View style={ProfileScreenStyleSheet.center}>
               <View style={ProfileScreenStyleSheet.inputContainer}>
                 <Text>Language</Text>
-
                 <Text
                   style={{
                     flex: 1,

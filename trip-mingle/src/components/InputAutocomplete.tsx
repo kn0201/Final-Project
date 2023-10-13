@@ -17,6 +17,7 @@ import {
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
+import { flex } from "../StyleSheet/StyleSheetHelper";
 
 export default function InputAutocomplete({
   //@ts-ignore
@@ -98,7 +99,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   list: {
-    zIndex: 999,
+    display: flex,
+    zIndex: 3,
     height: "100%",
     width: "100%",
     borderRadius: 8,
