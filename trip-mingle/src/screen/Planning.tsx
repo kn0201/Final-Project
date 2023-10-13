@@ -8,15 +8,14 @@ import {
   AgendaSchedule,
   Calendar,
 } from "react-native-calendars";
-import { ReservationListProps } from "react-native-calendars/src/agenda/reservation-list";
+import { ReservationListProps } from "react-native-calendars/src/agenda/reservation-list/index";
 import AgendaListItem from "../components/AgendaLIstItem";
-import { Entypo } from "@expo/vector-icons";
 import { NewType } from "../utils/types";
 import Constants from "expo-constants";
 
 const styles = StyleSheet.create({
   view: {
-    margin: 7,
+    margin: 20,
     backgroundColor: "#FFF",
     top: Constants.statusBarHeight,
     borderRadius: 8,
@@ -49,14 +48,7 @@ const PlanningPage = () => {
     <>
       <>
         <>
-          <View style={styles.view}>
-            <SearchBar
-              placeholder="Type Here..."
-              onChangeText={setSearch}
-              value={search}
-              inputStyle={{ color: "white" }}
-            />
-          </View>
+          <View style={styles.view}></View>
         </>
         <View style={{ flex: 1 }}>
           <Agenda
@@ -83,7 +75,7 @@ const PlanningPage = () => {
             // }}
             showClosingKnob={true}
             pastScrollRange={1}
-            futureScrollRange={18}
+            futureScrollRange={12}
           />
         </View>
       </>
@@ -97,13 +89,7 @@ const PlanningPage = () => {
         <SpeedDial.Action
           icon={{ name: "add", color: "#fff" }}
           title="Add"
-          onPress={() => (
-            <View>
-              <Input>Event</Input>
-              <Input>Date</Input>
-              <Input>Time</Input>
-            </View>
-          )}
+          onPress={() => console.log("Delete Something")}
         />
         <SpeedDial.Action
           icon={{ name: "delete", color: "#fff" }}

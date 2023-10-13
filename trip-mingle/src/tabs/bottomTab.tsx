@@ -6,11 +6,12 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import HomeScreen from "../pages/Homepage";
 import BuddiesPage from "./ExplorePageTopTab";
 import MapPage from "../pages/MapPage";
-import PlanningPage from "../pages/PlanningPage";
+import PlanningPage from "../pages/SchedulePage";
 import UserPage from "../pages/UserPage";
 import LoginPage from "../pages/LoginPage";
 import { useEffect } from "react";
 import ExplorePage from "../pages/ExplorePage";
+import SchedulePage from "../pages/SchedulePage";
 
 const Tab = createBottomTabNavigator();
 
@@ -39,8 +40,8 @@ function MyTab() {
         }}
       />
       <Tab.Screen
-        name="Planning"
-        component={PlanningPage}
+        name="Schedule"
+        component={SchedulePage}
         options={{
           tabBarLabel: "Planning",
           tabBarIcon: ({ color, size }) => (
