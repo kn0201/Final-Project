@@ -2,7 +2,7 @@ import session from 'express-session';
 import { env } from '../src/env';
 
 export let sessionMiddleware = session({
-  secret: env.SESSION_SECRET,
+  secret: env.JWT_SECRET,
   resave: true,
   saveUninitialized: false,
 });

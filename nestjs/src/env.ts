@@ -5,7 +5,7 @@ config();
 
 export let env = {
   NODE_ENV: 'development',
-  SESSION_SECRET: 'my-secret',
+  JWT_SECRET: 'my-secret',
   DB_NAME: '',
   DB_USERNAME: '',
   DB_PASSWORD: '',
