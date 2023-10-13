@@ -14,7 +14,8 @@ import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import InputAutocomplete from "./InputAutocomplete";
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
 
-export default function LocationInput() {
+//@ts-ignore
+export default function LocationInput({ code }) {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
 
   const [selectedLocationText, setSelectedLocationText] = useState(
@@ -41,6 +42,7 @@ export default function LocationInput() {
           focusInput;
         }
         Keyboard.dismiss();
+
         IonNeverDialog.show({
           dialogHeight: 300,
           component: () => {
@@ -49,6 +51,7 @@ export default function LocationInput() {
                 setSelectedLocationText={setSelectedLocationText}
                 setSelectedLocationList={setSelectedLocationList}
                 selectedLocationList={selectedLocationList}
+                code={code}
               />
             );
           },

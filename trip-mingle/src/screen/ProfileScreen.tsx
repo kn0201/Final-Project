@@ -61,7 +61,7 @@ export default function ProfileScreen({ navigation }) {
               <TouchableOpacity
                 onPress={() => {
                   setEditableText(!editableText);
-                  sendProfile;
+                  sendProfile();
                 }}
                 style={ProfileScreenStyleSheet.editButton}
               >

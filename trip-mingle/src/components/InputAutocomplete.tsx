@@ -25,18 +25,29 @@ export default function InputAutocomplete({
   setSelectedLocationList,
   //@ts-ignore
   selectedLocationList,
+  //@ts-ignore
+  code,
 }) {
   const GOOGLE_API_KEY = "AIzaSyDkl6HfJvmSSKDGWH0L0Y183PbBuY9fjdo";
 
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const [selectedLocation, setSelectedLocation] = useState("");
   const localSelectedLocationList = selectedLocationList;
+
   type CountryProps = { id: number; name: string };
   const Country = ({ id, name }: CountryProps) => (
     <View>
       <Text>{`${id}. ${name}`}</Text>
     </View>
   );
+  const query = {
+    key: GOOGLE_API_KEY,
+    language: ["en", "zh-CN", "zh-TW", "ja"],
+  };
+  if (code) {
+    //@ts-ignore
+    query.components = `country:${code}`;
+  }
   return (
     <>
       <GooglePlacesAutocomplete
@@ -54,10 +65,7 @@ export default function InputAutocomplete({
             setSelectedLocationText(updatedSelectedLocationText);
           }
         }}
-        query={{
-          key: GOOGLE_API_KEY,
-          language: ["en", "zh-CN", "zh-TW", "ja"],
-        }}
+        query={query}
         onFail={(error) => console.log(error)}
       />
       <FlatList
@@ -75,6 +83,7 @@ export default function InputAutocomplete({
         >
           <Text style={AddPostPageStyleSheet.ModalText}>OK</Text>
         </TouchableOpacity>
+        <Text>{code}</Text>
       </View>
     </>
   );

@@ -43,7 +43,7 @@ export default function AddPost() {
     "Destination Country *"
   );
   const [country, setCountry] = useState("");
-
+  const [code, setCode] = useState("");
   const [selectedLocationText, setSelectedLocationText] = useState(
     "Destination Location"
   );
@@ -256,6 +256,7 @@ export default function AddPost() {
               const [localCountry, setLocalCountry] = useState<string>(country);
               const [search, setSearch] = useState("");
               const [countryList, setCountryList] = useState(countriesListData);
+              const [localCode, setLocalCode] = useState("");
               const [matchedCountryList, setMatchedCountryList] =
                 useState(countriesListData);
               useEffect(() => {
@@ -270,8 +271,8 @@ export default function AddPost() {
               const updateSearch = (search: string) => {
                 setSearch(search);
               };
-              type CountryProps = { name: string };
-              const Country = ({ name }: CountryProps) => (
+              type CountryProps = { name: string; code: string };
+              const Country = ({ name, code }: CountryProps) => (
                 <View>
                   <CheckBox
                     title={name}
@@ -289,6 +290,7 @@ export default function AddPost() {
                       } else {
                         setCountry(name);
                         setLocalCountry(name);
+                        setCode(code);
                       }
                     }}
                   />
@@ -306,7 +308,9 @@ export default function AddPost() {
                   />
                   <FlatList
                     data={matchedCountryList}
-                    renderItem={({ item }) => <Country name={item.name} />}
+                    renderItem={({ item }) => (
+                      <Country name={item.name} code={item.code} />
+                    )}
                   />
                   <View style={AddPostPageStyleSheet.ModalButtonContainer}>
                     <TouchableOpacity
@@ -314,6 +318,7 @@ export default function AddPost() {
                         localCountry ? setSelectedCountry(localCountry) : null;
                         IonNeverDialog.dismiss();
                         updateInputText("country", country);
+                        // setCode(localCode);
                       }}
                     >
                       <Text style={AddPostPageStyleSheet.ModalText}>OK</Text>
@@ -347,7 +352,7 @@ export default function AddPost() {
           <View style={{ flex: 1, alignItems: "center" }}>
             {titleInput()}
             {countryCheckbox()}
-            <LocationInput />
+            <LocationInput code={code} />
             {contentInput()}
             {/* {genderCheckbox()} */}
             {ageCheckbox()}
