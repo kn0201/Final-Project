@@ -53,6 +53,7 @@ function MyTab() {
         name="Users"
         component={UserPage}
         options={{
+          // tabBarHideOnKeyboard: true,
           tabBarLabel: "Users",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person" color={color} size={size} />
@@ -63,6 +64,7 @@ function MyTab() {
         name="login"
         component={LoginPage}
         options={{
+          // tabBarHideOnKeyboard: true,
           tabBarLabel: "Login",
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="login" color={color} size={size} />

@@ -4,6 +4,7 @@ import SavedLocationScreen from "../screen/SavedLocationScreen";
 import MemoryScreen from "../screen/MemoryScreen";
 import ProfileScreen from "../screen/ProfileScreen";
 import LikedScreen from "../screen/LikedScreen";
+import { KeyboardAvoidingView, Platform } from "react-native";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -40,17 +41,3 @@ export default function UserPageTopTab() {
     </Tab.Navigator>
   );
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-//   title: {
-//     display: "flex",
-//     flexDirection: "row",
-//     fontSize: 48,
-//   },
-// });

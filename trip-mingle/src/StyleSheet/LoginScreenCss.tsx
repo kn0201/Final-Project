@@ -24,7 +24,7 @@ const LoginScreenStyleSheet = StyleSheet.create({
   input: {
     flexDirection: row,
     alignItems: center,
-    height: "7%",
+    height: 53,
     width: "90%",
     margin: 12,
     borderWidth: 1,

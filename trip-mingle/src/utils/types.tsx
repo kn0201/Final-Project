@@ -25,3 +25,10 @@ export type AgendaEventListItem = {
  */
 
 export type NewType = AgendaEntry & { id: number };
+
+export type ProfileInfo = {
+  language: string;
+  skill: string;
+  hobby: string;
+  country: string;
+};
