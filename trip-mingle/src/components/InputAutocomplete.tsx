@@ -27,8 +27,6 @@ export default function InputAutocomplete({
   selectedLocationList,
   //@ts-ignore
   code,
-  //@ts-ignore
-  code,
 }) {
   const GOOGLE_API_KEY = "AIzaSyDkl6HfJvmSSKDGWH0L0Y183PbBuY9fjdo";
 
