@@ -19,8 +19,8 @@ import Fontisto from "react-native-vector-icons/Fontisto";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import BuddiesPageStyleSheet from "../StyleSheet/BuddiesPageCss";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import jwt_decode from "jwt-decode";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
+// import jwt_decode from "jwt-decode";
 
 type Post = {
   id: number;
@@ -243,7 +243,7 @@ export default function TourScreen({ navigation }) {
               item.trip_country.toUpperCase().includes(textData)) ||
             (item.trip_location &&
               item.trip_location.some((location) =>
-                location.toUpperCase().includes(textData)
+                location.toUpperCase().includes(textData),
               ))
           );
         })

@@ -1,14 +1,6 @@
 //Buffer Line
-
-import { useState, useEffect, useRef } from "react";
-import {
-  TouchableOpacity,
-  Keyboard,
-  View,
-  FlatList,
-  Text,
-  TextInput,
-} from "react-native";
+import { useState, useRef } from "react";
+import { TouchableOpacity, Keyboard, Text, TextInput } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import InputAutocomplete from "./InputAutocomplete";
@@ -16,11 +8,10 @@ import { useIonNeverNotification } from "./IonNeverNotification/NotificationProv
 
 //@ts-ignore
 export default function LocationInput({ code }) {
-  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
+  const { IonNeverDialog } = useIonNeverNotification();
 
-  const [selectedLocationText, setSelectedLocationText] = useState(
-    "Destination Location"
-  );
+  const [selectedLocationText, setSelectedLocationText] =
+    useState("Destination Spots");
   const [selectedLocationList, setSelectedLocationList] = useState<
     UserLocation[]
   >([]);
@@ -44,7 +35,7 @@ export default function LocationInput({ code }) {
         Keyboard.dismiss();
 
         IonNeverDialog.show({
-          dialogHeight: 300,
+          dialogHeight: 550,
           component: () => {
             return (
               <InputAutocomplete

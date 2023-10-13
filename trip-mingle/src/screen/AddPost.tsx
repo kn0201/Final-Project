@@ -9,7 +9,6 @@ import {
   Keyboard,
   FlatList,
   ScrollView,
-  StyleSheet,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
@@ -17,19 +16,8 @@ import { RegisInfo } from "../utils/types";
 import { countriesList } from "../source/countries";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
-import {
-  GooglePlaceDetail,
-  GooglePlacesAutocomplete,
-} from "react-native-google-places-autocomplete";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import LocationInput from "../components/locationInput";
-
-type InputAutocompleteProps = {
-  placeholder?: string;
-  onPlaceSelected: (details: GooglePlaceDetail | null) => void;
-};
-
-const GOOGLE_API_KEY = "AIzaSyDkl6HfJvmSSKDGWH0L0Y183PbBuY9fjdo";
 
 export default function AddPost() {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
@@ -40,13 +28,10 @@ export default function AddPost() {
   const [selectedAge, setSelectedAge] = useState("Preferred Age Group");
   const [age, setAge] = useState("");
   const [selectedCountry, setSelectedCountry] = useState(
-    "Destination Country *"
+    "Destination Country *",
   );
   const [country, setCountry] = useState("");
   const [code, setCode] = useState("");
-  const [selectedLocationText, setSelectedLocationText] = useState(
-    "Destination Location"
-  );
 
   let countriesListData = countriesList;
 
@@ -60,6 +45,7 @@ export default function AddPost() {
     avatar: "",
   }).current;
 
+  // Update Input fields
   const updateInputText = (field: string, value: string) => {
     //@ts-ignore
     regisInfo[field as keyof RegisInfo] = value;
@@ -254,9 +240,9 @@ export default function AddPost() {
             dialogHeight: 560,
             component: () => {
               const [localCountry, setLocalCountry] = useState<string>(country);
+              const [localCode, setLocalCode] = useState<string>(code);
               const [search, setSearch] = useState("");
               const [countryList, setCountryList] = useState(countriesListData);
-              const [localCode, setLocalCode] = useState("");
               const [matchedCountryList, setMatchedCountryList] =
                 useState(countriesListData);
               useEffect(() => {
@@ -264,8 +250,8 @@ export default function AddPost() {
                   countryList.filter((country) =>
                     country.name
                       .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase())
-                  )
+                      .includes(search.toLocaleLowerCase()),
+                  ),
                 );
               }, [search, countryList]);
               const updateSearch = (search: string) => {
@@ -286,11 +272,14 @@ export default function AddPost() {
                     onPress={() => {
                       if (localCountry === name) {
                         setCountry("");
+                        setCode("");
                         setLocalCountry("");
+                        setLocalCode("");
                       } else {
                         setCountry(name);
-                        setLocalCountry(name);
                         setCode(code);
+                        setLocalCountry(name);
+                        setLocalCode(code);
                       }
                     }}
                   />
@@ -336,8 +325,7 @@ export default function AddPost() {
     );
   };
 
-  // Location autocomplete
-
+  // Display
   return (
     <>
       <TouchableWithoutFeedback
