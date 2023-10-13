@@ -42,6 +42,7 @@ export default function LocationInput({ code }) {
           focusInput;
         }
         Keyboard.dismiss();
+
         IonNeverDialog.show({
           dialogHeight: 550,
           component: () => {

@@ -27,12 +27,15 @@ export default function InputAutocomplete({
   selectedLocationList,
   //@ts-ignore
   code,
+  //@ts-ignore
+  code,
 }) {
   const GOOGLE_API_KEY = "AIzaSyDkl6HfJvmSSKDGWH0L0Y183PbBuY9fjdo";
 
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const [selectedLocation, setSelectedLocation] = useState("");
   const localSelectedLocationList = selectedLocationList;
+
   type CountryProps = { id: number; name: string };
   const Country = ({ id, name }: CountryProps) => (
     <View>
@@ -90,6 +93,7 @@ export default function InputAutocomplete({
         >
           <Text style={AddPostPageStyleSheet.ModalText}>OK</Text>
         </TouchableOpacity>
+        <Text>{code}</Text>
       </View>
     </>
   );

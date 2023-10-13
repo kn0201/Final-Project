@@ -242,6 +242,7 @@ export default function AddPost() {
               const [localCode, setLocalCode] = useState<string>(code);
               const [search, setSearch] = useState("");
               const [countryList, setCountryList] = useState(countriesListData);
+              const [localCode, setLocalCode] = useState("");
               const [matchedCountryList, setMatchedCountryList] =
                 useState(countriesListData);
               useEffect(() => {
@@ -256,6 +257,8 @@ export default function AddPost() {
               const updateSearch = (search: string) => {
                 setSearch(search);
               };
+              type CountryProps = { name: string; code: string };
+              const Country = ({ name, code }: CountryProps) => (
               type CountryProps = { name: string; code: string };
               const Country = ({ name, code }: CountryProps) => (
                 <View>
@@ -299,6 +302,9 @@ export default function AddPost() {
                     renderItem={({ item }) => (
                       <Country name={item.name} code={item.code} />
                     )}
+                    renderItem={({ item }) => (
+                      <Country name={item.name} code={item.code} />
+                    )}
                   />
                   <View style={AddPostPageStyleSheet.ModalButtonContainer}>
                     <TouchableOpacity
@@ -306,7 +312,7 @@ export default function AddPost() {
                         localCountry ? setSelectedCountry(localCountry) : null;
                         IonNeverDialog.dismiss();
                         updateInputText("country", country);
-                        console.log(code);
+                        // setCode(localCode);
                       }}
                     >
                       <Text style={AddPostPageStyleSheet.ModalText}>OK</Text>
@@ -339,6 +345,7 @@ export default function AddPost() {
           <View style={{ flex: 1, alignItems: "center" }}>
             {titleInput()}
             {countryCheckbox()}
+            <LocationInput code={code} />
             <LocationInput code={code} />
             {contentInput()}
             {/* {genderCheckbox()} */}

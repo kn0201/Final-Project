@@ -36,17 +36,24 @@ const LoginScreenStyleSheet = StyleSheet.create({
     fontSize: 32,
     margin: 16,
   },
-
+  signUpContainer: {
+    width: "90%",
+    display: flex,
+    flexDirection: row,
+    alignItems: center,
+    margin: 12,
+  },
   signUp: {
     color: iosBlue,
     textDecorationLine: "underline",
     fontWeight: "bold",
+    // backgroundColor: "red",
+    padding: 10,
   },
   forgotPW: {
     width: "90%",
     margin: 12,
     color: iosBlue,
-
     fontWeight: "bold",
     padding: 10,
   },
