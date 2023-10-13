@@ -1,0 +1,100 @@
+//Buffer Line
+import { StyleSheet } from "react-native";
+import { flex, center, row, iosBlue } from "./StyleSheetHelper";
+
+const AddPostPageStyleSheet = StyleSheet.create({
+  postInputContainer: {
+    flexDirection: row,
+    alignItems: center,
+    height: "5.5%",
+    width: "90%",
+    margin: 8,
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
+    textDecorationLine: "none",
+  },
+  contentContainer: {
+    flexDirection: row,
+    alignItems: center,
+    height: "30%",
+    width: "90%",
+    margin: 8,
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
+    textDecorationLine: "none",
+  },
+  textInput: {
+    width: 320,
+  },
+  postAgeContainer: {
+    display: flex,
+    justifyContent: "space-between",
+    alignItems: center,
+    height: "5.5%",
+    width: "90%",
+    flexDirection: row,
+    margin: 8,
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    textDecorationLine: "none",
+  },
+  postCountryContainer: {
+    display: flex,
+    justifyContent: "space-between",
+    alignItems: center,
+    height: "5.5%",
+    width: "90%",
+    flexDirection: row,
+    margin: 8,
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    textDecorationLine: "none",
+  },
+  ModalContainer: {
+    display: flex,
+    marginVertical: "10%",
+    marginHorizontal: "10%",
+    backgroundColor: "white",
+    justifyContent: center,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  CountryScrollViewContainer: {
+    width: "100%",
+    height: "100%",
+  },
+  AgeScrollViewContainer: {
+    width: "100%",
+    height: "100%",
+  },
+  ModalButtonContainer: {
+    display: flex,
+    flexDirection: row,
+    width: "100%",
+    height: "10%",
+    justifyContent: "space-evenly",
+    alignItems: center,
+  },
+  ModalText: {
+    paddingHorizontal: "45%",
+    color: iosBlue,
+    fontWeight: "bold",
+    fontSize: 16,
+    textAlign: center,
+    alignItems: center,
+    justifyContent: center,
+  },
+});
+
+export default AddPostPageStyleSheet;
