@@ -18,7 +18,7 @@ import { StyleSheet, ViewStyle, Dimensions } from "react-native";
 const { width, height } = Dimensions.get("screen");
 
 export const dialogDivPositioning: (dialogHeight: number) => ViewStyle = (
-  dialogHeight
+  dialogHeight,
 ) => {
   return { top: (height - 20 - dialogHeight) / 2 };
 };
@@ -48,6 +48,7 @@ const providerStyleSheet = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#F1F5F9",
     margin: 10,
+    zIndex: 1,
   },
   titleText: {
     fontSize: 24,

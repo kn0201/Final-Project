@@ -45,6 +45,7 @@ export default function AddPost() {
     avatar: "",
   }).current;
 
+  // Update Input fields
   const updateInputText = (field: string, value: string) => {
     //@ts-ignore
     regisInfo[field as keyof RegisInfo] = value;

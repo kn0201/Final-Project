@@ -42,10 +42,10 @@ function IonNeverNotificationRoot(props: { children: ReactNode }) {
   const [title, setTitle] = useState<string>("Successfully Showed");
   const [message, setMessage] = useState<string | null>(null);
   const [backgroundColor, setBackgroundColor] = useState<string>(
-    defaultValues.backgroundColor
+    defaultValues.backgroundColor,
   );
   const [dialogHeight, setDialogHeight] = useState<number>(
-    defaultValues.dialogHeight
+    defaultValues.dialogHeight,
   );
   const [DialogComponent, setDialogComponent] = useState<
     (() => JSX.Element) | null
@@ -74,12 +74,12 @@ function IonNeverNotificationRoot(props: { children: ReactNode }) {
   const leftButton = useButton(
     "OK",
     defaultValues.leftButtonColor,
-    dismissDialog
+    dismissDialog,
   );
   const rightButton = useButton(
     "Cancel",
     defaultValues.rightButtonColor,
-    dismissDialog
+    dismissDialog,
   );
 
   const showToast = (toastParams: ShowToastParams) => {
@@ -148,7 +148,7 @@ function IonNeverNotificationRoot(props: { children: ReactNode }) {
     } else {
       switch (true) {
         case ["success", "warning", "danger", "info"].indexOf(
-          type || "undefined"
+          type || "undefined",
         ) === -1:
           throw new Error("Notification Type undefined");
         case !title:
@@ -171,7 +171,7 @@ function IonNeverNotificationRoot(props: { children: ReactNode }) {
           }
 
           leftButton.updateButtonColor(
-            firstButtonColor || defaultValues.leftButtonColor
+            firstButtonColor || defaultValues.leftButtonColor,
           );
 
           if (secondButtonVisible) {
@@ -274,7 +274,7 @@ function IonNeverNotificationRoot(props: { children: ReactNode }) {
               {
                 translateY: toastTranslateAnim.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [0, 180],
+                  outputRange: [0, 200],
                 }),
               },
             ],
