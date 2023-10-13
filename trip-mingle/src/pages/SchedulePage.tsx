@@ -14,7 +14,7 @@ const SchedulePage = () => {
     >
       <Stack.Screen name="MySchedule" component={MySchedule} />
       <Stack.Screen name="Planning" component={PlanningPage} />
-      <Stack.Screen name="Add Schedule" component={AddSchedule} />
+      <Stack.Screen name="AddSchedule" component={AddSchedule} />
       <Stack.Screen name="NewPlanning" component={NewPlanning} />
       {/* <Stack.Screen
         name="Cancel"

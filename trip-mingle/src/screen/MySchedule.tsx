@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
 const Schedule = ({ navigation }) => {
   return (
     <>
-      <TouchableOpacity onPress={() => navigation.navigate("Planning")}>
+      <TouchableOpacity onPress={() => navigation.navigate("AddSchedule")}>
         <Card>
           <Card.Title>Sample</Card.Title>
           <Card.Divider />

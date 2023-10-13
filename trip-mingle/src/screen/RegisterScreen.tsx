@@ -275,6 +275,7 @@ export default function RegisterScreen({ navigation }) {
           <TouchableOpacity
             style={RegisterScreenStyleSheet.birthdayContainer}
             onPress={() => {
+              console.log("load age select");
               IonNeverDialog.show({
                 dialogHeight: 500,
                 component: () => {
