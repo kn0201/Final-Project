@@ -32,6 +32,7 @@ export type NewType = AgendaEntry & {
 };
 
 export type ProfileInfo = {
+  intro: string;
   language: string;
   skill: string;
   hobby: string;

@@ -33,11 +33,10 @@ const ProfileScreenStyleSheet = StyleSheet.create({
   },
   IntroText: {
     fontSize: 18,
-    marginTop: 24,
+    // marginTop: 16,
     marginBottom: 4,
     marginLeft: "2.5%",
   },
-  textInput: {},
   inputContainer: {
     display: flex,
     flexDirection: row,
@@ -50,6 +49,25 @@ const ProfileScreenStyleSheet = StyleSheet.create({
     borderRadius: 10,
     padding: 8,
     textDecorationLine: "none",
+  },
+  editContainer: {
+    display: flex,
+    flexDirection: row,
+    justifyContent: "flex-end",
+    marginTop: 8,
+    marginEnd: "2.5%",
+  },
+  editButton: {
+    display: flex,
+    width: "auto",
+    borderWidth: 1,
+    borderColor: iosBlue,
+    borderRadius: 5,
+    backgroundColor: iosBlue,
+    color: white,
+    flexDirection: row,
+    alignItems: center,
+    paddingHorizontal: 4,
   },
 });
 

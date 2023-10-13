@@ -15,7 +15,8 @@ import {
 } from "react-native";
 import ProfileScreenStyleSheet from "../StyleSheet/ProfileScreenCss";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { center, flex, white } from "../StyleSheet/StyleSheetHelper";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { center, flex, row, white } from "../StyleSheet/StyleSheetHelper";
 import { useRef, useState } from "react";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import SelectCountry from "../components/selectCountry";
@@ -26,42 +27,65 @@ export default function ProfileScreen({ navigation }) {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
 
   const profileInfo = useRef<ProfileInfo>({
+    intro: "",
     language: "",
     skill: "",
     hobby: "",
     country: "",
   }).current;
 
+  const [introText, setIntroText] = useState("Test");
   const [selectedLanguage, setSelectedLanguage] = useState("");
+
   const [selectedCountry, setSelectedCountry] = useState("");
+
   const [selectedSkill, setSelectedSkill] = useState("Skill");
+
   const [selectedHobby, setSelectedHobby] = useState("Hobby");
+
+  const [editableText, setEditableText] = useState(false);
+
   const updateInputText = (field: string, value: string) => {
-    //@ts-ignore
     profileInfo[field as keyof ProfileInfo] = value;
   };
 
+  const sendProfile = async () => {
+    console.log(profileInfo);
+  };
   return (
     <>
       <ScrollView>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View>
-            <Icon
-              style={{
-                display: flex,
-                marginHorizontal: 2,
-              }}
-              name="square-edit-outline"
-              size={20}
-            />
+            <View style={ProfileScreenStyleSheet.editContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  setEditableText(!editableText);
+                  sendProfile;
+                }}
+                style={ProfileScreenStyleSheet.editButton}
+              >
+                <Text style={{ color: white }}>Edit Profile</Text>
+                <MaterialIcons name="edit" size={20} style={{ color: white }} />
+              </TouchableOpacity>
+            </View>
+
             <Text style={ProfileScreenStyleSheet.IntroText}>Introduction</Text>
             <View style={ProfileScreenStyleSheet.center}>
               <View style={ProfileScreenStyleSheet.IntroContainer}>
-                <TouchableOpacity style={ProfileScreenStyleSheet.addProfile}>
-                  <Text style={ProfileScreenStyleSheet.addText}>
-                    Add Introduction
-                  </Text>
-                </TouchableOpacity>
+                <TextInput
+                  editable={editableText ? true : false}
+                  style={{
+                    textDecorationLine: editableText ? "underline" : "none",
+                  }}
+                  onChangeText={(text) => {
+                    setIntroText(text);
+                    updateInputText("intro", text);
+                    console.log(profileInfo);
+                  }}
+                >
+                  {introText}
+                </TextInput>
               </View>
             </View>
             <View style={ProfileScreenStyleSheet.center}>
@@ -82,12 +106,12 @@ export default function ProfileScreen({ navigation }) {
                   {selectedLanguage}
                 </Text>
                 <TouchableOpacity>
-                  <Icon
+                  <MaterialIcons
                     style={{
                       display: flex,
                       marginHorizontal: 2,
                     }}
-                    name="square-edit-outline"
+                    name={editableText ? "edit" : ""}
                     size={20}
                     onPress={() => {
                       IonNeverDialog.show({
@@ -123,12 +147,12 @@ export default function ProfileScreen({ navigation }) {
                   {selectedSkill}
                 </Text>
                 <TouchableOpacity>
-                  <Icon
+                  <MaterialIcons
                     style={{
                       display: flex,
                       marginHorizontal: 2,
                     }}
-                    name="square-edit-outline"
+                    name={editableText ? "edit" : ""}
                     size={20}
                     onPress={() => {
                       IonNeverDialog.show({
@@ -164,12 +188,12 @@ export default function ProfileScreen({ navigation }) {
                   {selectedHobby}
                 </Text>
                 <TouchableOpacity>
-                  <Icon
+                  <MaterialIcons
                     style={{
                       display: flex,
                       marginHorizontal: 2,
                     }}
-                    name="square-edit-outline"
+                    name={editableText ? "edit" : ""}
                     size={20}
                     onPress={() => {
                       IonNeverDialog.show({
@@ -205,12 +229,12 @@ export default function ProfileScreen({ navigation }) {
                   {selectedCountry}
                 </Text>
                 <TouchableOpacity>
-                  <Icon
+                  <MaterialIcons
                     style={{
                       display: flex,
                       marginHorizontal: 2,
                     }}
-                    name="square-edit-outline"
+                    name={editableText ? "edit" : ""}
                     size={20}
                     onPress={() => {
                       IonNeverDialog.show({
