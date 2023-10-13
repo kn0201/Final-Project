@@ -1,4 +1,4 @@
-import * as React from "react";
+import { Fragment } from "react";
 import * as Bar from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import MyBottomTab from "./src/tabs/bottomTab";
@@ -10,19 +10,37 @@ import {
   Platform,
   ScrollView,
   StatusBar,
+  View,
+  Dimensions,
 } from "react-native";
+import TestingApp from "./src/components/IonNeverNotification/testingApp";
 
 const Stack = createNativeStackNavigator();
+
+function RootApp() {
+  const { width, height } = Dimensions.get("screen");
+
+  return (
+    <IonNeverNotificationRoot>
+      <NavigationContainer>
+        <MyBottomTab />
+        <Bar.StatusBar style="auto" />
+      </NavigationContainer>
+    </IonNeverNotificationRoot>
+  );
+}
+
 function App() {
   return (
-    <KeyboardAvoidingView>
-      <IonNeverNotificationRoot>
-        <NavigationContainer>
-          <MyBottomTab></MyBottomTab>
-          <Bar.StatusBar style="auto" />
-        </NavigationContainer>
-      </IonNeverNotificationRoot>
-    </KeyboardAvoidingView>
+    <Fragment>
+      {Platform.OS === "ios" ? (
+        <KeyboardAvoidingView>
+          <RootApp />
+        </KeyboardAvoidingView>
+      ) : (
+        <RootApp />
+      )}
+    </Fragment>
   );
 }
 

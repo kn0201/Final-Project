@@ -177,6 +177,24 @@ const RegisterPageStyleSheet = StyleSheet.create({
   title: {
     fontSize: 32,
   },
+  uploadContainerSquare: {
+    elevation: 2,
+    height: 300,
+    width: 400,
+    backgroundColor: "#efefef",
+    position: "relative",
+    overflow: "hidden",
+    marginBottom: 12,
+  },
+  uploadBtnContainerSquare: {
+    opacity: 0.7,
+    position: "absolute",
+    right: 0,
+    bottom: 0,
+    backgroundColor: "lightgrey",
+    width: "100%",
+    height: "15%",
+  },
 });
 
 export default RegisterPageStyleSheet;

@@ -19,6 +19,9 @@ import { countriesList } from "../source/countries";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import RegisterScreenStyleSheet from "../StyleSheet/RegisterScreenCss";
 import { flex } from "../StyleSheet/StyleSheetHelper";
+import * as ImagePicker from "expo-image-picker";
+import { AntDesign } from "@expo/vector-icons";
+import LoginPageStyleSheet from "../StyleSheet/LoginScreenCss";
 
 //@ts-ignore
 const NewPlanning = () => {
@@ -30,6 +33,24 @@ const NewPlanning = () => {
   const [age, setAge] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("Country");
   const [country, setCountry] = useState("");
+  const [image, setImage] = useState(null);
+
+  const addImage = async () => {
+    let _image = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    // @ts-ignore
+    console.log(JSON.stringify(_image.assets[0].uri));
+    //@ts-ignore
+    if (!_image.canceled) {
+      //@ts-ignore
+      setImage(_image.assets[0].uri);
+      updateInputText("avatar", _image.assets[0].uri);
+    }
+  };
 
   let countriesListData = countriesList;
 
@@ -55,6 +76,23 @@ const NewPlanning = () => {
       }}
     >
       <View style={{ flex: 1, alignItems: "center" }}>
+        <View style={RegisterScreenStyleSheet.uploadContainerSquare}>
+          {image && (
+            <Image
+              source={{ uri: image }}
+              style={{ width: 300, height: 300 }}
+            />
+          )}
+          <View style={RegisterScreenStyleSheet.uploadBtnContainerSquare}>
+            <TouchableOpacity
+              onPress={addImage}
+              style={RegisterScreenStyleSheet.uploadBtn}
+            >
+              <Text>{image ? "Edit" : "Upload"} Image</Text>
+              <AntDesign name="camera" size={20} color="black" />
+            </TouchableOpacity>
+          </View>
+        </View>
         <TextInput
           style={RegisterScreenStyleSheet.inputContainer}
           onChangeText={onChangeTitle}
@@ -160,6 +198,12 @@ const NewPlanning = () => {
             size={16}
           />
           <Text>{selectedCountry}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={LoginPageStyleSheet.login}
+          // onPress={register}
+        >
+          <Text style={LoginPageStyleSheet.loginText}>Add New Plan</Text>
         </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>
