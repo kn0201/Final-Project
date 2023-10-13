@@ -6,7 +6,8 @@ import { Avatar, Card, Image } from "@rneui/themed";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import TourScreen from "./PostScreen";
 import SchedulePage from "../pages/SchedulePage";
-import AddSchedule from "./AddSchedule";
+import AddSchedule from "../screen/AddSchedule";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 const Stack = createStackNavigator();
 
@@ -47,19 +48,12 @@ const Schedule = ({ navigation }) => {
           />
         </Card>
       </TouchableOpacity>
-      <Stack.Navigator
-        screenOptions={{
-          presentation: "modal",
-          cardStyle: {
-            backgroundColor: "aqua",
-          },
-        }}
-      >
-        <Stack.Screen
-          name="Add Schedule"
-          component={AddSchedule}
-        ></Stack.Screen>
-      </Stack.Navigator>
+      <MaterialIcons
+        name="add-circle"
+        size={60}
+        style={{ position: "absolute", bottom: 10, right: 10 }}
+        onPress={() => navigation.navigate("Add Schedule")}
+      />
     </>
   );
 };

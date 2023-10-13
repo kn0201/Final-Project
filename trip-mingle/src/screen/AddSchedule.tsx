@@ -35,16 +35,17 @@ const AddSchedule = () => {
             selectedColor: "#30C0FE",
           },
         }}
-        renderList={(listItem: ReservationListProps) => {
-          return (
-            <AgendaListItem data={listItem.items} selectedDate={selected} />
-          );
+        marking={{
+          type: "multi-dot",
+          selected: true,
+          selectedColor: "blue",
+          marked: true,
+          startingDay: true,
+          endingDay: true,
         }}
-        // renderKnob={() => {
-        //   return (
-        //     <Entypo name="chevron-thin-down" size={24} color="black" />
-        //   );
-        // }}
+        //   renderList={(listItem: ReservationListProps) => {
+        //     return <AgendaListItem data={listItem.items} selectedDate={selected} />;
+        //   }}
         showClosingKnob={true}
         pastScrollRange={1}
         futureScrollRange={12}

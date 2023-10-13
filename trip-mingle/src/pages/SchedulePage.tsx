@@ -13,7 +13,12 @@ const SchedulePage = () => {
     >
       <Stack.Screen name="Schedule" component={Schedule} />
       <Stack.Screen name="Planning" component={PlanningPage} />
-      <Stack.Screen name="Add Schedule" component={AddSchedule}></Stack.Screen>
+      <Stack.Screen name="Add Schedule" component={AddSchedule} />
+      <Stack.Screen
+        name="Cancel"
+        component={Schedule}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };
