@@ -1,12 +1,12 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import PlanningPage from "../screen/Planning";
+import PlanningPage from "./Planning";
 import React from "react";
 import { View, ScrollView, StyleSheet } from "react-native";
 import { Avatar, Card, Image } from "@rneui/themed";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import TourScreen from "./PostScreen";
 import SchedulePage from "../pages/SchedulePage";
-import AddSchedule from "../screen/AddSchedule";
+import AddSchedule from "./AddSchedule";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 const Stack = createStackNavigator();
@@ -38,7 +38,7 @@ const Schedule = ({ navigation }) => {
     <>
       <TouchableOpacity onPress={() => navigation.navigate("Planning")}>
         <Card>
-          <Card.Title>Japan Travel</Card.Title>
+          <Card.Title>Sample</Card.Title>
           <Card.Divider />
           <Card.Image
             style={{ padding: 0 }}
@@ -52,7 +52,7 @@ const Schedule = ({ navigation }) => {
         name="add-circle"
         size={60}
         style={{ position: "absolute", bottom: 10, right: 10 }}
-        onPress={() => navigation.navigate("Add Schedule")}
+        onPress={() => navigation.navigate("NewPlanning")}
       />
     </>
   );

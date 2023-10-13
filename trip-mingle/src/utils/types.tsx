@@ -24,7 +24,12 @@ export type AgendaEventListItem = {
  * name: string, height: number, day:string
  */
 
-export type NewType = AgendaEntry & { id: number };
+export type NewType = AgendaEntry & {
+  id: number;
+  startingDay: boolean;
+  endingDay: boolean;
+  color: string;
+};
 
 export type ProfileInfo = {
   language: string;
