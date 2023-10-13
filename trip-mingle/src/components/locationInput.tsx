@@ -18,9 +18,8 @@ import { useIonNeverNotification } from "./IonNeverNotification/NotificationProv
 export default function LocationInput({ code }) {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
 
-  const [selectedLocationText, setSelectedLocationText] = useState(
-    "Destination Location",
-  );
+  const [selectedLocationText, setSelectedLocationText] =
+    useState("Destination Spots");
   const [selectedLocationList, setSelectedLocationList] = useState<
     UserLocation[]
   >([]);

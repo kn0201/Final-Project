@@ -1,6 +1,6 @@
 //Buffer Line
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Text,
   TouchableOpacity,
@@ -34,11 +34,27 @@ export default function InputAutocomplete({
   const [selectedLocation, setSelectedLocation] = useState("");
   const localSelectedLocationList = selectedLocationList;
 
-  type CountryProps = { id: number; name: string };
-  const Country = ({ id, name }: CountryProps) => (
-    <View>
+  type CountryProps = { id: number; name: string; onPress: () => void };
+
+  const handleLocationClick = (index: number) => {
+    selectedLocationList.splice(index, 1);
+    const updatedSelectedLocationText = selectedLocationList
+      .map((location: { name: any }) => location.name)
+      .join(", ");
+    if (updatedSelectedLocationText == "") {
+      setSelectedLocationText("Destination Spots");
+    } else {
+      setSelectedLocationText(updatedSelectedLocationText);
+    }
+    setSelectedLocation("");
+  };
+  useEffect(() => {
+    setSelectedLocationList([...selectedLocationList]);
+  }, [selectedLocationList]);
+  const Country = ({ id, name, onPress }: CountryProps) => (
+    <TouchableOpacity onPress={onPress}>
       <Text>{`${id}. ${name}`}</Text>
-    </View>
+    </TouchableOpacity>
   );
   const query = {
     key: GOOGLE_API_KEY,
@@ -79,7 +95,11 @@ export default function InputAutocomplete({
       <FlatList
         data={localSelectedLocationList}
         renderItem={({ item, index }) => (
-          <Country name={item.name} id={index + 1} />
+          <Country
+            name={item.name}
+            id={index + 1}
+            onPress={() => handleLocationClick(index)}
+          />
         )}
       />
       <View style={AddPostPageStyleSheet.ModalButtonContainer}>
@@ -107,7 +127,7 @@ const styles = StyleSheet.create({
   },
   list: {
     zIndex: 999,
-    height: "100%",
+    height: "80%",
     width: "100%",
     borderRadius: 8,
   },
