@@ -198,6 +198,9 @@ const RegisterPageStyleSheet = StyleSheet.create({
     width: "100%",
     height: "15%",
   },
+  backgroundColor: {
+    backgroundColor: "#ffffff",
+  },
 });
 
 export default RegisterPageStyleSheet;

@@ -10,8 +10,6 @@ import TestingApp from "./src/components/IonNeverNotification/testingApp";
 const Stack = createNativeStackNavigator();
 
 function RootApp() {
-  const { width, height } = Dimensions.get("screen");
-
   return (
     <NavigationContainer>
       <IonNeverNotificationRoot>

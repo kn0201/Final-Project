@@ -38,3 +38,12 @@ export type ProfileInfo = {
   hobby: string;
   country: string;
 };
+
+export type ScheduleCardInfo = {
+  id: number;
+} & ScheduleCardInputInfo;
+
+export type ScheduleCardInputInfo = {
+  title: string;
+  uri?: string;
+};

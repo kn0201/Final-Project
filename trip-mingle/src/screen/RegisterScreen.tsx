@@ -79,6 +79,8 @@ export default function RegisterScreen({ navigation }) {
     regisInfo[field as keyof RegisInfo] = value;
   };
 
+  let countriesListData = countriesList;
+
   const addImage = async () => {
     let _image = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -386,6 +388,7 @@ export default function RegisterScreen({ navigation }) {
               IonNeverDialog.show({
                 dialogHeight: 800,
                 component: () => {
+                  console.log("load country select");
                   return (
                     <SelectCountry
                       setSelectedCountry={setSelectedCountry}
