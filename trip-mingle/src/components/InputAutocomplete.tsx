@@ -25,6 +25,8 @@ export default function InputAutocomplete({
   setSelectedLocationList,
   //@ts-ignore
   selectedLocationList,
+  //@ts-ignore
+  code,
 }) {
   const GOOGLE_API_KEY = "AIzaSyDkl6HfJvmSSKDGWH0L0Y183PbBuY9fjdo";
 
@@ -37,6 +39,22 @@ export default function InputAutocomplete({
       <Text>{`${id}. ${name}`}</Text>
     </View>
   );
+  const query = {
+    key: GOOGLE_API_KEY,
+    language: ["en", "zh-CN", "zh-TW", "ja"],
+    types: [
+      "establishment",
+      "tourist_attraction",
+      "landmark",
+      "natural_feature",
+      "point_of_interest",
+    ],
+  };
+  if (code) {
+    //@ts-ignore
+    query.components = `country:${code}`;
+  }
+
   return (
     <>
       <GooglePlacesAutocomplete
@@ -54,10 +72,7 @@ export default function InputAutocomplete({
             setSelectedLocationText(updatedSelectedLocationText);
           }
         }}
-        query={{
-          key: GOOGLE_API_KEY,
-          language: ["en", "zh-CN", "zh-TW", "ja"],
-        }}
+        query={query}
         onFail={(error) => console.log(error)}
       />
       <FlatList

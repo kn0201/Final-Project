@@ -14,11 +14,12 @@ import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import InputAutocomplete from "./InputAutocomplete";
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
 
-export default function LocationInput() {
+//@ts-ignore
+export default function LocationInput({ code }) {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
 
   const [selectedLocationText, setSelectedLocationText] = useState(
-    "Destination Location"
+    "Destination Location",
   );
   const [selectedLocationList, setSelectedLocationList] = useState<
     UserLocation[]
@@ -42,13 +43,14 @@ export default function LocationInput() {
         }
         Keyboard.dismiss();
         IonNeverDialog.show({
-          dialogHeight: 300,
+          dialogHeight: 550,
           component: () => {
             return (
               <InputAutocomplete
                 setSelectedLocationText={setSelectedLocationText}
                 setSelectedLocationList={setSelectedLocationList}
                 selectedLocationList={selectedLocationList}
+                code={code}
               />
             );
           },
