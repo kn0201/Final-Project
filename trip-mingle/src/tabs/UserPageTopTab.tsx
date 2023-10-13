@@ -4,7 +4,8 @@ import SavedLocationScreen from "../screen/SavedLocationScreen";
 import MemoryScreen from "../screen/MemoryScreen";
 import ProfileScreen from "../screen/ProfileScreen";
 import LikedScreen from "../screen/LikedScreen";
-import { KeyboardAvoidingView, Platform } from "react-native";
+
+import LocationInput from "../components/locationInput";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -35,7 +36,7 @@ export default function UserPageTopTab() {
       />
       <Tab.Screen
         name="Liked"
-        component={LikedScreen}
+        component={LocationInput}
         options={{ tabBarLabel: "Liked" }}
       />
     </Tab.Navigator>

@@ -22,6 +22,7 @@ import {
   GooglePlacesAutocomplete,
 } from "react-native-google-places-autocomplete";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import LocationInput from "../components/locationInput";
 
 type InputAutocompleteProps = {
   placeholder?: string;
@@ -39,15 +40,14 @@ export default function AddPost() {
   const [selectedAge, setSelectedAge] = useState("Preferred Age Group");
   const [age, setAge] = useState("");
   const [selectedCountry, setSelectedCountry] = useState(
-    "Destination Country *",
+    "Destination Country *"
   );
   const [country, setCountry] = useState("");
-  const [userLocation, setUserLocation] = useState<UserLocation[]>([]);
-  const [location, setLocation] = useState<string[]>([]);
-  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
+
   const [selectedLocationText, setSelectedLocationText] = useState(
-    "Destination Location",
+    "Destination Location"
   );
+
   let countriesListData = countriesList;
 
   const regisInfo = useRef<RegisInfo>({
@@ -263,8 +263,8 @@ export default function AddPost() {
                   countryList.filter((country) =>
                     country.name
                       .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase()),
-                  ),
+                      .includes(search.toLocaleLowerCase())
+                  )
                 );
               }, [search, countryList]);
               const updateSearch = (search: string) => {
@@ -331,127 +331,29 @@ export default function AddPost() {
     );
   };
 
-  // Location input
-  const locationInput = () => {
-    return (
-      <TouchableOpacity
-        style={AddPostPageStyleSheet.postCountryContainer}
+  // Location autocomplete
+
+  return (
+    <>
+      <TouchableWithoutFeedback
         onPress={() => {
-          {
-            focusInput;
-          }
           Keyboard.dismiss();
-          IonNeverDialog.show({
-            dialogHeight: 300,
-            component: () => {
-              const [localLocation, setLocalLocation] =
-                useState<string[]>(location);
-              return (
-                <>
-                  <InputAutocomplete />
-                  <FlatList
-                    data={userLocation}
-                    renderItem={({ item, index }) => (
-                      <Text>{`${index + 1}. ${item.name}`}</Text>
-                    )}
-                  />
-                  <View style={AddPostPageStyleSheet.ModalButtonContainer}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        IonNeverDialog.dismiss();
-                        updateInputText("location", selectedLocationText);
-                      }}
-                    >
-                      <Text style={AddPostPageStyleSheet.ModalText}>OK</Text>
-                    </TouchableOpacity>
-                  </View>
-                </>
-              );
-            },
-          });
         }}
       >
-        <Text ref={inputRef}>{selectedLocationText}</Text>
-        <MaterialIcons name="edit" size={16} />
-      </TouchableOpacity>
-    );
-  };
-
-  // Location autocomplete
-  type UserLocation = {
-    id: string;
-    name: string;
-  };
-
-  function InputAutocomplete() {
-    return (
-      <>
-        <GooglePlacesAutocomplete
-          styles={{ textInput: styles.search, listView: styles.list }}
-          placeholder="Search..."
-          fetchDetails
-          onPress={(data, details) => {
-            // console.log(JSON.stringify(data));
-            // console.log(JSON.stringify(details));
-            if (details) {
-              const position = { id: details.place_id, name: details.name };
-              console.log({ userLocationbefore: userLocation });
-              setUserLocation([position]);
-              console.log({ userLocationafter: userLocation });
-              const updatedSelectedLocationText = userLocation
-                .concat(position)
-                .map((location) => location.name)
-                .join(", ");
-              setSelectedLocationText(updatedSelectedLocationText);
-            }
-          }}
-          query={{
-            key: GOOGLE_API_KEY,
-            language: ["en", "zh-CN", "zh-TW", "ja"],
-          }}
-          onFail={(error) => console.log(error)}
-        />
-      </>
-    );
-  }
-
-  //Display
-  return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss();
-      }}
-    >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-      >
-        <View style={{ flex: 1, alignItems: "center" }}>
-          {titleInput()}
-          {countryCheckbox()}
-          {locationInput()}
-          {contentInput()}
-          {/* {genderCheckbox()} */}
-          {ageCheckbox()}
-        </View>
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+        >
+          <View style={{ flex: 1, alignItems: "center" }}>
+            {titleInput()}
+            {countryCheckbox()}
+            <LocationInput />
+            {contentInput()}
+            {/* {genderCheckbox()} */}
+            {ageCheckbox()}
+          </View>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+    </>
   );
 }
-
-// Stylesheet
-const styles = StyleSheet.create({
-  search: {
-    height: 40,
-    width: "90%",
-    margin: 8,
-    borderWidth: 1,
-    borderRadius: 10,
-  },
-  list: {
-    zIndex: 1,
-    height: "100%",
-    width: "100%",
-    borderRadius: 8,
-  },
-});
