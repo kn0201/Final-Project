@@ -11,6 +11,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  StatusBar,
 } from "react-native";
 import { NewType, RegisInfo } from "../utils/types";
 import { countriesList } from "../source/countries";
@@ -19,6 +20,8 @@ import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import LocationInput from "../components/locationInput";
 import { Calendar } from "react-native-calendars";
+import CalendarPicker from "react-native-calendar-picker";
+import PeriodPicker from "../components/PeriodPicker";
 
 export default function AddPost() {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
@@ -33,18 +36,9 @@ export default function AddPost() {
   );
   const [country, setCountry] = useState("");
   const [code, setCode] = useState("");
-  const [selectedDates, setSelectedDates] = useState<SelectedDates>({});
-  const [isSelectingEndDate, setIsSelectingEndDate] = useState(false);
-  const [selected, setSelected] = useState("");
-  const [period, setPeriod] = useState("");
   const [selectedPeriod, setSelectedPeriod] = useState("Preferred Period");
 
   let countriesListData = countriesList;
-
-  type SelectedDates = {
-    start?: string;
-    end?: string;
-  };
 
   const regisInfo = useRef<RegisInfo>({
     username: "",
@@ -358,6 +352,12 @@ export default function AddPost() {
 
   // Period Selector
   const periodSelector = () => {
+    const [selectedDays, setSelectedDays] = useState([]);
+
+    const handleDaysSelected = (days: any) => {
+      setSelectedDays(days);
+    };
+
     return (
       <TouchableOpacity
         style={AddPostPageStyleSheet.postAgeContainer}
@@ -367,64 +367,14 @@ export default function AddPost() {
           }
           Keyboard.dismiss();
           IonNeverDialog.show({
-            dialogHeight: 450,
+            dialogHeight: 420,
             component: () => {
-              const [localPeriod, setLocalPeriod] = useState<string>(period);
-              const handleDayPress = (day: any) => {
-                if (isSelectingEndDate) {
-                  setSelectedDates({ ...selectedDates, end: day.dateString });
-                  setIsSelectingEndDate(false);
-                  setSelected(day.dateString);
-                } else {
-                  setSelectedDates({
-                    start: day.dateString,
-                    end: selectedDates.end,
-                  });
-                  setIsSelectingEndDate(true);
-                  setSelected(day.dateString);
-                }
-              };
-              const formatSelectedDates = () => {
-                const { start, end } = selectedDates;
-                if (start && end) {
-                  return `${start} to ${end}`;
-                }
-                return "Select Date Range";
-              };
               return (
-                <>
-                  <View style={{ flex: 1 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        margin: 16,
-                      }}
-                    >
-                      <Text>{formatSelectedDates()}</Text>
-                    </View>
-                    <Calendar
-                      onDayPress={handleDayPress}
-                      markedDates={{
-                        [selected]: {
-                          selectedColor: "#30C0FE",
-                        },
-                      }}
-                      markingType="period"
-                    />
-                  </View>
-                  <View style={AddPostPageStyleSheet.ModalButtonContainer}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        localPeriod ? setSelectedPeriod(localPeriod) : null;
-                        IonNeverDialog.dismiss();
-                        updateInputText("period", localPeriod);
-                      }}
-                    >
-                      <Text style={AddPostPageStyleSheet.ModalText}>OK</Text>
-                    </TouchableOpacity>
-                  </View>
-                </>
+                <PeriodPicker
+                  setSelectedPeriod={setSelectedPeriod}
+                  selectedPeriod={selectedPeriod}
+                  onDaysSelected={handleDaysSelected}
+                />
               );
             },
           });
@@ -452,8 +402,8 @@ export default function AddPost() {
           <View style={{ flex: 1, alignItems: "center" }}>
             {titleInput()}
             {countryCheckbox()}
-            <LocationInput code={code} />
             {periodSelector()}
+            <LocationInput code={code} />
             {contentInput()}
             {/* {genderCheckbox()} */}
             {ageCheckbox()}
