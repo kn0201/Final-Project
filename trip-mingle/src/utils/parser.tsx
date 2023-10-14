@@ -1,15 +1,27 @@
-import { boolean, nullable, number, object, string } from "cast.ts";
+import { array, boolean, nullable, number, object, string } from "cast.ts";
 
-export const signUpResult = object({
+export const signUpResultParser = object({
   username: string(),
   token: string(),
 });
 
-export const loginResult = object({
+export const loginResultParser = object({
   username: string(),
   token: string(),
 });
 
-export const checkResult = object({
+export const checkResultParser = object({
+  result: boolean(),
+});
+
+export const getProfileResultParser = object({
+  intro: string(),
+  language: string(),
+  skill: string(),
+  hobby: string(),
+  countries_travelled: string(),
+});
+
+export const sendProfileResultParser = object({
   result: boolean(),
 });

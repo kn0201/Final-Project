@@ -6,10 +6,6 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-  StatusBar,
-  SafeAreaView,
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
@@ -17,11 +13,16 @@ import ProfileScreenStyleSheet from "../StyleSheet/ProfileScreenCss";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { center, flex, row, white } from "../StyleSheet/StyleSheetHelper";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import SelectCountry from "../components/selectCountry";
 import { ProfileInfo } from "../utils/types";
 import SelectLanguage from "../components/selectLanguage";
+import { api } from "../apis/api";
+import {
+  getProfileResultParser,
+  sendProfileResultParser,
+} from "../utils/parser";
 //@ts-ignore
 export default function ProfileScreen({ navigation }) {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
@@ -34,14 +35,14 @@ export default function ProfileScreen({ navigation }) {
     country: "",
   }).current;
 
-  const [introText, setIntroText] = useState("Test");
-  const [selectedLanguage, setSelectedLanguage] = useState("");
+  const [introText, setIntroText] = useState("add");
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("");
 
-  const [selectedCountry, setSelectedCountry] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState<string>("");
 
-  const [selectedSkill, setSelectedSkill] = useState("Skill");
+  const [selectedSkill, setSelectedSkill] = useState("");
 
-  const [selectedHobby, setSelectedHobby] = useState("Hobby");
+  const [selectedHobby, setSelectedHobby] = useState("");
 
   const [editableText, setEditableText] = useState(false);
 
@@ -54,9 +55,42 @@ export default function ProfileScreen({ navigation }) {
   const editProfile = "Edit Profile";
   const submitProfile = "Submit";
 
-  const sendProfile = async () => {
-    console.log(profileInfo);
+  const getProfile = async () => {
+    let json = await api.get("/user/profile", getProfileResultParser);
+    setIntroText(json.intro);
+    setSelectedLanguage(json.language);
+    setSelectedCountry(json.countries_travelled);
+    setSelectedSkill(json.skill);
+    setSelectedHobby(json.hobby);
   };
+
+  const sendProfile = async () => {
+    try {
+      let json = await api.post(
+        "/user/profile",
+        profileInfo,
+        sendProfileResultParser
+      );
+      if (json.result == true) {
+        IonNeverDialog.show({
+          type: "success",
+          title: "Updated Profile",
+          // message: json.username,
+          firstButtonVisible: true,
+          firstButtonFunction: () => {
+            getProfile();
+          },
+        });
+      }
+    } catch (error) {
+      const errorObject: any = { ...(error as object) };
+      console.log(errorObject);
+    }
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, []);
   return (
     <>
       <ScrollView>
@@ -111,12 +145,11 @@ export default function ProfileScreen({ navigation }) {
                 <Text
                   style={{
                     flex: 1,
-                    backgroundColor: "red",
+
                     flexDirection: "column",
                     flexWrap: "wrap",
                     justifyContent: center,
                     marginHorizontal: 4,
-                    color: white,
                   }}
                 >
                   {selectedLanguage}
@@ -152,12 +185,11 @@ export default function ProfileScreen({ navigation }) {
                 <Text
                   style={{
                     flex: 1,
-                    backgroundColor: "red",
+
                     flexDirection: "column",
                     flexWrap: "wrap",
                     justifyContent: center,
                     marginHorizontal: 4,
-                    color: white,
                   }}
                 >
                   {selectedSkill}
@@ -193,12 +225,11 @@ export default function ProfileScreen({ navigation }) {
                 <Text
                   style={{
                     flex: 1,
-                    backgroundColor: "red",
+
                     flexDirection: "column",
                     flexWrap: "wrap",
                     justifyContent: center,
                     marginHorizontal: 4,
-                    color: white,
                   }}
                 >
                   {selectedHobby}
@@ -234,12 +265,11 @@ export default function ProfileScreen({ navigation }) {
                 <Text
                   style={{
                     flex: 1,
-                    backgroundColor: "red",
+
                     flexDirection: "column",
                     flexWrap: "wrap",
                     justifyContent: center,
                     marginHorizontal: 4,
-                    color: white,
                   }}
                 >
                   {selectedCountry}

@@ -17,6 +17,7 @@ function RootApp() {
         <Bar.StatusBar style="auto" />
       </IonNeverNotificationRoot>
     </NavigationContainer>
+    // <TestingApp></TestingApp>
   );
 }
 

@@ -43,7 +43,6 @@ const ProfileScreenStyleSheet = StyleSheet.create({
   },
   IntroText: {
     fontSize: 18,
-    // marginTop: 16,
     marginBottom: 4,
     marginLeft: "2.5%",
   },
