@@ -107,7 +107,7 @@ export default function InputAutocomplete({
                 if (
                   selectedLocationList.some(
                     (loc: { id: string; name: string }) =>
-                      loc.id === position.id
+                      loc.id === position.id,
                   )
                 ) {
                   IonNeverToast.show({
@@ -163,7 +163,6 @@ export default function InputAutocomplete({
         >
           <Text style={AddPostPageStyleSheet.ModalText}>OK</Text>
         </TouchableOpacity>
-        <Text>{code}</Text>
       </View>
     </>
   );

@@ -72,11 +72,11 @@ const AddPostPageStyleSheet = StyleSheet.create({
   },
   CountryScrollViewContainer: {
     width: "100%",
-    height: "100%",
+    height: "80%",
   },
   AgeScrollViewContainer: {
     width: "100%",
-    height: "100%",
+    height: "80%",
   },
   ModalButtonContainer: {
     display: flex,
