@@ -6,6 +6,7 @@ import { env } from './env';
 import { LoginModule } from './login/login.module';
 import { JwtService } from './jwt/jwt.service';
 import { ServerTestingModule } from './server-testing/server-testing.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ServerTestingModule } from './server-testing/server-testing.module';
     }),
     LoginModule,
     ServerTestingModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService],

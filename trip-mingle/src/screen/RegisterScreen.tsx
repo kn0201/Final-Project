@@ -139,16 +139,6 @@ export default function RegisterScreen({ navigation }) {
       const errorObject: any = { ...(error as object) };
       console.log(errorObject);
     }
-    // IonNeverDialog.show({
-    //   type: "success",
-    //   title: "Welcome to TripMingle",
-    //   message:json.username
-    //   firstButtonVisible: true,
-    //   firstButtonFunction: () => {
-    //     navigation.navigate("Users");
-    //   },
-    //   secondButtonVisible: false,
-    // });
     console.log(regisInfo);
     navigation.navigate("Users");
   };
