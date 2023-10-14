@@ -11,13 +11,12 @@ const Stack = createNativeStackNavigator();
 
 function RootApp() {
   return (
-    // <NavigationContainer>
-    //   <IonNeverNotificationRoot>
-    //     <MyBottomTab />
-    //     <Bar.StatusBar style="auto" />
-    //   </IonNeverNotificationRoot>
-    // </NavigationContainer>
-    <TestingApp />
+    <NavigationContainer>
+      <IonNeverNotificationRoot>
+        <MyBottomTab />
+        <Bar.StatusBar style="auto" />
+      </IonNeverNotificationRoot>
+    </NavigationContainer>
   );
 }
 
