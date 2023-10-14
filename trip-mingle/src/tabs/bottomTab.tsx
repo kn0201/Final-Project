@@ -13,23 +13,27 @@ import { useEffect, useState } from "react";
 import ExplorePage from "../pages/ExplorePage";
 import SchedulePage from "../pages/SchedulePage";
 import { getToken } from "../utils/jwtToken";
+import { useToken } from "../hooks/useToken";
 
 const Tab = createBottomTabNavigator();
 
 function MyTab() {
-  const [checkToken, setCheckToken] = useState(false);
-  const checkLogin = async () => {
-    let result = await getToken();
-    if (result == false) {
-      setCheckToken(false);
-    } else {
-      setCheckToken(true);
-    }
-  };
+  // const [checkToken, setCheckToken] = useState(false);
+  // const checkLogin = async () => {
+  //   let result = await getToken();
+  //   if (result == false) {
+  //     setCheckToken(false);
+  //   } else {
+  //     setCheckToken(true);
+  //   }
+  // };
 
-  useEffect(() => {
-    checkLogin;
-  }, []);
+  // useEffect(() => {
+  //   checkLogin();
+  // }, []);
+
+  const { token } = useToken();
+
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen
@@ -62,7 +66,7 @@ function MyTab() {
           ),
         }}
       />
-      {checkToken ? (
+      {token ? (
         <Tab.Screen
           name="Users"
           component={UserPage}

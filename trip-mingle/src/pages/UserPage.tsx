@@ -10,14 +10,15 @@ import UserPageTopTab from "../tabs/UserPageTopTab";
 import { Avatar, Header, Icon } from "@rneui/themed";
 import UserPageStyleSheet from "../StyleSheet/UserPageCss";
 import { iosBlue } from "../StyleSheet/StyleSheetHelper";
-import { removeToken } from "../utils/jwtToken";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
+import { useToken } from "../hooks/useToken";
 
 //@ts-ignore
 export default function UserPage({ navigation }) {
+  const { token, setToken } = useToken();
   const logout = async () => {
-    removeToken();
+    setToken("");
     await AsyncStorage.removeItem("username");
     navigation.navigate("Home");
   };

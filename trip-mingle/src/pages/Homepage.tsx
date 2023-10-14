@@ -1,5 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import * as React from "react";
+import { useToken } from "../hooks/useToken";
+import { Button } from "react-native-paper";
 
 export default function HomePage() {
   return (
@@ -7,6 +9,31 @@ export default function HomePage() {
       <Text style={styles.title}>Trip Mingle</Text>
       <Text style={styles.title}>伴</Text>
       <Text style={styles.title}>旅</Text>
+      <Demo />
+      <Demo />
+    </View>
+  );
+}
+
+function Demo() {
+  const { token, payload, setToken } = useToken();
+  console.log(token);
+  return (
+    <View>
+      <Text>Token: {JSON.stringify(token)}</Text>
+      <Text>Payload: {JSON.stringify(payload, null, 2)}</Text>
+      <Button
+        onPress={() =>
+          setToken(
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoibWVtYmVyIiwidXNlcl9pZCI6Mn0.HJZgCE9EW1DeO8EcJSFnv0JvNKHFkrL-ZR5hjLqaX2A"
+          )
+        }
+      >
+        <Text>login</Text>
+      </Button>
+      <Button onPress={() => setToken("")}>
+        <Text>logout</Text>
+      </Button>
     </View>
   );
 }
