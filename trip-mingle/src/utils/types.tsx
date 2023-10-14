@@ -20,10 +20,6 @@ export type AgendaEventListItem = {
   date: string;
 } & AgendaEntry;
 
-/** AgendaEntry
- * name: string, height: number, day:string
- */
-
 export type NewType = AgendaEntry & {
   id: number;
   startingDay: boolean;

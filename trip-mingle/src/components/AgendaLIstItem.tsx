@@ -7,7 +7,7 @@ import {
   ListRenderItemInfo,
   TouchableOpacity,
 } from "react-native";
-import { AgendaEventListItem } from "../utils/types";
+import { AgendaEventListItem, NewType } from "../utils/types";
 import { AgendaSchedule } from "react-native-calendars";
 import { Avatar, Card } from "react-native-paper";
 
@@ -44,13 +44,15 @@ function AgendaListItem(props: {
 
   useEffect(() => {
     const eventItems: AgendaEventListItem[] = [];
+    if (!props.data) return;
 
-    const dateEventObject = props.data || {};
+    const dateEventObject = props.data;
     for (const date in dateEventObject) {
       if (props.selectedDate && props.selectedDate !== date) {
         continue;
       }
-      dateEventObject[date].map((info) =>
+
+      (dateEventObject[date as keyof AgendaSchedule] as NewType[]).map((info) =>
         eventItems.push({ ...info, date } as AgendaEventListItem)
       );
     }

@@ -38,6 +38,12 @@ function AddScheduleForm(props: {
     uri: "",
   }).current;
 
+  const clearInputs = useRef({
+    uri() {},
+    title() {},
+    country() {},
+  }).current;
+
   const updateInputText = (field: string, value: string) => {
     schdeuleInfo[field as keyof ScheduleCardInputInfo] = value;
   };
@@ -75,6 +81,9 @@ function AddScheduleForm(props: {
       </View>
       <TextInput
         style={RegisterScreenStyleSheet.inputContainer}
+        ref={(input: any) => {
+          clearInputs.title = () => input?.clear();
+        }}
         onChangeText={(text) => {
           updateInputText("title", text);
         }}

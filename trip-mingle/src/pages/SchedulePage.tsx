@@ -3,6 +3,7 @@ import PlanningPage from "../screen/Planning";
 import AddSchedule from "../screen/AddSchedule";
 import MySchedule from "../screen/MySchedule";
 import NewPlanning from "../screen/NewPlanning";
+import AddNewPlan from "../components/AddNewPlanSchedule";
 
 const Stack = createStackNavigator();
 
@@ -16,6 +17,8 @@ const SchedulePage = () => {
       <Stack.Screen name="Planning" component={PlanningPage} />
       <Stack.Screen name="AddSchedule" component={AddSchedule} />
       <Stack.Screen name="NewPlanning" component={NewPlanning} />
+      <Stack.Screen name="AddNewPlan" component={AddNewPlan} />
+
       {/* <Stack.Screen
         name="Cancel"
         component={Schedule}
