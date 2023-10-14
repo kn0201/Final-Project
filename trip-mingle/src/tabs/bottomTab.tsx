@@ -4,19 +4,20 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import HomeScreen from "../pages/Homepage";
-import BuddiesPage from "./ExplorePageTopTab";
+
 import MapPage from "../pages/MapPage";
-import PlanningPage from "../pages/SchedulePage";
+
 import UserPage from "../pages/UserPage";
 import LoginPage from "../pages/LoginPage";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ExplorePage from "../pages/ExplorePage";
 import SchedulePage from "../pages/SchedulePage";
 
 const Tab = createBottomTabNavigator();
 
 function MyTab() {
-  useEffect;
+  const [checkToken, setCheckToken] = useState(false);
+
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen

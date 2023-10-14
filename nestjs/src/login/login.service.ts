@@ -3,6 +3,7 @@ import { Knex } from 'knex';
 import { InjectKnex } from 'nestjs-knex';
 import * as nodemailer from 'nodemailer';
 import { env } from 'src/env';
+import { JwtService } from 'src/jwt/jwt.service';
 import { comparePassword, hashPassword } from 'utils/hash';
 
 @Injectable()
@@ -14,7 +15,24 @@ export class LoginService {
       pass: env.EMAIL_PASSWORD,
     },
   });
-  constructor(@InjectKnex() private readonly knex: Knex) {}
+  constructor(
+    @InjectKnex() private readonly knex: Knex,
+    private jwtService: JwtService,
+  ) {}
+
+  async checker(input) {
+    let foundUser = await this.knex('users')
+      .select('username')
+      .where('username', input.username)
+      .first();
+    console.log(foundUser);
+
+    if (foundUser === undefined) {
+      return { result: false };
+    } else {
+      return { result: true };
+    }
+  }
 
   async login(input) {
     let foundUser = await this.knex('users')
@@ -32,7 +50,8 @@ export class LoginService {
     let role = foundUser.role;
     let id = foundUser.id;
 
-    return { username: input.username, role: role, error: null, id: id };
+    const token = this.jwtService.encode({ role: role, user_id: id });
+    return { username: input.username, token: token };
   }
 
   async register(body: {
@@ -77,6 +96,7 @@ export class LoginService {
         console.log('Email sent:' + info.response);
       }
     });
-    return { username: username, id: id, role: 'member' };
+    const token = this.jwtService.encode({ role: 'member', user_id: id });
+    return { username: username, token: token };
   }
 }

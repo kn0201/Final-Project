@@ -20,13 +20,13 @@ import RegisterScreenStyleSheet from "../StyleSheet/RegisterScreenCss";
 import { RegisInfo } from "../utils/types";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { countriesList } from "../source/countries";
 import { api } from "../apis/api";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import SelectCountry from "../components/selectCountry";
-import { signUpResult } from "../utils/parser";
+import { checkResult, signUpResult } from "../utils/parser";
+import { storeToken } from "../utils/jwtToken";
 
-//@ts-ignore
+// @ts-ignore
 export default function RegisterScreen({ navigation }) {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
 
@@ -36,14 +36,16 @@ export default function RegisterScreen({ navigation }) {
   const [age, setAge] = useState("");
 
   const [selectedCountry, setSelectedCountry] = useState("Country");
-  const [country, setCountry] = useState("");
 
   const [image, setImage] = useState<string>();
 
   const [checkPassword, setCheckPassword] = useState("");
   const [checkConfirmPassword, setCheckConfirmPassword] = useState("");
 
+  const [checkUsernameResult, setCheckUsernameResult] = useState(false);
+
   const errMsg = "Password Not Match!";
+  const usernameErrorMsg = "Username already exist";
 
   const regisInfo = useRef<RegisInfo>({
     username: "",
@@ -80,8 +82,6 @@ export default function RegisterScreen({ navigation }) {
     regisInfo[field as keyof RegisInfo] = value;
   };
 
-  let countriesListData = countriesList;
-
   const addImage = async () => {
     let _image = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -98,12 +98,33 @@ export default function RegisterScreen({ navigation }) {
     }
   };
 
+  const checkUsername = async (text: string) => {
+    try {
+      let checker = await api.post(
+        "/login/check",
+        { username: text },
+        checkResult
+      );
+      if (checker.result === true) {
+        setCheckUsernameResult(true);
+        console.log(checkUsernameResult);
+      } else if (checker.result === false) {
+        console.log(checkUsernameResult);
+        setCheckUsernameResult(false);
+      }
+    } catch (error) {
+      const errorObject: any = { ...(error as object) };
+      console.log(errorObject);
+    }
+  };
+
   const register = async () => {
     try {
       let json = await api.post("/login/register", regisInfo, signUpResult);
       Object.entries(clearInputs).map(([_key, clear]) => clear());
       setSelectedAge("Select Your Age Group");
       setSelectedCountry("Country");
+      storeToken(json.token);
       IonNeverDialog.show({
         type: "success",
         title: "Welcome to TripMingle",
@@ -178,6 +199,7 @@ export default function RegisterScreen({ navigation }) {
               }}
               onChangeText={(text: string) => {
                 updateInputText("username", text);
+                checkUsername(text);
               }}
               onEndEditing={() => Keyboard.dismiss()}
               placeholder="Username"
@@ -190,6 +212,11 @@ export default function RegisterScreen({ navigation }) {
               size={20}
               onPress={() => clearInputs.username()}
             />
+          </View>
+          <View style={RegisterScreenStyleSheet.center}>
+            <Text style={{ color: "red" }}>
+              {checkUsernameResult ? usernameErrorMsg : ""}
+            </Text>
           </View>
         </View>
         <View style={RegisterScreenStyleSheet.outerContainer}>
@@ -402,7 +429,6 @@ export default function RegisterScreen({ navigation }) {
               IonNeverDialog.show({
                 dialogHeight: 800,
                 component: () => {
-                  console.log("load country select");
                   return (
                     <SelectCountry
                       setSelectedCountry={setSelectedCountry}

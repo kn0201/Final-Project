@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -17,10 +17,17 @@ import { nullable, number, object, string } from "cast.ts";
 import { center, flex, iosBlue } from "../StyleSheet/StyleSheetHelper";
 import { loginResult } from "../utils/parser";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
+import { storeToken } from "../utils/jwtToken";
 
 //@ts-ignore
 export default function LoginScreen({ navigation }) {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
+  // const [dummyState, setDummyState] = useState<boolean>(false);
+
+  // useEffect(() => {
+  //   console.log("changed", dummyState);
+  //   if (dummyState) navigation.navigate("Users");
+  // }, [dummyState]);
 
   const [showPassword, setPassword] = useState(true);
   const password = () => {
@@ -41,19 +48,22 @@ export default function LoginScreen({ navigation }) {
     loginInfo[field as keyof LoginInfo] = value;
   };
 
+  const toUserPage = () => {
+    navigation.navigate("Users");
+  };
   const login = async () => {
     try {
       let json = await api.post("/login", loginInfo, loginResult);
       Object.entries(clearInputs).map(([_key, clear]) => clear());
+      storeToken(json.token);
       IonNeverDialog.show({
         type: "success",
         title: "Welcome Back",
-        // message: json.username,
+        message: json.username,
         firstButtonVisible: true,
         firstButtonFunction: () => {
-          navigation.navigate("Users");
+          // setDummyState(true);
         },
-        secondButtonVisible: false,
       });
     } catch (error) {
       const errorObject: any = { ...(error as object) };
@@ -96,6 +106,7 @@ export default function LoginScreen({ navigation }) {
             onChangeText={(text: string) => updateInputText("username", text)}
             onEndEditing={() => Keyboard.dismiss()}
             style={{ display: flex, width: 320 }}
+            autoCapitalize="none"
             placeholder="Username"
           ></TextInput>
           <Icon

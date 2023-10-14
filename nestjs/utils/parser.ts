@@ -13,3 +13,7 @@ export const signUpParser = object({
   age: string(),
   country: string(),
 });
+
+export const checkerParser = object({
+  username: string(),
+});

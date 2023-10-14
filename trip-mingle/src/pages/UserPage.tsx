@@ -1,21 +1,23 @@
 import {
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
-  StyleSheet,
   Text,
-  TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
-import * as React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import UserPageTopTab from "../tabs/UserPageTopTab";
-import { Avatar, Header } from "@rneui/themed";
+import { Avatar, Header, Icon } from "@rneui/themed";
 import UserPageStyleSheet from "../StyleSheet/UserPageCss";
+import { iosBlue } from "../StyleSheet/StyleSheetHelper";
+import { removeToken } from "../utils/jwtToken";
 
-const Stack = createStackNavigator();
-
-export default function UserPage() {
+//@ts-ignore
+export default function UserPage({ navigation }) {
+  const logout = () => {
+    removeToken();
+    navigation.navigate("Home");
+  };
   return (
     <>
       <KeyboardAvoidingView
@@ -28,6 +30,21 @@ export default function UserPage() {
             text: "User",
             style: UserPageStyleSheet.header,
           }}
+          rightComponent={
+            <View>
+              <TouchableOpacity
+                style={UserPageStyleSheet.rightComponent}
+                onPress={logout}
+              >
+                <Text style={{ color: iosBlue }}>Logout</Text>
+                <Icon
+                  name="logout"
+                  type="material-community"
+                  color={iosBlue}
+                ></Icon>
+              </TouchableOpacity>
+            </View>
+          }
         ></Header>
         <View style={UserPageStyleSheet.container}>
           <Avatar

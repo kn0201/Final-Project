@@ -10,5 +10,6 @@ export type DBProxy = {
 };
 
 export type JWT_Payload = {
-  id: number;
+  role: string;
+  user_id: number;
 };
