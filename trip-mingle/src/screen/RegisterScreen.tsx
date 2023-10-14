@@ -24,6 +24,7 @@ import { countriesList } from "../source/countries";
 import { api } from "../apis/api";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import SelectCountry from "../components/selectCountry";
+import { signUpResult } from "../utils/parser";
 
 //@ts-ignore
 export default function RegisterScreen({ navigation }) {
@@ -98,22 +99,35 @@ export default function RegisterScreen({ navigation }) {
   };
 
   const register = async () => {
-    // try {
-    //   let json = await api.post("/login", regisInfo, loginResult);
-    //   Object.entries(clearInputs).map(([_key, clear]) => clear());
-    // } catch (error) {
-    //   const errorObject: any = { ...(error as object) };
-    //   console.log(errorObject);
-    // }
-    IonNeverDialog.show({
-      type: "success",
-      title: "Welcome to TripMingle",
-      firstButtonVisible: true,
-      firstButtonFunction: () => {
-        navigation.navigate("Users");
-      },
-      secondButtonVisible: false,
-    });
+    try {
+      let json = await api.post("/login/register", regisInfo, signUpResult);
+      Object.entries(clearInputs).map(([_key, clear]) => clear());
+      setSelectedAge("Select Your Age Group");
+      setSelectedCountry("Country");
+      IonNeverDialog.show({
+        type: "success",
+        title: "Welcome to TripMingle",
+        message: json.username,
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          navigation.navigate("Users");
+        },
+        secondButtonVisible: false,
+      });
+    } catch (error) {
+      const errorObject: any = { ...(error as object) };
+      console.log(errorObject);
+    }
+    // IonNeverDialog.show({
+    //   type: "success",
+    //   title: "Welcome to TripMingle",
+    //   message:json.username
+    //   firstButtonVisible: true,
+    //   firstButtonFunction: () => {
+    //     navigation.navigate("Users");
+    //   },
+    //   secondButtonVisible: false,
+    // });
     console.log(regisInfo);
     navigation.navigate("Users");
   };
