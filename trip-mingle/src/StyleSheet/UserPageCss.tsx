@@ -1,6 +1,6 @@
 //Buffer Line
 import { StyleSheet } from "react-native";
-import { center, flex } from "./StyleSheetHelper";
+import { center, flex, row } from "./StyleSheetHelper";
 
 const UserPageStyleSheet = StyleSheet.create({
   container: {
@@ -21,6 +21,11 @@ const UserPageStyleSheet = StyleSheet.create({
   username: {
     marginBottom: 16,
     fontSize: 24,
+  },
+  rightComponent: {
+    display: flex,
+    flexDirection: row,
+    alignItems: center,
   },
 });
 

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { object, string } from 'cast.ts';
 import { LoginService } from './login.service';
-import { loginParser, signUpParser } from 'utils/parser';
+import { checkerParser, loginParser, signUpParser } from 'utils/parser';
 
 @Controller('login')
 export class LoginController {
@@ -17,5 +17,11 @@ export class LoginController {
   async register(@Body() body: Body) {
     let input = signUpParser.parse(body);
     return this.loginService.register(input);
+  }
+
+  @Post('check')
+  async checker(@Body() body: Body) {
+    let input = checkerParser.parse(body);
+    return this.loginService.checker(input);
   }
 }
