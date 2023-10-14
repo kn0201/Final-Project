@@ -12,12 +12,24 @@ import LoginPage from "../pages/LoginPage";
 import { useEffect, useState } from "react";
 import ExplorePage from "../pages/ExplorePage";
 import SchedulePage from "../pages/SchedulePage";
+import { getToken } from "../utils/jwtToken";
 
 const Tab = createBottomTabNavigator();
 
 function MyTab() {
   const [checkToken, setCheckToken] = useState(false);
+  const checkLogin = async () => {
+    let result = await getToken();
+    if (result == false) {
+      setCheckToken(false);
+    } else {
+      setCheckToken(true);
+    }
+  };
 
+  useEffect(() => {
+    checkLogin;
+  }, []);
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen
@@ -50,28 +62,31 @@ function MyTab() {
           ),
         }}
       />
-      <Tab.Screen
-        name="Users"
-        component={UserPage}
-        options={{
-          // tabBarHideOnKeyboard: true,
-          tabBarLabel: "Users",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="login"
-        component={LoginPage}
-        options={{
-          // tabBarHideOnKeyboard: true,
-          tabBarLabel: "Login",
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="login" color={color} size={size} />
-          ),
-        }}
-      />
+      {checkToken ? (
+        <Tab.Screen
+          name="Users"
+          component={UserPage}
+          options={{
+            // tabBarHideOnKeyboard: true,
+            tabBarLabel: "Users",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="person" color={color} size={size} />
+            ),
+          }}
+        />
+      ) : (
+        <Tab.Screen
+          name="login"
+          component={LoginPage}
+          options={{
+            // tabBarHideOnKeyboard: true,
+            tabBarLabel: "Login",
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="login" color={color} size={size} />
+            ),
+          }}
+        />
+      )}
       <Tab.Screen
         name="Map"
         component={MapPage}

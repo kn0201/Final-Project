@@ -23,7 +23,7 @@ import * as ImagePicker from "expo-image-picker";
 import { api } from "../apis/api";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import SelectCountry from "../components/selectCountry";
-import { checkResult, signUpResult } from "../utils/parser";
+import { checkResultParser, signUpResultParser } from "../utils/parser";
 import { storeToken } from "../utils/jwtToken";
 
 // @ts-ignore
@@ -103,7 +103,7 @@ export default function RegisterScreen({ navigation }) {
       let checker = await api.post(
         "/login/check",
         { username: text },
-        checkResult
+        checkResultParser
       );
       if (checker.result === true) {
         setCheckUsernameResult(true);
@@ -120,7 +120,11 @@ export default function RegisterScreen({ navigation }) {
 
   const register = async () => {
     try {
-      let json = await api.post("/login/register", regisInfo, signUpResult);
+      let json = await api.post(
+        "/login/register",
+        regisInfo,
+        signUpResultParser
+      );
       Object.entries(clearInputs).map(([_key, clear]) => clear());
       setSelectedAge("Select Your Age Group");
       setSelectedCountry("Country");
@@ -139,16 +143,6 @@ export default function RegisterScreen({ navigation }) {
       const errorObject: any = { ...(error as object) };
       console.log(errorObject);
     }
-    // IonNeverDialog.show({
-    //   type: "success",
-    //   title: "Welcome to TripMingle",
-    //   message:json.username
-    //   firstButtonVisible: true,
-    //   firstButtonFunction: () => {
-    //     navigation.navigate("Users");
-    //   },
-    //   secondButtonVisible: false,
-    // });
     console.log(regisInfo);
     navigation.navigate("Users");
   };

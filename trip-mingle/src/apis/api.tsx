@@ -1,12 +1,15 @@
 import { Parser } from "cast.ts";
+import { getToken } from "../utils/jwtToken";
 
 export class ApiService {
   apiOrigin = "http://192.168.80.71:8200";
 
   async get<T>(path: string, parser: Parser<T>) {
+    const token = getToken();
     let res = await fetch(this.apiOrigin + path, {
       headers: {
         Accept: "application/json",
+        Authorization: "Bearer " + token,
       },
     });
     let json = await res.json();
