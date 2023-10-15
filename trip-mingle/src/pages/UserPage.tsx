@@ -16,27 +16,13 @@ import { useToken } from "../hooks/useToken";
 
 //@ts-ignore
 export default function UserPage({ navigation }) {
-  const { token, setToken } = useToken();
+  const { token, payload, setToken } = useToken();
   const logout = async () => {
     setToken("");
     await AsyncStorage.removeItem("username");
     navigation.navigate("Home");
   };
-  const getUsername = async () => {
-    try {
-      const result = await AsyncStorage.getItem("username");
-      if (result) {
-        setUsername(result);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
-  const [username, setUsername] = useState("");
-  useEffect(() => {
-    getUsername();
-  }, []);
   return (
     <>
       <KeyboardAvoidingView
@@ -72,7 +58,7 @@ export default function UserPage({ navigation }) {
             containerStyle={UserPageStyleSheet.AvatarContainer}
             source={require("../assets/yukimin.png")}
           />
-          <Text style={UserPageStyleSheet.username}>{username}</Text>
+          <Text style={UserPageStyleSheet.username}>{payload?.username}</Text>
         </View>
         <UserPageTopTab></UserPageTopTab>
       </KeyboardAvoidingView>

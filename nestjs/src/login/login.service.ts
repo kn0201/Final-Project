@@ -25,7 +25,6 @@ export class LoginService {
       .select('username')
       .where('username', input.username)
       .first();
-    console.log(foundUser);
 
     if (foundUser === undefined) {
       return { result: false };
@@ -50,8 +49,12 @@ export class LoginService {
     let role = foundUser.role;
     let id = foundUser.id;
 
-    const token = this.jwtService.encode({ role: role, user_id: id });
-    return { username: input.username, token: token };
+    const token = this.jwtService.encode({
+      role: role,
+      user_id: id,
+      username: input.username,
+    });
+    return { token: token };
   }
 
   async register(body: {
@@ -77,16 +80,21 @@ export class LoginService {
         is_delete: false,
       })
       .returning('id');
+
     let id = result[0].id;
+
+    let emailUsername = username[0].toUpperCase() + username.slice(1);
 
     const mailOptions = {
       from: env.EMAIL_ADDRESS,
       to: body.email,
       subject: 'Trip Mingle Register',
       text:
-        `Hi ${username}` +
+        `Hi ${emailUsername} !` +
         '\n' +
-        `Welcome to Trip Mingle, Enjoy your member benefits!`,
+        `Welcome to Trip Mingle` +
+        '\n' +
+        `Enjoy your member benefits!`,
     };
 
     this.transporter.sendMail(mailOptions, function (error, info) {
@@ -96,7 +104,11 @@ export class LoginService {
         console.log('Email sent:' + info.response);
       }
     });
-    const token = this.jwtService.encode({ role: 'member', user_id: id });
-    return { username: username, token: token };
+    const token = this.jwtService.encode({
+      username: username,
+      role: 'member',
+      user_id: id,
+    });
+    return { token: token };
   }
 }

@@ -23,9 +23,11 @@ import {
   getProfileResultParser,
   sendProfileResultParser,
 } from "../utils/parser";
+import { useToken } from "../hooks/useToken";
 //@ts-ignore
 export default function ProfileScreen({ navigation }) {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
+  const { token, payload, setToken } = useToken();
 
   const profileInfo = useRef<ProfileInfo>({
     intro: "",
@@ -56,12 +58,22 @@ export default function ProfileScreen({ navigation }) {
   const submitProfile = "Submit";
 
   const getProfile = async () => {
-    let json = await api.get("/user/profile", getProfileResultParser);
-    setIntroText(json.intro);
-    setSelectedLanguage(json.language);
-    setSelectedCountry(json.countries_travelled);
-    setSelectedSkill(json.skill);
-    setSelectedHobby(json.hobby);
+    let json = await api.get("/user/profile", getProfileResultParser, token);
+    if (json.intro != null) {
+      setIntroText(json.intro);
+    }
+    if (json.language != null) {
+      setSelectedLanguage(json.language);
+    }
+    if (json.countries_travelled != null) {
+      setSelectedCountry(json.countries_travelled);
+    }
+    if (json.skill != null) {
+      setSelectedSkill(json.skill);
+    }
+    if (json.hobby != null) {
+      setSelectedHobby(json.hobby);
+    }
   };
 
   const sendProfile = async () => {
@@ -69,7 +81,8 @@ export default function ProfileScreen({ navigation }) {
       let json = await api.post(
         "/user/profile",
         profileInfo,
-        sendProfileResultParser
+        sendProfileResultParser,
+        token
       );
       if (json.result == true) {
         IonNeverDialog.show({
@@ -141,7 +154,7 @@ export default function ProfileScreen({ navigation }) {
             </View>
             <View style={ProfileScreenStyleSheet.center}>
               <View style={ProfileScreenStyleSheet.inputContainer}>
-                <Text>Language</Text>
+                <Text>Language :</Text>
                 <Text
                   style={{
                     flex: 1,
@@ -181,7 +194,7 @@ export default function ProfileScreen({ navigation }) {
             </View>
             <View style={ProfileScreenStyleSheet.center}>
               <View style={ProfileScreenStyleSheet.inputContainer}>
-                <Text>Skill</Text>
+                <Text>Skill :</Text>
                 <Text
                   style={{
                     flex: 1,
@@ -221,7 +234,7 @@ export default function ProfileScreen({ navigation }) {
             </View>
             <View style={ProfileScreenStyleSheet.center}>
               <View style={ProfileScreenStyleSheet.inputContainer}>
-                <Text>Hobby</Text>
+                <Text>Hobby :</Text>
                 <Text
                   style={{
                     flex: 1,
@@ -261,7 +274,7 @@ export default function ProfileScreen({ navigation }) {
             </View>
             <View style={ProfileScreenStyleSheet.center}>
               <View style={ProfileScreenStyleSheet.inputContainer}>
-                <Text>Countries Traveled</Text>
+                <Text>Countries Traveled :</Text>
                 <Text
                   style={{
                     flex: 1,

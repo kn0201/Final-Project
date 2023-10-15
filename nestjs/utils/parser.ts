@@ -20,8 +20,8 @@ export const checkerParser = object({
 
 export const sendProfileParser = object({
   intro: string(),
-  language: array(string()),
+  language: string(),
   skill: string(),
   hobby: string(),
-  countries_travelled: array(string()),
+  country: string(),
 });

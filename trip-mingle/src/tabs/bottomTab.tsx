@@ -9,29 +9,15 @@ import MapPage from "../pages/MapPage";
 
 import UserPage from "../pages/UserPage";
 import LoginPage from "../pages/LoginPage";
-import { useEffect, useState } from "react";
+
 import ExplorePage from "../pages/ExplorePage";
 import SchedulePage from "../pages/SchedulePage";
-import { getToken } from "../utils/jwtToken";
+
 import { useToken } from "../hooks/useToken";
 
 const Tab = createBottomTabNavigator();
 
 function MyTab() {
-  // const [checkToken, setCheckToken] = useState(false);
-  // const checkLogin = async () => {
-  //   let result = await getToken();
-  //   if (result == false) {
-  //     setCheckToken(false);
-  //   } else {
-  //     setCheckToken(true);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   checkLogin();
-  // }, []);
-
   const { token } = useToken();
 
   return (

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { sendProfileParser } from 'utils/parser';
@@ -9,14 +9,14 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Get('profile')
-  async getProfile() {
-    return this.userService.getProfile();
+  async getProfile(@Req() req: Request) {
+    return this.userService.getProfile(req);
   }
 
   @UseGuards(AuthGuard)
   @Post('profile')
-  async sendProfile(@Body() body: Body) {
+  async sendProfile(@Body() body: Body, @Req() req: Request) {
     let input = sendProfileParser.parse(body);
-    return this.userService.sendProfile(input);
+    return this.userService.sendProfile(input, req);
   }
 }

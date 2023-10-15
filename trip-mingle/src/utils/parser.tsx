@@ -1,12 +1,10 @@
 import { array, boolean, nullable, number, object, string } from "cast.ts";
 
 export const signUpResultParser = object({
-  username: string(),
   token: string(),
 });
 
 export const loginResultParser = object({
-  username: string(),
   token: string(),
 });
 
@@ -15,11 +13,11 @@ export const checkResultParser = object({
 });
 
 export const getProfileResultParser = object({
-  intro: string(),
-  language: string(),
-  skill: string(),
-  hobby: string(),
-  countries_travelled: string(),
+  intro: nullable(string()),
+  language: nullable(string()),
+  skill: nullable(string()),
+  hobby: nullable(string()),
+  countries_travelled: nullable(string()),
 });
 
 export const sendProfileResultParser = object({
