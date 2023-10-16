@@ -31,3 +31,11 @@ export const countryListParser = array(
     name: string(),
   })
 );
+
+export const addPostCountryListParser = array(
+  object({
+    id: string(),
+    name: string(),
+    code: string(),
+  })
+);

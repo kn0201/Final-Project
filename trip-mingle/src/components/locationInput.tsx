@@ -8,7 +8,7 @@ import { useIonNeverNotification } from "./IonNeverNotification/NotificationProv
 import { UserLocation } from "../utils/types";
 
 //@ts-ignore
-export default function LocationInput({ code }) {
+export default function LocationInput({ code, updateInputText }) {
   const { IonNeverDialog } = useIonNeverNotification();
 
   const [selectedLocationText, setSelectedLocationText] =
@@ -40,6 +40,7 @@ export default function LocationInput({ code }) {
                 setSelectedLocationText={setSelectedLocationText}
                 setSelectedLocationList={setSelectedLocationList}
                 selectedLocationList={selectedLocationList}
+                updateInputText={updateInputText}
                 code={code}
               />
             );

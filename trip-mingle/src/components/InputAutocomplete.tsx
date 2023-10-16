@@ -25,6 +25,8 @@ export default function InputAutocomplete({
   selectedLocationList,
   //@ts-ignore
   code,
+  //@ts-ignore
+  updateInputText,
 }) {
   const autocompleteRef = useRef(null);
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
@@ -147,6 +149,7 @@ export default function InputAutocomplete({
           onPress={() => {
             IonNeverDialog.dismiss();
             setSelectedLocationList(localSelectedLocationList);
+            updateInputText("trip_location", localSelectedLocationList);
           }}
         >
           <Text style={AddPostPageStyleSheet.ModalText}>OK</Text>

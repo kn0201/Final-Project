@@ -10,17 +10,19 @@ import {
   FlatList,
   ScrollView,
 } from "react-native";
-import { PostInfo } from "../utils/types";
-import { countriesList } from "../source/countries";
+import { AddPostCountryList, LanguageList, PostInfo } from "../utils/types";
+
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import LocationInput from "../components/locationInput";
 import PeriodPicker from "../components/PeriodPicker";
 import MultipleSelector from "../components/MutlipleSelector";
-import languagesList from "../source/languages";
+
 import SingleSelectorWithOther from "../components/SingleSelectorWithOther";
 import MultipleSelectorWithOther from "../components/MultipleSelectorWithOther";
+import { addPostCountryListParser, countryListParser } from "../utils/parser";
+import { api } from "../apis/api";
 
 export default function AddPost() {
   const { IonNeverDialog } = useIonNeverNotification();
@@ -68,8 +70,41 @@ export default function AddPost() {
   const [selectedSkillsText, setSelectedSkillsText] =
     useState<string>("Preferred Skill(s)");
 
-  let countriesListData = countriesList;
-  let languagesListData = languagesList;
+  const [selectedAgesText, setSelectedAgesText] = useState("Preferred Age(s)");
+  const [selectedAgesList, setSelectedAgesList] = useState<string[]>([]);
+  const ageLabels = [
+    "18-24",
+    "25-30",
+    "31-36",
+    "37-42",
+    "42-48",
+    "48-54",
+    ">55",
+  ];
+
+  const [countriesListData, setCountriesListData] = useState<
+    AddPostCountryList[]
+  >([]);
+  const getCountryList = async () => {
+    const json = await api.getList(
+      "/login/country_list",
+      addPostCountryListParser
+    );
+    setCountriesListData(json);
+  };
+  const [languagesListData, setLanguagesListData] = useState<LanguageList[]>(
+    []
+  );
+  const getLanguageList = async () => {
+    const json = await api.getList("/user/language_list", countryListParser);
+
+    setLanguagesListData(json);
+  };
+
+  useEffect(() => {
+    getCountryList();
+    getLanguageList();
+  }, []);
 
   const postInfo = useRef<PostInfo>({
     // avatar_path: "",
@@ -91,6 +126,16 @@ export default function AddPost() {
     // created_at: ""
   }).current;
 
+  const addPost = () => {
+    updateInputText("trip_headcount", selectedHeadcount);
+    updateInputText("preferred_gender", selectedGender);
+    updateInputText("preferred_age", selectedAgesText);
+    updateInputText("trip_country", selectedCountry);
+    updateInputText("trip_period", selectedPeriod);
+    updateInputText("preferred_language", selectedLanguagesText);
+    updateInputText("preferred_skill", selectedSkillsText);
+    console.log(postInfo);
+  };
   // Update Input fields
   const updateInputText = (field: string, value: string) => {
     //@ts-ignore
@@ -113,6 +158,7 @@ export default function AddPost() {
         style={AddPostPageStyleSheet.postInputContainer}
         onChangeText={(title) => {
           setTitle(title);
+          updateInputText("title", title);
         }}
         value={title}
         placeholder="Post Title *"
@@ -129,6 +175,7 @@ export default function AddPost() {
         style={AddPostPageStyleSheet.contentContainer}
         onChangeText={(content) => {
           setContent(content);
+          updateInputText("content", content);
         }}
         value={content}
         multiline
@@ -241,18 +288,6 @@ export default function AddPost() {
 
   // Age checkbox
   const AgeCheckbox = () => {
-    const [selectedAgesText, setSelectedAgesText] =
-      useState("Preferred Age(s)");
-    const [selectedAgesList, setSelectedAgesList] = useState<string[]>([]);
-    const ageLabels = [
-      "18-24",
-      "25-30",
-      "31-36",
-      "37-42",
-      "42-48",
-      "48-54",
-      ">55",
-    ];
     return (
       <TouchableOpacity
         style={AddPostPageStyleSheet.postAgeContainer}
@@ -598,18 +633,28 @@ export default function AddPost() {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{ flex: 1 }}
         > */}
-        <ScrollView style={{ height: "100%", flex: 1 }}>
-          <View style={{ flex: 1, alignItems: "center" }}>
+        <ScrollView>
+          <View style={{ height: "auto", alignItems: "center" }}>
             {TitleInput()}
             <CountryCheckbox />
             <PeriodSelector />
-            <LocationInput code={code} />
+            <LocationInput code={code} updateInputText={updateInputText} />
             {ContentInput()}
             <HeadcountCheckbox />
             <GenderCheckbox />
             <AgeCheckbox />
             <LanguagesCheckbox />
             <SkillCheckbox />
+            <View style={AddPostPageStyleSheet.center}>
+              <TouchableOpacity
+                style={AddPostPageStyleSheet.addPost}
+                onPress={addPost}
+              >
+                <Text style={AddPostPageStyleSheet.addPostText}>
+                  Create New Post
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
         {/* </KeyboardAvoidingView> */}

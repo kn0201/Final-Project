@@ -59,7 +59,7 @@ const SingleSelectorWithOther = ({
                 }
               }}
             />
-          ),
+          )
         )}
         <TextInput
           style={AddPostPageStyleSheet.otherInputContainer}

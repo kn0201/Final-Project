@@ -6,7 +6,7 @@ const AddPostPageStyleSheet = StyleSheet.create({
   postInputContainer: {
     flexDirection: row,
     alignItems: center,
-    height: "5.5%",
+    height: 43,
     width: "90%",
     margin: 8,
     borderWidth: 1,
@@ -28,7 +28,7 @@ const AddPostPageStyleSheet = StyleSheet.create({
   contentContainer: {
     flexDirection: row,
     alignItems: center,
-    height: "30%",
+    height: 200,
     width: "90%",
     margin: 8,
     borderWidth: 1,
@@ -105,6 +105,29 @@ const AddPostPageStyleSheet = StyleSheet.create({
     textAlign: center,
     alignItems: center,
     justifyContent: center,
+  },
+  addPost: {
+    width: "90%",
+    height: 60,
+    margin: 12,
+    padding: 10,
+    display: flex,
+    justifyContent: center,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: iosBlue,
+    backgroundColor: iosBlue,
+  },
+  addPostText: {
+    fontSize: 16,
+    color: "#ffffff",
+    textAlign: center,
+  },
+  center: {
+    display: flex,
+    justifyContent: center,
+    alignItems: center,
+    width: "100%",
   },
 });
 

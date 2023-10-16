@@ -68,6 +68,11 @@ export type CountryList = {
   name: string;
 };
 
+export type AddPostCountryList = {
+  id: string;
+  name: string;
+  code: string;
+};
 export type LanguageList = {
   id: string;
   name: string;
