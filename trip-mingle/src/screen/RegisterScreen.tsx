@@ -12,7 +12,7 @@ import {
 import LoginPageStyleSheet from "../StyleSheet/LoginScreenCss";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { flex } from "../StyleSheet/StyleSheetHelper";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CheckBox } from "@rneui/themed";
 import RegisterScreenStyleSheet from "../StyleSheet/RegisterScreenCss";
 import { RegisInfo } from "../utils/types";
@@ -21,7 +21,11 @@ import * as ImagePicker from "expo-image-picker";
 import { api } from "../apis/api";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import SelectCountry from "../components/selectCountry";
-import { checkResultParser, signUpResultParser } from "../utils/parser";
+import {
+  checkResultParser,
+  countryListParser,
+  signUpResultParser,
+} from "../utils/parser";
 import { JWTPayload, useToken } from "../hooks/useToken";
 import decode from "jwt-decode";
 
@@ -43,6 +47,10 @@ export default function RegisterScreen({ navigation }) {
 
   const [checkUsernameResult, setCheckUsernameResult] = useState(false);
 
+  useEffect(() => {
+    getList();
+  }, []);
+
   const errMsg = "Password Not Match!";
   const usernameErrorMsg = "Username already exist";
 
@@ -52,7 +60,7 @@ export default function RegisterScreen({ navigation }) {
     password: "",
     gender: checkGender,
     age: "",
-    country: "",
+    country_id: "",
     avatar: "",
   }).current;
 
@@ -117,34 +125,41 @@ export default function RegisterScreen({ navigation }) {
     }
   };
 
+  const getList = async () => {
+    const json = await api.getList("/login/country_list", countryListParser);
+
+    const countriesListData = json;
+    return countriesListData;
+  };
+
   const register = async () => {
-    try {
-      let json = await api.loginSignUp(
-        "/login/register",
-        regisInfo,
-        signUpResultParser
-      );
-      Object.entries(clearInputs).map(([_key, clear]) => clear());
-      setSelectedAge("Select Your Age Group");
-      setSelectedCountry("Country");
-      setToken(json.token);
-      const username = decode<JWTPayload>(json.token).username;
-      IonNeverDialog.show({
-        type: "success",
-        title: "Welcome to TripMingle",
-        message: username,
-        firstButtonVisible: true,
-        firstButtonFunction: () => {
-          navigation.navigate("Users");
-        },
-        secondButtonVisible: false,
-      });
-    } catch (error) {
-      const errorObject: any = { ...(error as object) };
-      console.log(errorObject);
-    }
+    // try {
+    //   let json = await api.loginSignUp(
+    //     "/login/register",
+    //     regisInfo,
+    //     signUpResultParser
+    //   );
+    //   Object.entries(clearInputs).map(([_key, clear]) => clear());
+    //   setSelectedAge("Select Your Age Group");
+    //   setSelectedCountry("Country");
+    //   setToken(json.token);
+    //   const username = decode<JWTPayload>(json.token).username;
+    //   IonNeverDialog.show({
+    //     type: "success",
+    //     title: "Welcome to TripMingle",
+    //     message: username,
+    //     firstButtonVisible: true,
+    //     firstButtonFunction: () => {
+    //       navigation.navigate("Users");
+    //     },
+    //     secondButtonVisible: false,
+    //   });
+    // } catch (error) {
+    //   const errorObject: any = { ...(error as object) };
+    //   console.log(errorObject);
+    // }
     console.log(regisInfo);
-    navigation.navigate("Users");
+    // navigation.navigate("Users");
   };
 
   return (

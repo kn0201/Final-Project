@@ -200,7 +200,7 @@ skill
 -----
 id integer PK
 user_id integer FK -> users.id
-skill_list integer FK -> skill_list.id
+skill_id integer FK -> skill_list.id
 
 
 skill_list
@@ -213,7 +213,7 @@ hobby
 -----
 id integer PK
 user_id integer FK -> users.id
-hobby_list_id integer FK -> hobby_list.id
+hobby_id integer FK -> hobby_list.id
 
 
 hobby_list
@@ -223,34 +223,34 @@ name varchar(255)
 
 
 # zoom: 0.754
-# view: (164, 4)
+# view: (165, 4)
 # text-bg: #6495ed
 # text-color: #000000
 # diagram-bg: #f5f5f5
 # diagram-text: #f5f5f5
 # table-bg: #ffffff
 # table-text: #000000
-# users (260, 460, #505133)
-# comment (-123, 158, #12503c)
-# application (1110, 414, #4b132c)
-# chatroom (-134, 927, #090f13)
-# chat_record (-133, 765, #1e5854)
-# image (1074, 139, #312f37)
-# post (289, 87, #543e56)
-# hashtags (-133, 338, #223539)
-# like (-117, 482, #17633e)
-# bookmark (-117, 625, #1a560a)
-# complaint (73, 25, #5f2560)
-# planing (1061, 559, #1d3a62)
-# plan_detail (1074, 760, #0f232a)
-# daily_event (1073, 910, #211a20)
-# user_location (777, 35, #124c34)
-# system_location (556, 35, #48231f)
-# language_list (850, 626, #18235a)
-# language (619, 597, #083915)
-# country_list (867, 471, #3e5757)
-# countries_travelled (631, 432, #133f44)
-# skill (640, 737, #3f0c37)
-# skill_list (858, 770, #030808)
-# hobby (639, 867, #63344c)
-# hobby_list (858, 903, #2b130a)
+# users (260, 460, #1d0a19)
+# comment (-123, 158, #3d2452)
+# application (1110, 414, #393c07)
+# chatroom (-134, 927, #252a1d)
+# chat_record (-133, 765, #074345)
+# image (1074, 139, #3a3a28)
+# post (289, 87, #47545b)
+# hashtags (-133, 338, #2f4624)
+# like (-117, 482, #135b33)
+# bookmark (-117, 625, #1a4f55)
+# complaint (73, 25, #1f2f50)
+# planing (1061, 559, #003b58)
+# plan_detail (1074, 760, #022f2b)
+# daily_event (1073, 910, #382845)
+# user_location (777, 35, #490f5a)
+# system_location (556, 35, #1b571c)
+# language_list (850, 626, #334f0c)
+# language (619, 597, #4e334f)
+# country_list (867, 471, #623a23)
+# countries_travelled (608, 424, #293c4f)
+# skill (640, 737, #23171c)
+# skill_list (858, 770, #5f3f08)
+# hobby (639, 867, #575d06)
+# hobby_list (864, 903, #354a4c)

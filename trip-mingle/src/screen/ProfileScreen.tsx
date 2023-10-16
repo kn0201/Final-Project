@@ -10,20 +10,22 @@ import {
   Keyboard,
 } from "react-native";
 import ProfileScreenStyleSheet from "../StyleSheet/ProfileScreenCss";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { center, flex, row, white } from "../StyleSheet/StyleSheetHelper";
+import { center, flex, white } from "../StyleSheet/StyleSheetHelper";
 import { useEffect, useRef, useState } from "react";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
-import SelectCountry from "../components/selectCountry";
+
 import { ProfileInfo } from "../utils/types";
-import SelectLanguage from "../components/selectLanguage";
+import MultipleLanguagesCheckbox from "../components/multipleLanguagesCheckbox";
 import { api } from "../apis/api";
 import {
   getProfileResultParser,
   sendProfileResultParser,
 } from "../utils/parser";
 import { useToken } from "../hooks/useToken";
+import MultipleCountryCheckbox from "../components/multipleCountryCheckbox";
+import MultipleHobbyCheckbox from "../components/multipleHobbyCheckbox";
 //@ts-ignore
 export default function ProfileScreen({ navigation }) {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
@@ -32,19 +34,16 @@ export default function ProfileScreen({ navigation }) {
   const profileInfo = useRef<ProfileInfo>({
     intro: "",
     language: "",
-    skill: "",
     hobby: "",
     country: "",
   }).current;
 
   const [introText, setIntroText] = useState("add");
-  const [selectedLanguage, setSelectedLanguage] = useState<string>("");
+  const [selectedLanguage, setSelectedLanguage] = useState<string[]>([]);
 
-  const [selectedCountry, setSelectedCountry] = useState<string>("");
+  const [selectedCountry, setSelectedCountry] = useState<string[]>([]);
 
-  const [selectedSkill, setSelectedSkill] = useState("");
-
-  const [selectedHobby, setSelectedHobby] = useState("");
+  const [selectedHobby, setSelectedHobby] = useState<string[]>([]);
 
   const [editableText, setEditableText] = useState(false);
 
@@ -63,16 +62,19 @@ export default function ProfileScreen({ navigation }) {
       setIntroText(json.intro);
     }
     if (json.language != null) {
-      setSelectedLanguage(json.language);
-    }
-    if (json.countries_travelled != null) {
-      setSelectedCountry(json.countries_travelled);
-    }
-    if (json.skill != null) {
-      setSelectedSkill(json.skill);
+      for (let language of json.language) {
+        selectedLanguage.push(language.name);
+      }
     }
     if (json.hobby != null) {
-      setSelectedHobby(json.hobby);
+      for (let hobby of json.hobby) {
+        selectedHobby.push(hobby.name);
+      }
+    }
+    if (json.countries_travelled != null) {
+      for (let countries_travelled of json.countries_travelled) {
+        selectedCountry.push(countries_travelled.name);
+      }
     }
   };
 
@@ -99,6 +101,7 @@ export default function ProfileScreen({ navigation }) {
       const errorObject: any = { ...(error as object) };
       console.log(errorObject);
     }
+    console.log(profileInfo);
   };
 
   useEffect(() => {
@@ -180,10 +183,14 @@ export default function ProfileScreen({ navigation }) {
                         dialogHeight: 800,
                         component: () => {
                           return (
-                            <SelectLanguage
+                            <MultipleLanguagesCheckbox
                               setSelectedLanguage={setSelectedLanguage}
                               updateInputText={updateInputText}
                             />
+                            // <SelectLanguage
+                            //   setSelectedLanguage={setSelectedLanguage}
+                            //   updateInputText={updateInputText}
+                            // />
                           );
                         },
                       });
@@ -192,46 +199,7 @@ export default function ProfileScreen({ navigation }) {
                 </TouchableOpacity>
               </View>
             </View>
-            <View style={ProfileScreenStyleSheet.center}>
-              <View style={ProfileScreenStyleSheet.inputContainer}>
-                <Text>Skill :</Text>
-                <Text
-                  style={{
-                    flex: 1,
 
-                    flexDirection: "column",
-                    flexWrap: "wrap",
-                    justifyContent: center,
-                    marginHorizontal: 4,
-                  }}
-                >
-                  {selectedSkill}
-                </Text>
-                <TouchableOpacity>
-                  <MaterialIcons
-                    style={{
-                      display: flex,
-                      marginHorizontal: 2,
-                    }}
-                    name={editableText ? "edit" : ""}
-                    size={20}
-                    onPress={() => {
-                      IonNeverDialog.show({
-                        dialogHeight: 800,
-                        component: () => {
-                          return (
-                            <SelectLanguage
-                              setSelectedLanguage={setSelectedLanguage}
-                              updateInputText={updateInputText}
-                            />
-                          );
-                        },
-                      });
-                    }}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
             <View style={ProfileScreenStyleSheet.center}>
               <View style={ProfileScreenStyleSheet.inputContainer}>
                 <Text>Hobby :</Text>
@@ -260,10 +228,14 @@ export default function ProfileScreen({ navigation }) {
                         dialogHeight: 800,
                         component: () => {
                           return (
-                            <SelectLanguage
-                              setSelectedLanguage={setSelectedLanguage}
+                            <MultipleHobbyCheckbox
+                              setSelectedHobby={setSelectedHobby}
                               updateInputText={updateInputText}
                             />
+                            // <SelectLanguage
+                            //   setSelectedLanguage={setSelectedLanguage}
+                            //   updateInputText={updateInputText}
+                            // />
                           );
                         },
                       });
@@ -300,10 +272,14 @@ export default function ProfileScreen({ navigation }) {
                         dialogHeight: 800,
                         component: () => {
                           return (
-                            <SelectCountry
+                            <MultipleCountryCheckbox
                               setSelectedCountry={setSelectedCountry}
                               updateInputText={updateInputText}
                             />
+                            // <SelectCountry
+                            //   setSelectedCountry={setSelectedCountry}
+                            //   updateInputText={updateInputText}
+                            // />
                           );
                         },
                       });

@@ -31,4 +31,19 @@ export async function seed(knex: Knex): Promise<void> {
     }
     await knex.update(language).from('language_list').where('id', row.id);
   }
+
+  let hobbies = JSON.parse(readFileSync('source/hobby.json').toString());
+
+  for (let hobby of hobbies) {
+    let row = await knex
+      .select('id')
+      .from('language_list')
+      .where('name', hobby.name)
+      .first();
+    if (!row) {
+      await knex.insert(hobby).into('hobby_list');
+      continue;
+    }
+    await knex.update(hobby).from('hobby_list').where('id', row.id);
+  }
 }

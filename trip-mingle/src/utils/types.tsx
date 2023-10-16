@@ -12,7 +12,7 @@ export type RegisInfo = {
   password: string;
   gender: boolean;
   age: string;
-  country: string;
+  country_id: string;
   avatar: string;
 };
 
@@ -30,7 +30,6 @@ export type NewType = AgendaEntry & {
 export type ProfileInfo = {
   intro: string;
   language: string;
-  skill: string;
   hobby: string;
   country: string;
 };
@@ -62,4 +61,14 @@ export type PostInfo = {
   // preferred_hobby: string | null;
   // status: string;
   // created_at: string;
+};
+
+export type CountryList = {
+  id: string;
+  name: string;
+};
+
+export type LanguageList = {
+  id: string;
+  name: string;
 };

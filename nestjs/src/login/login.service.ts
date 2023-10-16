@@ -63,7 +63,7 @@ export class LoginService {
     password: any;
     gender: any;
     age: any;
-    country: any;
+    country_id: any;
   }) {
     let username = body.username;
     let hashedPW = await hashPassword(body.password);
@@ -74,7 +74,7 @@ export class LoginService {
         password: hashedPW,
         gender: body.gender,
         age: body.age,
-        country: body.country,
+        country_id: body.country_id,
         rating: 0,
         role: 'member',
         is_delete: false,
@@ -110,5 +110,10 @@ export class LoginService {
       user_id: id,
     });
     return { token: token };
+  }
+
+  async getCountryList() {
+    let result = await this.knex('country_list').select('id', 'name');
+    return result;
   }
 }

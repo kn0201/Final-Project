@@ -9,8 +9,6 @@ import {
   Keyboard,
   FlatList,
   ScrollView,
-  KeyboardAvoidingView,
-  Platform,
 } from "react-native";
 import { PostInfo } from "../utils/types";
 import { countriesList } from "../source/countries";
@@ -30,7 +28,7 @@ export default function AddPost() {
   const [selectedGender, setSelectedGender] = useState("Preferred Gender");
   const [gender, setGender] = useState("");
   const [selectedHeadcount, setSelectedHeadcount] = useState<string>(
-    "Preferred Headcount",
+    "Preferred Headcount"
   );
   const [headcount, setHeadcount] = useState<string>("");
   const [headcountListData, setHeadcountListData] = useState<string[]>([
@@ -49,7 +47,7 @@ export default function AddPost() {
   const [period, setPeriod] = useState<string[]>([]);
   const [languages, setLanguages] = useState<string[]>([]);
   const [selectedLanguagesText, setSelectedLanguagesText] = useState(
-    "Preferred Languages(s)",
+    "Preferred Languages(s)"
   );
 
   let countriesListData = countriesList;
@@ -435,8 +433,8 @@ export default function AddPost() {
                   languagesList.filter((language) =>
                     language.name
                       .toLocaleLowerCase()
-                      .includes(searchLanguages.toLocaleLowerCase()),
-                  ),
+                      .includes(searchLanguages.toLocaleLowerCase())
+                  )
                 );
               }, [searchLanguages, languagesList]);
 
@@ -448,8 +446,8 @@ export default function AddPost() {
                 if (localLanguages.includes(name)) {
                   setLocalLanguages(
                     localLanguages.filter(
-                      (language: string) => language !== name,
-                    ),
+                      (language: string) => language !== name
+                    )
                   );
                 } else {
                   setLocalLanguages([...localLanguages, name]);

@@ -14,12 +14,18 @@ export const checkResultParser = object({
 
 export const getProfileResultParser = object({
   intro: nullable(string()),
-  language: nullable(string()),
-  skill: nullable(string()),
-  hobby: nullable(string()),
-  countries_travelled: nullable(string()),
+  language: nullable(array(object({ name: string() }))),
+  hobby: nullable(array(object({ name: string() }))),
+  countries_travelled: nullable(array(object({ name: string() }))),
 });
 
 export const sendProfileResultParser = object({
   result: boolean(),
 });
+
+export const countryListParser = array(
+  object({
+    id: string(),
+    name: string(),
+  })
+);
