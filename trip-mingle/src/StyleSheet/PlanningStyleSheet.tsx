@@ -1,17 +1,29 @@
 import { StyleSheet } from "react-native";
-import { center, flex, iosBlue, row, white } from "./StyleSheetHelper";
+import { center, flex, full, iosBlue, row, white } from "./StyleSheetHelper";
 
 const PlannigStyleSheet = StyleSheet.create({
   center: {
     display: flex,
     justifyContent: center,
     alignItems: center,
-    width: "100%",
+    width: full,
     flexDirection: row,
   },
+  inputTitle: {
+    fontWeight: "800",
+    fontSize: 24,
+    marginLeft: 8,
+  },
   inputContainer: {
-    flexDirection: row,
-    alignItems: center,
+    width: "95%",
+    height: 24,
+    marginLeft: 8,
+    marginTop: 4,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
+    fontSize: 16,
   },
   daySelectCon: {
     display: flex,
@@ -87,6 +99,26 @@ const PlannigStyleSheet = StyleSheet.create({
     textAlign: center,
     alignItems: center,
     justifyContent: center,
+  },
+  AddScheduleSytle: {
+    height: 1000,
+  },
+  buttonStyle: {
+    width: "90%",
+    height: 60,
+    margin: 12,
+    padding: 10,
+    display: flex,
+    justifyContent: center,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: iosBlue,
+    backgroundColor: iosBlue,
+  },
+  loginText: {
+    fontSize: 16,
+    color: "#ffffff",
+    textAlign: center,
   },
 });
 

@@ -63,3 +63,17 @@ export type PostInfo = {
   // status: string;
   // created_at: string;
 };
+
+export type ScheduleItem = { id: number } & ScheduleItemInfo;
+
+export type ScheduleItemInfo = {
+  date: string;
+  startTime: string;
+  endTime: string;
+  location: string;
+};
+
+export type UserLocation = {
+  id: string;
+  name: string;
+};
