@@ -16,10 +16,10 @@ const AddPostPageStyleSheet = StyleSheet.create({
   },
   otherInputContainer: {
     flexDirection: row,
-    height: "10%",
+    height: "8%",
     width: "73%",
     marginLeft: "13%",
-    marginBottom: 15,
+    marginBottom: 25,
     borderWidth: 1,
     borderRadius: 5.5,
     paddingLeft: 10,

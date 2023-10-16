@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   ScrollView,
   TextInput,
@@ -87,9 +87,9 @@ const SingleSelectorWithOther = ({
             } else if (localHeadcount === "Other: " && otherHeadcount == "") {
               setHeadcount("");
               setLocalHeadcount("");
-              setSelectedHeadcount("Preferred Headcount");
+              setSelectedHeadcount("Preferred Headcount *");
             } else if (localHeadcount === "") {
-              setSelectedHeadcount("Preferred Headcount");
+              setSelectedHeadcount("Preferred Headcount *");
             } else {
               setSelectedHeadcount(localHeadcount);
             }

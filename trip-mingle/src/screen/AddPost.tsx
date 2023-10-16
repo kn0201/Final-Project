@@ -22,15 +22,16 @@ import PeriodPicker from "../components/PeriodPicker";
 import MultipleSelector from "../components/MutlipleSelector";
 import languagesList from "../source/languages";
 import SingleSelectorWithOther from "../components/SingleSelectorWithOther";
+import MultipleSelectorWithOther from "../components/MultipleSelectorWithOther";
 
 export default function AddPost() {
-  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
-  const [title, onChangeTitle] = useState("");
-  const [content, onChangeContent] = useState("");
+  const { IonNeverDialog } = useIonNeverNotification();
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
   const [selectedGender, setSelectedGender] = useState("Preferred Gender");
   const [gender, setGender] = useState("");
   const [selectedHeadcount, setSelectedHeadcount] = useState<string>(
-    "Preferred Headcount",
+    "Preferred Headcount *",
   );
   const [headcount, setHeadcount] = useState<string>("");
   const [headcountListData, setHeadcountListData] = useState<string[]>([
@@ -39,9 +40,12 @@ export default function AddPost() {
     "3",
     "4",
     "5",
+    "6",
+    "7",
+    "8",
   ]);
   const [selectedCountry, setSelectedCountry] = useState(
-    "Destination Country *"
+    "Destination Country *",
   );
   const [country, setCountry] = useState("");
   const [code, setCode] = useState("");
@@ -51,6 +55,20 @@ export default function AddPost() {
   const [selectedLanguagesText, setSelectedLanguagesText] = useState(
     "Preferred Languages(s)",
   );
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [skills, setSkills] = useState<string[]>([]);
+  const [skillsListData, setSkillsListData] = useState<string[]>([
+    "Driving",
+    "Cycling",
+    "Diving",
+    "Cooking",
+    "Camping",
+    "Photography",
+    "VLogging",
+    "Sketching",
+  ]);
+  const [selectedSkillsText, setSelectedSkillsText] =
+    useState<string>("Preferred Skill(s)");
 
   let countriesListData = countriesList;
   let languagesListData = languagesList;
@@ -64,7 +82,7 @@ export default function AddPost() {
     trip_country: "",
     trip_location: "",
     trip_period: "",
-    // trip_headcount: 0,
+    trip_headcount: "",
     // trip_budget: "",
     preferred_gender: "",
     preferred_age: "",
@@ -93,9 +111,11 @@ export default function AddPost() {
   const TitleInput = () => {
     return (
       <TextInput
-        // ref={inputRef}
+        ref={inputRef}
         style={AddPostPageStyleSheet.postInputContainer}
-        onChangeText={onChangeTitle}
+        onChangeText={(title) => {
+          setTitle(title);
+        }}
         value={title}
         placeholder="Post Title *"
         returnKeyType="done"
@@ -109,7 +129,9 @@ export default function AddPost() {
       <TextInput
         ref={inputRef}
         style={AddPostPageStyleSheet.contentContainer}
-        onChangeText={onChangeContent}
+        onChangeText={(content) => {
+          setContent(content);
+        }}
         value={content}
         multiline
         placeholder="Post Content *"
@@ -286,8 +308,8 @@ export default function AddPost() {
                   countryList.filter((country) =>
                     country.name
                       .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase())
-                  )
+                      .includes(search.toLocaleLowerCase()),
+                  ),
                 );
               }, [search, countryList]);
               const updateSearch = (search: string) => {
@@ -333,7 +355,7 @@ export default function AddPost() {
                       backgroundColor: "transparent",
                       borderTopColor: "transparent",
                       borderBottomColor: "transparent",
-                      height: 40,
+                      height: 50,
                     }}
                     inputContainerStyle={{
                       backgroundColor: "white",
@@ -532,6 +554,38 @@ export default function AddPost() {
     );
   };
 
+  // Skill checkbox
+  const SkillCheckbox = () => {
+    return (
+      <TouchableOpacity
+        style={AddPostPageStyleSheet.postAgeContainer}
+        onPress={() => {
+          {
+            focusInput;
+          }
+          Keyboard.dismiss();
+          IonNeverDialog.show({
+            dialogHeight: 300,
+            component: () => {
+              return MultipleSelectorWithOther(
+                setSkills,
+                setSelectedSkills,
+                setSelectedSkillsText,
+                setSkillsListData,
+                skills,
+                selectedSkills,
+                skillsListData,
+              );
+            },
+          });
+        }}
+      >
+        <Text ref={inputRef}>{selectedSkillsText}</Text>
+        <MaterialIcons name="edit" size={16} />
+      </TouchableOpacity>
+    );
+  };
+
   // Display
   return (
     <>
@@ -544,19 +598,20 @@ export default function AddPost() {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{ flex: 1 }}
         > */}
-        {/* <ScrollView> */}
-        <View style={{ flex: 1, alignItems: "center" }}>
-          <TitleInput />
-          <CountryCheckbox />
-          <PeriodSelector />
-          <LocationInput code={code} />
-          <ContentInput />
-          <HeadcountCheckbox />
-          <GenderCheckbox />
-          <AgeCheckbox />
-          <LanguagesCheckbox />
-        </View>
-        {/* </ScrollView> */}
+        <ScrollView style={{ height: "100%", flex: 1 }}>
+          <View style={{ flex: 1, alignItems: "center" }}>
+            {TitleInput()}
+            <CountryCheckbox />
+            <PeriodSelector />
+            <LocationInput code={code} />
+            {ContentInput()}
+            <HeadcountCheckbox />
+            <GenderCheckbox />
+            <AgeCheckbox />
+            <LanguagesCheckbox />
+            <SkillCheckbox />
+          </View>
+        </ScrollView>
         {/* </KeyboardAvoidingView> */}
       </TouchableWithoutFeedback>
     </>

@@ -57,7 +57,7 @@ export type PostInfo = {
   trip_country: string;
   trip_location: string | null;
   trip_period: string | null;
-  // trip_headcount: number | null;
+  trip_headcount: string;
   // trip_budget: string | null;
   preferred_gender: string | null;
   preferred_age: string | null;
