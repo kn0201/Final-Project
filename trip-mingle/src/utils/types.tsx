@@ -47,3 +47,23 @@ export type ScheduleCardInputInfo = {
   title: string;
   uri?: string;
 };
+
+export type PostInfo = {
+  // avatar_path: string;
+  // username: string;
+  // rating: number;
+  title: string;
+  content: string;
+  trip_country: string;
+  trip_location: string | null;
+  trip_period: string | null;
+  // trip_headcount: number | null;
+  // trip_budget: string | null;
+  preferred_gender: string | null;
+  preferred_age: string | null;
+  preferred_language: string | null;
+  // preferred_skill: string | null;
+  // preferred_hobby: string | null;
+  // status: string;
+  // created_at: string;
+};
