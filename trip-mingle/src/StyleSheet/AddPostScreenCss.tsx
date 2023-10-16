@@ -14,6 +14,17 @@ const AddPostPageStyleSheet = StyleSheet.create({
     padding: 10,
     textDecorationLine: "none",
   },
+  otherInputContainer: {
+    flexDirection: row,
+    height: "10%",
+    width: "73%",
+    marginLeft: "13%",
+    marginBottom: 15,
+    borderWidth: 1,
+    borderRadius: 5.5,
+    paddingLeft: 10,
+    textDecorationLine: "none",
+  },
   contentContainer: {
     flexDirection: row,
     alignItems: center,

@@ -1,5 +1,5 @@
-// Buffer Line
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { Agenda, AgendaSchedule } from "react-native-calendars";
 import {
   View,
   Text,
@@ -7,14 +7,11 @@ import {
   ListRenderItemInfo,
   TouchableOpacity,
 } from "react-native";
-import { AgendaEventListItem, NewType } from "../utils/types";
-import { AgendaSchedule } from "react-native-calendars";
-import { Avatar, Card } from "react-native-paper";
 
-function AgendaListItem(props: {
-  data?: AgendaSchedule;
-  selectedDate?: string;
-}) {
+import { Avatar, Card } from "react-native-paper";
+import { AgendaEventListItem, NewType } from "../utils/types";
+
+function AddNewPlan(props: { data?: AgendaSchedule; selectedDate?: string }) {
   const [eventList, setEventList] = useState<AgendaEventListItem[]>([]);
 
   const renderItem = (listItem: ListRenderItemInfo<AgendaEventListItem>) => {
@@ -63,4 +60,4 @@ function AgendaListItem(props: {
   return <FlatList data={eventList} renderItem={renderItem}></FlatList>;
 }
 
-export default AgendaListItem;
+export default AddNewPlan;

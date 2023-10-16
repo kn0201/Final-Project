@@ -1,0 +1,93 @@
+import { StyleSheet } from "react-native";
+import { center, flex, iosBlue, row, white } from "./StyleSheetHelper";
+
+const PlannigStyleSheet = StyleSheet.create({
+  center: {
+    display: flex,
+    justifyContent: center,
+    alignItems: center,
+    width: "100%",
+    flexDirection: row,
+  },
+  inputContainer: {
+    flexDirection: row,
+    alignItems: center,
+  },
+  daySelectCon: {
+    display: flex,
+    justifyContent: center,
+    alignItems: center,
+    height: 50,
+    width: "90%",
+    flexDirection: row,
+    margin: 8,
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    textDecorationLine: "none",
+  },
+  uploadContainerSquare: {
+    elevation: 2,
+    height: 300,
+    width: 400,
+    backgroundColor: "#efefef",
+    position: "relative",
+    overflow: "hidden",
+    marginBottom: 12,
+    justifyContent: center,
+  },
+  uploadBtnContainerSquare: {
+    opacity: 0.7,
+    position: "absolute",
+    right: 0,
+    bottom: 0,
+    backgroundColor: "lightgrey",
+    width: "100%",
+    height: "15%",
+    color: "red",
+    justifyContent: center,
+    alignItems: center,
+  },
+  backgroundColor: {
+    backgroundColor: "#ffffff",
+  },
+  uploadBtn: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  countryContainer: {
+    display: flex,
+    justifyContent: center,
+    alignItems: center,
+    height: 50,
+    width: "90%",
+    flexDirection: row,
+    margin: 8,
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    textDecorationLine: "none",
+  },
+  ModalButtonContainer: {
+    display: flex,
+    flexDirection: row,
+    width: "100%",
+    height: "10%",
+    justifyContent: center,
+    alignItems: center,
+  },
+  ModalText: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginBottom: 8,
+    color: iosBlue,
+    fontWeight: "bold",
+    fontSize: 16,
+    textAlign: center,
+    alignItems: center,
+    justifyContent: center,
+  },
+});
+
+export default PlannigStyleSheet;

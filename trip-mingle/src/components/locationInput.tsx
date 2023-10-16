@@ -11,7 +11,7 @@ export default function LocationInput({ code }) {
   const { IonNeverDialog } = useIonNeverNotification();
 
   const [selectedLocationText, setSelectedLocationText] =
-    useState("Destination Spots");
+    useState("Expected Spot(s)");
   const [selectedLocationList, setSelectedLocationList] = useState<
     UserLocation[]
   >([]);

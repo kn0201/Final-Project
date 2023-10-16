@@ -9,10 +9,10 @@ import {
   FlatList,
   Animated,
   StyleSheet,
+  Keyboard,
 } from "react-native";
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
 import { AntDesign } from "@expo/vector-icons";
-import RegisterScreenStyleSheet from "../StyleSheet/RegisterScreenCss";
 import LoginPageStyleSheet from "../StyleSheet/LoginScreenCss";
 import { CheckBox, SearchBar } from "@rneui/base";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -20,7 +20,8 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import * as ImagePicker from "expo-image-picker";
 import { ScheduleCardInputInfo } from "../utils/types";
 import { countriesList } from "../source/countries";
-import { absolute } from "../StyleSheet/StyleSheetHelper";
+import { absolute, center } from "../StyleSheet/StyleSheetHelper";
+import PlannigStyleSheet from "../StyleSheet/PlanningStyleSheet";
 
 function AddScheduleForm(props: {
   closeModal: () => void;
@@ -36,6 +37,12 @@ function AddScheduleForm(props: {
   const schdeuleInfo = useRef<ScheduleCardInputInfo>({
     title: "",
     uri: "",
+  }).current;
+
+  const clearInputs = useRef({
+    uri() {},
+    title() {},
+    country() {},
   }).current;
 
   const updateInputText = (field: string, value: string) => {
@@ -59,14 +66,22 @@ function AddScheduleForm(props: {
 
   return (
     <View style={{ flex: 1, alignItems: "center", backgroundColor: "white" }}>
-      <View style={RegisterScreenStyleSheet.uploadContainerSquare}>
+      <View style={PlannigStyleSheet.uploadContainerSquare}>
         {image && (
-          <Image source={{ uri: image }} style={{ width: 300, height: 300 }} />
+          <Image
+            source={{ uri: image }}
+            style={{
+              width: 500,
+              height: 300,
+              justifyContent: center,
+              alignItems: center,
+            }}
+          />
         )}
-        <View style={RegisterScreenStyleSheet.uploadBtnContainerSquare}>
+        <View style={PlannigStyleSheet.uploadBtnContainerSquare}>
           <TouchableOpacity
             onPress={addImage}
-            style={RegisterScreenStyleSheet.uploadBtn}
+            style={PlannigStyleSheet.uploadBtn}
           >
             <Text>{image ? "Edit" : "Upload"} Image</Text>
             <AntDesign name="camera" size={20} color="black" />
@@ -74,14 +89,17 @@ function AddScheduleForm(props: {
         </View>
       </View>
       <TextInput
-        style={RegisterScreenStyleSheet.inputContainer}
+        style={PlannigStyleSheet.inputContainer}
+        ref={(input: any) => {
+          clearInputs.title = () => input?.clear();
+        }}
         onChangeText={(text) => {
           updateInputText("title", text);
         }}
         placeholder="Title"
       />
       <TouchableOpacity
-        style={RegisterScreenStyleSheet.countryContainer}
+        style={PlannigStyleSheet.countryContainer}
         onPress={() => {
           IonNeverDialog.show({
             dialogHeight: 800,
@@ -118,6 +136,7 @@ function AddScheduleForm(props: {
           }
           addNewScheduleCard(schdeuleInfo);
           closeModal();
+          Keyboard.dismiss;
         }}
       >
         <Text style={LoginPageStyleSheet.loginText}>Add New Plan</Text>
