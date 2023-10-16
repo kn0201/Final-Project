@@ -17,8 +17,8 @@ import { api } from "../apis/api";
 import { flex } from "../StyleSheet/StyleSheetHelper";
 import { loginResultParser } from "../utils/parser";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
-
-import { useToken } from "../hooks/useToken";
+import decode from "jwt-decode";
+import { JWTPayload, useToken } from "../hooks/useToken";
 //@ts-ignore
 
 export default function LoginScreen({ navigation }) {
@@ -51,10 +51,11 @@ export default function LoginScreen({ navigation }) {
     try {
       let json = await api.loginSignUp("/login", loginInfo, loginResultParser);
       setToken(json.token);
+      const username = decode<JWTPayload>(json.token).username;
 
       Object.entries(clearInputs).map(([_key, clear]) => clear());
       if (json.token) {
-        loginAlert();
+        loginAlert(username);
       }
     } catch (error) {
       const errorObject: any = { ...(error as object) };
@@ -62,11 +63,11 @@ export default function LoginScreen({ navigation }) {
     }
   };
 
-  const loginAlert = () => {
+  const loginAlert = (username: string) => {
     IonNeverDialog.show({
       type: "success",
       title: "Welcome Back",
-      message: payload?.username,
+      message: username,
       firstButtonVisible: true,
       firstButtonFunction: () => {
         toUserPage();

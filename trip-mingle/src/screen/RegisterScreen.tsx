@@ -22,7 +22,8 @@ import { api } from "../apis/api";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import SelectCountry from "../components/selectCountry";
 import { checkResultParser, signUpResultParser } from "../utils/parser";
-import { useToken } from "../hooks/useToken";
+import { JWTPayload, useToken } from "../hooks/useToken";
+import decode from "jwt-decode";
 
 // @ts-ignore
 export default function RegisterScreen({ navigation }) {
@@ -127,10 +128,11 @@ export default function RegisterScreen({ navigation }) {
       setSelectedAge("Select Your Age Group");
       setSelectedCountry("Country");
       setToken(json.token);
+      const username = decode<JWTPayload>(json.token).username;
       IonNeverDialog.show({
         type: "success",
         title: "Welcome to TripMingle",
-        message: payload?.username,
+        message: username,
         firstButtonVisible: true,
         firstButtonFunction: () => {
           navigation.navigate("Users");

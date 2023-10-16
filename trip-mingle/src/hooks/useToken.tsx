@@ -11,7 +11,7 @@ type TokenEvent = {
 
 let token = "";
 
-type JWTPayload = {
+export type JWTPayload = {
   role: "member" | "admin";
   user_id: number;
   username: string;
@@ -19,6 +19,8 @@ type JWTPayload = {
 
 export function useToken() {
   const [_, setState] = useState(token);
+  // console.log({ useToken: token });
+
   const dispatch = useEvent<TokenEvent>("token", (event) => {
     setState(event.token);
   });
