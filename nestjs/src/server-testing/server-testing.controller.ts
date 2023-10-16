@@ -5,11 +5,13 @@ import {
   HttpException,
   HttpStatus,
   Post,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { ServerTestingService } from './server-testing.service';
 import { JwtService } from 'src/jwt/jwt.service';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { Request } from 'express';
 
 @Controller('server-testing')
 export class ServerTestingController {
@@ -33,7 +35,8 @@ export class ServerTestingController {
 
   @UseGuards(AuthGuard)
   @Get()
-  testingJWT() {
+  testingJWT(@Request() req: any) {
+    console.log(req.users);
     return { message: 'JWT passed' };
   }
 }
