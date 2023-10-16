@@ -13,7 +13,6 @@ import {
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
-import { flex } from "../StyleSheet/StyleSheetHelper";
 import Entypo from "react-native-vector-icons/Entypo";
 
 export default function InputAutocomplete({
@@ -42,7 +41,7 @@ export default function InputAutocomplete({
       .map((location: { name: any }) => location.name)
       .join(", ");
     if (updatedSelectedLocationText == "") {
-      setSelectedLocationText("Destination Spots");
+      setSelectedLocationText("Destination Spot(s)");
     } else {
       setSelectedLocationText(updatedSelectedLocationText);
     }

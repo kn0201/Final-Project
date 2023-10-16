@@ -11,17 +11,17 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  StatusBar,
 } from "react-native";
-import { NewType, RegisInfo } from "../utils/types";
+import { PostInfo } from "../utils/types";
 import { countriesList } from "../source/countries";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import LocationInput from "../components/locationInput";
-import { Calendar } from "react-native-calendars";
-import CalendarPicker from "react-native-calendar-picker";
 import PeriodPicker from "../components/PeriodPicker";
+import MultipleSelector from "../components/MutlipleSelector";
+import languagesList from "../source/languages";
+import SingleSelectorWithOther from "../components/SingleSelectorWithOther";
 
 export default function AddPost() {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
@@ -29,31 +29,56 @@ export default function AddPost() {
   const [content, onChangeContent] = useState("");
   const [selectedGender, setSelectedGender] = useState("Preferred Gender");
   const [gender, setGender] = useState("");
-  const [selectedAge, setSelectedAge] = useState("Preferred Age");
-  const [age, setAge] = useState("");
+  const [selectedHeadcount, setSelectedHeadcount] = useState<string>(
+    "Preferred Headcount",
+  );
+  const [headcount, setHeadcount] = useState<string>("");
+  const [headcountListData, setHeadcountListData] = useState<string[]>([
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+  ]);
   const [selectedCountry, setSelectedCountry] = useState(
     "Destination Country *"
   );
   const [country, setCountry] = useState("");
   const [code, setCode] = useState("");
-  const [selectedPeriod, setSelectedPeriod] = useState("Preferred Period");
+  const [selectedPeriod, setSelectedPeriod] = useState("Expected Period");
+  const [period, setPeriod] = useState<string[]>([]);
+  const [languages, setLanguages] = useState<string[]>([]);
+  const [selectedLanguagesText, setSelectedLanguagesText] = useState(
+    "Preferred Languages(s)",
+  );
 
   let countriesListData = countriesList;
+  let languagesListData = languagesList;
 
-  const regisInfo = useRef<RegisInfo>({
-    username: "",
-    email: "",
-    password: "",
-    gender: true,
-    age: "",
-    country: "",
-    avatar: "",
+  const postInfo = useRef<PostInfo>({
+    // avatar_path: "",
+    // username: "",
+    // rating: 0,
+    title: "",
+    content: "",
+    trip_country: "",
+    trip_location: "",
+    trip_period: "",
+    // trip_headcount: 0,
+    // trip_budget: "",
+    preferred_gender: "",
+    preferred_age: "",
+    preferred_language: "",
+    // preferred_skill: "",
+    // preferred_hobby: "",
+    // status: "",
+    // created_at: ""
   }).current;
 
   // Update Input fields
   const updateInputText = (field: string, value: string) => {
     //@ts-ignore
-    regisInfo[field as keyof RegisInfo] = value;
+    postInfo[field as keyof PostInfo] = value;
   };
 
   // Autofocus
@@ -65,20 +90,21 @@ export default function AddPost() {
   };
 
   // Title input
-  const titleInput = () => {
+  const TitleInput = () => {
     return (
       <TextInput
-        ref={inputRef}
+        // ref={inputRef}
         style={AddPostPageStyleSheet.postInputContainer}
         onChangeText={onChangeTitle}
         value={title}
         placeholder="Post Title *"
+        returnKeyType="done"
       />
     );
   };
 
   // Content input
-  const contentInput = () => {
+  const ContentInput = () => {
     return (
       <TextInput
         ref={inputRef}
@@ -91,76 +117,8 @@ export default function AddPost() {
     );
   };
 
-  // Gender checkbox
-  // const genderCheckbox = () => {
-  //   return (
-  //     <TouchableOpacity
-  //       style={AddPostPageStyleSheet.postAgeContainer}
-  //       onPress={() => {
-  //         {
-  //           focusInput;
-  //         }
-  //         Keyboard.dismiss();
-  //         IonNeverDialog.show({
-  //           dialogHeight: 300,
-  //           component: () => {
-  //             const [localGender, setLocalGender] = useState<string>(age);
-  //             return (
-  //               <>
-  //                 <ScrollView
-  //                   horizontal={false}
-  //                   style={AddPostPageStyleSheet.AgeScrollViewContainer}
-  //                 >
-  //                   {["Male", "Female", "Either"].map((label, index) => (
-  //                     <CheckBox
-  //                       key={index + 1}
-  //                       title={label}
-  //                       containerStyle={{
-  //                         backgroundColor: "transparent",
-  //                         borderWidth: 0,
-  //                         padding: 3,
-  //                       }}
-  //                       textStyle={{ fontWeight: "normal" }}
-  //                       checkedIcon="dot-circle-o"
-  //                       uncheckedIcon="circle-o"
-  //                       checked={localGender === label}
-  //                       onPress={() => {
-  //                         if (localGender === label) {
-  //                           setGender("");
-  //                           setLocalGender("");
-  //                         } else {
-  //                           setGender(label);
-  //                           setLocalGender(label);
-  //                         }
-  //                       }}
-  //                     />
-  //                   ))}
-  //                 </ScrollView>
-  //                 <View style={AddPostPageStyleSheet.ModalButtonContainer}>
-  //                   <TouchableOpacity
-  //                     onPress={() => {
-  //                       localGender ? setSelectedGender(localGender) : null;
-  //                       IonNeverDialog.dismiss();
-  //                       updateInputText("gender", localGender);
-  //                     }}
-  //                   >
-  //                     <Text style={AddPostPageStyleSheet.ModalText}>OK</Text>
-  //                   </TouchableOpacity>
-  //                 </View>
-  //               </>
-  //             );
-  //           },
-  //         });
-  //       }}
-  //     >
-  //       <Text ref={inputRef}>{selectedGender}</Text>
-  //       <MaterialIcons name="edit" size={16} />
-  //     </TouchableOpacity>
-  //   );
-  // };
-
-  // Age checkbox
-  const ageCheckbox = () => {
+  // Headcount checkbox
+  const HeadcountCheckbox = () => {
     return (
       <TouchableOpacity
         style={AddPostPageStyleSheet.postAgeContainer}
@@ -170,24 +128,48 @@ export default function AddPost() {
           }
           Keyboard.dismiss();
           IonNeverDialog.show({
-            dialogHeight: 350,
+            dialogHeight: 300,
             component: () => {
-              const [localAge, setLocalAge] = useState<string>(age);
+              return (
+                <SingleSelectorWithOther
+                  setHeadcount={setHeadcount}
+                  setSelectedHeadcount={setSelectedHeadcount}
+                  setHeadcountListData={setHeadcountListData}
+                  headcount={headcount}
+                  headcountListData={headcountListData}
+                />
+              );
+            },
+          });
+        }}
+      >
+        <Text ref={inputRef}>{selectedHeadcount}</Text>
+        <MaterialIcons name="edit" size={16} />
+      </TouchableOpacity>
+    );
+  };
+
+  // Gender checkbox
+  const GenderCheckbox = () => {
+    return (
+      <TouchableOpacity
+        style={AddPostPageStyleSheet.postAgeContainer}
+        onPress={() => {
+          {
+            focusInput;
+          }
+          Keyboard.dismiss();
+          IonNeverDialog.show({
+            dialogHeight: 300,
+            component: () => {
+              const [localGender, setLocalGender] = useState<string>(gender);
               return (
                 <>
                   <ScrollView
                     horizontal={false}
                     style={AddPostPageStyleSheet.AgeScrollViewContainer}
                   >
-                    {[
-                      "18-24",
-                      "25-30",
-                      "31-36",
-                      "37-42",
-                      "42-48",
-                      "48-54",
-                      ">55",
-                    ].map((label, index) => (
+                    {["Male", "Female"].map((label, index) => (
                       <CheckBox
                         key={index + 1}
                         title={label}
@@ -199,14 +181,14 @@ export default function AddPost() {
                         textStyle={{ fontWeight: "normal" }}
                         checkedIcon="dot-circle-o"
                         uncheckedIcon="circle-o"
-                        checked={localAge === label}
+                        checked={localGender === label}
                         onPress={() => {
-                          if (localAge === label) {
-                            setAge("");
-                            setLocalAge("");
+                          if (localGender === label) {
+                            setGender("");
+                            setLocalGender("");
                           } else {
-                            setAge(label);
-                            setLocalAge(label);
+                            setGender(label);
+                            setLocalGender(label);
                           }
                         }}
                       />
@@ -215,9 +197,11 @@ export default function AddPost() {
                   <View style={AddPostPageStyleSheet.ModalButtonContainer}>
                     <TouchableOpacity
                       onPress={() => {
-                        localAge ? setSelectedAge(localAge) : null;
+                        localGender
+                          ? setSelectedGender(localGender)
+                          : setSelectedGender("Preferred Gender");
                         IonNeverDialog.dismiss();
-                        updateInputText("age", localAge);
+                        updateInputText("preferred_gender", gender);
                       }}
                     >
                       <Text style={AddPostPageStyleSheet.ModalText}>OK</Text>
@@ -229,14 +213,57 @@ export default function AddPost() {
           });
         }}
       >
-        <Text ref={inputRef}>{selectedAge}</Text>
+        <Text ref={inputRef}>{selectedGender}</Text>
+        <MaterialIcons name="edit" size={16} />
+      </TouchableOpacity>
+    );
+  };
+
+  // Age checkbox
+  const AgeCheckbox = () => {
+    const [selectedAgesText, setSelectedAgesText] =
+      useState("Preferred Age(s)");
+    const [selectedAgesList, setSelectedAgesList] = useState<string[]>([]);
+    const ageLabels = [
+      "18-24",
+      "25-30",
+      "31-36",
+      "37-42",
+      "42-48",
+      "48-54",
+      ">55",
+    ];
+    return (
+      <TouchableOpacity
+        style={AddPostPageStyleSheet.postAgeContainer}
+        onPress={() => {
+          {
+            focusInput;
+          }
+          Keyboard.dismiss();
+          IonNeverDialog.show({
+            dialogHeight: 350,
+            component: () => {
+              return (
+                <MultipleSelector
+                  setSelectedAgesText={setSelectedAgesText}
+                  setSelectedAges={setSelectedAgesList}
+                  selectedAges={selectedAgesList}
+                  labels={ageLabels}
+                />
+              );
+            },
+          });
+        }}
+      >
+        <Text ref={inputRef}>{selectedAgesText}</Text>
         <MaterialIcons name="edit" size={16} />
       </TouchableOpacity>
     );
   };
 
   // Country checkbox
-  const countryCheckbox = () => {
+  const CountryCheckbox = () => {
     return (
       <TouchableOpacity
         style={AddPostPageStyleSheet.postCountryContainer}
@@ -313,9 +340,10 @@ export default function AddPost() {
                       borderColor: "black",
                       height: 40,
                       borderRadius: 10,
+                      borderBottomWidth: 1,
                       borderWidth: 1,
                     }}
-                    inputStyle={{ fontSize: 14 }}
+                    inputStyle={{ fontSize: 14, color: "black" }}
                     placeholderTextColor="#BFBFC1"
                     searchIcon={false}
                     lightTheme
@@ -329,10 +357,11 @@ export default function AddPost() {
                   <View style={AddPostPageStyleSheet.ModalButtonContainer}>
                     <TouchableOpacity
                       onPress={() => {
-                        localCountry ? setSelectedCountry(localCountry) : null;
+                        localCountry
+                          ? setSelectedCountry(localCountry)
+                          : setSelectedCountry("Destination Country *");
                         IonNeverDialog.dismiss();
-                        updateInputText("country", country);
-                        // setCode(localCode);
+                        updateInputText("trip_country", country);
                       }}
                     >
                       <Text style={AddPostPageStyleSheet.ModalText}>OK</Text>
@@ -351,13 +380,7 @@ export default function AddPost() {
   };
 
   // Period Selector
-  const periodSelector = () => {
-    const [selectedDays, setSelectedDays] = useState([]);
-
-    const handleDaysSelected = (days: any) => {
-      setSelectedDays(days);
-    };
-
+  const PeriodSelector = () => {
     return (
       <TouchableOpacity
         style={AddPostPageStyleSheet.postAgeContainer}
@@ -372,8 +395,7 @@ export default function AddPost() {
               return (
                 <PeriodPicker
                   setSelectedPeriod={setSelectedPeriod}
-                  selectedPeriod={selectedPeriod}
-                  onDaysSelected={handleDaysSelected}
+                  setPeriod={setPeriod}
                 />
               );
             },
@@ -381,6 +403,130 @@ export default function AddPost() {
         }}
       >
         <Text ref={inputRef}>{selectedPeriod}</Text>
+        <MaterialIcons name="edit" size={16} />
+      </TouchableOpacity>
+    );
+  };
+
+  // Language checkbox
+  const LanguagesCheckbox = () => {
+    const { IonNeverDialog } = useIonNeverNotification();
+    return (
+      <TouchableOpacity
+        style={AddPostPageStyleSheet.postCountryContainer}
+        onPress={() => {
+          {
+            focusInput;
+          }
+          Keyboard.dismiss();
+          IonNeverDialog.show({
+            dialogHeight: 560,
+            component: () => {
+              const [localLanguages, setLocalLanguages] =
+                useState<string[]>(languages);
+              const [searchLanguages, setSearchLanguages] = useState("");
+              const [languagesList, setLanguagesList] =
+                useState(languagesListData);
+              const [matchedLanguagesList, setMatchedLanguagesList] =
+                useState(languagesListData);
+
+              useEffect(() => {
+                setMatchedLanguagesList(
+                  languagesList.filter((language) =>
+                    language.name
+                      .toLocaleLowerCase()
+                      .includes(searchLanguages.toLocaleLowerCase()),
+                  ),
+                );
+              }, [searchLanguages, languagesList]);
+
+              const updateSearch = (search: string) => {
+                setSearchLanguages(search);
+              };
+
+              const toggleLangaugeSelection = (name: string) => {
+                if (localLanguages.includes(name)) {
+                  setLocalLanguages(
+                    localLanguages.filter(
+                      (language: string) => language !== name,
+                    ),
+                  );
+                } else {
+                  setLocalLanguages([...localLanguages, name]);
+                }
+              };
+
+              type LanguagesProps = { name: string };
+
+              const Languages = ({ name }: LanguagesProps) => (
+                <View>
+                  <CheckBox
+                    title={name}
+                    containerStyle={{
+                      backgroundColor: "transparent",
+                      borderWidth: 0,
+                      padding: 3,
+                    }}
+                    textStyle={{ fontWeight: "normal" }}
+                    iconType="material-community"
+                    checkedIcon="checkbox-marked-outline"
+                    uncheckedIcon="checkbox-blank-outline"
+                    checked={localLanguages.includes(name)}
+                    onPress={() => toggleLangaugeSelection(name)}
+                  />
+                </View>
+              );
+              return (
+                <>
+                  <SearchBar
+                    placeholder="Search..."
+                    onChangeText={updateSearch}
+                    value={searchLanguages}
+                    containerStyle={{
+                      backgroundColor: "transparent",
+                      borderTopColor: "transparent",
+                      borderBottomColor: "transparent",
+                      height: 50,
+                    }}
+                    inputContainerStyle={{
+                      backgroundColor: "white",
+                      borderColor: "black",
+                      height: 40,
+                      borderRadius: 10,
+                      borderBottomWidth: 1,
+                      borderWidth: 1,
+                    }}
+                    inputStyle={{ fontSize: 14, color: "black" }}
+                    placeholderTextColor="#BFBFC1"
+                    searchIcon={false}
+                    lightTheme
+                  />
+                  <FlatList
+                    data={matchedLanguagesList}
+                    renderItem={({ item }) => <Languages name={item.name} />}
+                  />
+                  <View style={AddPostPageStyleSheet.ModalButtonContainer}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        const selectedLanguagesString =
+                          localLanguages.join(", ");
+                        setLanguages(localLanguages);
+                        selectedLanguagesString
+                          ? setSelectedLanguagesText(selectedLanguagesString)
+                          : setSelectedLanguagesText("Preferred Language(s)");
+                        IonNeverDialog.dismiss();
+                      }}
+                    >
+                      <Text style={AddPostPageStyleSheet.ModalText}>OK</Text>
+                    </TouchableOpacity>
+                  </View>
+                </>
+              );
+            },
+          });
+        }}
+      >
+        <Text ref={inputRef}>{selectedLanguagesText}</Text>
         <MaterialIcons name="edit" size={16} />
       </TouchableOpacity>
     );
@@ -394,22 +540,24 @@ export default function AddPost() {
           Keyboard.dismiss();
         }}
       >
-        <KeyboardAvoidingView
+        {/* <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{ flex: 1 }}
-        >
-          {/* <ScrollView> */}
-          <View style={{ flex: 1, alignItems: "center" }}>
-            {titleInput()}
-            {countryCheckbox()}
-            {periodSelector()}
-            <LocationInput code={code} />
-            {contentInput()}
-            {/* {genderCheckbox()} */}
-            {ageCheckbox()}
-          </View>
-          {/* </ScrollView> */}
-        </KeyboardAvoidingView>
+        > */}
+        {/* <ScrollView> */}
+        <View style={{ flex: 1, alignItems: "center" }}>
+          <TitleInput />
+          <CountryCheckbox />
+          <PeriodSelector />
+          <LocationInput code={code} />
+          <ContentInput />
+          <HeadcountCheckbox />
+          <GenderCheckbox />
+          <AgeCheckbox />
+          <LanguagesCheckbox />
+        </View>
+        {/* </ScrollView> */}
+        {/* </KeyboardAvoidingView> */}
       </TouchableWithoutFeedback>
     </>
   );
