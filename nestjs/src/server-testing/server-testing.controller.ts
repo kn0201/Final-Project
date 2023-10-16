@@ -21,7 +21,11 @@ export class ServerTestingController {
   @Post()
   submitPayload(@Body() body: { id: number }) {
     if (body.id === -1) {
-      const token = this.jwtService.encode({ user_id: -1, role: 'guest' });
+      const token = this.jwtService.encode({
+        user_id: -1,
+        role: 'member',
+        username: 'testing',
+      });
       return { token };
     }
     throw new HttpException('Not a Tester', HttpStatus.BAD_REQUEST);

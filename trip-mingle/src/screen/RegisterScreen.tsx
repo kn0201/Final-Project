@@ -6,16 +6,14 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
-  Modal,
   Image,
-  FlatList,
 } from "react-native";
 
 import LoginPageStyleSheet from "../StyleSheet/LoginScreenCss";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { center, flex } from "../StyleSheet/StyleSheetHelper";
-import { useRef, useState, useEffect, SetStateAction } from "react";
-import { CheckBox, SearchBar } from "@rneui/themed";
+import { flex } from "../StyleSheet/StyleSheetHelper";
+import { useRef, useState } from "react";
+import { CheckBox } from "@rneui/themed";
 import RegisterScreenStyleSheet from "../StyleSheet/RegisterScreenCss";
 import { RegisInfo } from "../utils/types";
 import { AntDesign } from "@expo/vector-icons";
@@ -24,12 +22,12 @@ import { api } from "../apis/api";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import SelectCountry from "../components/selectCountry";
 import { checkResultParser, signUpResultParser } from "../utils/parser";
-import { storeToken } from "../utils/jwtToken";
+import { useToken } from "../hooks/useToken";
 
 // @ts-ignore
 export default function RegisterScreen({ navigation }) {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
-
+  const { token, payload, setToken } = useToken();
   const [checkGender, setCheck1] = useState(true);
 
   const [selectedAge, setSelectedAge] = useState("Select Your Age Group");
@@ -100,7 +98,7 @@ export default function RegisterScreen({ navigation }) {
 
   const checkUsername = async (text: string) => {
     try {
-      let checker = await api.post(
+      let checker = await api.loginSignUp(
         "/login/check",
         { username: text },
         checkResultParser
@@ -120,7 +118,7 @@ export default function RegisterScreen({ navigation }) {
 
   const register = async () => {
     try {
-      let json = await api.post(
+      let json = await api.loginSignUp(
         "/login/register",
         regisInfo,
         signUpResultParser
@@ -128,11 +126,11 @@ export default function RegisterScreen({ navigation }) {
       Object.entries(clearInputs).map(([_key, clear]) => clear());
       setSelectedAge("Select Your Age Group");
       setSelectedCountry("Country");
-      storeToken(json.token);
+      setToken(json.token);
       IonNeverDialog.show({
         type: "success",
         title: "Welcome to TripMingle",
-        message: json.username,
+        message: payload?.username,
         firstButtonVisible: true,
         firstButtonFunction: () => {
           navigation.navigate("Users");
@@ -198,6 +196,7 @@ export default function RegisterScreen({ navigation }) {
               onEndEditing={() => Keyboard.dismiss()}
               placeholder="Username"
               maxLength={10}
+              autoCapitalize="none"
               style={RegisterScreenStyleSheet.textInput}
             ></TextInput>
             <Icon

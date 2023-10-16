@@ -20,7 +20,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "db": "run-s db:update db:plan db:update",
     "db:plan": "auto-migrate pg < erd.txt",
-    "db:update": "knex migrate:latest && erd-to-types < erd.txt > src/types.ts"
+    "db:update": "knex migrate:latest && erd-to-types < erd.txt > src/types.ts",
+    "db:dev": "run-s db:update db:plan db:update"
   },
   "dependencies": {
     "@abacritt/angularx-social-login": "^2.1.0",

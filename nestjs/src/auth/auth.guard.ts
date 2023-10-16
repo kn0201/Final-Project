@@ -9,6 +9,7 @@ export class AuthGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const req = context.switchToHttp().getRequest();
+
     if (!req.headers.authorization) return false;
 
     const token = req.headers?.authorization.split(' ')[1];

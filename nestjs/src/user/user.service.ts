@@ -10,21 +10,31 @@ export class UserService {
     private jwtService: JwtService,
   ) {}
 
-  async getProfile() {
+  async getProfile(req) {
+    const payload = this.jwtService.decode(
+      req.headers.authorization.split(' ')[1],
+    );
+    let user_id = payload.user_id;
+
     let result = await this.knex('users')
       .select('intro', 'language', 'skill', 'hobby', 'countries_travelled')
-      .where('id', 1);
+      .where('id', user_id)
+      .first();
 
-    return { result };
+    return result;
   }
 
-  async sendProfile(input) {
-    await this.knex('users').update({
+  async sendProfile(input, req) {
+    const payload = this.jwtService.decode(
+      req.headers.authorization.split(' ')[1],
+    );
+    let user_id = payload.user_id;
+    await this.knex('users').where({ id: user_id }).update({
       intro: input.intro,
       language: input.language,
       skill: input.skill,
       hobby: input.hobby,
-      countries_travelled: input.countries_travelled,
+      countries_travelled: input.country,
     });
 
     return { result: true };
