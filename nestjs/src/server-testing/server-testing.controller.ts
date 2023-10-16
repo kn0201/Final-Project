@@ -11,7 +11,6 @@ import {
 import { ServerTestingService } from './server-testing.service';
 import { JwtService } from 'src/jwt/jwt.service';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { Request } from 'express';
 
 @Controller('server-testing')
 export class ServerTestingController {

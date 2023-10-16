@@ -24,7 +24,6 @@ import {
 } from "../utils/types";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import { countriesList } from "../source/countries";
-import RegisterScreenStyleSheet from "../StyleSheet/RegisterScreenCss";
 import { flex, white } from "../StyleSheet/StyleSheetHelper";
 import LoginPageStyleSheet from "../StyleSheet/LoginScreenCss";
 import AddScheduleForm from "../components/AddScheduleForm";
@@ -98,7 +97,7 @@ const Schedule = ({ navigation }) => {
           <Card.Title>{title}</Card.Title>
           <Card.Divider />
           <Card.Image
-            style={{ padding: 0 }}
+            style={{ padding: 0, height: 200 }}
             source={{
               uri,
             }}
@@ -117,17 +116,7 @@ const Schedule = ({ navigation }) => {
       },
       {
         id: 1,
-        title: "Sample 2",
-        uri: "https://res.klook.com/image/upload/fl_lossy.progressive,q_85/c_fill,w_1000/v1674014276/blog/wsqagneebxdvvquuk9db.webp",
-      },
-      {
-        id: 2,
-        title: "Sample 3",
-        uri: "https://res.klook.com/image/upload/fl_lossy.progressive,q_85/c_fill,w_1000/v1674014276/blog/wsqagneebxdvvquuk9db.webp",
-      },
-      {
-        id: 3,
-        title: "Sample 4",
+        title: "Sample",
         uri: "https://res.klook.com/image/upload/fl_lossy.progressive,q_85/c_fill,w_1000/v1674014276/blog/wsqagneebxdvvquuk9db.webp",
       },
     ]);

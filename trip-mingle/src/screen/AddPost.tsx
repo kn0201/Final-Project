@@ -9,8 +9,6 @@ import {
   Keyboard,
   FlatList,
   ScrollView,
-  KeyboardAvoidingView,
-  Platform,
 } from "react-native";
 import { PostInfo } from "../utils/types";
 import { countriesList } from "../source/countries";

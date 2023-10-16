@@ -90,6 +90,21 @@ export class ApiService {
     }
     return parser.parse(json);
   }
+
+  async getList<T>(path: string, parser: Parser<T>) {
+    let res = await fetch(apiOrigin + path, {
+      headers: {
+        Accept: "application/json",
+      },
+    });
+    let json = await res.json();
+    if (json.error) {
+      //   this.alertService.showError(json.error)
+
+      throw new Error(json.error);
+    }
+    return parser.parse(json);
+  }
 }
 
 export let api = new ApiService();

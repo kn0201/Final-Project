@@ -6,18 +6,33 @@ import { View, FlatList, TouchableOpacity, Text } from "react-native";
 import { countriesList } from "../source/countries";
 import RegisterScreenStyleSheet from "../StyleSheet/RegisterScreenCss";
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
+import { api } from "../apis/api";
+import { countryListParser } from "../utils/parser";
+import { CountryList } from "../utils/types";
 
 //@ts-ignore
 export default function SelectCountry({ setSelectedCountry, updateInputText }) {
-  let countriesListData = countriesList;
+  const getList = async () => {
+    const json = await api.getList("/login/country_list", countryListParser);
+    console.log(json);
+
+    setCountryList(json);
+    setMatchedCountryList(json);
+  };
+  // const countriesListData = countriesList;
+  useEffect(() => {
+    getList();
+  }, []);
+
   const { IonNeverDialog } = useIonNeverNotification();
   const [country, setCountry] = useState("");
   const [localCountry, setLocalCountry] = useState<string>(country);
   const [search, setSearch] = useState("");
-  const [countryList, setCountryList] = useState(countriesListData);
-
-  const [matchedCountryList, setMatchedCountryList] =
-    useState(countriesListData);
+  const [countryList, setCountryList] = useState<CountryList[]>([]);
+  const [countryID, setCountryID] = useState("");
+  const [matchedCountryList, setMatchedCountryList] = useState<CountryList[]>(
+    []
+  );
 
   useEffect(() => {
     setMatchedCountryList(
@@ -30,10 +45,11 @@ export default function SelectCountry({ setSelectedCountry, updateInputText }) {
   const updateSearch = (search: string) => {
     setSearch(search);
   };
-  type CountryProps = { name: string };
-  const Country = ({ name }: CountryProps) => (
+  type CountryProps = { name: string; id: string };
+  const Country = ({ name, id }: CountryProps) => (
     <View>
       <CheckBox
+        id={id}
         title={name}
         containerStyle={{
           backgroundColor: "transparent",
@@ -43,6 +59,7 @@ export default function SelectCountry({ setSelectedCountry, updateInputText }) {
         uncheckedIcon="circle-o"
         checked={localCountry === name}
         onPress={() => {
+          setCountryID(id);
           setCountry(name);
           setLocalCountry(name);
         }}
@@ -62,7 +79,7 @@ export default function SelectCountry({ setSelectedCountry, updateInputText }) {
       <Text>Result : {search}</Text>
       <FlatList
         data={matchedCountryList}
-        renderItem={({ item }) => <Country name={item.name} />}
+        renderItem={({ item }) => <Country name={item.name} id={item.id} />}
       />
       <View style={RegisterScreenStyleSheet.ModalButtonContainer}>
         <TouchableOpacity
@@ -70,7 +87,7 @@ export default function SelectCountry({ setSelectedCountry, updateInputText }) {
           onPress={() => {
             setSelectedCountry(localCountry);
             IonNeverDialog.dismiss();
-            updateInputText("country", country);
+            updateInputText("country_id", countryID);
           }}
         >
           <Text style={RegisterScreenStyleSheet.ModalText}>Confirm</Text>
