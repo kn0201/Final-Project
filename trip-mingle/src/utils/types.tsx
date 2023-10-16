@@ -57,7 +57,7 @@ export type PostInfo = {
   preferred_gender: string | null;
   preferred_age: string | null;
   preferred_language: string | null;
-  // preferred_skill: string | null;
+  preferred_skill: string;
   // preferred_hobby: string | null;
   // status: string;
   // created_at: string;

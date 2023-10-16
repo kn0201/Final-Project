@@ -10,7 +10,7 @@ import { CheckBox, SearchBar } from "@rneui/themed";
 import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
 
-const MultipleSelectorWithOther = (
+const MultipleSelectorWithOther = ({
   //@ts-ignore
   setSkills,
   //@ts-ignore
@@ -25,7 +25,7 @@ const MultipleSelectorWithOther = (
   selectedSkills,
   //@ts-ignore
   skillsListData,
-) => {
+}) => {
   const { IonNeverDialog } = useIonNeverNotification();
   const [localSkills, setLocalSkills] = useState<string[]>(skills);
   const [otherSkill, setOtherSkill] = useState<string>("");
@@ -36,8 +36,8 @@ const MultipleSelectorWithOther = (
   useEffect(() => {
     setMatchedSkillsList(
       skillsListData.filter((skill: string) =>
-        skill.toLocaleLowerCase().includes(searchSkills.toLocaleLowerCase()),
-      ),
+        skill.toLocaleLowerCase().includes(searchSkills.toLocaleLowerCase())
+      )
     );
   }, [searchSkills, skillsListData]);
 
@@ -140,7 +140,7 @@ const MultipleSelectorWithOther = (
                     toggleSkillSelection(name);
                   }}
                 />
-              ),
+              )
             )}
             <TextInput
               style={AddPostPageStyleSheet.otherInputContainer}
@@ -164,7 +164,7 @@ const MultipleSelectorWithOther = (
             if (localSkills.includes("Other: ")) {
               console.log({ bb: otherSkill });
               const formattedLocalSkills = localSkills.filter(
-                (skill) => skill !== "Other: ",
+                (skill) => skill !== "Other: "
               );
               console.log({ formattedLocalSkills });
 

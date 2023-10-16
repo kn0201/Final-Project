@@ -29,7 +29,7 @@ export default function AddPost() {
   const [selectedGender, setSelectedGender] = useState("Preferred Gender");
   const [gender, setGender] = useState("");
   const [selectedHeadcount, setSelectedHeadcount] = useState<string>(
-    "Preferred Headcount *",
+    "Preferred Headcount *"
   );
   const [headcount, setHeadcount] = useState<string>("");
   const [headcountListData, setHeadcountListData] = useState<string[]>([
@@ -43,7 +43,7 @@ export default function AddPost() {
     "8",
   ]);
   const [selectedCountry, setSelectedCountry] = useState(
-    "Destination Country *",
+    "Destination Country *"
   );
   const [country, setCountry] = useState("");
   const [code, setCode] = useState("");
@@ -51,7 +51,7 @@ export default function AddPost() {
   const [period, setPeriod] = useState<string[]>([]);
   const [languages, setLanguages] = useState<string[]>([]);
   const [selectedLanguagesText, setSelectedLanguagesText] = useState(
-    "Preferred Languages(s)",
+    "Preferred Languages(s)"
   );
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
@@ -85,7 +85,7 @@ export default function AddPost() {
     preferred_gender: "",
     preferred_age: "",
     preferred_language: "",
-    // preferred_skill: "",
+    preferred_skill: "",
     // preferred_hobby: "",
     // status: "",
     // created_at: ""
@@ -306,8 +306,8 @@ export default function AddPost() {
                   countryList.filter((country) =>
                     country.name
                       .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase()),
-                  ),
+                      .includes(search.toLocaleLowerCase())
+                  )
                 );
               }, [search, countryList]);
               const updateSearch = (search: string) => {
@@ -455,8 +455,8 @@ export default function AddPost() {
                   languagesList.filter((language) =>
                     language.name
                       .toLocaleLowerCase()
-                      .includes(searchLanguages.toLocaleLowerCase()),
-                  ),
+                      .includes(searchLanguages.toLocaleLowerCase())
+                  )
                 );
               }, [searchLanguages, languagesList]);
 
@@ -468,8 +468,8 @@ export default function AddPost() {
                 if (localLanguages.includes(name)) {
                   setLocalLanguages(
                     localLanguages.filter(
-                      (language: string) => language !== name,
-                    ),
+                      (language: string) => language !== name
+                    )
                   );
                 } else {
                   setLocalLanguages([...localLanguages, name]);
@@ -565,14 +565,16 @@ export default function AddPost() {
           IonNeverDialog.show({
             dialogHeight: 300,
             component: () => {
-              return MultipleSelectorWithOther(
-                setSkills,
-                setSelectedSkills,
-                setSelectedSkillsText,
-                setSkillsListData,
-                skills,
-                selectedSkills,
-                skillsListData,
+              return (
+                <MultipleSelectorWithOther
+                  setSkills={setSkills}
+                  setSelectedSkills={setSelectedSkills}
+                  setSkillsListData={setSkillsListData}
+                  setSelectedSkillsText={setSelectedSkillsText}
+                  skills={skills}
+                  selectedSkills={selectedSkills}
+                  skillsListData={skillsListData}
+                />
               );
             },
           });
