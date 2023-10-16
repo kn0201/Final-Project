@@ -1,82 +1,63 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Agenda, AgendaSchedule } from "react-native-calendars";
-import { StyleSheet, View } from "react-native";
-import Constants from "expo-constants";
-import { ListItem, SpeedDial } from "@rneui/base";
-import { ReservationListProps } from "react-native-calendars/src/agenda/reservation-list";
-import AgendaListItem from "./AgendaLIstItem";
+import {
+  View,
+  Text,
+  FlatList,
+  ListRenderItemInfo,
+  TouchableOpacity,
+} from "react-native";
 
-const styles = StyleSheet.create({
-  view: {
-    margin: 20,
-    backgroundColor: "#FFF",
-    top: Constants.statusBarHeight,
-  },
-});
+import { Avatar, Card } from "react-native-paper";
+import { AgendaEventListItem, NewType } from "../utils/types";
 
-const AddNewPlan = () => {
-  const [selected, setSelected] = useState("");
+function AddNewPlan(props: { data?: AgendaSchedule; selectedDate?: string }) {
+  const [eventList, setEventList] = useState<AgendaEventListItem[]>([]);
 
-  const [open, setOpen] = useState(false);
+  const renderItem = (listItem: ListRenderItemInfo<AgendaEventListItem>) => {
+    const index = listItem.index;
+    const { date, name, day } = listItem.item;
 
-  const items: AgendaSchedule = {
-    seleted: [
-      {
-        name: "sample name",
-        height: 10,
-        day: "",
-        startingDay: true,
-        endingDay: true,
-        color: "green",
-      },
-    ],
+    return (
+      <TouchableOpacity style={{ marginRight: 10, marginTop: 17 }}>
+        <Card>
+          <Card.Content>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Text>{date}</Text>
+              <Text>{name}</Text>
+              <Avatar.Text label={day} />
+            </View>
+          </Card.Content>
+        </Card>
+      </TouchableOpacity>
+    );
   };
 
-  return (
-    <>
-      <>
-        <>
-          <View style={styles.view}></View>
-        </>
-        <View style={{ flex: 1 }}>
-          <Agenda
-            markingType={"period"}
-            markedDates={items}
-            items={items}
-            onDayPress={(day) => {
-              setSelected(day.dateString);
-            }}
-            renderList={(listItem: ReservationListProps) => {
-              return (
-                <AgendaListItem data={listItem.items} selectedDate={selected} />
-              );
-            }}
-            showClosingKnob={true}
-            pastScrollRange={1}
-            futureScrollRange={12}
-          ></Agenda>
-        </View>
-      </>
-      <SpeedDial
-        isOpen={open}
-        icon={{ name: "edit", color: "#fff" }}
-        openIcon={{ name: "close", color: "#fff" }}
-        onOpen={() => setOpen(!open)}
-        onClose={() => setOpen(!open)}
-      >
-        <SpeedDial.Action
-          icon={{ name: "add", color: "#fff" }}
-          title="Add"
-          onPress={() => console.log("Add Something")}
-        />
-        <SpeedDial.Action
-          icon={{ name: "delete", color: "#fff" }}
-          title="Delete"
-          onPress={() => console.log("Delete Something")}
-        />
-      </SpeedDial>
-    </>
-  );
-};
+  useEffect(() => {
+    const eventItems: AgendaEventListItem[] = [];
+    if (!props.data) return;
+
+    const dateEventObject = props.data;
+    for (const date in dateEventObject) {
+      if (props.selectedDate && props.selectedDate !== date) {
+        continue;
+      }
+
+      (dateEventObject[date as keyof AgendaSchedule] as NewType[]).map((info) =>
+        eventItems.push({ ...info, date } as AgendaEventListItem)
+      );
+    }
+
+    setEventList(eventItems);
+  }, [props.data, props.selectedDate]);
+
+  return <FlatList data={eventList} renderItem={renderItem}></FlatList>;
+}
 
 export default AddNewPlan;

@@ -24,7 +24,6 @@ import {
 } from "../utils/types";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import { countriesList } from "../source/countries";
-import RegisterScreenStyleSheet from "../StyleSheet/RegisterScreenCss";
 import { flex, white } from "../StyleSheet/StyleSheetHelper";
 import LoginPageStyleSheet from "../StyleSheet/LoginScreenCss";
 import AddScheduleForm from "../components/AddScheduleForm";

@@ -5,31 +5,25 @@ import {
   TouchableOpacity,
   View,
   TextInput,
-  StyleSheet,
   TouchableWithoutFeedback,
   Keyboard,
-  Modal,
   Image,
   FlatList,
-  ScrollView,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { RegisInfo } from "../utils/types";
 import { countriesList } from "../source/countries";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
-import RegisterScreenStyleSheet from "../StyleSheet/RegisterScreenCss";
-import { flex } from "../StyleSheet/StyleSheetHelper";
+import { center, flex } from "../StyleSheet/StyleSheetHelper";
 import * as ImagePicker from "expo-image-picker";
 import { AntDesign } from "@expo/vector-icons";
 import LoginPageStyleSheet from "../StyleSheet/LoginScreenCss";
+import PlannigStyleSheet from "../StyleSheet/PlanningStyleSheet";
 
 const NewPlanning = () => {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const [title, onChangeTitle] = useState("");
-  const [content, onChangeContent] = useState("");
   const [checkGender, setCheck1] = useState(true);
-  const [selectedAge, setSelectedAge] = useState("Select Your Age Group");
-  const [age, setAge] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("Country");
   const [country, setCountry] = useState("");
   const [image, setImage] = useState(null);
@@ -74,18 +68,18 @@ const NewPlanning = () => {
         Keyboard.dismiss;
       }}
     >
-      <View style={{ flex: 1, alignItems: "center" }}>
-        <View style={RegisterScreenStyleSheet.uploadContainerSquare}>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <View style={PlannigStyleSheet.uploadContainerSquare}>
           {image && (
             <Image
               source={{ uri: image }}
-              style={{ width: 300, height: 300 }}
+              style={{ width: 300, height: 300, alignItems: center }}
             />
           )}
-          <View style={RegisterScreenStyleSheet.uploadBtnContainerSquare}>
+          <View style={PlannigStyleSheet.uploadBtnContainerSquare}>
             <TouchableOpacity
               onPress={addImage}
-              style={RegisterScreenStyleSheet.uploadBtn}
+              style={PlannigStyleSheet.uploadBtn}
             >
               <Text>{image ? "Edit" : "Upload"} Image</Text>
               <AntDesign name="camera" size={20} color="black" />
@@ -93,14 +87,14 @@ const NewPlanning = () => {
           </View>
         </View>
         <TextInput
-          style={RegisterScreenStyleSheet.inputContainer}
+          style={PlannigStyleSheet.inputContainer}
           onChangeText={onChangeTitle}
           value={title}
           placeholder="Title"
         />
 
         <TouchableOpacity
-          style={RegisterScreenStyleSheet.countryContainer}
+          style={PlannigStyleSheet.countryContainer}
           onPress={() => {
             IonNeverDialog.show({
               dialogHeight: 800,
@@ -161,7 +155,7 @@ const NewPlanning = () => {
                       data={matchedCountryList}
                       renderItem={({ item }) => <Country name={item.name} />}
                     />
-                    <View style={RegisterScreenStyleSheet.ModalButtonContainer}>
+                    <View style={PlannigStyleSheet.ModalButtonContainer}>
                       <TouchableOpacity
                         disabled={localCountry === ""}
                         onPress={() => {
@@ -170,9 +164,7 @@ const NewPlanning = () => {
                           updateInputText("country", country);
                         }}
                       >
-                        <Text style={RegisterScreenStyleSheet.ModalText}>
-                          OK
-                        </Text>
+                        <Text style={PlannigStyleSheet.ModalText}>OK</Text>
                       </TouchableOpacity>
                     </View>
                   </>
