@@ -133,33 +133,33 @@ export default function RegisterScreen({ navigation }) {
   };
 
   const register = async () => {
-    // try {
-    //   let json = await api.loginSignUp(
-    //     "/login/register",
-    //     regisInfo,
-    //     signUpResultParser
-    //   );
-    //   Object.entries(clearInputs).map(([_key, clear]) => clear());
-    //   setSelectedAge("Select Your Age Group");
-    //   setSelectedCountry("Country");
-    //   setToken(json.token);
-    //   const username = decode<JWTPayload>(json.token).username;
-    //   IonNeverDialog.show({
-    //     type: "success",
-    //     title: "Welcome to TripMingle",
-    //     message: username,
-    //     firstButtonVisible: true,
-    //     firstButtonFunction: () => {
-    //       navigation.navigate("Users");
-    //     },
-    //     secondButtonVisible: false,
-    //   });
-    // } catch (error) {
-    //   const errorObject: any = { ...(error as object) };
-    //   console.log(errorObject);
-    // }
+    try {
+      let json = await api.loginSignUp(
+        "/login/register",
+        regisInfo,
+        signUpResultParser
+      );
+      Object.entries(clearInputs).map(([_key, clear]) => clear());
+      setSelectedAge("Select Your Age Group");
+      setSelectedCountry("Country");
+      setToken(json.token);
+      const username = decode<JWTPayload>(json.token).username;
+      IonNeverDialog.show({
+        type: "success",
+        title: "Welcome to TripMingle",
+        message: username,
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          navigation.navigate("Users");
+        },
+        secondButtonVisible: false,
+      });
+    } catch (error) {
+      const errorObject: any = { ...(error as object) };
+      console.log(errorObject);
+    }
     console.log(regisInfo);
-    // navigation.navigate("Users");
+    navigation.navigate("Users");
   };
 
   return (

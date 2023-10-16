@@ -14,9 +14,11 @@ export const checkResultParser = object({
 
 export const getProfileResultParser = object({
   intro: nullable(string()),
-  language: nullable(array(object({ name: string() }))),
-  hobby: nullable(array(object({ name: string() }))),
-  countries_travelled: nullable(array(object({ name: string() }))),
+  language: nullable(array(object({ name: string(), id: string() }))),
+  hobby: nullable(array(object({ name: string(), id: string() }))),
+  countries_travelled: nullable(
+    array(object({ name: string(), id: string() }))
+  ),
 });
 
 export const sendProfileResultParser = object({

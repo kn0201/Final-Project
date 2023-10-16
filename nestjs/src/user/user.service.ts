@@ -23,21 +23,21 @@ export class UserService {
     console.log(intro);
 
     let language = await this.knex
-      .select('language_list.name as name')
+      .select('language_list.name as name', 'language_list.id as id')
       .from('language')
       .where('user_id', user_id)
       .leftJoin('language_list', 'language_list.id', 'language_id');
     console.log({ language: language });
 
     let hobby = await this.knex
-      .select('hobby_list.name as name')
+      .select('hobby_list.name as name', 'hobby_list.id as id')
       .from('hobby')
       .where('user_id', user_id)
-      .leftJoin('hobby_list', 'hobby_list.id', 'hobby_id');
+      .leftJoin('hobby_list', 'hobby_list.id', 'hobby_list_id');
     console.log({ hobby: hobby });
 
     let countries_travelled = await this.knex
-      .select('country_list.name as name')
+      .select('country_list.name as name', 'country_list.id as id')
       .from('countries_travelled')
       .where('user_id', user_id)
       .leftJoin('country_list', 'country_list.id', 'country_id');
@@ -99,12 +99,12 @@ export class UserService {
         .select('id')
         .from('hobby')
         .where('user_id', user_id)
-        .andWhere('hobby_id', hobby_id)
+        .andWhere('hobby_list_id', hobby_id)
         .first();
       if (!row) {
         await this.knex('hobby').insert({
           user_id: user_id,
-          hobby_id: hobby_id,
+          hobby_list_id: hobby_id,
         });
       }
     }

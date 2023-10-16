@@ -42,31 +42,20 @@ const MultipleSelectorWithOther = ({
   }, [searchSkills, skillsListData]);
 
   const toggleSkillSelection = (name: string) => {
-    console.log("0", localSkills);
     if (name === "Other: ") {
       if (!localSkills.includes(name)) {
-        console.log("1", localSkills);
-
         setSkills([...skills, otherSkill]);
         setLocalSkills([...localSkills, name]);
-        console.log("2", localSkills);
       } else {
-        console.log("3", localSkills);
         setSkills(skills.filter((skill: string) => skill !== otherSkill));
         setLocalSkills(localSkills.filter((skill: string) => skill !== name));
-        console.log("4", localSkills);
       }
-      console.log("5", localSkills);
     } else if (localSkills.includes(name)) {
-      console.log("6", localSkills);
       setSkills(skills.filter((skill: string) => skill !== name));
       setLocalSkills(localSkills.filter((skill: string) => skill !== name));
-      console.log("7", localSkills);
     } else {
-      console.log("8", localSkills);
       setSkills([...skills, name]);
       setLocalSkills([...localSkills, name]);
-      console.log("9", localSkills);
     }
   };
 
@@ -159,65 +148,61 @@ const MultipleSelectorWithOther = ({
       <View style={AddPostPageStyleSheet.ModalButtonContainer}>
         <TouchableOpacity
           onPress={() => {
-            console.log({ aa: otherSkill });
-            console.log({ localSkillsb4: localSkills });
+            console.log({ otherSkill: otherSkill });
+            console.log({ localSkill_Before: localSkills });
             if (localSkills.includes("Other: ")) {
-              console.log({ bb: otherSkill });
+              let array = [];
+              console.log({ otherSkill: otherSkill });
+              console.log({ localSkill_Before: localSkills });
+              if (localSkills.includes("Other: ")) {
+                for (let skill of localSkills) {
+                  if (skill === "Other: ") {
+                    array.push(otherSkill);
+                    continue;
+                  } else {
+                    array.push(skill);
+                  }
+                }
+              }
+              let arrayString = array.join(", ");
+              setSelectedSkillsText(arrayString);
+
               const formattedLocalSkills = localSkills.filter(
                 (skill) => skill !== "Other: "
               );
               console.log({ formattedLocalSkills });
 
               if (otherSkill !== "") {
-                console.log({ cc: otherSkill });
                 if (!formattedLocalSkills.includes(otherSkill)) {
-                  console.log({ dd: otherSkill });
-                  console.log({ 11: localSkills });
-                  console.log({ "00": formattedLocalSkills });
                   setSkillsListData([...skillsListData, otherSkill]);
                   setSkills([...formattedLocalSkills, otherSkill]);
-
                   setLocalSkills([...formattedLocalSkills, otherSkill]);
                   setSelectedSkills([...formattedLocalSkills, otherSkill]);
-                  console.log({ 12: localSkills });
-                  console.log({ "01": formattedLocalSkills });
-                  console.log({ ee: otherSkill });
                 } else {
-                  console.log({ ff: otherSkill });
-                  console.log({ 13: localSkills });
                   setSkills(formattedLocalSkills);
                   setLocalSkills(formattedLocalSkills);
                   setSelectedSkills(formattedLocalSkills);
-                  console.log({ 'localSkillsOther!=""': localSkills });
-                  console.log({ 'selectedSkillsOther!=""': localSkills });
-                  console.log({ "02": formattedLocalSkills });
-                  console.log({ gg: otherSkill });
                 }
               } else {
-                console.log({ hh: otherSkill });
-                console.log({ 14: localSkills });
-                console.log({ "03": formattedLocalSkills });
                 setSkills(formattedLocalSkills);
                 setLocalSkills(formattedLocalSkills);
                 setSelectedSkills(formattedLocalSkills);
-                console.log({ 15: localSkills });
-                console.log({ ii: otherSkill });
               }
+              setSelectedSkillsText(arrayString);
+              IonNeverDialog.dismiss();
             } else if (localSkills.length <= 0) {
-              console.log({ 16: localSkills });
               setSkills([]);
               setSelectedSkills([]);
             } else {
-              console.log({ 17: localSkills });
               setSkills(localSkills);
               setSelectedSkills(localSkills);
             }
-            console.log({ localSkillsafter: localSkills });
+            console.log({ localSkills_After: localSkills });
             const selectedSkillsString = localSkills.join(", ");
             selectedSkillsString;
-            localSkills.length <= 0
-              ? setSelectedSkillsText("Preferred Skill(s)")
-              : setSelectedSkillsText(selectedSkillsString);
+            if (localSkills.length <= 0) {
+              setSelectedSkillsText("Preferred Skill(s)");
+            }
             IonNeverDialog.dismiss();
           }}
         >

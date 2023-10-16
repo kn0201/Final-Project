@@ -12,7 +12,7 @@ import {
 import ProfileScreenStyleSheet from "../StyleSheet/ProfileScreenCss";
 
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { center, flex, white } from "../StyleSheet/StyleSheetHelper";
+import { center, flex, full, white } from "../StyleSheet/StyleSheetHelper";
 import { useEffect, useRef, useState } from "react";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 
@@ -42,25 +42,51 @@ export default function ProfileScreen({ navigation }) {
     let json = await api.get("/user/profile", getProfileResultParser, token);
     if (json.intro != null) {
       setIntroText(json.intro);
+      updateInputText("intro", json.intro);
     }
     if (json.language != null) {
+      let IDarray: string[] = [];
+      let nameArray: string[] = [];
       for (let language of json.language) {
-        selectedLanguage.push(language.name);
+        nameArray.push(language.name);
+
+        IDarray.push(language.id);
+        let idString = IDarray.join(",");
+        updateInputText("language", idString);
       }
-      setSelectedLanguage(selectedLanguage);
+      console.log(selectedLanguage);
+
+      const languageString = nameArray.join(", ");
+      //@ts-ignore
+      setSelectedLanguage(languageString);
     }
     if (json.hobby != null) {
+      let IDarray: string[] = [];
+      let nameArray: string[] = [];
       for (let hobby of json.hobby) {
-        selectedHobby.push(hobby.name);
+        nameArray.push(hobby.name);
+        IDarray.push(hobby.id);
+        let idString = IDarray.join(",");
+        updateInputText("hobby", idString);
       }
-      setSelectedHobby(selectedHobby);
+      const hobbyString = nameArray.join(", ");
+      //@ts-ignore
+      setSelectedHobby(hobbyString);
     }
     if (json.countries_travelled != null) {
+      let IDarray: string[] = [];
+      let nameArray: string[] = [];
       for (let countries_travelled of json.countries_travelled) {
-        selectedCountry.push(countries_travelled.name);
+        nameArray.push(countries_travelled.name);
+        IDarray.push(countries_travelled.id);
+        let idString = IDarray.join(",");
+        updateInputText("country", idString);
       }
-      setSelectedCountry(selectedCountry);
+      const countryString = nameArray.join(", ");
+      //@ts-ignore
+      setSelectedCountry(countryString);
     }
+    console.log(profileInfo);
   };
 
   useEffect(() => {
@@ -147,6 +173,10 @@ export default function ProfileScreen({ navigation }) {
                   editable={editableText ? true : false}
                   style={{
                     textDecorationLine: editableText ? "underline" : "none",
+                    width: full,
+                    height: "100%",
+                    // backgroundColor: "red",
+                    textAlign: center,
                   }}
                   onChangeText={(text) => {
                     setIntroText(text);
@@ -190,10 +220,6 @@ export default function ProfileScreen({ navigation }) {
                               setSelectedLanguage={setSelectedLanguage}
                               updateInputText={updateInputText}
                             />
-                            // <SelectLanguage
-                            //   setSelectedLanguage={setSelectedLanguage}
-                            //   updateInputText={updateInputText}
-                            // />
                           );
                         },
                       });
