@@ -46,9 +46,9 @@ function useButton(
       if (clickFunction) clickFunction();
       dismissFunction();
       resetButton();
-
-      setButtonFunction(() => updateFunction);
     };
+
+    setButtonFunction(() => updateFunction);
   };
 
   const resetButton = () => {

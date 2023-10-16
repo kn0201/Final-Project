@@ -1,37 +1,45 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import * as Bar from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import MyBottomTab from "./src/tabs/bottomTab";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import IonNeverNotificationRoot from "./src/components/IonNeverNotification/NotificationProvider";
-import { KeyboardAvoidingView, Platform, Dimensions } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Dimensions,
+  SafeAreaView,
+  Text,
+} from "react-native";
 import TestingApp from "./src/components/IonNeverNotification/testingApp";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { TokenProvider } from "./src/hooks/useToken";
 
 const Stack = createNativeStackNavigator();
 
-function RootApp() {
+function Root() {
   return (
-    <NavigationContainer>
-      <IonNeverNotificationRoot>
-        <MyBottomTab />
-        <Bar.StatusBar style="auto" />
-      </IonNeverNotificationRoot>
-    </NavigationContainer>
+    <TokenProvider>
+      <NavigationContainer>
+        <IonNeverNotificationRoot>
+          <MyBottomTab />
+          <Bar.StatusBar style="auto" />
+        </IonNeverNotificationRoot>
+      </NavigationContainer>
+    </TokenProvider>
   );
 }
 
-function App() {
+export default function App() {
   return (
     <Fragment>
       {Platform.OS === "ios" ? (
         <KeyboardAvoidingView>
-          <RootApp />
+          <Root />
         </KeyboardAvoidingView>
       ) : (
-        <RootApp />
+        <Root />
       )}
     </Fragment>
   );
 }
-
-export default App;

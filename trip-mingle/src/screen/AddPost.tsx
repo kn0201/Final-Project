@@ -41,7 +41,7 @@ export default function AddPost() {
     "5",
   ]);
   const [selectedCountry, setSelectedCountry] = useState(
-    "Destination Country *",
+    "Destination Country *"
   );
   const [country, setCountry] = useState("");
   const [code, setCode] = useState("");
@@ -273,7 +273,7 @@ export default function AddPost() {
           }
           Keyboard.dismiss();
           IonNeverDialog.show({
-            dialogHeight: 560,
+            dialogHeight: 600,
             component: () => {
               const [localCountry, setLocalCountry] = useState<string>(country);
               const [localCode, setLocalCode] = useState<string>(code);
@@ -286,8 +286,8 @@ export default function AddPost() {
                   countryList.filter((country) =>
                     country.name
                       .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase()),
-                  ),
+                      .includes(search.toLocaleLowerCase())
+                  )
                 );
               }, [search, countryList]);
               const updateSearch = (search: string) => {
@@ -333,7 +333,7 @@ export default function AddPost() {
                       backgroundColor: "transparent",
                       borderTopColor: "transparent",
                       borderBottomColor: "transparent",
-                      height: 50,
+                      height: 40,
                     }}
                     inputContainerStyle={{
                       backgroundColor: "white",

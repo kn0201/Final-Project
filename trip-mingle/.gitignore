@@ -40,3 +40,5 @@ ios/
 android/
 environments.ts
 eas.json
+app.json
+src/utils/apiOrigin.tsx

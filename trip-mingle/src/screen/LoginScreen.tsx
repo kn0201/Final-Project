@@ -13,21 +13,17 @@ import { Avatar } from "@rneui/themed";
 import LoginScreenStyleSheet from "../StyleSheet/LoginScreenCss";
 import { LoginInfo } from "../utils/types";
 import { api } from "../apis/api";
-import { nullable, number, object, string } from "cast.ts";
-import { center, flex, iosBlue } from "../StyleSheet/StyleSheetHelper";
-import { loginResult } from "../utils/parser";
+
+import { flex } from "../StyleSheet/StyleSheetHelper";
+import { loginResultParser } from "../utils/parser";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
-import { storeToken } from "../utils/jwtToken";
 
+import { useToken } from "../hooks/useToken";
 //@ts-ignore
-export default function LoginScreen({ navigation }) {
-  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
-  // const [dummyState, setDummyState] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   console.log("changed", dummyState);
-  //   if (dummyState) navigation.navigate("Users");
-  // }, [dummyState]);
+export default function LoginScreen({ navigation }) {
+  const { token, payload, setToken } = useToken();
+  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
 
   const [showPassword, setPassword] = useState(true);
   const password = () => {
@@ -53,22 +49,29 @@ export default function LoginScreen({ navigation }) {
   };
   const login = async () => {
     try {
-      let json = await api.post("/login", loginInfo, loginResult);
+      let json = await api.loginSignUp("/login", loginInfo, loginResultParser);
+      setToken(json.token);
+
       Object.entries(clearInputs).map(([_key, clear]) => clear());
-      storeToken(json.token);
-      IonNeverDialog.show({
-        type: "success",
-        title: "Welcome Back",
-        message: json.username,
-        firstButtonVisible: true,
-        firstButtonFunction: () => {
-          // setDummyState(true);
-        },
-      });
+      if (json.token) {
+        loginAlert();
+      }
     } catch (error) {
       const errorObject: any = { ...(error as object) };
       console.log(errorObject);
     }
+  };
+
+  const loginAlert = () => {
+    IonNeverDialog.show({
+      type: "success",
+      title: "Welcome Back",
+      message: payload?.username,
+      firstButtonVisible: true,
+      firstButtonFunction: () => {
+        toUserPage();
+      },
+    });
   };
 
   return (

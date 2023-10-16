@@ -25,6 +25,7 @@ gender boolean
 age varchar(255)
 country varchar(255)
 rating decimal
+intro text NULL
 language varchar(255) NULL
 skill varchar(255) NULL
 hobby varchar(255) NULL
@@ -179,19 +180,19 @@ location point
 # diagram-text: #f5f5f5
 # table-bg: #ffffff
 # table-text: #000000
-# users (263, 533, #0c3b1a)
-# comment (-106, 91, #38302c)
-# application (1110, 414, #06011d)
-# chatroom (-110, 906, #0d624f)
-# chat_record (-108, 716, #5c3a47)
-# image (1074, 139, #582c18)
-# post (285, 96, #35332e)
-# hashtags (-120, 290, #170a47)
-# like (-104, 442, #0c5522)
-# bookmark (-102, 595, #550e42)
-# complaint (313, 930, #0c4841)
-# planing (1061, 559, #083a37)
-# plan_detail (1074, 760, #411e58)
-# daily_event (1073, 910, #1a5430)
-# user_location (668, 715, #2e1b2b)
-# system_location (702, 970, #4a284a)
+# users (264, 515, #03445e)
+# comment (-106, 91, #4d375a)
+# application (1110, 414, #57525e)
+# chatroom (-110, 906, #303c38)
+# chat_record (-108, 716, #150c2b)
+# image (1074, 139, #133a41)
+# post (289, 87, #5a2549)
+# hashtags (-120, 290, #1e0126)
+# like (-104, 442, #314523)
+# bookmark (-102, 595, #535235)
+# complaint (705, 91, #0e0f57)
+# planing (1061, 559, #294420)
+# plan_detail (1074, 760, #004252)
+# daily_event (1073, 910, #422d4b)
+# user_location (668, 715, #0c2b0b)
+# system_location (702, 970, #4c235c)

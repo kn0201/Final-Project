@@ -9,6 +9,7 @@ export class AuthGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const req = context.switchToHttp().getRequest();
+
     if (!req.headers.authorization) return false;
 
     const token = req.headers?.authorization.split(' ')[1];
@@ -16,7 +17,7 @@ export class AuthGuard implements CanActivate {
     if (!token) return false;
     const payload = this.jwtService.decode(token);
 
-    if (payload.id && typeof payload.id === 'number') {
+    if (payload.user_id && typeof payload.user_id === 'number') {
       req.payload = payload;
       return true;
     } else {

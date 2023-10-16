@@ -10,14 +10,19 @@ import UserPageTopTab from "../tabs/UserPageTopTab";
 import { Avatar, Header, Icon } from "@rneui/themed";
 import UserPageStyleSheet from "../StyleSheet/UserPageCss";
 import { iosBlue } from "../StyleSheet/StyleSheetHelper";
-import { removeToken } from "../utils/jwtToken";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
+import { useToken } from "../hooks/useToken";
 
 //@ts-ignore
 export default function UserPage({ navigation }) {
-  const logout = () => {
-    removeToken();
+  const { token, payload, setToken } = useToken();
+  const logout = async () => {
+    setToken("");
+    await AsyncStorage.removeItem("username");
     navigation.navigate("Home");
   };
+
   return (
     <>
       <KeyboardAvoidingView
@@ -53,7 +58,7 @@ export default function UserPage({ navigation }) {
             containerStyle={UserPageStyleSheet.AvatarContainer}
             source={require("../assets/yukimin.png")}
           />
-          <Text style={UserPageStyleSheet.username}>Username</Text>
+          <Text style={UserPageStyleSheet.username}>{payload?.username}</Text>
         </View>
         <UserPageTopTab></UserPageTopTab>
       </KeyboardAvoidingView>

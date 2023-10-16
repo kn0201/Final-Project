@@ -5,11 +5,13 @@ import {
   HttpException,
   HttpStatus,
   Post,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { ServerTestingService } from './server-testing.service';
 import { JwtService } from 'src/jwt/jwt.service';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { Request } from 'express';
 
 @Controller('server-testing')
 export class ServerTestingController {
@@ -21,7 +23,11 @@ export class ServerTestingController {
   @Post()
   submitPayload(@Body() body: { id: number }) {
     if (body.id === -1) {
-      const token = this.jwtService.encode({ user_id: -1, role: 'guest' });
+      const token = this.jwtService.encode({
+        user_id: -1,
+        role: 'member',
+        username: 'testing',
+      });
       return { token };
     }
     throw new HttpException('Not a Tester', HttpStatus.BAD_REQUEST);
@@ -29,7 +35,8 @@ export class ServerTestingController {
 
   @UseGuards(AuthGuard)
   @Get()
-  testingJWT() {
+  testingJWT(@Request() req: any) {
+    console.log(req.users);
     return { message: 'JWT passed' };
   }
 }

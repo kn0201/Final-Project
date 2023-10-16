@@ -9,14 +9,16 @@ import MapPage from "../pages/MapPage";
 
 import UserPage from "../pages/UserPage";
 import LoginPage from "../pages/LoginPage";
-import { useEffect, useState } from "react";
+
 import ExplorePage from "../pages/ExplorePage";
 import SchedulePage from "../pages/SchedulePage";
+
+import { useToken } from "../hooks/useToken";
 
 const Tab = createBottomTabNavigator();
 
 function MyTab() {
-  const [checkToken, setCheckToken] = useState(false);
+  const { token } = useToken();
 
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
@@ -50,28 +52,31 @@ function MyTab() {
           ),
         }}
       />
-      <Tab.Screen
-        name="Users"
-        component={UserPage}
-        options={{
-          // tabBarHideOnKeyboard: true,
-          tabBarLabel: "Users",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="login"
-        component={LoginPage}
-        options={{
-          // tabBarHideOnKeyboard: true,
-          tabBarLabel: "Login",
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="login" color={color} size={size} />
-          ),
-        }}
-      />
+      {token ? (
+        <Tab.Screen
+          name="Users"
+          component={UserPage}
+          options={{
+            // tabBarHideOnKeyboard: true,
+            tabBarLabel: "Users",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="person" color={color} size={size} />
+            ),
+          }}
+        />
+      ) : (
+        <Tab.Screen
+          name="login"
+          component={LoginPage}
+          options={{
+            // tabBarHideOnKeyboard: true,
+            tabBarLabel: "Login",
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="login" color={color} size={size} />
+            ),
+          }}
+        />
+      )}
       <Tab.Screen
         name="Map"
         component={MapPage}
