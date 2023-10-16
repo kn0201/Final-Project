@@ -38,6 +38,34 @@ export default function ProfileScreen({ navigation }) {
     country: "",
   }).current;
 
+  const getProfile = async () => {
+    let json = await api.get("/user/profile", getProfileResultParser, token);
+    if (json.intro != null) {
+      setIntroText(json.intro);
+    }
+    if (json.language != null) {
+      for (let language of json.language) {
+        selectedLanguage.push(language.name);
+      }
+      setSelectedLanguage(selectedLanguage);
+    }
+    if (json.hobby != null) {
+      for (let hobby of json.hobby) {
+        selectedHobby.push(hobby.name);
+      }
+      setSelectedHobby(selectedHobby);
+    }
+    if (json.countries_travelled != null) {
+      for (let countries_travelled of json.countries_travelled) {
+        selectedCountry.push(countries_travelled.name);
+      }
+      setSelectedCountry(selectedCountry);
+    }
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, []);
   const [introText, setIntroText] = useState("add");
   const [selectedLanguage, setSelectedLanguage] = useState<string[]>([]);
 
@@ -55,28 +83,6 @@ export default function ProfileScreen({ navigation }) {
 
   const editProfile = "Edit Profile";
   const submitProfile = "Submit";
-
-  const getProfile = async () => {
-    let json = await api.get("/user/profile", getProfileResultParser, token);
-    if (json.intro != null) {
-      setIntroText(json.intro);
-    }
-    if (json.language != null) {
-      for (let language of json.language) {
-        selectedLanguage.push(language.name);
-      }
-    }
-    if (json.hobby != null) {
-      for (let hobby of json.hobby) {
-        selectedHobby.push(hobby.name);
-      }
-    }
-    if (json.countries_travelled != null) {
-      for (let countries_travelled of json.countries_travelled) {
-        selectedCountry.push(countries_travelled.name);
-      }
-    }
-  };
 
   const sendProfile = async () => {
     try {
@@ -104,9 +110,6 @@ export default function ProfileScreen({ navigation }) {
     console.log(profileInfo);
   };
 
-  useEffect(() => {
-    getProfile();
-  }, []);
   return (
     <>
       <ScrollView>
