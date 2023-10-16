@@ -1,32 +1,17 @@
-import { useState, SetStateAction } from "react";
-import { Input, SearchBar, SpeedDial } from "@rneui/themed";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Keyboard,
-  Button,
-  TouchableWithoutFeedback,
-} from "react-native";
-import { Card, Avatar } from "react-native-paper";
-import {
-  Agenda,
-  AgendaEntry,
-  AgendaSchedule,
-  Calendar,
-} from "react-native-calendars";
-import { ReservationListProps } from "react-native-calendars/src/agenda/reservation-list/index";
-import AgendaListItem from "../components/AgendaLIstItem";
-import { NewType } from "../utils/types";
+import { useEffect, useState } from "react";
+import { Input, SpeedDial } from "@rneui/themed";
+import { View, Text, StyleSheet, Keyboard } from "react-native";
+import { Card } from "react-native-paper";
+import { Agenda, AgendaEntry } from "react-native-calendars";
 import Constants from "expo-constants";
 import { TextInput } from "react-native-gesture-handler";
 import { MarkedDates } from "react-native-calendars/src/types";
 import { DAY } from "@beenotung/tslib/time";
 import { format_2_digit } from "@beenotung/tslib/format";
-import { color } from "cast.ts";
 import PlannigStyleSheet from "../StyleSheet/PlanningStyleSheet";
-import day from "react-native-calendars/src/calendar/day";
+import AgendaListItem from "../components/AgendaLIstItem";
+import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
+import { ScheduleItem, ScheduleItemInfo } from "../utils/types";
 
 const styles = StyleSheet.create({
   view: {
@@ -50,119 +35,130 @@ function Space(props: { height: number }) {
 }
 
 const AddSchedule = () => {
+  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const [selectedDate, setSelectedDate] = useState<any>();
   const [open, setOpen] = useState(false);
 
-  type ScheduleItem = {
-    id: number;
-    date: string;
-    startTime: string;
-    endTime: string;
-    location: string;
-  };
-  const scheduleItems: ScheduleItem[] = [
-    {
-      id: 1,
-      date: "2023-10-10",
-      startTime: "13:00",
-      endTime: "15:00",
-      location: "Place 1",
-    },
-    {
-      id: 2,
-      date: "2023-10-10",
-      startTime: "15:30",
-      endTime: "15:45",
-      location: "Place 2",
-    },
-    {
-      id: 3,
-      date: "2023-10-11",
-      startTime: "15:30",
-      endTime: "15:45",
-      location: "Place 3",
-    },
-    {
-      id: 4,
-      date: "2023-10-12",
-      startTime: "13:00",
-      endTime: "15:00",
-      location: "Place 1",
-    },
-    {
-      id: 5,
-      date: "2023-10-12",
-      startTime: "15:30",
-      endTime: "15:45",
-      location: "Place 2",
-    },
-    {
-      id: 6,
-      date: "2023-10-12",
-      startTime: "16:00",
-      endTime: "16:30",
-      location: "Place 3",
-    },
-    {
-      id: 7,
-      date: "2023-10-12",
-      startTime: "16:45",
-      endTime: "16:55",
-      location: "Place 4",
-    },
-    {
-      id: 1,
-      date: "2023-10-10",
-      startTime: "13:00",
-      endTime: "15:00",
-      location: "Place 1",
-    },
-    {
-      id: 2,
-      date: "2023-10-10",
-      startTime: "15:30",
-      endTime: "15:45",
-      location: "Place 2",
-    },
-    {
-      id: 3,
-      date: "2023-10-11",
-      startTime: "15:30",
-      endTime: "15:45",
-      location: "Place 3",
-    },
-    {
-      id: 4,
-      date: "2023-10-12",
-      startTime: "13:00",
-      endTime: "15:00",
-      location: "Place 1",
-    },
-    {
-      id: 5,
-      date: "2023-10-12",
-      startTime: "15:30",
-      endTime: "15:45",
-      location: "Place 2",
-    },
-    {
-      id: 6,
-      date: "2023-10-12",
-      startTime: "16:00",
-      endTime: "16:30",
-      location: "Place 3",
-    },
-    {
-      id: 7,
-      date: "2023-10-12",
-      startTime: "16:45",
-      endTime: "16:55",
-      location: "Place 4",
-    },
-  ];
+  const [scheduleItems, setScheduleItems] = useState<ScheduleItem[]>([]);
+
+  useEffect(() => {
+    setScheduleItems([
+      {
+        id: 1,
+        date: "2023-10-16",
+        startTime: "13:00",
+        endTime: "15:00",
+        location: "Place 1",
+      },
+      {
+        id: 2,
+        date: "2023-10-16",
+        startTime: "15:30",
+        endTime: "15:45",
+        location: "Place 2",
+      },
+      {
+        id: 3,
+        date: "2023-10-17",
+        startTime: "15:30",
+        endTime: "15:45",
+        location: "Place 3",
+      },
+      {
+        id: 4,
+        date: "2023-10-17",
+        startTime: "13:00",
+        endTime: "15:00",
+        location: "Place 1",
+      },
+      {
+        id: 5,
+        date: "2023-10-18",
+        startTime: "15:30",
+        endTime: "15:45",
+        location: "Place 2",
+      },
+      {
+        id: 6,
+        date: "2023-10-18",
+        startTime: "16:00",
+        endTime: "16:30",
+        location: "Place 3",
+      },
+      {
+        id: 7,
+        date: "2023-10-19",
+        startTime: "16:45",
+        endTime: "16:55",
+        location: "Place 4",
+      },
+      {
+        id: 1,
+        date: "2023-10-19",
+        startTime: "13:00",
+        endTime: "15:00",
+        location: "Place 1",
+      },
+      {
+        id: 2,
+        date: "2023-10-20",
+        startTime: "15:30",
+        endTime: "15:45",
+        location: "Place 2",
+      },
+      {
+        id: 3,
+        date: "2023-10-20",
+        startTime: "15:30",
+        endTime: "15:45",
+        location: "Place 3",
+      },
+      {
+        id: 4,
+        date: "2023-10-20",
+        startTime: "13:00",
+        endTime: "15:00",
+        location: "Place 1",
+      },
+      {
+        id: 5,
+        date: "2023-10-21",
+        startTime: "15:30",
+        endTime: "15:45",
+        location: "Place 2",
+      },
+      {
+        id: 6,
+        date: "2023-10-21",
+        startTime: "16:00",
+        endTime: "16:30",
+        location: "Place 3",
+      },
+      {
+        id: 7,
+        date: "2023-10-21",
+        startTime: "16:45",
+        endTime: "16:55",
+        location: "Place 4",
+      },
+      {
+        id: 7,
+        date: "2023-10-21",
+        startTime: "16:45",
+        endTime: "16:55",
+        location: "Place 4",
+      },
+      {
+        id: 7,
+        date: "2023-10-21",
+        startTime: "16:45",
+        endTime: "16:55",
+        location: "Place 4",
+      },
+    ]);
+  }, []);
 
   const data: Record<string, ScheduleItem[]> = {};
-
   scheduleItems.forEach((item) => {
     let date = item.date;
     let items = data[date];
@@ -193,6 +189,14 @@ const AddSchedule = () => {
       color: "lightgreen",
     };
   }
+
+  const updateScheduleList = (scheduleInfo: ScheduleItemInfo) => {
+    setScheduleItems((currentList) => {
+      const newID = (currentList.pop()?.id || -1) + 1;
+      return [...currentList, { ...scheduleInfo, id: newID }];
+    });
+    IonNeverDialog.dismiss();
+  };
 
   return (
     <>
@@ -265,6 +269,7 @@ const AddSchedule = () => {
                   style={{
                     margin: 8,
                     padding: 4,
+                    borderRadius: 0,
                     // margin: "auto",
                   }}
                 >
@@ -340,12 +345,26 @@ const AddSchedule = () => {
         <SpeedDial.Action
           icon={{ name: "add", color: "#fff" }}
           title="Add"
-          onPress={() => console.log("Added")}
+          onPress={() => {
+            IonNeverDialog.show({
+              dialogHeight: 600,
+              component: () => {
+                return (
+                  <AgendaListItem
+                    selectedDate={selectedDate as string}
+                    updateScheduleList={updateScheduleList}
+                  />
+                );
+              },
+            });
+          }}
         />
         <SpeedDial.Action
           icon={{ name: "delete", color: "#fff" }}
           title="Delete"
-          onPress={() => console.log("Delete Something")}
+          onPress={() => {
+            console.log("delete");
+          }}
         />
       </SpeedDial>
     </>

@@ -14,6 +14,7 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
 import Entypo from "react-native-vector-icons/Entypo";
+import query from "../utils/googleAPIQuery";
 
 export default function InputAutocomplete({
   //@ts-ignore
@@ -25,8 +26,6 @@ export default function InputAutocomplete({
   //@ts-ignore
   code,
 }) {
-  const GOOGLE_API_KEY = "AIzaSyDkl6HfJvmSSKDGWH0L0Y183PbBuY9fjdo";
-
   const autocompleteRef = useRef(null);
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const [selectedLocation, setSelectedLocation] = useState<string[]>([]);
@@ -65,17 +64,7 @@ export default function InputAutocomplete({
       </View>
     );
   };
-  const query = {
-    key: GOOGLE_API_KEY,
-    language: ["en", "zh-CN", "zh-TW", "ja"],
-    types: [
-      "establishment",
-      "tourist_attraction",
-      "landmark",
-      "natural_feature",
-      "point_of_interest",
-    ],
-  };
+
   if (code) {
     //@ts-ignore
     query.components = `country:${code}`;
@@ -106,7 +95,7 @@ export default function InputAutocomplete({
                 if (
                   selectedLocationList.some(
                     (loc: { id: string; name: string }) =>
-                      loc.id === position.id,
+                      loc.id === position.id
                   )
                 ) {
                   IonNeverToast.show({

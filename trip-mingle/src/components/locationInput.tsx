@@ -5,6 +5,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import InputAutocomplete from "./InputAutocomplete";
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
+import { UserLocation } from "../utils/types";
 
 //@ts-ignore
 export default function LocationInput({ code }) {
@@ -15,10 +16,7 @@ export default function LocationInput({ code }) {
   const [selectedLocationList, setSelectedLocationList] = useState<
     UserLocation[]
   >([]);
-  type UserLocation = {
-    id: string;
-    name: string;
-  };
+
   const inputRef = useRef<TextInput | null>(null);
   const focusInput = () => {
     if (inputRef.current) {

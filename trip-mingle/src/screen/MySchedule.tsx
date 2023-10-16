@@ -1,5 +1,4 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import PlanningPage from "./Planning";
 import { useEffect, useRef, useState } from "react";
 import {
   View,
@@ -11,21 +10,15 @@ import {
   Animated,
   SafeAreaView,
 } from "react-native";
-import { Avatar, Card, CheckBox, Image, SearchBar } from "@rneui/themed";
-import TourScreen from "./PostScreen";
-import SchedulePage from "../pages/SchedulePage";
-import AddSchedule from "./AddSchedule";
+import { Card } from "@rneui/themed";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import {
   RegisInfo,
   ScheduleCardInfo,
   ScheduleCardInputInfo,
 } from "../utils/types";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
-import { countriesList } from "../source/countries";
-import { flex, white } from "../StyleSheet/StyleSheetHelper";
-import LoginPageStyleSheet from "../StyleSheet/LoginScreenCss";
+
 import AddScheduleForm from "../components/AddScheduleForm";
 
 const Stack = createStackNavigator();
