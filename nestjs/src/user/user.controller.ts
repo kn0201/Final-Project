@@ -34,6 +34,11 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard)
+  @Get('icon')
+  async getIcon(@Req() req: Request) {
+    return this.userService.getIcon(req);
+  }
+  @UseGuards(AuthGuard)
   @Post('profile')
   async sendProfile(@Body() body: Body, @Req() req: Request) {
     let input = sendProfileParser.parse(body);
@@ -50,10 +55,10 @@ export class UserController {
     return this.userService.getHobbyList();
   }
 
-  @Post('image')
-  @UseInterceptors(FileInterceptor('image', { storage: storage }))
-  async uploadImage(@UploadedFile() image) {
-    console.log('image:', image);
-    return this.userService.uploadImage(image);
-  }
+  // @Post('image')
+  // @UseInterceptors(FileInterceptor('image', { storage: storage }))
+  // async uploadImage(@UploadedFile() image) {
+  //   console.log('image:', image);
+  //   return this.userService.uploadImage(image);
+  // }
 }

@@ -13,16 +13,25 @@ import { iosBlue } from "../StyleSheet/StyleSheetHelper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { useToken } from "../hooks/useToken";
+import { api } from "../apis/api";
+import { getIconResult } from "../utils/parser";
 
 //@ts-ignore
 export default function UserPage({ navigation }) {
   const { token, payload, setToken } = useToken();
+  const [iconPath, setIconPath] = useState("");
   const logout = async () => {
     setToken("");
     await AsyncStorage.removeItem("username");
     navigation.navigate("Home");
   };
-
+  const getIcon = async () => {
+    let json = await api.get("/user/icon", getIconResult, token);
+    console.log(json);
+  };
+  useEffect(() => {
+    getIcon();
+  }, []);
   return (
     <>
       <KeyboardAvoidingView

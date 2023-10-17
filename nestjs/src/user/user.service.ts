@@ -122,9 +122,24 @@ export class UserService {
     return result;
   }
 
-  async uploadImage(image){
-    let imageName = image.filename
+  async getIcon(req) {
+    const payload = this.jwtService.decode(
+      req.headers.authorization.split(' ')[1],
+    );
+    let user_id = payload.user_id;
     let result = await this.knex
-    .
+      .select('path')
+      .from('image')
+      .where('user_id', user_id)
+      .first();
+
+    console.log(result);
+
+    return result;
   }
+  // async uploadImage(image){
+  //   let imageName = image.filename
+  //   let result = await this.knex
+  //   .
+  // }
 }

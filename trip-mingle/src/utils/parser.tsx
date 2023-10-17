@@ -39,3 +39,7 @@ export const addPostCountryListParser = array(
     code: string(),
   })
 );
+
+export const getIconResult = object({
+  result: boolean(),
+});

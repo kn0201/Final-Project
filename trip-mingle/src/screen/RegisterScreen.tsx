@@ -130,18 +130,19 @@ export default function RegisterScreen({ navigation }) {
     }
     // console.log(imageFile);
   };
-  const uploadImage = async () => {
-    let formData = new FormData();
-    formData.append("image", imageFile as any);
-    console.log(imageFile);
+  // const uploadImage = async () => {
+  //   let formData = new FormData();
+  //   formData.append("image", imageFile as any);
+  //   formData.append("regisInfo",regisInfo as any)
+  //   console.log(imageFile);
 
-    // let res = await fetch(apiOrigin + "/user/image", {
-    //   method: "POST",
-    //   body: formData,
-    // });
-    // let json = await res.json();
-    // console.log("json:", json);
-  };
+  //   let res = await fetch(apiOrigin + "/user/image", {
+  //     method: "POST",
+  //     body: formData,
+  //   });
+  //   let json = await res.json();
+  //   // console.log("json:", json);
+  // };
 
   const checkUsername = async (text: string) => {
     try {
@@ -172,12 +173,20 @@ export default function RegisterScreen({ navigation }) {
 
   const register = async () => {
     try {
-      let json = await api.loginSignUp(
-        "/login/register",
-        regisInfo,
-        signUpResultParser
-      );
-      await uploadImage();
+      let formData = new FormData();
+      formData.append("image", imageFile as any);
+      formData.append("username", regisInfo.username);
+      formData.append("email", regisInfo.email);
+      formData.append("password", regisInfo.password);
+      formData.append("gender", regisInfo.gender as any);
+      formData.append("country_id", regisInfo.country_id);
+      formData.append("age", regisInfo.age);
+
+      let res = await fetch(apiOrigin + "/login/register", {
+        method: "POST",
+        body: formData,
+      });
+      let json = await res.json();
       Object.entries(clearInputs).map(([_key, clear]) => clear());
       setSelectedAge("Select Your Age Group");
       setSelectedCountry("Country");
