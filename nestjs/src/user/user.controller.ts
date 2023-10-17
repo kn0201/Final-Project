@@ -16,7 +16,7 @@ import multer from 'multer';
 import { randomUUID } from 'crypto';
 
 let storage = multer.diskStorage({
-  destination: 'uploads',
+  destination: '../trip-mingle/uploads',
   filename(req, file, callback) {
     let ext = file.mimetype.match(/^image\/([\w-]+)/)?.[1] || 'bin';
     let filename = randomUUID() + '.' + ext;
@@ -55,10 +55,10 @@ export class UserController {
     return this.userService.getHobbyList();
   }
 
-  // @Post('image')
-  // @UseInterceptors(FileInterceptor('image', { storage: storage }))
-  // async uploadImage(@UploadedFile() image) {
-  //   console.log('image:', image);
-  //   return this.userService.uploadImage(image);
-  // }
+  @Post('image')
+  @UseInterceptors(FileInterceptor('image', { storage: storage }))
+  async uploadImage(@UploadedFile() image) {
+    console.log('image:', image);
+    return;
+  }
 }

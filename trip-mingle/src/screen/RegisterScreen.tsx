@@ -153,9 +153,7 @@ export default function RegisterScreen({ navigation }) {
       );
       if (checker.result === true) {
         setCheckUsernameResult(true);
-        console.log(checkUsernameResult);
       } else if (checker.result === false) {
-        console.log(checkUsernameResult);
         setCheckUsernameResult(false);
       }
     } catch (error) {
@@ -209,26 +207,6 @@ export default function RegisterScreen({ navigation }) {
     console.log(regisInfo);
     navigation.navigate("Users");
   };
-
-  // const makeFormData = ()=>{
-  //   let formData = new FormData();
-  //     let file = {uri: regisInfo.avatar, type: 'application/octet-stream', name: 'image.jpg'};
-  //     formData.append('image', {
-  //       uri: imageUri,  // 文件的本地 URI
-  //       type: 'image/jpeg', // 文件类型
-  //       name: 'photo.jpg', // 文件名称
-  //     });
-  // }
-
-  // const uploadImage =async () => {
-  //   try{
-
-  //   }catch (error) {
-  //     const errorObject: any = { ...(error as object) };
-  //     console.log(errorObject);
-  //   }
-
-  // }
 
   return (
     <TouchableWithoutFeedback

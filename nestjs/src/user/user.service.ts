@@ -20,28 +20,24 @@ export class UserService {
       .select('intro')
       .where('id', user_id)
       .first();
-    console.log(intro);
 
     let language = await this.knex
       .select('language_list.name as name', 'language_list.id as id')
       .from('language')
       .where('user_id', user_id)
       .leftJoin('language_list', 'language_list.id', 'language_id');
-    console.log({ language: language });
 
     let hobby = await this.knex
       .select('hobby_list.name as name', 'hobby_list.id as id')
       .from('hobby')
       .where('user_id', user_id)
       .leftJoin('hobby_list', 'hobby_list.id', 'hobby_id');
-    console.log({ hobby: hobby });
 
     let countries_travelled = await this.knex
       .select('country_list.name as name', 'country_list.id as id')
       .from('countries_travelled')
       .where('user_id', user_id)
       .leftJoin('country_list', 'country_list.id', 'country_id');
-    console.log({ countries_travelled: countries_travelled });
 
     return {
       intro: intro.intro,

@@ -71,6 +71,7 @@ export class LoginService {
     let username = body.username;
     let imageName = image.filename;
     let hashedPW = await hashPassword(body.password);
+
     let result = await this.knex('users')
       .insert({
         username: body.username,
@@ -86,15 +87,18 @@ export class LoginService {
       .returning('id');
 
     let id = result[0].id;
-    let uploadResult = await this.knex(image)
+
+    let uploadResult = await this.knex('image')
       .insert({
         user_id: id,
         path: imageName,
         is_delete: false,
       })
       .returning('id');
+
     let image_id = uploadResult[0].id;
-    await this.knex('users').insert({
+
+    await this.knex('users').update({
       avatar_id: image_id,
     });
 

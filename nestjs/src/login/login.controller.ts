@@ -14,7 +14,7 @@ import { randomUUID } from 'crypto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 let storage = multer.diskStorage({
-  destination: 'uploads',
+  destination: '../trip-mingle/uploads',
   filename(req, file, callback) {
     let ext = file.mimetype.match(/^image\/([\w-]+)/)?.[1] || 'bin';
     let filename = randomUUID() + '.' + ext;
@@ -35,7 +35,7 @@ export class LoginController {
   @UseInterceptors(FileInterceptor('image', { storage: storage }))
   async register(@Body() body: Body, @UploadedFile() image) {
     console.log(body);
-
+    console.log('image:', image);
     let input = signUpParser.parse(body);
     return this.loginService.register(input, image);
   }
