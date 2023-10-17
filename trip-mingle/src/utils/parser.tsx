@@ -17,7 +17,7 @@ export const getProfileResultParser = object({
   language: nullable(array(object({ name: string(), id: string() }))),
   hobby: nullable(array(object({ name: string(), id: string() }))),
   countries_travelled: nullable(
-    array(object({ name: string(), id: string() }))
+    array(object({ name: string(), id: string() })),
   ),
 });
 
@@ -29,7 +29,7 @@ export const countryListParser = array(
   object({
     id: string(),
     name: string(),
-  })
+  }),
 );
 
 export const addPostCountryListParser = array(
@@ -37,5 +37,9 @@ export const addPostCountryListParser = array(
     id: string(),
     name: string(),
     code: string(),
-  })
+  }),
 );
+
+export const getPostResultListParser = array(object({}));
+
+export const addTourPostParser = object({});

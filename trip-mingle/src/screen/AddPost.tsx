@@ -20,13 +20,18 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import LocationInput from "../components/locationInput";
 import PeriodPicker from "../components/PeriodPicker";
 import MultipleSelector from "../components/MutlipleSelector";
-
 import SingleSelectorWithOther from "../components/SingleSelectorWithOther";
 import MultipleSelectorWithOther from "../components/MultipleSelectorWithOther";
-import { addPostCountryListParser, countryListParser } from "../utils/parser";
+import {
+  addPostCountryListParser,
+  addTourPostParser,
+  countryListParser,
+} from "../utils/parser";
 import { api } from "../apis/api";
+import { useToken } from "../hooks/useToken";
 
 export default function AddPost() {
+  const { token, payload, setToken } = useToken();
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const [title, setTitle] = useState("");
   const [budget, setBudget] = useState("");
@@ -72,7 +77,6 @@ export default function AddPost() {
   ]);
   const [selectedSkillsText, setSelectedSkillsText] =
     useState<string>("Preferred Hobbies");
-
   const [selectedAgesText, setSelectedAgesText] = useState("Preferred Age(s)");
   const [selectedAgesList, setSelectedAgesList] = useState<string[]>([]);
   const ageLabels = [
@@ -84,7 +88,6 @@ export default function AddPost() {
     "48-54",
     ">55",
   ];
-
   const [countriesListData, setCountriesListData] = useState<
     AddPostCountryList[]
   >([]);
@@ -100,11 +103,9 @@ export default function AddPost() {
   );
   const getLanguageList = async () => {
     const json = await api.getList("/user/language_list", countryListParser);
-
     setLanguagesListData(json);
   };
-
-  const [checkType, setCheckType] = useState({ type: "none" });
+  const [checkType, setCheckType] = useState("none");
 
   useEffect(() => {
     getCountryList();
@@ -112,6 +113,7 @@ export default function AddPost() {
   }, []);
 
   const postInfo = useRef<PostInfo>({
+    type: "",
     title: "",
     content: "",
     trip_country: "",
@@ -125,82 +127,95 @@ export default function AddPost() {
     preferred_hobby: "",
   }).current;
 
-  const addPost = () => {
-    if (title !== "") {
-      updateInputText("title", title);
-    } else {
-      IonNeverDialog.show({
-        type: "warning",
-        title: "Error",
-        message: "Missing title",
-        firstButtonVisible: true,
-        firstButtonFunction: () => {
-          IonNeverDialog.dismiss();
-        },
-      });
-      return;
+  const addPost = async () => {
+    try {
+      if (checkType !== "none") {
+        updateInputText("type", checkType);
+      }
+      if (title !== "") {
+        updateInputText("title", title);
+      } else {
+        IonNeverDialog.show({
+          type: "warning",
+          title: "Error",
+          message: "Missing title",
+          firstButtonVisible: true,
+          firstButtonFunction: () => {
+            IonNeverDialog.dismiss();
+          },
+        });
+        throw new Error("Missing title");
+      }
+      if (selectedCountry !== "Destination Country *") {
+        updateInputText("trip_country", selectedCountry);
+      } else {
+        IonNeverDialog.show({
+          type: "warning",
+          title: "Error",
+          message: "Missing destination country",
+          firstButtonVisible: true,
+          firstButtonFunction: () => {
+            IonNeverDialog.dismiss();
+          },
+        });
+        throw new Error("Missing destination country");
+      }
+      if (content !== "") {
+        updateInputText("content", content);
+      } else {
+        IonNeverDialog.show({
+          type: "warning",
+          title: "Error",
+          message: "Missing content",
+          firstButtonVisible: true,
+          firstButtonFunction: () => {
+            IonNeverDialog.dismiss();
+          },
+        });
+        throw new Error("Missing content");
+      }
+      if (selectedHeadcount !== "Preferred Headcount *") {
+        updateInputText("trip_headcount", selectedHeadcount);
+      } else {
+        IonNeverDialog.show({
+          type: "warning",
+          title: "Error",
+          message: "Missing preferred headcount",
+          firstButtonVisible: true,
+          firstButtonFunction: () => {
+            IonNeverDialog.dismiss();
+          },
+        });
+        throw new Error("Missing preferred headcount");
+      }
+      if (selectedPeriod !== "Expected Period") {
+        updateInputText("trip_period", selectedPeriod);
+      }
+      if (budget !== "") {
+        updateInputText("trip_budget", budget);
+      }
+      if (selectedGender !== "Preferred Gender") {
+        updateInputText("preferred_gender", selectedGender);
+      }
+      if (selectedAgesText != "Preferred Age(s)") {
+        updateInputText("preferred_age", selectedAgesText);
+      }
+      if (selectedLanguagesText != "Preferred Languages(s)") {
+        updateInputText("preferred_language", selectedLanguagesText);
+      }
+      if (selectedSkillsText != "Preferred Hobbies") {
+        updateInputText("preferred_hobby", selectedSkillsText);
+      }
+      // const json = await api.post(
+      //   "/blog/tour",
+      //   postInfo,
+      //   addTourPostParser,
+      //   token,
+      // );
+      console.log(postInfo);
+    } catch (e) {
+      console.log({ e });
     }
-    if (selectedCountry !== "Destination Country *") {
-      updateInputText("trip_country", selectedCountry);
-    } else {
-      IonNeverDialog.show({
-        type: "warning",
-        title: "Error",
-        message: "Missing destination country",
-        firstButtonVisible: true,
-        firstButtonFunction: () => {
-          IonNeverDialog.dismiss();
-        },
-      });
-      return;
-    }
-    if (content !== "") {
-      updateInputText("content", content);
-    } else {
-      IonNeverDialog.show({
-        type: "warning",
-        title: "Error",
-        message: "Missing content",
-        firstButtonVisible: true,
-        firstButtonFunction: () => {
-          IonNeverDialog.dismiss();
-        },
-      });
-      return;
-    }
-    if (selectedHeadcount !== "Preferred Headcount *") {
-      updateInputText("trip_headcount", selectedHeadcount);
-    } else {
-      IonNeverDialog.show({
-        type: "warning",
-        title: "Error",
-        message: "Missing preferred headcount",
-        firstButtonVisible: true,
-        firstButtonFunction: () => {
-          IonNeverDialog.dismiss();
-        },
-      });
-      return;
-    }
-    if (selectedPeriod !== "Expected Period") {
-      updateInputText("trip_period", selectedPeriod);
-    }
-    if (budget !== "") {
-      updateInputText("trip_budget", budget);
-    }
-    if (selectedGender !== "Preferred Gender") {
-      updateInputText("preferred_gender", selectedGender);
-    }
-    if (selectedAgesText != "Preferred Age(s)") {
-      updateInputText("preferred_age", selectedAgesText);
-    }
-    if (selectedLanguagesText != "Preferred Languages(s)") {
-      updateInputText("preferred_language", selectedLanguagesText);
-    }
-    if (selectedSkillsText != "Preferred Hobbies") {
-      updateInputText("preferred_hobby", selectedSkillsText);
-    }
-    console.log(postInfo);
   };
 
   // Update Input fields
@@ -720,8 +735,8 @@ export default function AddPost() {
                 title="BLOG"
                 checkedIcon="dot-circle-o"
                 uncheckedIcon="circle-o"
-                checked={checkType.type == "blog"}
-                onPress={() => setCheckType({ type: "blog" })}
+                checked={checkType === "blog"}
+                onPress={() => setCheckType("blog")}
                 size={20}
                 containerStyle={{ backgroundColor: "transparent" }}
               />
@@ -730,8 +745,8 @@ export default function AddPost() {
                 title="TOUR"
                 checkedIcon="dot-circle-o"
                 uncheckedIcon="circle-o"
-                checked={checkType.type == "tour"}
-                onPress={() => setCheckType({ type: "tour" })}
+                checked={checkType === "tour"}
+                onPress={() => setCheckType("tour")}
                 size={20}
                 containerStyle={{ backgroundColor: "transparent" }}
               />
@@ -740,27 +755,27 @@ export default function AddPost() {
                 title="ENQUIRE"
                 checkedIcon="dot-circle-o"
                 uncheckedIcon="circle-o"
-                checked={checkType.type == "enquire"}
-                onPress={() => setCheckType({ type: "enquire" })}
+                checked={checkType === "enquire"}
+                onPress={() => setCheckType("enquire")}
                 size={20}
                 containerStyle={{ backgroundColor: "transparent" }}
               />
             </View>
             {TitleInput()}
-            {checkType.type == "enquire" ? <></> : <CountryCheckbox />}
-            {checkType.type == "enquire" ? (
+            {checkType === "enquire" ? <></> : <CountryCheckbox />}
+            {checkType === "enquire" ? (
               <></>
             ) : (
               <LocationInput code={code} updateInputText={updateInputText} />
             )}
-            {checkType.type == "tour" ? <PeriodSelector /> : <></>}
-            {checkType.type == "tour" ? BudgetInput() : <></>}
+            {checkType === "tour" ? <PeriodSelector /> : <></>}
+            {checkType === "tour" ? BudgetInput() : <></>}
             {ContentInput()}
-            {checkType.type == "tour" ? <HeadcountCheckbox /> : <></>}
-            {checkType.type == "tour" ? <GenderCheckbox /> : <></>}
-            {checkType.type == "tour" ? <AgeCheckbox /> : <></>}
-            {checkType.type == "tour" ? <LanguagesCheckbox /> : <></>}
-            {checkType.type == "tour" ? <SkillCheckbox /> : <></>}
+            {checkType === "tour" ? <HeadcountCheckbox /> : <></>}
+            {checkType === "tour" ? <GenderCheckbox /> : <></>}
+            {checkType === "tour" ? <AgeCheckbox /> : <></>}
+            {checkType === "tour" ? <LanguagesCheckbox /> : <></>}
+            {checkType === "tour" ? <SkillCheckbox /> : <></>}
             <View style={AddPostPageStyleSheet.center}>
               <TouchableOpacity
                 style={AddPostPageStyleSheet.addPost}

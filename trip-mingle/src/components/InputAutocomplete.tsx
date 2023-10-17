@@ -95,11 +95,52 @@ export default function InputAutocomplete({
             fetchDetails
             onPress={(data, details) => {
               if (details) {
-                const position = { id: details.place_id, name: details.name };
+                const position = {
+                  id: details.place_id,
+                  name: details.name,
+                  // country:
+                  //   details.address_components.find((component) =>
+                  //     component.types.includes("country"),
+                  //   )?.long_name || null,
+                  // county:
+                  //   details.address_components.find((component) =>
+                  //     component.types.includes("administrative_area_level_1"),
+                  //   )?.long_name || null,
+                  // city:
+                  //   details.address_components.find((component) =>
+                  //     component.types.includes("locality"),
+                  //   )?.long_name || null,
+                  address: details.formatted_address,
+                  // website: details.website || null,
+                  // opening_hours: details.opening_hours?.weekday_text || null,
+                  coordinates: {
+                    lat: details.geometry.location.lat,
+                    lng: details.geometry.location.lng,
+                  },
+                  // type: details.types,
+                  // photo: details.photos
+                  //   ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${details.photos[1].photo_reference}&key=${query.key}`
+                  //   : null,
+                };
                 if (
                   selectedLocationList.some(
-                    (loc: { id: string; name: string }) =>
-                      loc.id === position.id,
+                    (loc: {
+                      id: string;
+                      name: string;
+                      // overview: string | null;
+                      // country: string | null;
+                      // county: string | null;
+                      // city: string | null;
+                      address: string;
+                      // website: string | null;
+                      // opening_hours: string[] | null;
+                      coordinates: {
+                        lat: string;
+                        lng: string;
+                      };
+                      // types: string[];
+                      // photo: string | null;
+                    }) => loc.id === position.id,
                   )
                 ) {
                   IonNeverToast.show({

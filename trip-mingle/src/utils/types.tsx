@@ -44,6 +44,7 @@ export type ScheduleCardInputInfo = {
 };
 
 export type PostInfo = {
+  type: string;
   title: string;
   content: string;
   trip_country: string;
