@@ -150,21 +150,40 @@ const MultipleSelectorWithOther = ({
       <View style={AddPostPageStyleSheet.ModalButtonContainer}>
         <TouchableOpacity
           onPress={() => {
-            if (localSkills.includes("Other: ")) {
-              let array = [];
-              if (localSkills.includes("Other: ")) {
-                for (let skill of localSkills) {
-                  if (skill === "Other: ") {
-                    array.push(otherSkill);
+            let array: string[] = [];
+            if (
+              localSkills.length <= 0 ||
+              (localSkills.length === 1 &&
+                localSkills.includes("Other: ") &&
+                otherSkill === "")
+            ) {
+              setSelectedSkillsText("Preferred Hobbies");
+            } else {
+              for (let skill of localSkills) {
+                if (skill === "Other: ") {
+                  if (otherSkill === "") {
                     continue;
-                  } else {
+                  }
+                  if (!array.includes(otherSkill)) {
+                    array.push(otherSkill);
+                  }
+                  if (array.includes(otherSkill)) {
+                    continue;
+                  }
+                } else {
+                  if (!array.includes(skill)) {
                     array.push(skill);
+                  }
+                  if (array.includes(skill)) {
+                    continue;
                   }
                 }
               }
               let arrayString = array.join(", ");
               setSelectedSkillsText(arrayString);
+            }
 
+            if (localSkills.includes("Other: ")) {
               const formattedLocalSkills = localSkills.filter(
                 (skill) => skill !== "Other: ",
               );
@@ -185,7 +204,6 @@ const MultipleSelectorWithOther = ({
                 setLocalSkills(formattedLocalSkills);
                 setSelectedSkills(formattedLocalSkills);
               }
-              setSelectedSkillsText(arrayString);
               IonNeverDialog.dismiss();
             } else if (localSkills.length <= 0) {
               setSkills([]);
@@ -193,11 +211,6 @@ const MultipleSelectorWithOther = ({
             } else {
               setSkills(localSkills);
               setSelectedSkills(localSkills);
-            }
-            const selectedSkillsString = localSkills.join(", ");
-            selectedSkillsString;
-            if (localSkills.length <= 0) {
-              setSelectedSkillsText("Preferred Hobbies");
             }
             IonNeverDialog.dismiss();
           }}
