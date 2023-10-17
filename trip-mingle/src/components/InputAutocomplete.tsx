@@ -22,6 +22,8 @@ export default function InputAutocomplete({
   //@ts-ignore
   setSelectedLocationList,
   //@ts-ignore
+  selectedLocationText,
+  //@ts-ignore
   selectedLocationList,
   //@ts-ignore
   code,
@@ -97,7 +99,7 @@ export default function InputAutocomplete({
                 if (
                   selectedLocationList.some(
                     (loc: { id: string; name: string }) =>
-                      loc.id === position.id
+                      loc.id === position.id,
                   )
                 ) {
                   IonNeverToast.show({
@@ -149,7 +151,9 @@ export default function InputAutocomplete({
           onPress={() => {
             IonNeverDialog.dismiss();
             setSelectedLocationList(localSelectedLocationList);
-            updateInputText("trip_location", localSelectedLocationList);
+            if (localSelectedLocationList.length > 0) {
+              updateInputText("trip_location", localSelectedLocationList);
+            }
           }}
         >
           <Text style={AddPostPageStyleSheet.ModalText}>OK</Text>

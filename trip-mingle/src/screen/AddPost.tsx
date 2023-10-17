@@ -27,7 +27,7 @@ import { addPostCountryListParser, countryListParser } from "../utils/parser";
 import { api } from "../apis/api";
 
 export default function AddPost() {
-  const { IonNeverDialog } = useIonNeverNotification();
+  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const [title, setTitle] = useState("");
   const [budget, setBudget] = useState("");
   const [content, setContent] = useState("");
@@ -113,28 +113,75 @@ export default function AddPost() {
     title: "",
     content: "",
     trip_country: "",
-    trip_location: "",
+    trip_location: [],
     trip_period: "",
     trip_headcount: "",
     trip_budget: "",
     preferred_gender: "",
-    preferred_age: "",
-    preferred_language: "",
-    preferred_hobby: "",
+    preferred_age: [],
+    preferred_language: [],
+    preferred_hobby: [],
   }).current;
 
   const addPost = () => {
-    updateInputText("trip_headcount", selectedHeadcount);
-    updateInputText("preferred_gender", selectedGender);
-    updateInputText("preferred_age", selectedAgesText);
-    updateInputText("trip_country", selectedCountry);
-    updateInputText("trip_period", selectedPeriod);
-    updateInputText("preferred_language", selectedLanguagesText);
-    updateInputText("preferred_skill", selectedSkillsText);
-    console.log(postInfo);
+    if (title !== "") {
+      updateInputText("title", title);
+    } else {
+      IonNeverToast.show({
+        type: "warning",
+        title: "Title cannot be empty!",
+        autoClose: 500,
+      });
+    }
+    if (content !== "") {
+      updateInputText("content", content);
+    } else {
+      IonNeverToast.show({
+        type: "warning",
+        title: "Content cannot be empty!",
+        autoClose: 500,
+      });
+    }
+    if (selectedCountry !== "Destination Country *") {
+      updateInputText("trip_country", selectedCountry);
+    } else {
+      IonNeverToast.show({
+        type: "warning",
+        title: "Destination Country cannot be empty!",
+        autoClose: 500,
+      });
+    }
+    if (selectedPeriod !== "Expected Period") {
+      updateInputText("trip_period", selectedPeriod);
+    }
+    if (selectedHeadcount !== "Preferred Headcount *") {
+      updateInputText("trip_headcount", selectedHeadcount);
+    } else {
+      IonNeverToast.show({
+        type: "warning",
+        title: "Preferred Headcount cannot be empty!",
+        autoClose: 500,
+      });
+    }
+    if (budget !== "") {
+      updateInputText("trip_budget", budget);
+    }
+    if (selectedGender !== "Preferred Gender") {
+      updateInputText("preferred_gender", selectedGender);
+    }
+    if (selectedAgesText != "Preferred Age(s)") {
+      updateInputText("preferred_age", selectedAgesList);
+    }
+    if (selectedLanguagesText != "Preferred Languages(s)") {
+      updateInputText("preferred_language", languages);
+    }
+    if (selectedSkillsText != "Preferred Hobbies") {
+      updateInputText("preferred_skill", skills);
+    }
+    console.log({ postInfo });
   };
   // Update Input fields
-  const updateInputText = (field: string, value: string) => {
+  const updateInputText = (field: string, value: string | string[]) => {
     //@ts-ignore
     postInfo[field as keyof PostInfo] = value;
   };
@@ -155,7 +202,6 @@ export default function AddPost() {
         style={AddPostPageStyleSheet.postInputContainer}
         onChangeText={(title) => {
           setTitle(title);
-          updateInputText("title", title);
         }}
         value={title}
         placeholder="Post Title *"
@@ -172,7 +218,6 @@ export default function AddPost() {
         style={AddPostPageStyleSheet.postInputContainer}
         onChangeText={(budget) => {
           setBudget(budget);
-          updateInputText("trip_budget", budget);
         }}
         value={budget}
         placeholder="Expected Budget (e.g. HKD10,000)"
@@ -189,7 +234,6 @@ export default function AddPost() {
         style={AddPostPageStyleSheet.contentContainer}
         onChangeText={(content) => {
           setContent(content);
-          updateInputText("content", content);
         }}
         value={content}
         multiline
@@ -282,7 +326,6 @@ export default function AddPost() {
                           ? setSelectedGender(localGender)
                           : setSelectedGender("Preferred Gender");
                         IonNeverDialog.dismiss();
-                        updateInputText("preferred_gender", gender);
                       }}
                     >
                       <Text style={AddPostPageStyleSheet.ModalText}>OK</Text>
@@ -430,7 +473,6 @@ export default function AddPost() {
                           ? setSelectedCountry(localCountry)
                           : setSelectedCountry("Destination Country *");
                         IonNeverDialog.dismiss();
-                        updateInputText("trip_country", country);
                       }}
                     >
                       <Text style={AddPostPageStyleSheet.ModalText}>OK</Text>
@@ -651,8 +693,8 @@ export default function AddPost() {
             <View style={{ height: "auto", alignItems: "center" }}>
               {TitleInput()}
               <CountryCheckbox />
-              <PeriodSelector />
               <LocationInput code={code} updateInputText={updateInputText} />
+              <PeriodSelector />
               {BudgetInput()}
               {ContentInput()}
               <HeadcountCheckbox />

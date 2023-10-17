@@ -39,6 +39,7 @@ export default function LocationInput({ code, updateInputText }) {
               <InputAutocomplete
                 setSelectedLocationText={setSelectedLocationText}
                 setSelectedLocationList={setSelectedLocationList}
+                selectedLocationText={selectedLocationText}
                 selectedLocationList={selectedLocationList}
                 updateInputText={updateInputText}
                 code={code}
