@@ -115,55 +115,75 @@ export default function AddPost() {
     title: "",
     content: "",
     trip_country: "",
-    trip_location: [],
+    trip_location: "",
     trip_period: "",
     trip_headcount: "",
     trip_budget: "",
     preferred_gender: "",
-    preferred_age: [],
-    preferred_language: [],
-    preferred_hobby: [],
+    preferred_age: "",
+    preferred_language: "",
+    preferred_hobby: "",
   }).current;
 
   const addPost = () => {
     if (title !== "") {
       updateInputText("title", title);
     } else {
-      IonNeverToast.show({
+      IonNeverDialog.show({
         type: "warning",
-        title: "Title cannot be empty!",
-        autoClose: 500,
+        title: "Error",
+        message: "Missing title",
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          IonNeverDialog.dismiss();
+        },
       });
-    }
-    if (content !== "") {
-      updateInputText("content", content);
-    } else {
-      IonNeverToast.show({
-        type: "warning",
-        title: "Content cannot be empty!",
-        autoClose: 500,
-      });
+      return;
     }
     if (selectedCountry !== "Destination Country *") {
       updateInputText("trip_country", selectedCountry);
     } else {
-      IonNeverToast.show({
+      IonNeverDialog.show({
         type: "warning",
-        title: "Destination Country cannot be empty!",
-        autoClose: 500,
+        title: "Error",
+        message: "Missing destination country",
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          IonNeverDialog.dismiss();
+        },
       });
+      return;
     }
-    if (selectedPeriod !== "Expected Period") {
-      updateInputText("trip_period", selectedPeriod);
+    if (content !== "") {
+      updateInputText("content", content);
+    } else {
+      IonNeverDialog.show({
+        type: "warning",
+        title: "Error",
+        message: "Missing content",
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          IonNeverDialog.dismiss();
+        },
+      });
+      return;
     }
     if (selectedHeadcount !== "Preferred Headcount *") {
       updateInputText("trip_headcount", selectedHeadcount);
     } else {
-      IonNeverToast.show({
+      IonNeverDialog.show({
         type: "warning",
-        title: "Preferred Headcount cannot be empty!",
-        autoClose: 500,
+        title: "Error",
+        message: "Missing preferred headcount",
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          IonNeverDialog.dismiss();
+        },
       });
+      return;
+    }
+    if (selectedPeriod !== "Expected Period") {
+      updateInputText("trip_period", selectedPeriod);
     }
     if (budget !== "") {
       updateInputText("trip_budget", budget);
@@ -172,18 +192,19 @@ export default function AddPost() {
       updateInputText("preferred_gender", selectedGender);
     }
     if (selectedAgesText != "Preferred Age(s)") {
-      updateInputText("preferred_age", selectedAgesList);
+      updateInputText("preferred_age", selectedAgesText);
     }
     if (selectedLanguagesText != "Preferred Languages(s)") {
-      updateInputText("preferred_language", languages);
+      updateInputText("preferred_language", selectedLanguagesText);
     }
     if (selectedSkillsText != "Preferred Hobbies") {
-      updateInputText("preferred_skill", skills);
+      updateInputText("preferred_hobby", selectedSkillsText);
     }
-    console.log({ postInfo });
+    console.log(postInfo);
   };
+
   // Update Input fields
-  const updateInputText = (field: string, value: string | string[]) => {
+  const updateInputText = (field: string, value: string) => {
     //@ts-ignore
     postInfo[field as keyof PostInfo] = value;
   };
@@ -733,7 +754,7 @@ export default function AddPost() {
               <LocationInput code={code} updateInputText={updateInputText} />
             )}
             {checkType.type == "tour" ? <PeriodSelector /> : <></>}
-            {checkType.type == "tour" ? <BudgetInput /> : <></>}
+            {checkType.type == "tour" ? BudgetInput() : <></>}
             {ContentInput()}
             {checkType.type == "tour" ? <HeadcountCheckbox /> : <></>}
             {checkType.type == "tour" ? <GenderCheckbox /> : <></>}
