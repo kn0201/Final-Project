@@ -1,8 +1,28 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  UseGuards,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { sendProfileParser } from 'utils/parser';
+import multer from 'multer';
+import { randomUUID } from 'crypto';
 
+let storage = multer.diskStorage({
+  destination: 'uploads',
+  filename(req, file, callback) {
+    let ext = file.mimetype.match(/^image\/([\w-]+)/)?.[1] || 'bin';
+    let filename = randomUUID() + '.' + ext;
+    callback(null, filename);
+  },
+});
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
@@ -28,5 +48,12 @@ export class UserController {
   @Get('hobby_list')
   async getHobbyList() {
     return this.userService.getHobbyList();
+  }
+
+  @Post('image')
+  @UseInterceptors(FileInterceptor('image', { storage: storage }))
+  async uploadImage(@UploadedFile() image) {
+    console.log('image:', image);
+    return this.userService.uploadImage(image);
   }
 }

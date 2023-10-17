@@ -53,7 +53,7 @@ export default function UserPage({ navigation }) {
         ></Header>
         <View style={UserPageStyleSheet.container}>
           <Avatar
-            size={120}
+            size={150}
             rounded
             containerStyle={UserPageStyleSheet.AvatarContainer}
             source={require("../assets/yukimin.png")}
