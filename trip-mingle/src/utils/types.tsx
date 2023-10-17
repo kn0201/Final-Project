@@ -44,23 +44,18 @@ export type ScheduleCardInputInfo = {
 };
 
 export type PostInfo = {
-  // avatar_path: string;
-  // username: string;
-  // rating: number;
+  type: string;
   title: string;
   content: string;
   trip_country: string;
   trip_location: string | null;
   trip_period: string | null;
   trip_headcount: string;
-  // trip_budget: string | null;
+  trip_budget: string | null;
   preferred_gender: string | null;
   preferred_age: string | null;
   preferred_language: string | null;
-  preferred_skill: string;
-  // preferred_hobby: string | null;
-  // status: string;
-  // created_at: string;
+  preferred_hobby: string | null;
 };
 
 export type CountryList = {

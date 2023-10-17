@@ -1,4 +1,4 @@
-import { array, boolean, number, object, string } from 'cast.ts';
+import { array, boolean, nullable, number, object, string } from 'cast.ts';
 
 export const loginParser = object({
   username: string({ trim: true, nonEmpty: true }),
@@ -23,4 +23,19 @@ export const sendProfileParser = object({
   language: string(),
   hobby: string(),
   country: string(),
+});
+
+export const addTourPostParser = object({
+  type: string(),
+  title: string(),
+  content: string(),
+  trip_country: string(),
+  trip_location: nullable(array(object({ id: string(), name: string() }))),
+  trip_period: nullable(string()),
+  trip_headcount: string(),
+  trip_budget: nullable(string()),
+  preferred_gender: nullable(string()),
+  preferred_age: nullable(string()),
+  preferred_language: nullable(string()),
+  preferred_hobby: nullable(string()),
 });

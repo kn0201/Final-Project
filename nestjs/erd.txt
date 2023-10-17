@@ -79,17 +79,17 @@ post
 ----
 id integer PK
 user_id integer FK >- users.id
-privacy boolean
 type varchar(255)
 title varchar(255)
 content varchar(255)
-location_id integer NULL FK >- system_location.id
 time varchar(255) NULL
-headcount varchar(255) NULL
+headcount varchar(255)
 budget varchar(255) NULL
 status varchar(255)
 age varchar(255) NULL
 gender boolean NULL
+language varchar(255) NULL
+hobby varchar(255) NULL
 country varchar(255)
 view integer
 is_delete boolean
@@ -164,7 +164,9 @@ is_delete boolean
 system_location
 ---------------
 id integer PK
+place_id varchar(255)
 name varchar(255)
+address varchar(255)
 location point
 
 
@@ -209,6 +211,8 @@ id integer PK
 name varchar(255)
 
 
+# zoom: 0.754
+# view: (-176, 268)
 # zoom: 1.000
 # view: (0, 0)
 # text-bg: #6495ed
@@ -217,6 +221,28 @@ name varchar(255)
 # diagram-text: #f5f5f5
 # table-bg: #ffffff
 # table-text: #000000
+# users (260, 460, #283006)
+# comment (612, 198, #18623c)
+# application (640, 398, #393c07)
+# chatroom (-134, 927, #51144d)
+# chat_record (-133, 765, #0f1d59)
+# image (1074, 139, #232e3a)
+# post (258, 28, #5a6233)
+# hashtags (-133, 338, #3e4856)
+# like (-117, 482, #124546)
+# bookmark (-117, 625, #093a1f)
+# complaint (-74, 129, #5f5730)
+# planing (1061, 559, #33325c)
+# plan_detail (1074, 760, #424616)
+# daily_event (1134, 883, #4c1003)
+# user_location (672, -56, #01081d)
+# system_location (1043, -95, #391f3e)
+# language_list (850, 626, #334f0c)
+# language (619, 597, #4e334f)
+# country_list (1105, 401, #623a23)
+# countries_travelled (829, 314, #293c4f)
+# hobby (630, 751, #575d06)
+# hobby_list (855, 801, #354a4c)
 # users (726, 631, #1d0a19)
 # comment (1371, 335, #3d2452)
 # application (1152, 41, #393c07)

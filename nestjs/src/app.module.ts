@@ -7,6 +7,7 @@ import { LoginModule } from './login/login.module';
 import { JwtService } from './jwt/jwt.service';
 import { ServerTestingModule } from './server-testing/server-testing.module';
 import { UserModule } from './user/user.module';
+import { BlogModule } from './blog/blog.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { UserModule } from './user/user.module';
     LoginModule,
     ServerTestingModule,
     UserModule,
+    BlogModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService],

@@ -40,6 +40,10 @@ export const addPostCountryListParser = array(
   })
 );
 
+export const getPostResultListParser = array(object({}));
+
+export const addTourPostParser = object({});
+
 export const getIconResult = object({
   result: boolean(),
 });

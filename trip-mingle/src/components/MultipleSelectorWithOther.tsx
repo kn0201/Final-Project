@@ -36,8 +36,8 @@ const MultipleSelectorWithOther = ({
   useEffect(() => {
     setMatchedSkillsList(
       skillsListData.filter((skill: string) =>
-        skill.toLocaleLowerCase().includes(searchSkills.toLocaleLowerCase())
-      )
+        skill.toLocaleLowerCase().includes(searchSkills.toLocaleLowerCase()),
+      ),
     );
   }, [searchSkills, skillsListData]);
 
@@ -129,12 +129,14 @@ const MultipleSelectorWithOther = ({
                     toggleSkillSelection(name);
                   }}
                 />
-              )
+              ),
             )}
             <TextInput
               style={AddPostPageStyleSheet.otherInputContainer}
               onFocus={() => {
-                setLocalSkills([...localSkills]);
+                if (!localSkills.includes("Other: ")) {
+                  setLocalSkills([...localSkills, "Other: "]);
+                }
               }}
               onChangeText={(text) => {
                 setOtherSkill(text);
@@ -148,29 +150,43 @@ const MultipleSelectorWithOther = ({
       <View style={AddPostPageStyleSheet.ModalButtonContainer}>
         <TouchableOpacity
           onPress={() => {
-            console.log({ otherSkill: otherSkill });
-            console.log({ localSkill_Before: localSkills });
-            if (localSkills.includes("Other: ")) {
-              let array = [];
-              console.log({ otherSkill: otherSkill });
-              console.log({ localSkill_Before: localSkills });
-              if (localSkills.includes("Other: ")) {
-                for (let skill of localSkills) {
-                  if (skill === "Other: ") {
-                    array.push(otherSkill);
+            let array: string[] = [];
+            if (
+              localSkills.length <= 0 ||
+              (localSkills.length === 1 &&
+                localSkills.includes("Other: ") &&
+                otherSkill === "")
+            ) {
+              setSelectedSkillsText("Preferred Hobbies");
+            } else {
+              for (let skill of localSkills) {
+                if (skill === "Other: ") {
+                  if (otherSkill === "") {
                     continue;
-                  } else {
+                  }
+                  if (!array.includes(otherSkill)) {
+                    array.push(otherSkill);
+                  }
+                  if (array.includes(otherSkill)) {
+                    continue;
+                  }
+                } else {
+                  if (!array.includes(skill)) {
                     array.push(skill);
+                  }
+                  if (array.includes(skill)) {
+                    continue;
                   }
                 }
               }
               let arrayString = array.join(", ");
               setSelectedSkillsText(arrayString);
+            }
 
+            if (localSkills.includes("Other: ")) {
               const formattedLocalSkills = localSkills.filter(
-                (skill) => skill !== "Other: "
+                (skill) => skill !== "Other: ",
               );
-              console.log({ formattedLocalSkills });
 
               if (otherSkill !== "") {
                 if (!formattedLocalSkills.includes(otherSkill)) {
@@ -188,7 +204,6 @@ const MultipleSelectorWithOther = ({
                 setLocalSkills(formattedLocalSkills);
                 setSelectedSkills(formattedLocalSkills);
               }
-              setSelectedSkillsText(arrayString);
               IonNeverDialog.dismiss();
             } else if (localSkills.length <= 0) {
               setSkills([]);
@@ -196,12 +211,6 @@ const MultipleSelectorWithOther = ({
             } else {
               setSkills(localSkills);
               setSelectedSkills(localSkills);
-            }
-            console.log({ localSkills_After: localSkills });
-            const selectedSkillsString = localSkills.join(", ");
-            selectedSkillsString;
-            if (localSkills.length <= 0) {
-              setSelectedSkillsText("Preferred Skill(s)");
             }
             IonNeverDialog.dismiss();
           }}
