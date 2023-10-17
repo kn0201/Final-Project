@@ -19,7 +19,7 @@ export type JWTPayload = {
 
 export function useToken() {
   const [_, setState] = useState(token);
-  // console.log({ useToken: token });
+  console.log({ useToken: token });
 
   const dispatch = useEvent<TokenEvent>("token", (event) => {
     setState(event.token);

@@ -33,7 +33,7 @@ export class UserService {
       .select('hobby_list.name as name', 'hobby_list.id as id')
       .from('hobby')
       .where('user_id', user_id)
-      .leftJoin('hobby_list', 'hobby_list.id', 'hobby_list_id');
+      .leftJoin('hobby_list', 'hobby_list.id', 'hobby_id');
     console.log({ hobby: hobby });
 
     let countries_travelled = await this.knex

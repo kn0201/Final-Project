@@ -5,10 +5,16 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import BlogScreen from "../screen/BlogScreen";
 import TourScreen from "../screen/PostScreen";
 import EnquireScreen from "../screen/EnquireScreen";
+import { TouchableOpacity, View, Text, TextInput } from "react-native";
+import { Icon } from "@rneui/themed";
+import { iosBlue } from "../StyleSheet/StyleSheetHelper";
+import UserPageStyleSheet from "../StyleSheet/UserPageCss";
+import BuddiesPageStyleSheet from "../StyleSheet/BuddiesPageCss";
 
 const Tab = createMaterialTopTabNavigator();
 
-function MyTabs() {
+//@ts-ignore
+function MyTabs({ navigation }) {
   return (
     <>
       <Header
@@ -17,8 +23,30 @@ function MyTabs() {
           text: "EXPLORE",
           style: { color: "#000000" },
         }}
+        rightComponent={
+          <View>
+            <TouchableOpacity
+              style={UserPageStyleSheet.rightComponent}
+              onPress={() => navigation.navigate("Add Post")}
+            >
+              <Text style={{ color: iosBlue }}>Logout</Text>
+              <Icon
+                name="logout"
+                type="material-community"
+                color={iosBlue}
+              ></Icon>
+            </TouchableOpacity>
+          </View>
+        }
         containerStyle={{ width: "100%" }}
         placement="center"
+      />
+      <TextInput
+        style={BuddiesPageStyleSheet.textInputStyle}
+        // onChangeText={(text) => searchFilterFunction(text)}
+        // value={text}
+        underlineColorAndroid="transparent"
+        placeholder="Search..."
       />
       <Tab.Navigator
         initialRouteName="Blog"
@@ -71,6 +99,7 @@ function MyTabs() {
   );
 }
 
-export default function BuddiesPage() {
-  return <MyTabs />;
+//@ts-ignore
+export default function BuddiesPage({ navigation }) {
+  return <MyTabs navigation={navigation} />;
 }

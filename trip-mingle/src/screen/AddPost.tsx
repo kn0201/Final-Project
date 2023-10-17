@@ -101,6 +101,8 @@ export default function AddPost() {
     setLanguagesListData(json);
   };
 
+  const [checkType, setCheckType] = useState({ type: "none" });
+
   useEffect(() => {
     getCountryList();
     getLanguageList();
@@ -636,15 +638,52 @@ export default function AddPost() {
         <ScrollView>
           <View style={{ height: "auto", alignItems: "center" }}>
             {TitleInput()}
-            <CountryCheckbox />
-            <PeriodSelector />
-            <LocationInput code={code} updateInputText={updateInputText} />
+            <View style={AddPostPageStyleSheet.typeContainer}>
+              <CheckBox
+                center
+                title="BLOG"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={checkType.type == "blog"}
+                onPress={() => setCheckType({ type: "blog" })}
+                size={20}
+                containerStyle={{ backgroundColor: "transparent" }}
+              />
+              <CheckBox
+                center
+                title="TOUR"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={checkType.type == "tour"}
+                onPress={() => setCheckType({ type: "tour" })}
+                size={20}
+                containerStyle={{ backgroundColor: "transparent" }}
+              />
+              <CheckBox
+                center
+                title="ENQUIRE"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={checkType.type == "enquire"}
+                onPress={() => setCheckType({ type: "enquire" })}
+                size={20}
+                containerStyle={{ backgroundColor: "transparent" }}
+              />
+            </View>
+
+            {checkType.type == "enquire" ? <></> : <CountryCheckbox />}
+            {checkType.type == "tour" ? <PeriodSelector /> : <></>}
+            {checkType.type == "enquire" ? (
+              <></>
+            ) : (
+              <LocationInput code={code} updateInputText={updateInputText} />
+            )}
             {ContentInput()}
-            <HeadcountCheckbox />
-            <GenderCheckbox />
-            <AgeCheckbox />
-            <LanguagesCheckbox />
-            <SkillCheckbox />
+            {checkType.type == "tour" ? <HeadcountCheckbox /> : <></>}
+            {checkType.type == "tour" ? <GenderCheckbox /> : <></>}
+            {checkType.type == "tour" ? <AgeCheckbox /> : <></>}
+            {checkType.type == "tour" ? <LanguagesCheckbox /> : <></>}
+            {checkType.type == "tour" ? <SkillCheckbox /> : <></>}
             <View style={AddPostPageStyleSheet.center}>
               <TouchableOpacity
                 style={AddPostPageStyleSheet.addPost}

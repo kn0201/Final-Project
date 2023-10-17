@@ -243,7 +243,7 @@ export default function TourScreen({ navigation }) {
               item.trip_country.toUpperCase().includes(textData)) ||
             (item.trip_location &&
               item.trip_location.some((location) =>
-                location.toUpperCase().includes(textData),
+                location.toUpperCase().includes(textData)
               ))
           );
         })
@@ -379,12 +379,12 @@ export default function TourScreen({ navigation }) {
           renderItem={ItemView}
         />
       </View>
-      <MaterialIcons
+      {/* <MaterialIcons
         name="add-circle"
         size={60}
         style={{ position: "absolute", bottom: 10, right: 10 }}
         onPress={() => navigation.navigate("Add Post")}
-      />
+      /> */}
     </>
   );
 }
