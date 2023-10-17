@@ -104,6 +104,8 @@ export default function AddPost() {
     setLanguagesListData(json);
   };
 
+  const [checkType, setCheckType] = useState({ type: "none" });
+
   useEffect(() => {
     getCountryList();
     getLanguageList();
@@ -685,36 +687,72 @@ export default function AddPost() {
           Keyboard.dismiss();
         }}
       >
-        <KeyboardAvoidingView
+        {/* <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{ flex: 1 }}
-        >
-          <ScrollView>
-            <View style={{ height: "auto", alignItems: "center" }}>
-              {TitleInput()}
-              <CountryCheckbox />
-              <LocationInput code={code} updateInputText={updateInputText} />
-              <PeriodSelector />
-              {BudgetInput()}
-              {ContentInput()}
-              <HeadcountCheckbox />
-              <GenderCheckbox />
-              <AgeCheckbox />
-              <LanguagesCheckbox />
-              <SkillCheckbox />
-              <View style={AddPostPageStyleSheet.center}>
-                <TouchableOpacity
-                  style={AddPostPageStyleSheet.addPost}
-                  onPress={addPost}
-                >
-                  <Text style={AddPostPageStyleSheet.addPostText}>
-                    Create New Post
-                  </Text>
-                </TouchableOpacity>
-              </View>
+        > */}
+        <ScrollView>
+          <View style={{ height: "auto", alignItems: "center" }}>
+            <View style={AddPostPageStyleSheet.typeContainer}>
+              <CheckBox
+                center
+                title="BLOG"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={checkType.type == "blog"}
+                onPress={() => setCheckType({ type: "blog" })}
+                size={20}
+                containerStyle={{ backgroundColor: "transparent" }}
+              />
+              <CheckBox
+                center
+                title="TOUR"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={checkType.type == "tour"}
+                onPress={() => setCheckType({ type: "tour" })}
+                size={20}
+                containerStyle={{ backgroundColor: "transparent" }}
+              />
+              <CheckBox
+                center
+                title="ENQUIRE"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={checkType.type == "enquire"}
+                onPress={() => setCheckType({ type: "enquire" })}
+                size={20}
+                containerStyle={{ backgroundColor: "transparent" }}
+              />
             </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
+            {TitleInput()}
+            {checkType.type == "enquire" ? <></> : <CountryCheckbox />}
+            {checkType.type == "enquire" ? (
+              <></>
+            ) : (
+              <LocationInput code={code} updateInputText={updateInputText} />
+            )}
+            {checkType.type == "tour" ? <PeriodSelector /> : <></>}
+            {checkType.type == "tour" ? <BudgetInput /> : <></>}
+            {ContentInput()}
+            {checkType.type == "tour" ? <HeadcountCheckbox /> : <></>}
+            {checkType.type == "tour" ? <GenderCheckbox /> : <></>}
+            {checkType.type == "tour" ? <AgeCheckbox /> : <></>}
+            {checkType.type == "tour" ? <LanguagesCheckbox /> : <></>}
+            {checkType.type == "tour" ? <SkillCheckbox /> : <></>}
+            <View style={AddPostPageStyleSheet.center}>
+              <TouchableOpacity
+                style={AddPostPageStyleSheet.addPost}
+                onPress={addPost}
+              >
+                <Text style={AddPostPageStyleSheet.addPostText}>
+                  Create New Post
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+        {/* </KeyboardAvoidingView> */}
       </TouchableWithoutFeedback>
     </>
   );

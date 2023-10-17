@@ -14,7 +14,6 @@ import { CountryList } from "../utils/types";
 export default function SelectCountry({ setSelectedCountry, updateInputText }) {
   const getList = async () => {
     const json = await api.getList("/login/country_list", countryListParser);
-    console.log(json);
 
     setCountryList(json);
     setMatchedCountryList(json);

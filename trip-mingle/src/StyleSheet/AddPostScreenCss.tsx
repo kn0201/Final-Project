@@ -129,6 +129,19 @@ const AddPostPageStyleSheet = StyleSheet.create({
     alignItems: center,
     width: "100%",
   },
+  typeContainer: {
+    display: flex,
+    justifyContent: "space-evenly",
+    alignItems: center,
+    width: "90%",
+    height: 52,
+    flexDirection: row,
+
+    borderWidth: 1,
+    borderRadius: 10,
+
+    textDecorationLine: "none",
+  },
 });
 
 export default AddPostPageStyleSheet;
