@@ -122,9 +122,8 @@ export class UserService {
     return result;
   }
 
-  async uploadImage(image){
-    let imageName = image.filename
-    let result = await this.knex
-    .
+  async uploadImage(image) {
+    let imageName = image.filename;
+    let result = await this.knex;
   }
 }
