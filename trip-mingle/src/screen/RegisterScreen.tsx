@@ -28,13 +28,15 @@ import {
 } from "../utils/parser";
 import { JWTPayload, useToken } from "../hooks/useToken";
 import decode from "jwt-decode";
+import { basename } from "path";
+import { apiOrigin } from "../utils/apiOrigin";
 
 // @ts-ignore
 export default function RegisterScreen({ navigation }) {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const { token, payload, setToken } = useToken();
   const [checkGender, setCheck1] = useState(true);
-
+  const [imageFile, setImageFile] = useState<any>();
   const [selectedAge, setSelectedAge] = useState("Select Your Age Group");
   const [age, setAge] = useState("");
 
@@ -90,19 +92,55 @@ export default function RegisterScreen({ navigation }) {
   };
 
   const addImage = async () => {
-    let _image = await ImagePicker.launchImageLibraryAsync({
+    let imagePickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
-    // @ts-ignore
-    console.log(JSON.stringify(_image.assets[0].uri));
+    let imageAsset = imagePickerResult.assets?.[0];
+    if (!imageAsset) return;
+    let type = imageAsset.uri.endsWith(".png")
+      ? "image/png"
+      : imageAsset.uri.endsWith(".jpg") || imageAsset.uri.endsWith(".jpg")
+      ? "image/jpeg"
+      : null;
+    if (!type) return;
+    let filename = imageAsset.uri.split("/").pop();
+    let file = {
+      uri: imageAsset.uri,
+      type,
+      name: filename,
+    };
+    console.log("fileUri:", file);
 
-    if (!_image.canceled) {
-      setImage(_image.assets[0].uri);
-      updateInputText("avatar", _image.assets[0].uri);
+    if (!imagePickerResult.canceled) {
+      setImage(imagePickerResult.assets[0].uri);
+      setImageFile(file);
+
+      // let formData = new FormData();
+      // formData.append("image", file as any);
+
+      // let res = await fetch(apiOrigin + "/user/image", {
+      //   method: "POST",
+      //   body: formData,
+      // });
+      // let json = await res.json();
+      // console.log("json:", json);
     }
+    // console.log(imageFile);
+  };
+  const uploadImage = async () => {
+    let formData = new FormData();
+    formData.append("image", imageFile as any);
+    console.log(imageFile);
+
+    // let res = await fetch(apiOrigin + "/user/image", {
+    //   method: "POST",
+    //   body: formData,
+    // });
+    // let json = await res.json();
+    // console.log("json:", json);
   };
 
   const checkUsername = async (text: string) => {
@@ -139,6 +177,7 @@ export default function RegisterScreen({ navigation }) {
         regisInfo,
         signUpResultParser
       );
+      await uploadImage();
       Object.entries(clearInputs).map(([_key, clear]) => clear());
       setSelectedAge("Select Your Age Group");
       setSelectedCountry("Country");
@@ -161,6 +200,26 @@ export default function RegisterScreen({ navigation }) {
     console.log(regisInfo);
     navigation.navigate("Users");
   };
+
+  // const makeFormData = ()=>{
+  //   let formData = new FormData();
+  //     let file = {uri: regisInfo.avatar, type: 'application/octet-stream', name: 'image.jpg'};
+  //     formData.append('image', {
+  //       uri: imageUri,  // 文件的本地 URI
+  //       type: 'image/jpeg', // 文件类型
+  //       name: 'photo.jpg', // 文件名称
+  //     });
+  // }
+
+  // const uploadImage =async () => {
+  //   try{
+
+  //   }catch (error) {
+  //     const errorObject: any = { ...(error as object) };
+  //     console.log(errorObject);
+  //   }
+
+  // }
 
   return (
     <TouchableWithoutFeedback
@@ -186,6 +245,7 @@ export default function RegisterScreen({ navigation }) {
             </TouchableOpacity>
           </View>
         </View>
+
         <View style={RegisterScreenStyleSheet.outerContainer}>
           <Text>
             Username* <Text style={{ fontSize: 10 }}> Max 10 letter</Text>

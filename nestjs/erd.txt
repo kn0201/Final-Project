@@ -60,8 +60,8 @@ user2_is_delete boolean
 chat_record
 -----------
 id integer PK
-chatroom_id integer FK >- chatroom.id
 user_id integer FK >- users.id
+chatroom_id integer FK >- chatroom.id
 message varchar(255)
 
 
@@ -129,9 +129,9 @@ planing
 -------
 id integer PK
 user_id integer FK >- users.id
+image_id integer NULL FK >- image.id
 privacy boolean
 title varchar(255)
-image_id integer NULL FK >- image.id
 
 
 plan_detail
@@ -213,6 +213,8 @@ name varchar(255)
 
 # zoom: 0.754
 # view: (-176, 268)
+# zoom: 1.000
+# view: (0, 0)
 # text-bg: #6495ed
 # text-color: #000000
 # diagram-bg: #f5f5f5
@@ -241,3 +243,25 @@ name varchar(255)
 # countries_travelled (829, 314, #293c4f)
 # hobby (630, 751, #575d06)
 # hobby_list (855, 801, #354a4c)
+# users (726, 631, #1d0a19)
+# comment (1371, 335, #3d2452)
+# application (1152, 41, #393c07)
+# chatroom (331, 738, #252a1d)
+# chat_record (39, 605, #074345)
+# image (1784, 346, #3a3a28)
+# post (727, 140, #47545b)
+# hashtags (226, 16, #2f4624)
+# like (224, 207, #135b33)
+# bookmark (223, 353, #1a4f55)
+# complaint (716, 1073, #1f2f50)
+# planing (1357, 586, #003b58)
+# plan_detail (1821, 750, #022f2b)
+# daily_event (1798, 1007, #382845)
+# user_location (1741, 35, #490f5a)
+# system_location (1387, 76, #1b571c)
+# language_list (1484, 936, #334f0c)
+# language (1196, 870, #4e334f)
+# country_list (61, 961, #3e5757)
+# countries_travelled (334, 1052, #293c4f)
+# hobby (1201, 1071, #575d06)
+# hobby_list (1481, 1116, #354a4c)

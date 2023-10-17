@@ -99,7 +99,7 @@ export class UserService {
         .select('id')
         .from('hobby')
         .where('user_id', user_id)
-        .andWhere('hobby_list_id', hobby_id)
+        .andWhere('hobby_id', hobby_id)
         .first();
       if (!row) {
         await this.knex('hobby').insert({
@@ -120,5 +120,11 @@ export class UserService {
   async getHobbyList() {
     let result = await this.knex('hobby_list').select('id', 'name');
     return result;
+  }
+
+  async uploadImage(image){
+    let imageName = image.filename
+    let result = await this.knex
+    .
   }
 }
