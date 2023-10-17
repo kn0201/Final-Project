@@ -36,8 +36,8 @@ const MultipleSelectorWithOther = ({
   useEffect(() => {
     setMatchedSkillsList(
       skillsListData.filter((skill: string) =>
-        skill.toLocaleLowerCase().includes(searchSkills.toLocaleLowerCase())
-      )
+        skill.toLocaleLowerCase().includes(searchSkills.toLocaleLowerCase()),
+      ),
     );
   }, [searchSkills, skillsListData]);
 
@@ -129,12 +129,14 @@ const MultipleSelectorWithOther = ({
                     toggleSkillSelection(name);
                   }}
                 />
-              )
+              ),
             )}
             <TextInput
               style={AddPostPageStyleSheet.otherInputContainer}
               onFocus={() => {
-                setLocalSkills([...localSkills]);
+                if (!localSkills.includes("Other: ")) {
+                  setLocalSkills([...localSkills, "Other: "]);
+                }
               }}
               onChangeText={(text) => {
                 setOtherSkill(text);
@@ -148,12 +150,8 @@ const MultipleSelectorWithOther = ({
       <View style={AddPostPageStyleSheet.ModalButtonContainer}>
         <TouchableOpacity
           onPress={() => {
-            console.log({ otherSkill: otherSkill });
-            console.log({ localSkill_Before: localSkills });
             if (localSkills.includes("Other: ")) {
               let array = [];
-              console.log({ otherSkill: otherSkill });
-              console.log({ localSkill_Before: localSkills });
               if (localSkills.includes("Other: ")) {
                 for (let skill of localSkills) {
                   if (skill === "Other: ") {
@@ -168,9 +166,8 @@ const MultipleSelectorWithOther = ({
               setSelectedSkillsText(arrayString);
 
               const formattedLocalSkills = localSkills.filter(
-                (skill) => skill !== "Other: "
+                (skill) => skill !== "Other: ",
               );
-              console.log({ formattedLocalSkills });
 
               if (otherSkill !== "") {
                 if (!formattedLocalSkills.includes(otherSkill)) {
@@ -197,11 +194,10 @@ const MultipleSelectorWithOther = ({
               setSkills(localSkills);
               setSelectedSkills(localSkills);
             }
-            console.log({ localSkills_After: localSkills });
             const selectedSkillsString = localSkills.join(", ");
             selectedSkillsString;
             if (localSkills.length <= 0) {
-              setSelectedSkillsText("Preferred Skill(s)");
+              setSelectedSkillsText("Preferred Hobbies");
             }
             IonNeverDialog.dismiss();
           }}

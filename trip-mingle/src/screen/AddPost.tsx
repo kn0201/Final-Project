@@ -9,6 +9,8 @@ import {
   Keyboard,
   FlatList,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { AddPostCountryList, LanguageList, PostInfo } from "../utils/types";
 
@@ -27,11 +29,12 @@ import { api } from "../apis/api";
 export default function AddPost() {
   const { IonNeverDialog } = useIonNeverNotification();
   const [title, setTitle] = useState("");
+  const [budget, setBudget] = useState("");
   const [content, setContent] = useState("");
   const [selectedGender, setSelectedGender] = useState("Preferred Gender");
   const [gender, setGender] = useState("");
   const [selectedHeadcount, setSelectedHeadcount] = useState<string>(
-    "Preferred Headcount *"
+    "Preferred Headcount *",
   );
   const [headcount, setHeadcount] = useState<string>("");
   const [headcountListData, setHeadcountListData] = useState<string[]>([
@@ -45,7 +48,7 @@ export default function AddPost() {
     "8",
   ]);
   const [selectedCountry, setSelectedCountry] = useState(
-    "Destination Country *"
+    "Destination Country *",
   );
   const [country, setCountry] = useState("");
   const [code, setCode] = useState("");
@@ -53,7 +56,7 @@ export default function AddPost() {
   const [period, setPeriod] = useState<string[]>([]);
   const [languages, setLanguages] = useState<string[]>([]);
   const [selectedLanguagesText, setSelectedLanguagesText] = useState(
-    "Preferred Languages(s)"
+    "Preferred Languages(s)",
   );
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
@@ -68,7 +71,7 @@ export default function AddPost() {
     "Sketching",
   ]);
   const [selectedSkillsText, setSelectedSkillsText] =
-    useState<string>("Preferred Skill(s)");
+    useState<string>("Preferred Hobbies");
 
   const [selectedAgesText, setSelectedAgesText] = useState("Preferred Age(s)");
   const [selectedAgesList, setSelectedAgesList] = useState<string[]>([]);
@@ -88,12 +91,12 @@ export default function AddPost() {
   const getCountryList = async () => {
     const json = await api.getList(
       "/login/country_list",
-      addPostCountryListParser
+      addPostCountryListParser,
     );
     setCountriesListData(json);
   };
   const [languagesListData, setLanguagesListData] = useState<LanguageList[]>(
-    []
+    [],
   );
   const getLanguageList = async () => {
     const json = await api.getList("/user/language_list", countryListParser);
@@ -107,23 +110,17 @@ export default function AddPost() {
   }, []);
 
   const postInfo = useRef<PostInfo>({
-    // avatar_path: "",
-    // username: "",
-    // rating: 0,
     title: "",
     content: "",
     trip_country: "",
     trip_location: "",
     trip_period: "",
     trip_headcount: "",
-    // trip_budget: "",
+    trip_budget: "",
     preferred_gender: "",
     preferred_age: "",
     preferred_language: "",
-    preferred_skill: "",
-    // preferred_hobby: "",
-    // status: "",
-    // created_at: ""
+    preferred_hobby: "",
   }).current;
 
   const addPost = () => {
@@ -162,6 +159,23 @@ export default function AddPost() {
         }}
         value={title}
         placeholder="Post Title *"
+        returnKeyType="done"
+      />
+    );
+  };
+
+  // Budget input
+  const BudgetInput = () => {
+    return (
+      <TextInput
+        ref={inputRef}
+        style={AddPostPageStyleSheet.postInputContainer}
+        onChangeText={(budget) => {
+          setBudget(budget);
+          updateInputText("trip_budget", budget);
+        }}
+        value={budget}
+        placeholder="Expected Budget (e.g. HKD10,000)"
         returnKeyType="done"
       />
     );
@@ -341,8 +355,8 @@ export default function AddPost() {
                   countryList.filter((country) =>
                     country.name
                       .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase())
-                  )
+                      .includes(search.toLocaleLowerCase()),
+                  ),
                 );
               }, [search, countryList]);
               const updateSearch = (search: string) => {
@@ -490,8 +504,8 @@ export default function AddPost() {
                   languagesList.filter((language) =>
                     language.name
                       .toLocaleLowerCase()
-                      .includes(searchLanguages.toLocaleLowerCase())
-                  )
+                      .includes(searchLanguages.toLocaleLowerCase()),
+                  ),
                 );
               }, [searchLanguages, languagesList]);
 
@@ -503,8 +517,8 @@ export default function AddPost() {
                 if (localLanguages.includes(name)) {
                   setLocalLanguages(
                     localLanguages.filter(
-                      (language: string) => language !== name
-                    )
+                      (language: string) => language !== name,
+                    ),
                   );
                 } else {
                   setLocalLanguages([...localLanguages, name]);
@@ -629,35 +643,36 @@ export default function AddPost() {
           Keyboard.dismiss();
         }}
       >
-        {/* <KeyboardAvoidingView
+        <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{ flex: 1 }}
-        > */}
-        <ScrollView>
-          <View style={{ height: "auto", alignItems: "center" }}>
-            {TitleInput()}
-            <CountryCheckbox />
-            <PeriodSelector />
-            <LocationInput code={code} updateInputText={updateInputText} />
-            {ContentInput()}
-            <HeadcountCheckbox />
-            <GenderCheckbox />
-            <AgeCheckbox />
-            <LanguagesCheckbox />
-            <SkillCheckbox />
-            <View style={AddPostPageStyleSheet.center}>
-              <TouchableOpacity
-                style={AddPostPageStyleSheet.addPost}
-                onPress={addPost}
-              >
-                <Text style={AddPostPageStyleSheet.addPostText}>
-                  Create New Post
-                </Text>
-              </TouchableOpacity>
+        >
+          <ScrollView>
+            <View style={{ height: "auto", alignItems: "center" }}>
+              {TitleInput()}
+              <CountryCheckbox />
+              <PeriodSelector />
+              <LocationInput code={code} updateInputText={updateInputText} />
+              {BudgetInput()}
+              {ContentInput()}
+              <HeadcountCheckbox />
+              <GenderCheckbox />
+              <AgeCheckbox />
+              <LanguagesCheckbox />
+              <SkillCheckbox />
+              <View style={AddPostPageStyleSheet.center}>
+                <TouchableOpacity
+                  style={AddPostPageStyleSheet.addPost}
+                  onPress={addPost}
+                >
+                  <Text style={AddPostPageStyleSheet.addPostText}>
+                    Create New Post
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        </ScrollView>
-        {/* </KeyboardAvoidingView> */}
+          </ScrollView>
+        </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
     </>
   );
