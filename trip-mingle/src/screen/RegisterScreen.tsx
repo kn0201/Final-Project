@@ -28,13 +28,15 @@ import {
 } from "../utils/parser";
 import { JWTPayload, useToken } from "../hooks/useToken";
 import decode from "jwt-decode";
+import { basename } from "path";
+import { apiOrigin } from "../utils/apiOrigin";
 
 // @ts-ignore
 export default function RegisterScreen({ navigation }) {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const { token, payload, setToken } = useToken();
   const [checkGender, setCheck1] = useState(true);
-
+  const [imageFile, setImageFile] = useState<any>();
   const [selectedAge, setSelectedAge] = useState("Select Your Age Group");
   const [age, setAge] = useState("");
 
@@ -90,20 +92,57 @@ export default function RegisterScreen({ navigation }) {
   };
 
   const addImage = async () => {
-    let _image = await ImagePicker.launchImageLibraryAsync({
+    let imagePickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
-    // @ts-ignore
-    console.log(JSON.stringify(_image.assets[0].uri));
+    let imageAsset = imagePickerResult.assets?.[0];
+    if (!imageAsset) return;
+    let type = imageAsset.uri.endsWith(".png")
+      ? "image/png"
+      : imageAsset.uri.endsWith(".jpg") || imageAsset.uri.endsWith(".jpg")
+      ? "image/jpeg"
+      : null;
+    if (!type) return;
+    let filename = imageAsset.uri.split("/").pop();
+    let file = {
+      uri: imageAsset.uri,
+      type,
+      name: filename,
+    };
+    console.log("fileUri:", file);
 
-    if (!_image.canceled) {
-      setImage(_image.assets[0].uri);
-      updateInputText("avatar", _image.assets[0].uri);
+    if (!imagePickerResult.canceled) {
+      setImage(imagePickerResult.assets[0].uri);
+      setImageFile(file);
+
+      // let formData = new FormData();
+      // formData.append("image", file as any);
+
+      // let res = await fetch(apiOrigin + "/user/image", {
+      //   method: "POST",
+      //   body: formData,
+      // });
+      // let json = await res.json();
+      // console.log("json:", json);
     }
+    // console.log(imageFile);
   };
+  // const uploadImage = async () => {
+  //   let formData = new FormData();
+  //   formData.append("image", imageFile as any);
+  //   formData.append("regisInfo",regisInfo as any)
+  //   console.log(imageFile);
+
+  //   let res = await fetch(apiOrigin + "/user/image", {
+  //     method: "POST",
+  //     body: formData,
+  //   });
+  //   let json = await res.json();
+  //   // console.log("json:", json);
+  // };
 
   const checkUsername = async (text: string) => {
     try {
@@ -114,9 +153,7 @@ export default function RegisterScreen({ navigation }) {
       );
       if (checker.result === true) {
         setCheckUsernameResult(true);
-        console.log(checkUsernameResult);
       } else if (checker.result === false) {
-        console.log(checkUsernameResult);
         setCheckUsernameResult(false);
       }
     } catch (error) {
@@ -134,11 +171,20 @@ export default function RegisterScreen({ navigation }) {
 
   const register = async () => {
     try {
-      let json = await api.loginSignUp(
-        "/login/register",
-        regisInfo,
-        signUpResultParser
-      );
+      let formData = new FormData();
+      formData.append("image", imageFile as any);
+      formData.append("username", regisInfo.username);
+      formData.append("email", regisInfo.email);
+      formData.append("password", regisInfo.password);
+      formData.append("gender", regisInfo.gender as any);
+      formData.append("country_id", regisInfo.country_id);
+      formData.append("age", regisInfo.age);
+
+      let res = await fetch(apiOrigin + "/login/register", {
+        method: "POST",
+        body: formData,
+      });
+      let json = await res.json();
       Object.entries(clearInputs).map(([_key, clear]) => clear());
       setSelectedAge("Select Your Age Group");
       setSelectedCountry("Country");
@@ -186,6 +232,7 @@ export default function RegisterScreen({ navigation }) {
             </TouchableOpacity>
           </View>
         </View>
+
         <View style={RegisterScreenStyleSheet.outerContainer}>
           <Text>
             Username* <Text style={{ fontSize: 10 }}> Max 10 letter</Text>

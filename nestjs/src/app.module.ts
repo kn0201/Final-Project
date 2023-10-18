@@ -9,6 +9,7 @@ import { ServerTestingModule } from './server-testing/server-testing.module';
 import { UserModule } from './user/user.module';
 import { PlanningController } from './planning/planning.controller';
 import { PlanningModule } from './planning/planning.module';
+import { BlogModule } from './blog/blog.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { PlanningModule } from './planning/planning.module';
     ServerTestingModule,
     UserModule,
     PlanningModule,
+    BlogModule,
   ],
   controllers: [AppController, PlanningController],
   providers: [AppService, JwtService],

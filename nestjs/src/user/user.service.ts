@@ -20,28 +20,24 @@ export class UserService {
       .select('intro')
       .where('id', user_id)
       .first();
-    console.log(intro);
 
     let language = await this.knex
       .select('language_list.name as name', 'language_list.id as id')
       .from('language')
       .where('user_id', user_id)
       .leftJoin('language_list', 'language_list.id', 'language_id');
-    console.log({ language: language });
 
     let hobby = await this.knex
       .select('hobby_list.name as name', 'hobby_list.id as id')
       .from('hobby')
       .where('user_id', user_id)
-      .leftJoin('hobby_list', 'hobby_list.id', 'hobby_list_id');
-    console.log({ hobby: hobby });
+      .leftJoin('hobby_list', 'hobby_list.id', 'hobby_id');
 
     let countries_travelled = await this.knex
       .select('country_list.name as name', 'country_list.id as id')
       .from('countries_travelled')
       .where('user_id', user_id)
       .leftJoin('country_list', 'country_list.id', 'country_id');
-    console.log({ countries_travelled: countries_travelled });
 
     return {
       intro: intro.intro,
@@ -99,7 +95,7 @@ export class UserService {
         .select('id')
         .from('hobby')
         .where('user_id', user_id)
-        .andWhere('hobby_list_id', hobby_id)
+        .andWhere('hobby_id', hobby_id)
         .first();
       if (!row) {
         await this.knex('hobby').insert({
@@ -121,4 +117,25 @@ export class UserService {
     let result = await this.knex('hobby_list').select('id', 'name');
     return result;
   }
+
+  async getIcon(req) {
+    const payload = this.jwtService.decode(
+      req.headers.authorization.split(' ')[1],
+    );
+    let user_id = payload.user_id;
+    let result = await this.knex
+      .select('path')
+      .from('image')
+      .where('user_id', user_id)
+      .first();
+
+    console.log(result);
+
+    return result;
+  }
+  // async uploadImage(image){
+  //   let imageName = image.filename
+  //   let result = await this.knex
+  //   .
+  // }
 }

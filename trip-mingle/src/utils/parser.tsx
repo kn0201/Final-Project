@@ -39,3 +39,11 @@ export const addPostCountryListParser = array(
     code: string(),
   })
 );
+
+export const getPostResultListParser = array(object({}));
+
+export const addTourPostParser = object({});
+
+export const getIconResult = object({
+  path: string(),
+});

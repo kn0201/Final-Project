@@ -57,16 +57,21 @@ export class LoginService {
     return { token: token };
   }
 
-  async register(body: {
-    username: any;
-    email: any;
-    password: any;
-    gender: any;
-    age: any;
-    country_id: any;
-  }) {
+  async register(
+    body: {
+      username: any;
+      email: any;
+      password: any;
+      gender: any;
+      age: any;
+      country_id: any;
+    },
+    image,
+  ) {
     let username = body.username;
+    let imageName = image.filename;
     let hashedPW = await hashPassword(body.password);
+
     let result = await this.knex('users')
       .insert({
         username: body.username,
@@ -82,6 +87,20 @@ export class LoginService {
       .returning('id');
 
     let id = result[0].id;
+
+    let uploadResult = await this.knex('image')
+      .insert({
+        user_id: id,
+        path: imageName,
+        is_delete: false,
+      })
+      .returning('id');
+
+    let image_id = uploadResult[0].id;
+
+    await this.knex('users').update({
+      avatar_id: image_id,
+    });
 
     let emailUsername = username[0].toUpperCase() + username.slice(1);
 

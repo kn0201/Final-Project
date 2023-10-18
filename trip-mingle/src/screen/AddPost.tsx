@@ -9,6 +9,8 @@ import {
   Keyboard,
   FlatList,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { AddPostCountryList, LanguageList, PostInfo } from "../utils/types";
 
@@ -18,20 +20,26 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import LocationInput from "../components/locationInput";
 import PeriodPicker from "../components/PeriodPicker";
 import MultipleSelector from "../components/MutlipleSelector";
-
 import SingleSelectorWithOther from "../components/SingleSelectorWithOther";
 import MultipleSelectorWithOther from "../components/MultipleSelectorWithOther";
-import { addPostCountryListParser, countryListParser } from "../utils/parser";
+import {
+  addPostCountryListParser,
+  addTourPostParser,
+  countryListParser,
+} from "../utils/parser";
 import { api } from "../apis/api";
+import { useToken } from "../hooks/useToken";
 
 export default function AddPost() {
-  const { IonNeverDialog } = useIonNeverNotification();
+  const { token, payload, setToken } = useToken();
+  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const [title, setTitle] = useState("");
+  const [budget, setBudget] = useState("");
   const [content, setContent] = useState("");
   const [selectedGender, setSelectedGender] = useState("Preferred Gender");
   const [gender, setGender] = useState("");
   const [selectedHeadcount, setSelectedHeadcount] = useState<string>(
-    "Preferred Headcount *"
+    "Preferred Headcount *",
   );
   const [headcount, setHeadcount] = useState<string>("");
   const [headcountListData, setHeadcountListData] = useState<string[]>([
@@ -45,7 +53,7 @@ export default function AddPost() {
     "8",
   ]);
   const [selectedCountry, setSelectedCountry] = useState(
-    "Destination Country *"
+    "Destination Country *",
   );
   const [country, setCountry] = useState("");
   const [code, setCode] = useState("");
@@ -53,7 +61,7 @@ export default function AddPost() {
   const [period, setPeriod] = useState<string[]>([]);
   const [languages, setLanguages] = useState<string[]>([]);
   const [selectedLanguagesText, setSelectedLanguagesText] = useState(
-    "Preferred Languages(s)"
+    "Preferred Languages(s)",
   );
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
@@ -68,8 +76,7 @@ export default function AddPost() {
     "Sketching",
   ]);
   const [selectedSkillsText, setSelectedSkillsText] =
-    useState<string>("Preferred Skill(s)");
-
+    useState<string>("Preferred Hobbies");
   const [selectedAgesText, setSelectedAgesText] = useState("Preferred Age(s)");
   const [selectedAgesList, setSelectedAgesList] = useState<string[]>([]);
   const ageLabels = [
@@ -81,25 +88,24 @@ export default function AddPost() {
     "48-54",
     ">55",
   ];
-
   const [countriesListData, setCountriesListData] = useState<
     AddPostCountryList[]
   >([]);
   const getCountryList = async () => {
     const json = await api.getList(
       "/login/country_list",
-      addPostCountryListParser
+      addPostCountryListParser,
     );
     setCountriesListData(json);
   };
   const [languagesListData, setLanguagesListData] = useState<LanguageList[]>(
-    []
+    [],
   );
   const getLanguageList = async () => {
     const json = await api.getList("/user/language_list", countryListParser);
-
     setLanguagesListData(json);
   };
+  const [checkType, setCheckType] = useState("none");
 
   useEffect(() => {
     getCountryList();
@@ -107,35 +113,111 @@ export default function AddPost() {
   }, []);
 
   const postInfo = useRef<PostInfo>({
-    // avatar_path: "",
-    // username: "",
-    // rating: 0,
+    type: "",
     title: "",
     content: "",
     trip_country: "",
     trip_location: "",
     trip_period: "",
     trip_headcount: "",
-    // trip_budget: "",
+    trip_budget: "",
     preferred_gender: "",
     preferred_age: "",
     preferred_language: "",
-    preferred_skill: "",
-    // preferred_hobby: "",
-    // status: "",
-    // created_at: ""
+    preferred_hobby: "",
   }).current;
 
-  const addPost = () => {
-    updateInputText("trip_headcount", selectedHeadcount);
-    updateInputText("preferred_gender", selectedGender);
-    updateInputText("preferred_age", selectedAgesText);
-    updateInputText("trip_country", selectedCountry);
-    updateInputText("trip_period", selectedPeriod);
-    updateInputText("preferred_language", selectedLanguagesText);
-    updateInputText("preferred_skill", selectedSkillsText);
-    console.log(postInfo);
+  const addPost = async () => {
+    try {
+      if (checkType !== "none") {
+        updateInputText("type", checkType);
+      }
+      if (title !== "") {
+        updateInputText("title", title);
+      } else {
+        IonNeverDialog.show({
+          type: "warning",
+          title: "Error",
+          message: "Missing title",
+          firstButtonVisible: true,
+          firstButtonFunction: () => {
+            IonNeverDialog.dismiss();
+          },
+        });
+        throw new Error("Missing title");
+      }
+      if (selectedCountry !== "Destination Country *") {
+        updateInputText("trip_country", selectedCountry);
+      } else {
+        IonNeverDialog.show({
+          type: "warning",
+          title: "Error",
+          message: "Missing destination country",
+          firstButtonVisible: true,
+          firstButtonFunction: () => {
+            IonNeverDialog.dismiss();
+          },
+        });
+        throw new Error("Missing destination country");
+      }
+      if (content !== "") {
+        updateInputText("content", content);
+      } else {
+        IonNeverDialog.show({
+          type: "warning",
+          title: "Error",
+          message: "Missing content",
+          firstButtonVisible: true,
+          firstButtonFunction: () => {
+            IonNeverDialog.dismiss();
+          },
+        });
+        throw new Error("Missing content");
+      }
+      if (selectedHeadcount !== "Preferred Headcount *") {
+        updateInputText("trip_headcount", selectedHeadcount);
+      } else {
+        IonNeverDialog.show({
+          type: "warning",
+          title: "Error",
+          message: "Missing preferred headcount",
+          firstButtonVisible: true,
+          firstButtonFunction: () => {
+            IonNeverDialog.dismiss();
+          },
+        });
+        throw new Error("Missing preferred headcount");
+      }
+      if (selectedPeriod !== "Expected Period") {
+        updateInputText("trip_period", selectedPeriod);
+      }
+      if (budget !== "") {
+        updateInputText("trip_budget", budget);
+      }
+      if (selectedGender !== "Preferred Gender") {
+        updateInputText("preferred_gender", selectedGender);
+      }
+      if (selectedAgesText != "Preferred Age(s)") {
+        updateInputText("preferred_age", selectedAgesText);
+      }
+      if (selectedLanguagesText != "Preferred Languages(s)") {
+        updateInputText("preferred_language", selectedLanguagesText);
+      }
+      if (selectedSkillsText != "Preferred Hobbies") {
+        updateInputText("preferred_hobby", selectedSkillsText);
+      }
+      // const json = await api.post(
+      //   "/blog/tour",
+      //   postInfo,
+      //   addTourPostParser,
+      //   token,
+      // );
+      console.log(postInfo);
+    } catch (e) {
+      console.log({ e });
+    }
   };
+
   // Update Input fields
   const updateInputText = (field: string, value: string) => {
     //@ts-ignore
@@ -158,10 +240,25 @@ export default function AddPost() {
         style={AddPostPageStyleSheet.postInputContainer}
         onChangeText={(title) => {
           setTitle(title);
-          updateInputText("title", title);
         }}
         value={title}
         placeholder="Post Title *"
+        returnKeyType="done"
+      />
+    );
+  };
+
+  // Budget input
+  const BudgetInput = () => {
+    return (
+      <TextInput
+        ref={inputRef}
+        style={AddPostPageStyleSheet.postInputContainer}
+        onChangeText={(budget) => {
+          setBudget(budget);
+        }}
+        value={budget}
+        placeholder="Expected Budget (e.g. HKD10,000)"
         returnKeyType="done"
       />
     );
@@ -175,7 +272,6 @@ export default function AddPost() {
         style={AddPostPageStyleSheet.contentContainer}
         onChangeText={(content) => {
           setContent(content);
-          updateInputText("content", content);
         }}
         value={content}
         multiline
@@ -268,7 +364,6 @@ export default function AddPost() {
                           ? setSelectedGender(localGender)
                           : setSelectedGender("Preferred Gender");
                         IonNeverDialog.dismiss();
-                        updateInputText("preferred_gender", gender);
                       }}
                     >
                       <Text style={AddPostPageStyleSheet.ModalText}>OK</Text>
@@ -341,8 +436,8 @@ export default function AddPost() {
                   countryList.filter((country) =>
                     country.name
                       .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase())
-                  )
+                      .includes(search.toLocaleLowerCase()),
+                  ),
                 );
               }, [search, countryList]);
               const updateSearch = (search: string) => {
@@ -416,7 +511,6 @@ export default function AddPost() {
                           ? setSelectedCountry(localCountry)
                           : setSelectedCountry("Destination Country *");
                         IonNeverDialog.dismiss();
-                        updateInputText("trip_country", country);
                       }}
                     >
                       <Text style={AddPostPageStyleSheet.ModalText}>OK</Text>
@@ -490,8 +584,8 @@ export default function AddPost() {
                   languagesList.filter((language) =>
                     language.name
                       .toLocaleLowerCase()
-                      .includes(searchLanguages.toLocaleLowerCase())
-                  )
+                      .includes(searchLanguages.toLocaleLowerCase()),
+                  ),
                 );
               }, [searchLanguages, languagesList]);
 
@@ -503,8 +597,8 @@ export default function AddPost() {
                 if (localLanguages.includes(name)) {
                   setLocalLanguages(
                     localLanguages.filter(
-                      (language: string) => language !== name
-                    )
+                      (language: string) => language !== name,
+                    ),
                   );
                 } else {
                   setLocalLanguages([...localLanguages, name]);
@@ -635,16 +729,53 @@ export default function AddPost() {
         > */}
         <ScrollView>
           <View style={{ height: "auto", alignItems: "center" }}>
+            <View style={AddPostPageStyleSheet.typeContainer}>
+              <CheckBox
+                center
+                title="BLOG"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={checkType === "blog"}
+                onPress={() => setCheckType("blog")}
+                size={20}
+                containerStyle={{ backgroundColor: "transparent" }}
+              />
+              <CheckBox
+                center
+                title="TOUR"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={checkType === "tour"}
+                onPress={() => setCheckType("tour")}
+                size={20}
+                containerStyle={{ backgroundColor: "transparent" }}
+              />
+              <CheckBox
+                center
+                title="ENQUIRE"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={checkType === "enquire"}
+                onPress={() => setCheckType("enquire")}
+                size={20}
+                containerStyle={{ backgroundColor: "transparent" }}
+              />
+            </View>
             {TitleInput()}
-            <CountryCheckbox />
-            <PeriodSelector />
-            <LocationInput code={code} updateInputText={updateInputText} />
+            {checkType === "enquire" ? <></> : <CountryCheckbox />}
+            {checkType === "enquire" ? (
+              <></>
+            ) : (
+              <LocationInput code={code} updateInputText={updateInputText} />
+            )}
+            {checkType === "tour" ? <PeriodSelector /> : <></>}
+            {checkType === "tour" ? BudgetInput() : <></>}
             {ContentInput()}
-            <HeadcountCheckbox />
-            <GenderCheckbox />
-            <AgeCheckbox />
-            <LanguagesCheckbox />
-            <SkillCheckbox />
+            {checkType === "tour" ? <HeadcountCheckbox /> : <></>}
+            {checkType === "tour" ? <GenderCheckbox /> : <></>}
+            {checkType === "tour" ? <AgeCheckbox /> : <></>}
+            {checkType === "tour" ? <LanguagesCheckbox /> : <></>}
+            {checkType === "tour" ? <SkillCheckbox /> : <></>}
             <View style={AddPostPageStyleSheet.center}>
               <TouchableOpacity
                 style={AddPostPageStyleSheet.addPost}

@@ -1,8 +1,28 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  UseGuards,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { sendProfileParser } from 'utils/parser';
+import multer from 'multer';
+import { randomUUID } from 'crypto';
 
+let storage = multer.diskStorage({
+  destination: '../trip-mingle/uploads',
+  filename(req, file, callback) {
+    let ext = file.mimetype.match(/^image\/([\w-]+)/)?.[1] || 'bin';
+    let filename = randomUUID() + '.' + ext;
+    callback(null, filename);
+  },
+});
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
@@ -13,6 +33,11 @@ export class UserController {
     return this.userService.getProfile(req);
   }
 
+  @UseGuards(AuthGuard)
+  @Get('icon')
+  async getIcon(@Req() req: Request) {
+    return this.userService.getIcon(req);
+  }
   @UseGuards(AuthGuard)
   @Post('profile')
   async sendProfile(@Body() body: Body, @Req() req: Request) {
@@ -28,5 +53,12 @@ export class UserController {
   @Get('hobby_list')
   async getHobbyList() {
     return this.userService.getHobbyList();
+  }
+
+  @Post('image')
+  @UseInterceptors(FileInterceptor('image', { storage: storage }))
+  async uploadImage(@UploadedFile() image) {
+    console.log('image:', image);
+    return;
   }
 }
