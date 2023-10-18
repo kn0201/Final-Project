@@ -19,7 +19,7 @@ import { getIconResult } from "../utils/parser";
 
 //@ts-ignore
 export default function UserPage({ navigation }) {
-  let path = "e88faa97-9f5a-4551-8a48-f31827f57385.jpeg";
+  // let path = "e88faa97-9f5a-4551-8a48-f31827f57385.jpeg";
   // let path = "yukimin.png";
   const { token, payload, setToken } = useToken();
   const [iconPath, setIconPath] = useState("");
@@ -71,7 +71,7 @@ export default function UserPage({ navigation }) {
             size={150}
             rounded
             containerStyle={UserPageStyleSheet.AvatarContainer}
-            source={require("../../uploads/" + path)}
+            // source={require("../../uploads/" + path)}
           />
           <Text style={UserPageStyleSheet.username}>{payload?.username}</Text>
           {/* <Image source={require(iconPath)} /> */}

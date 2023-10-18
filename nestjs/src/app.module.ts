@@ -33,10 +33,9 @@ import { BlogModule } from './blog/blog.module';
     LoginModule,
     ServerTestingModule,
     UserModule,
-    PlanningModule,
     BlogModule,
   ],
-  controllers: [AppController, PlanningController],
+  controllers: [AppController],
   providers: [AppService, JwtService],
 })
 export class AppModule {}
