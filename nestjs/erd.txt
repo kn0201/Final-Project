@@ -146,8 +146,8 @@ daily_event
 -----------
 id integer PK
 detail_id integer FK >- plan_detail.id
-start_time number
-end_time number
+start_time integer
+end_time integer
 location varchar(255)
 remark varchar(255)
 
@@ -179,11 +179,12 @@ code varchar(255)
 name varchar(255)
 
 
-language
+user_language
 --------
 id integer PK
 user_id integer FK >- users.id
 language_id integer FK >- language_list.id
+     
 
 
 country_list
@@ -241,11 +242,10 @@ name varchar(255)
 # user_location (672, -56, #01081d)
 # system_location (1043, -95, #391f3e)
 # language_list (850, 626, #334f0c)
-# language (619, 597, #4e334f)
 # country_list (1105, 401, #623a23)
 # countries_travelled (829, 314, #293c4f)
 # hobby (630, 751, #575d06)
-# hobby_list (855, 801, #354a4c)
+# hobby_list (1481, 1116, #354a4c)
 # users (726, 631, #1d0a19)
 # comment (1371, 335, #3d2452)
 # application (1152, 41, #393c07)
@@ -263,7 +263,7 @@ name varchar(255)
 # user_location (1741, 35, #490f5a)
 # system_location (1387, 76, #1b571c)
 # language_list (1484, 936, #334f0c)
-# language (1196, 870, #4e334f)
+# user_language (1196, 870, #4e334f)
 # country_list (61, 961, #3e5757)
 # countries_travelled (334, 1052, #293c4f)
 # hobby (1201, 1071, #575d06)
