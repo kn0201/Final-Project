@@ -1,6 +1,6 @@
 //Buffer Line
 import { StatusBar, StyleSheet } from "react-native";
-import { flex, center, row, full, iosBlue } from "./StyleSheetHelper";
+import { flex, center, row, full, iosBlue, white } from "./StyleSheetHelper";
 
 const BlogDetailScreenStyleSheet = StyleSheet.create({
   centerContainer: {
@@ -15,9 +15,7 @@ const BlogDetailScreenStyleSheet = StyleSheet.create({
   topContentContainer: {
     display: flex,
     flexDirection: row,
-    marginTop: 16,
-    marginStart: 16,
-    marginEnd: 16,
+    margin: 8,
     justifyContent: "space-between",
   },
   buttonContainer: {
@@ -34,6 +32,15 @@ const BlogDetailScreenStyleSheet = StyleSheet.create({
   },
   contentContainer: {
     marginHorizontal: 16,
+  },
+  bottomContainer: {
+    backgroundColor: white,
+    height: 45,
+    width: full,
+    justifyContent: "space-between",
+    alignItems: center,
+    flexDirection: row,
+    paddingHorizontal: 16,
   },
 });
 export default BlogDetailScreenStyleSheet;

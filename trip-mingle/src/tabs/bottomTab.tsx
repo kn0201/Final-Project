@@ -9,10 +9,8 @@ import MapPage from "../pages/MapPage";
 
 import UserPage from "../pages/UserPage";
 import LoginPage from "../pages/LoginPage";
-
 import ExplorePage from "../pages/ExplorePage";
 import SchedulePage from "../pages/SchedulePage";
-
 import { useToken } from "../hooks/useToken";
 
 const Tab = createBottomTabNavigator();
@@ -33,12 +31,12 @@ function MyTab() {
         }}
       />
       <Tab.Screen
-        name="Explore"
+        name="ExplorePage"
         component={ExplorePage}
         options={{
           tabBarLabel: "Explore",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="search" color={color} size={size} />
+            <Ionicons name="compass-outline" color={color} size={size} />
           ),
         }}
       />
@@ -49,6 +47,16 @@ function MyTab() {
           tabBarLabel: "Schedule",
           tabBarIcon: ({ color, size }) => (
             <Fontisto name="suitcase" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Map"
+        component={MapPage}
+        options={{
+          tabBarLabel: "Map",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="map" color={color} size={size} />
           ),
         }}
       />
@@ -77,16 +85,6 @@ function MyTab() {
           }}
         />
       )}
-      <Tab.Screen
-        name="Map"
-        component={MapPage}
-        options={{
-          tabBarLabel: "Map",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="map" color={color} size={size} />
-          ),
-        }}
-      />
     </Tab.Navigator>
   );
 }

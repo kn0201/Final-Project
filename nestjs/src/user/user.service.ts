@@ -100,7 +100,7 @@ export class UserService {
       if (!row) {
         await this.knex('hobby').insert({
           user_id: user_id,
-          hobby_list_id: hobby_id,
+          hobby_id: hobby_id,
         });
       }
     }

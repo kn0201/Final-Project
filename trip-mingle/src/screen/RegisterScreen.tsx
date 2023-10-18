@@ -114,32 +114,9 @@ export default function RegisterScreen({ navigation }) {
     if (!imagePickerResult.canceled) {
       setImage(imagePickerResult.assets[0].uri);
       setImageFile(file);
-
-      // let formData = new FormData();
-      // formData.append("image", file as any);
-
-      // let res = await fetch(apiOrigin + "/user/image", {
-      //   method: "POST",
-      //   body: formData,
-      // });
-      // let json = await res.json();
-      // console.log("json:", json);
     }
     // console.log(imageFile);
   };
-  // const uploadImage = async () => {
-  //   let formData = new FormData();
-  //   formData.append("image", imageFile as any);
-  //   formData.append("regisInfo",regisInfo as any)
-  //   console.log(imageFile);
-
-  //   let res = await fetch(apiOrigin + "/user/image", {
-  //     method: "POST",
-  //     body: formData,
-  //   });
-  //   let json = await res.json();
-  //   // console.log("json:", json);
-  // };
 
   const checkUsername = async (text: string) => {
     try {

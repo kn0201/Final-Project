@@ -14,7 +14,7 @@ import BuddiesPageStyleSheet from "../StyleSheet/BuddiesPageCss";
 const Tab = createMaterialTopTabNavigator();
 
 //@ts-ignore
-function MyTabs({ navigation }) {
+function ExplorePageTopTab({ navigation }) {
   return (
     <>
       <Header
@@ -103,5 +103,5 @@ function MyTabs({ navigation }) {
 
 //@ts-ignore
 export default function BuddiesPage({ navigation }) {
-  return <MyTabs navigation={navigation} />;
+  return <ExplorePageTopTab navigation={navigation} />;
 }

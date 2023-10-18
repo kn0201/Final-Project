@@ -6,10 +6,11 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { useState } from "react";
-import { iosBlue } from "../StyleSheet/StyleSheetHelper";
+import { center, iosBlue, row } from "../StyleSheet/StyleSheetHelper";
 import { apiOrigin } from "../utils/apiOrigin";
 
-export default function BlogDetailScreen() {
+//@ts-ignore
+export default function BlogDetailScreen({ navigation }) {
   let path = "d76562b8-adef-470b-9934-5181d38b68c9.jpeg";
   const [isLike, setIsLike] = useState(false);
   const [isBookmark, setIsBookmark] = useState(false);
@@ -24,25 +25,7 @@ export default function BlogDetailScreen() {
     <>
       <ScrollView>
         <View style={BlogDetailScreenStyleSheet.topContentContainer}>
-          <View>
-            <Text>2023年9月14日</Text>
-          </View>
-          <View style={BlogDetailScreenStyleSheet.buttonContainer}>
-            <TouchableOpacity onPress={like}>
-              <AntDesign
-                name={isLike ? "like1" : "like2"}
-                size={20}
-                style={{ color: iosBlue }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={bookmark}>
-              <MaterialCommunityIcons
-                name={isBookmark ? "bookmark" : "bookmark-outline"}
-                size={22}
-                style={{ color: iosBlue }}
-              />
-            </TouchableOpacity>
-          </View>
+          <Text>2023年9月14日</Text>
         </View>
         <View style={BlogDetailScreenStyleSheet.centerContainer}>
           <Text style={BlogDetailScreenStyleSheet.blogTitle}>Blog Title</Text>
@@ -91,6 +74,37 @@ export default function BlogDetailScreen() {
           />
         </View>
       </ScrollView>
+      <View style={BlogDetailScreenStyleSheet.bottomContainer}>
+        <View style={BlogDetailScreenStyleSheet.buttonContainer}>
+          <TouchableOpacity onPress={bookmark}>
+            <MaterialCommunityIcons
+              name={isBookmark ? "bookmark" : "bookmark-outline"}
+              size={22}
+              style={{ color: iosBlue }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={like}
+            style={{ flexDirection: row, alignItems: center, gap: 5 }}
+          >
+            <AntDesign
+              name={isLike ? "like1" : "like2"}
+              size={20}
+              style={{ color: iosBlue }}
+            />
+            <Text style={{ color: iosBlue }}>3</Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity
+          style={{ flexDirection: row, alignItems: center, gap: 5 }}
+          onPress={() => {
+            navigation.navigate("Comment");
+          }}
+        >
+          <MaterialCommunityIcons name="comment-plus" size={22} />
+          <Text>Comment</Text>
+        </TouchableOpacity>
+      </View>
     </>
   );
 }
