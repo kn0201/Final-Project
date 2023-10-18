@@ -7,6 +7,8 @@ import { LoginModule } from './login/login.module';
 import { JwtService } from './jwt/jwt.service';
 import { ServerTestingModule } from './server-testing/server-testing.module';
 import { UserModule } from './user/user.module';
+import { PlanningController } from './planning/planning.controller';
+import { PlanningModule } from './planning/planning.module';
 import { BlogModule } from './blog/blog.module';
 
 @Module({

@@ -138,14 +138,16 @@ plan_detail
 -----------
 id integer PK
 planing_id integer FK >- planing.id
-date timestamp
+start_date timestamp
+end_date timestamp
 
 
 daily_event
 -----------
 id integer PK
 detail_id integer FK >- plan_detail.id
-time timestamp
+start_time number
+end_time number
 location varchar(255)
 remark varchar(255)
 
@@ -215,6 +217,7 @@ name varchar(255)
 # view: (-176, 268)
 # zoom: 1.000
 # view: (0, 0)
+# view: (165, 3)
 # text-bg: #6495ed
 # text-color: #000000
 # diagram-bg: #f5f5f5
