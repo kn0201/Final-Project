@@ -2,10 +2,8 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import TourScreen from "../screen/PostScreen";
-import AddPost from "../screen/AddPost";
+import AddPostScreen from "../screen/AddPostScreen";
 import BuddiesPage from "../tabs/ExplorePageTopTab";
-import { TextInput } from "react-native";
-import BuddiesPageStyleSheet from "../StyleSheet/BuddiesPageCss";
 
 const Stack = createStackNavigator();
 
@@ -26,7 +24,7 @@ export default function ExplorePage() {
           options={{ headerShown: false }}
         />
         <Stack.Screen name="Posts" component={TourScreen} />
-        <Stack.Screen name="Add Post" component={AddPost} />
+        <Stack.Screen name="Add Post" component={AddPostScreen} />
       </Stack.Navigator>
     </>
   );

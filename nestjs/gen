@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+name="$1"
+
+nest g mo $name
+nest g co $name
+nest g s $name
+
+echo "import { Controller, Get, Post, Patch } from '@nestjs/common';
+import { ${name^}Service } from './$name.service';
+
+@Controller('$name')
+export class ${name^}Controller {
+  constructor(private ${name}Service: ${name^}Service) {}
+}" > src/$name/$name.controller.ts
+
+echo "import { Injectable } from '@nestjs/common';
+import { Knex } from 'knex';
+import { InjectKnex } from 'nestjs-knex';
+
+@Injectable()
+export class ${name^}Service {
+  constructor(@InjectKnex() private readonly knex: Knex) {}
+}" > src/$name/$name.service.ts

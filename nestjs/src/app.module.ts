@@ -9,6 +9,7 @@ import { ServerTestingModule } from './server-testing/server-testing.module';
 import { UserModule } from './user/user.module';
 
 import { BlogModule } from './blog/blog.module';
+import { LanguageModule } from './language/language.module';
 import { ServeStaticModule } from '@nestjs/serve-static/dist/serve-static.module';
 import { resolve } from 'path';
 @Module({
@@ -37,6 +38,7 @@ import { resolve } from 'path';
     ServerTestingModule,
     UserModule,
     BlogModule,
+    LanguageModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService],

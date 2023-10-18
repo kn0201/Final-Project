@@ -1,5 +1,7 @@
 // Buffer Line
 
+import { theme } from "../theme/variables";
+
 export const flex = "flex";
 export const row = "row";
 export const column = "column";
@@ -14,6 +16,6 @@ export const absolute = "absolute";
 
 /* Colors */
 
-export const white = "#FFFFFF";
-export const textColor = "#313432";
-export const iosBlue = "#0E7AFE";
+export const white = theme.white;
+export const textColor = theme.textColor;
+export const iosBlue = theme.primaryColor;
