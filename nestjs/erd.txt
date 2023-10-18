@@ -23,11 +23,11 @@ email varchar(255) unique
 password varchar(255)
 gender boolean
 age varchar(255)
-country_id integer FK - country_list.id
-rating decimal
+country_id integer FK >- country_list.id
+rating numeric
 intro text NULL
 role varchar(255)
-avatar_id integer NULL FK - image.id
+avatar_id integer NULL FK >- image.id
 is_delete boolean
 
 
@@ -35,7 +35,7 @@ comment
 -------
 id integer PK
 post_id integer FK >- post.id
-user_id integer FK - users.id
+user_id integer FK >- users.id
 content text
 is_delete boolean
 
@@ -51,8 +51,8 @@ status boolean
 chatroom
 --------
 id integer PK
-user1_id integer FK - users.id
-user2_id integer FK - users.id
+user1_id integer FK >- users.id
+user2_id integer FK >- users.id
 user1_is_delete boolean
 user2_is_delete boolean
 
@@ -182,8 +182,8 @@ name varchar(255)
 language
 --------
 id integer PK
-user_id integer FK -> users.id
-language_id integer FK -> language_list.id
+user_id integer FK >- users.id
+language_id integer FK >- language_list.id
 
 
 country_list
@@ -196,15 +196,15 @@ name varchar(255)
 countries_travelled
 -------------------
 id integer PK
-user_id integer FK -< users.id
-country_id integer FK -< country_list.id
+user_id integer FK >- users.id
+country_id integer FK >- country_list.id
 
 
 hobby
 -----
 id integer PK
-user_id integer FK -> users.id
-hobby_id integer FK -> hobby_list.id
+user_id integer FK >- users.id
+hobby_id integer FK >- hobby_list.id
 
 
 hobby_list
