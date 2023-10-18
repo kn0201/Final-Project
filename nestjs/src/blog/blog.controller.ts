@@ -20,7 +20,7 @@ export class BlogController {
   constructor(private blogService: BlogService) {}
 
   @UseGuards(AuthGuard)
-  @Post('/blog/tour')
+  @Post('tour')
   addTourPost(@Body() body: Body, @Req() req: Request) {
     let input = addTourPostParser.parse(body);
     return this.blogService.addTourPost(input, req);

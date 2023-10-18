@@ -112,6 +112,7 @@ export default function AddPost() {
     getLanguageList();
   }, []);
 
+  // Submit
   const postInfo = useRef<PostInfo>({
     type: "",
     title: "",
@@ -135,57 +136,21 @@ export default function AddPost() {
       if (title !== "") {
         updateInputText("title", title);
       } else {
-        IonNeverDialog.show({
-          type: "warning",
-          title: "Error",
-          message: "Missing title",
-          firstButtonVisible: true,
-          firstButtonFunction: () => {
-            IonNeverDialog.dismiss();
-          },
-        });
         throw new Error("Missing title");
       }
       if (selectedCountry !== "Destination Country *") {
         updateInputText("trip_country", selectedCountry);
       } else {
-        IonNeverDialog.show({
-          type: "warning",
-          title: "Error",
-          message: "Missing destination country",
-          firstButtonVisible: true,
-          firstButtonFunction: () => {
-            IonNeverDialog.dismiss();
-          },
-        });
         throw new Error("Missing destination country");
       }
       if (content !== "") {
         updateInputText("content", content);
       } else {
-        IonNeverDialog.show({
-          type: "warning",
-          title: "Error",
-          message: "Missing content",
-          firstButtonVisible: true,
-          firstButtonFunction: () => {
-            IonNeverDialog.dismiss();
-          },
-        });
         throw new Error("Missing content");
       }
       if (selectedHeadcount !== "Preferred Headcount *") {
         updateInputText("trip_headcount", selectedHeadcount);
       } else {
-        IonNeverDialog.show({
-          type: "warning",
-          title: "Error",
-          message: "Missing preferred headcount",
-          firstButtonVisible: true,
-          firstButtonFunction: () => {
-            IonNeverDialog.dismiss();
-          },
-        });
         throw new Error("Missing preferred headcount");
       }
       if (selectedPeriod !== "Expected Period") {
@@ -206,14 +171,18 @@ export default function AddPost() {
       if (selectedSkillsText != "Preferred Hobbies") {
         updateInputText("preferred_hobby", selectedSkillsText);
       }
-      // const json = await api.post(
-      //   "/blog/tour",
-      //   postInfo,
-      //   addTourPostParser,
-      //   token,
-      // );
+      await api.post("/blog/tour", postInfo, addTourPostParser, token);
       console.log(postInfo);
     } catch (e) {
+      IonNeverDialog.show({
+        type: "warning",
+        title: "Error",
+        message: `${e}`,
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          IonNeverDialog.dismiss();
+        },
+      });
       console.log({ e });
     }
   };

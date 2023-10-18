@@ -30,7 +30,16 @@ export const addTourPostParser = object({
   title: string(),
   content: string(),
   trip_country: string(),
-  trip_location: nullable(array(object({ id: string(), name: string() }))),
+  trip_location: nullable(
+    array(
+      object({
+        id: string(),
+        name: string(),
+        address: string(),
+        coordinates: object({ lat: string(), lng: string() }),
+      }),
+    ),
+  ),
   trip_period: nullable(string()),
   trip_headcount: string(),
   trip_budget: nullable(string()),

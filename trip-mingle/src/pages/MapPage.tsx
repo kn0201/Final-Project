@@ -155,9 +155,9 @@ export default function MapPage() {
 
   const fetchPlacesFromGoogleMaps = async (
     location: LocationObject,
-    placeType: string
+    placeType: string,
   ) => {
-    let radius = 4 * 1000;
+    let radius = 2 * 1000;
     const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location?.coords.latitude},${location?.coords.longitude}&radius=${radius}&type=${placeType}&key=${GOOGLE_API_KEY}`;
     try {
       const res = await fetch(url);
