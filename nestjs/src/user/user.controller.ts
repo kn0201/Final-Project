@@ -45,11 +45,6 @@ export class UserController {
     return this.userService.sendProfile(input, req);
   }
 
-  @Get('language_list')
-  async getLanguageList() {
-    return this.userService.getLanguageList();
-  }
-
   @Get('hobby_list')
   async getHobbyList() {
     return this.userService.getHobbyList();

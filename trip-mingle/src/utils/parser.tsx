@@ -1,4 +1,12 @@
-import { array, boolean, nullable, number, object, string } from "cast.ts";
+import {
+  ParseResult,
+  array,
+  boolean,
+  nullable,
+  number,
+  object,
+  string,
+} from "cast.ts";
 
 export const signUpResultParser = object({
   token: string(),
@@ -31,6 +39,9 @@ export const countryListParser = array(
     name: string(),
   })
 );
+
+export const languageListParser = countryListParser;
+export type LanguageListItem = ParseResult<typeof languageListParser>[number];
 
 export const addPostCountryListParser = array(
   object({

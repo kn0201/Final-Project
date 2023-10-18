@@ -10,16 +10,20 @@ import {
   Dimensions,
   SafeAreaView,
   Text,
+  View,
 } from "react-native";
 import TestingApp from "./src/components/IonNeverNotification/testingApp";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TokenProvider } from "./src/hooks/useToken";
+import { Modal, ModalRoot } from "./src/components/Modal";
 
 const Stack = createNativeStackNavigator();
 
 function Root() {
   return (
     <TokenProvider>
+      <ModalRoot />
+      {/* <Modal isOpen></Modal> */}
       <NavigationContainer>
         <IonNeverNotificationRoot>
           <MyBottomTab />

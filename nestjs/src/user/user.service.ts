@@ -108,11 +108,6 @@ export class UserService {
     return { result: true };
   }
 
-  async getLanguageList() {
-    let result = await this.knex('language_list').select('id', 'name');
-
-    return result;
-  }
   async getHobbyList() {
     let result = await this.knex('hobby_list').select('id', 'name');
     return result;

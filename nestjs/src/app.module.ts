@@ -10,6 +10,7 @@ import { UserModule } from './user/user.module';
 import { PlanningController } from './planning/planning.controller';
 import { PlanningModule } from './planning/planning.module';
 import { BlogModule } from './blog/blog.module';
+import { LanguageModule } from './language/language.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { BlogModule } from './blog/blog.module';
     ServerTestingModule,
     UserModule,
     BlogModule,
+    LanguageModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService],
