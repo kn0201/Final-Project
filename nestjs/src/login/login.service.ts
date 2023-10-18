@@ -69,7 +69,7 @@ export class LoginService {
     image,
   ) {
     let username = body.username;
-    let imageName = image.filename;
+
     let hashedPW = await hashPassword(body.password);
 
     let result = await this.knex('users')
@@ -87,20 +87,22 @@ export class LoginService {
       .returning('id');
 
     let id = result[0].id;
+    if (image != undefined) {
+      let imageName = image.filename;
+      let uploadResult = await this.knex('image')
+        .insert({
+          user_id: id,
+          path: imageName,
+          is_delete: false,
+        })
+        .returning('id');
 
-    let uploadResult = await this.knex('image')
-      .insert({
-        user_id: id,
-        path: imageName,
-        is_delete: false,
-      })
-      .returning('id');
+      let image_id = uploadResult[0].id;
 
-    let image_id = uploadResult[0].id;
-
-    await this.knex('users').update({
-      avatar_id: image_id,
-    });
+      await this.knex('users').update({
+        avatar_id: image_id,
+      });
+    }
 
     let emailUsername = username[0].toUpperCase() + username.slice(1);
 

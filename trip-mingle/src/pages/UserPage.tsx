@@ -20,11 +20,14 @@ import { apiOrigin } from "../utils/apiOrigin";
 import { useGet } from "../hooks/useGet";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import ProfileScreenStyleSheet from "../StyleSheet/ProfileScreenCss";
+import useBoolean from "../hooks/useBoolean";
 
 //@ts-ignore
 export default function UserPage({ navigation }) {
   const { token, payload, setToken } = useToken();
   const [editableIcon, setEditableIcon] = useState(false);
+  const editable = useBoolean().value;
+  console.log(editable);
 
   const editProfile = "Edit Profile";
   const submitProfile = "Submit";

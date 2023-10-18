@@ -26,6 +26,7 @@ import {
 import { useToken } from "../hooks/useToken";
 import MultipleCountryCheckbox from "../components/multipleCountryCheckbox";
 import MultipleHobbyCheckbox from "../components/multipleHobbyCheckbox";
+import useBoolean from "../hooks/useBoolean";
 
 export default function ProfileScreen({
   //@ts-ignore
@@ -105,7 +106,7 @@ export default function ProfileScreen({
   const [selectedHobby, setSelectedHobby] = useState<string[]>([]);
 
   const [editableText, setEditableText] = useState(false);
-
+  const editable = useBoolean().off;
   const updateInputText = (field: string, value: string) => {
     profileInfo[field as keyof ProfileInfo] = value;
   };
@@ -147,7 +148,7 @@ export default function ProfileScreen({
             <View style={ProfileScreenStyleSheet.editContainer}>
               <TouchableOpacity
                 onPress={() => {
-                  // setEditableIcon(!editableIcon);
+                  useBoolean().on;
                   setEditableText(!editableText);
                   if (editableText) {
                     sendProfile();
