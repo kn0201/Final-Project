@@ -7,6 +7,8 @@ import { LoginModule } from './login/login.module';
 import { JwtService } from './jwt/jwt.service';
 import { ServerTestingModule } from './server-testing/server-testing.module';
 import { UserModule } from './user/user.module';
+import { PlanningController } from './planning/planning.controller';
+import { PlanningModule } from './planning/planning.module';
 
 @Module({
   imports: [
@@ -30,8 +32,9 @@ import { UserModule } from './user/user.module';
     LoginModule,
     ServerTestingModule,
     UserModule,
+    PlanningModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, PlanningController],
   providers: [AppService, JwtService],
 })
 export class AppModule {}

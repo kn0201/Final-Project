@@ -138,14 +138,16 @@ plan_detail
 -----------
 id integer PK
 planing_id integer FK >- planing.id
-date timestamp
+start_date timestamp
+end_date timestamp
 
 
 daily_event
 -----------
 id integer PK
 detail_id integer FK >- plan_detail.id
-time timestamp
+start_time number
+end_time number
 location varchar(255)
 remark varchar(255)
 
@@ -223,7 +225,7 @@ name varchar(255)
 
 
 # zoom: 0.754
-# view: (165, 4)
+# view: (165, 3)
 # text-bg: #6495ed
 # text-color: #000000
 # diagram-bg: #f5f5f5
@@ -243,14 +245,14 @@ name varchar(255)
 # complaint (73, 25, #1f2f50)
 # planing (1061, 559, #003b58)
 # plan_detail (1074, 760, #022f2b)
-# daily_event (1073, 910, #382845)
-# user_location (777, 35, #490f5a)
-# system_location (556, 35, #1b571c)
-# language_list (850, 626, #334f0c)
-# language (619, 597, #4e334f)
-# country_list (867, 471, #623a23)
-# countries_travelled (608, 424, #293c4f)
-# skill (640, 737, #23171c)
-# skill_list (858, 770, #5f3f08)
-# hobby (639, 867, #575d06)
-# hobby_list (864, 903, #354a4c)
+# daily_event (1073, 910)
+# user_location (777, 35)
+# system_location (556, 35)
+# language_list (850, 626)
+# language (619, 597)
+# country_list (867, 471)
+# countries_travelled (608, 424)
+# skill (640, 737)
+# skill_list (858, 770)
+# hobby (639, 867)
+# hobby_list (864, 903)

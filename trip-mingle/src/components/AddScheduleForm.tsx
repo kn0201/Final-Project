@@ -7,21 +7,19 @@ import {
   TouchableOpacity,
   TextInput,
   FlatList,
-  Animated,
-  StyleSheet,
   Keyboard,
 } from "react-native";
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
 import { AntDesign } from "@expo/vector-icons";
 import LoginPageStyleSheet from "../StyleSheet/LoginScreenCss";
 import { CheckBox, SearchBar } from "@rneui/base";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-
 import * as ImagePicker from "expo-image-picker";
 import { ScheduleCardInputInfo } from "../utils/types";
 import { countriesList } from "../source/countries";
-import { absolute, center } from "../StyleSheet/StyleSheetHelper";
+import { center } from "../StyleSheet/StyleSheetHelper";
 import PlannigStyleSheet from "../StyleSheet/PlanningStyleSheet";
+import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 function AddScheduleForm(props: {
   closeModal: () => void;
@@ -33,7 +31,11 @@ function AddScheduleForm(props: {
   const countriesListData = countriesList;
 
   const [image, setImage] = useState<string>();
-
+  const [country, setCountry] = useState("");
+  const [code, setCode] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState(
+    "Destination Country *"
+  );
   const schdeuleInfo = useRef<ScheduleCardInputInfo>({
     title: "",
     uri: "",
@@ -64,6 +66,129 @@ function AddScheduleForm(props: {
     }
   };
 
+  // Autofocus
+  const inputRef = useRef<TextInput | null>(null);
+  const focusInput = () => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
+
+  const CountryCheckbox = () => {
+    return (
+      <TouchableOpacity
+        style={AddPostPageStyleSheet.postCountryContainer}
+        onPress={() => {
+          {
+            focusInput;
+          }
+          Keyboard.dismiss();
+          IonNeverDialog.show({
+            dialogHeight: 600,
+            component: () => {
+              const [localCountry, setLocalCountry] = useState<string>(country);
+              const [localCode, setLocalCode] = useState<string>(code);
+              const [search, setSearch] = useState("");
+              const [countryList, setCountryList] = useState(countriesListData);
+              const [matchedCountryList, setMatchedCountryList] =
+                useState(countriesListData);
+              useEffect(() => {
+                setMatchedCountryList(
+                  countryList.filter((country) =>
+                    country.name
+                      .toLocaleLowerCase()
+                      .includes(search.toLocaleLowerCase())
+                  )
+                );
+              }, [search, countryList]);
+              const updateSearch = (search: string) => {
+                setSearch(search);
+              };
+              type CountryProps = { name: string; code: string };
+              const Country = ({ name, code }: CountryProps) => (
+                <View>
+                  <CheckBox
+                    title={name}
+                    containerStyle={{
+                      backgroundColor: "transparent",
+                      borderWidth: 0,
+                      padding: 3,
+                    }}
+                    textStyle={{ fontWeight: "normal" }}
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
+                    checked={localCountry === name}
+                    onPress={() => {
+                      if (localCountry === name) {
+                        setCountry("");
+                        setCode("");
+                        setLocalCountry("");
+                        setLocalCode("");
+                      } else {
+                        setCountry(name);
+                        setCode(code);
+                        setLocalCountry(name);
+                        setLocalCode(code);
+                      }
+                    }}
+                  />
+                </View>
+              );
+              return (
+                <>
+                  <SearchBar
+                    placeholder="Search..."
+                    onChangeText={updateSearch}
+                    value={search}
+                    containerStyle={{
+                      backgroundColor: "transparent",
+                      borderTopColor: "transparent",
+                      borderBottomColor: "transparent",
+                      height: 50,
+                    }}
+                    inputContainerStyle={{
+                      backgroundColor: "white",
+                      borderColor: "black",
+                      height: 40,
+                      borderRadius: 10,
+                      borderBottomWidth: 1,
+                      borderWidth: 1,
+                    }}
+                    inputStyle={{ fontSize: 14, color: "black" }}
+                    placeholderTextColor="#BFBFC1"
+                    searchIcon={false}
+                    lightTheme
+                  />
+                  <FlatList
+                    data={matchedCountryList}
+                    renderItem={({ item }) => (
+                      <Country name={item.name} code={item.code} />
+                    )}
+                  />
+                  <View style={AddPostPageStyleSheet.ModalButtonContainer}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        localCountry
+                          ? setSelectedCountry(localCountry)
+                          : setSelectedCountry("Destination Country *");
+                        IonNeverDialog.dismiss();
+                        updateInputText("trip_country", country);
+                      }}
+                    >
+                      <Text style={AddPostPageStyleSheet.ModalText}>OK</Text>
+                    </TouchableOpacity>
+                  </View>
+                </>
+              );
+            },
+          });
+        }}
+      >
+        <Text ref={inputRef}>{selectedCountry}</Text>
+        <MaterialIcons name="edit" size={16} />
+      </TouchableOpacity>
+    );
+  };
   return (
     <View style={{ flex: 1, alignItems: "center", backgroundColor: "white" }}>
       <View style={PlannigStyleSheet.uploadContainerSquare}>
@@ -98,32 +223,7 @@ function AddScheduleForm(props: {
         }}
         placeholder="Title"
       />
-      <TouchableOpacity
-        style={PlannigStyleSheet.countryContainer}
-        onPress={() => {
-          IonNeverDialog.show({
-            dialogHeight: 800,
-            component: () => {
-              return (
-                <View>
-                  <Text>123</Text>
-                </View>
-              );
-            },
-          });
-        }}
-      >
-        <Icon
-          style={{
-            display: "flex",
-            justifyContent: "flex-start",
-            marginEnd: 4,
-          }}
-          name={"earth"}
-          size={16}
-        />
-        <Text>{"selectedCountry"}</Text>
-      </TouchableOpacity>
+      <CountryCheckbox />
       <TouchableOpacity
         style={LoginPageStyleSheet.login}
         onPress={() => {
