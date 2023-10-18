@@ -6,38 +6,38 @@ import {
   View,
   Image,
 } from "react-native";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
 import UserPageTopTab from "../tabs/UserPageTopTab";
 import { Avatar, Header, Icon } from "@rneui/themed";
 import UserPageStyleSheet from "../StyleSheet/UserPageCss";
-import { iosBlue } from "../StyleSheet/StyleSheetHelper";
+import { iosBlue, white } from "../StyleSheet/StyleSheetHelper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useToken } from "../hooks/useToken";
-import { api } from "../apis/api";
+
 import { getIconResult } from "../utils/parser";
+import { apiOrigin } from "../utils/apiOrigin";
+import { useGet } from "../hooks/useGet";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import ProfileScreenStyleSheet from "../StyleSheet/ProfileScreenCss";
 
 //@ts-ignore
 export default function UserPage({ navigation }) {
-  // let path = "e88faa97-9f5a-4551-8a48-f31827f57385.jpeg";
-  // let path = "yukimin.png";
   const { token, payload, setToken } = useToken();
-  const [iconPath, setIconPath] = useState("");
+  const [editableIcon, setEditableIcon] = useState(false);
+
+  const editProfile = "Edit Profile";
+  const submitProfile = "Submit";
+
   const logout = async () => {
     setToken("");
     await AsyncStorage.removeItem("username");
     navigation.navigate("Home");
   };
-  const getIcon = async () => {
-    let json = await api.get("/user/icon", getIconResult, token);
-    console.log(json);
 
-    setIconPath("../../uploads/" + json.path);
-  };
-  useEffect(() => {
-    getIcon();
-  }, []);
-  useEffect(() => {}, [iconPath]);
+  let result = useGet("/user/icon", getIconResult).state?.path;
+  console.log(result);
+
   return (
     <>
       <KeyboardAvoidingView
@@ -66,15 +66,21 @@ export default function UserPage({ navigation }) {
             </View>
           }
         ></Header>
+
         <View style={UserPageStyleSheet.container}>
           <Avatar
             size={150}
             rounded
             containerStyle={UserPageStyleSheet.AvatarContainer}
-            // source={require("../../uploads/" + path)}
+            source={
+              result == null
+                ? require("../assets/yukimin.png")
+                : {
+                    uri: `${apiOrigin}/${result}`,
+                  }
+            }
           />
           <Text style={UserPageStyleSheet.username}>{payload?.username}</Text>
-          {/* <Image source={require(iconPath)} /> */}
         </View>
         <UserPageTopTab></UserPageTopTab>
       </KeyboardAvoidingView>

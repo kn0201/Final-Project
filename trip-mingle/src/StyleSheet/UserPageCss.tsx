@@ -6,7 +6,7 @@ const UserPageStyleSheet = StyleSheet.create({
   container: {
     backgroundColor: "#D3D3D3",
     alignItems: "center",
-    justifyContent: "center",
+    // justifyContent: "center",
   },
   header: {
     color: "black",
@@ -26,6 +26,13 @@ const UserPageStyleSheet = StyleSheet.create({
     display: flex,
     flexDirection: row,
     alignItems: center,
+  },
+  editContainer: {
+    display: flex,
+    flexDirection: row,
+    justifyContent: "flex-end",
+    marginTop: 8,
+    marginEnd: "2.5%",
   },
 });
 

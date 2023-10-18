@@ -16,7 +16,7 @@ import multer from 'multer';
 import { randomUUID } from 'crypto';
 
 let storage = multer.diskStorage({
-  destination: '../trip-mingle/uploads',
+  destination: 'uploads',
   filename(req, file, callback) {
     let ext = file.mimetype.match(/^image\/([\w-]+)/)?.[1] || 'bin';
     let filename = randomUUID() + '.' + ext;

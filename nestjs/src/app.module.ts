@@ -7,12 +7,15 @@ import { LoginModule } from './login/login.module';
 import { JwtService } from './jwt/jwt.service';
 import { ServerTestingModule } from './server-testing/server-testing.module';
 import { UserModule } from './user/user.module';
-import { PlanningController } from './planning/planning.controller';
-import { PlanningModule } from './planning/planning.module';
-import { BlogModule } from './blog/blog.module';
 
+import { BlogModule } from './blog/blog.module';
+import { ServeStaticModule } from '@nestjs/serve-static/dist/serve-static.module';
+import { resolve } from 'path';
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: resolve('uploads'),
+    }),
     KnexModule.forRoot({
       config: {
         client: 'postgresql',
