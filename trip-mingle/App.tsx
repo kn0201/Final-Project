@@ -22,7 +22,7 @@ const Stack = createNativeStackNavigator();
 function Root() {
   return (
     <TokenProvider>
-      <ModalRoot />
+      {/* <ModalRoot /> */}
       {/* <Modal isOpen></Modal> */}
       <NavigationContainer>
         <IonNeverNotificationRoot>

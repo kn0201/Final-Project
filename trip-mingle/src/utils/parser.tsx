@@ -56,5 +56,5 @@ export const getPostResultListParser = array(object({}));
 export const addTourPostParser = object({});
 
 export const getIconResult = object({
-  path: string(),
+  path: nullable(string()),
 });

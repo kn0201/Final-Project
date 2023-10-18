@@ -124,8 +124,10 @@ export class UserService {
       .where('user_id', user_id)
       .first();
 
-    console.log(result);
-
+    // console.log(result);
+    if (result === undefined) {
+      return { path: null };
+    }
     return result;
   }
   // async uploadImage(image){

@@ -26,8 +26,16 @@ import {
 import { useToken } from "../hooks/useToken";
 import MultipleCountryCheckbox from "../components/multipleCountryCheckbox";
 import MultipleHobbyCheckbox from "../components/multipleHobbyCheckbox";
-//@ts-ignore
-export default function ProfileScreen({ navigation }) {
+import useBoolean from "../hooks/useBoolean";
+
+export default function ProfileScreen({
+  //@ts-ignore
+  navigation,
+  // //@ts-ignore
+  // setEditableIcon,
+  // //@ts-ignore
+  // editableIcon,
+}) {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const { token, payload, setToken } = useToken();
 
@@ -54,7 +62,6 @@ export default function ProfileScreen({ navigation }) {
         let idString = IDarray.join(",");
         updateInputText("language", idString);
       }
-      console.log(selectedLanguage);
 
       const languageString = nameArray.join(", ");
       //@ts-ignore
@@ -86,7 +93,6 @@ export default function ProfileScreen({ navigation }) {
       //@ts-ignore
       setSelectedCountry(countryString);
     }
-    console.log(profileInfo);
   };
 
   useEffect(() => {
@@ -100,7 +106,7 @@ export default function ProfileScreen({ navigation }) {
   const [selectedHobby, setSelectedHobby] = useState<string[]>([]);
 
   const [editableText, setEditableText] = useState(false);
-
+  const editable = useBoolean().off;
   const updateInputText = (field: string, value: string) => {
     profileInfo[field as keyof ProfileInfo] = value;
   };
@@ -122,7 +128,6 @@ export default function ProfileScreen({ navigation }) {
         IonNeverDialog.show({
           type: "success",
           title: "Updated Profile",
-          // message: json.username,
           firstButtonVisible: true,
           firstButtonFunction: () => {
             getProfile();
@@ -133,7 +138,6 @@ export default function ProfileScreen({ navigation }) {
       const errorObject: any = { ...(error as object) };
       console.log(errorObject);
     }
-    console.log(profileInfo);
   };
 
   return (
@@ -144,6 +148,7 @@ export default function ProfileScreen({ navigation }) {
             <View style={ProfileScreenStyleSheet.editContainer}>
               <TouchableOpacity
                 onPress={() => {
+                  useBoolean().on;
                   setEditableText(!editableText);
                   if (editableText) {
                     sendProfile();
@@ -181,7 +186,6 @@ export default function ProfileScreen({ navigation }) {
                   onChangeText={(text) => {
                     setIntroText(text);
                     updateInputText("intro", text);
-                    console.log(profileInfo);
                   }}
                 >
                   {introText}
@@ -261,10 +265,6 @@ export default function ProfileScreen({ navigation }) {
                               setSelectedHobby={setSelectedHobby}
                               updateInputText={updateInputText}
                             />
-                            // <SelectLanguage
-                            //   setSelectedLanguage={setSelectedLanguage}
-                            //   updateInputText={updateInputText}
-                            // />
                           );
                         },
                       });
@@ -305,10 +305,6 @@ export default function ProfileScreen({ navigation }) {
                               setSelectedCountry={setSelectedCountry}
                               updateInputText={updateInputText}
                             />
-                            // <SelectCountry
-                            //   setSelectedCountry={setSelectedCountry}
-                            //   updateInputText={updateInputText}
-                            // />
                           );
                         },
                       });

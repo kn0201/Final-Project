@@ -55,6 +55,7 @@ export default function LoginScreen({ navigation }) {
 
       Object.entries(clearInputs).map(([_key, clear]) => clear());
       if (json.token) {
+        navigation.navigate("Users");
         loginAlert(username);
       }
     } catch (error) {

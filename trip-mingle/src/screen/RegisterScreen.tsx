@@ -30,6 +30,7 @@ import { JWTPayload, useToken } from "../hooks/useToken";
 import decode from "jwt-decode";
 import { basename } from "path";
 import { apiOrigin } from "../utils/apiOrigin";
+import { useGet } from "../hooks/useGet";
 
 // @ts-ignore
 export default function RegisterScreen({ navigation }) {
@@ -48,10 +49,6 @@ export default function RegisterScreen({ navigation }) {
   const [checkConfirmPassword, setCheckConfirmPassword] = useState("");
 
   const [checkUsernameResult, setCheckUsernameResult] = useState(false);
-
-  useEffect(() => {
-    getList();
-  }, []);
 
   const errMsg = "Password Not Match!";
   const usernameErrorMsg = "Username already exist";
@@ -162,12 +159,7 @@ export default function RegisterScreen({ navigation }) {
     }
   };
 
-  const getList = async () => {
-    const json = await api.getList("/login/country_list", countryListParser);
-
-    const countriesListData = json;
-    return countriesListData;
-  };
+  const countriesListData = useGet("/login/country_list", countryListParser);
 
   const register = async () => {
     try {
@@ -211,7 +203,7 @@ export default function RegisterScreen({ navigation }) {
   return (
     <TouchableWithoutFeedback
       onPress={() => {
-        Keyboard.dismiss;
+        Keyboard.dismiss();
       }}
     >
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
