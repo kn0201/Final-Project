@@ -21,19 +21,21 @@ function MyTabs({ navigation }) {
         backgroundColor="#fff"
         centerComponent={{
           text: "EXPLORE",
-          style: { color: "#000000" },
+          style: { color: "#000000", fontSize: 17, fontWeight: "600" },
         }}
         rightComponent={
           <View>
             <TouchableOpacity
               style={UserPageStyleSheet.rightComponent}
-              onPress={() => navigation.navigate("Add Post")}
+              onPress={() => navigation.navigate("New Post")}
             >
-              <Text style={{ color: iosBlue }}>Logout</Text>
+              <Text style={{ color: iosBlue }}>New Post </Text>
               <Icon
-                name="logout"
-                type="material-community"
+                name="new-message"
+                type="entypo"
                 color={iosBlue}
+                size={20}
+                style={{ marginEnd: 8 }}
               ></Icon>
             </TouchableOpacity>
           </View>

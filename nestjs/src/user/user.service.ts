@@ -22,10 +22,10 @@ export class UserService {
       .first();
 
     let language = await this.knex
-      .select('language_list.name as name', 'language_list.id as id')
-      .from('language')
+      .select('language.name as name', 'language.id as id')
+      .from('user_language')
       .where('user_id', user_id)
-      .leftJoin('language_list', 'language_list.id', 'language_id');
+      .leftJoin('language', 'language.id', 'language_id');
 
     let hobby = await this.knex
       .select('hobby_list.name as name', 'hobby_list.id as id')
@@ -78,12 +78,12 @@ export class UserService {
     for (let language_id of language) {
       let row = await this.knex
         .select('id')
-        .from('language')
+        .from('user_language')
         .where('user_id', user_id)
         .andWhere('language_id', language_id)
         .first();
       if (!row) {
-        await this.knex('language').insert({
+        await this.knex('user_language').insert({
           user_id: user_id,
           language_id: language_id,
         });

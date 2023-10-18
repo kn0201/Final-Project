@@ -24,7 +24,7 @@ export default function ExplorePage() {
           options={{ headerShown: false }}
         />
         <Stack.Screen name="Posts" component={TourScreen} />
-        <Stack.Screen name="Add Post" component={AddPostScreen} />
+        <Stack.Screen name="New Post" component={AddPostScreen} />
       </Stack.Navigator>
     </>
   );

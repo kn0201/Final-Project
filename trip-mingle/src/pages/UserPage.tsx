@@ -26,7 +26,7 @@ import useBoolean from "../hooks/useBoolean";
 export default function UserPage({ navigation }) {
   const { token, payload, setToken } = useToken();
   const [editableIcon, setEditableIcon] = useState(false);
-  const editable = useBoolean().value;
+  const editable = useBoolean();
   console.log(editable);
 
   const editProfile = "Edit Profile";

@@ -32,7 +32,7 @@ export default function MultipleLanguagesCheckbox({
   const [localCode, setLocalCode] = useState<string[]>(code);
 
   const getList = async () => {
-    const json = await api.getList("/user/language_list", countryListParser);
+    const json = await api.getList("/languages", countryListParser);
 
     setLanguagesList(json);
     setMatchedLanguagesList(json);
