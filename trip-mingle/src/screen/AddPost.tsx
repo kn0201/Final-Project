@@ -29,6 +29,7 @@ import {
 } from "../utils/parser";
 import { api } from "../apis/api";
 import { useToken } from "../hooks/useToken";
+import { useGet } from "../hooks/useGet";
 
 export default function AddPost() {
   const { token, payload, setToken } = useToken();
@@ -88,29 +89,10 @@ export default function AddPost() {
     "48-54",
     ">55",
   ];
-  const [countriesListData, setCountriesListData] = useState<
-    AddPostCountryList[]
-  >([]);
-  const getCountryList = async () => {
-    const json = await api.getList(
-      "/login/country_list",
-      addPostCountryListParser,
-    );
-    setCountriesListData(json);
-  };
-  const [languagesListData, setLanguagesListData] = useState<LanguageList[]>(
-    [],
-  );
-  const getLanguageList = async () => {
-    const json = await api.getList("/user/language_list", countryListParser);
-    setLanguagesListData(json);
-  };
-  const [checkType, setCheckType] = useState("none");
+  const countriesList = useGet("/login/country_list", addPostCountryListParser);
+  const languagesList = useGet("/user/language_list", countryListParser);
 
-  useEffect(() => {
-    getCountryList();
-    getLanguageList();
-  }, []);
+  const [checkType, setCheckType] = useState("none");
 
   // Submit
   const postInfo = useRef<PostInfo>({
@@ -187,7 +169,6 @@ export default function AddPost() {
     }
   };
 
-  // Update Input fields
   const updateInputText = (field: string, value: string) => {
     //@ts-ignore
     postInfo[field as keyof PostInfo] = value;
