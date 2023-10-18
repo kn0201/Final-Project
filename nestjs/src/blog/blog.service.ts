@@ -12,68 +12,78 @@ export class BlogService {
   ) {}
 
   async addTourPost(body, req) {
-    const payload = this.jwtService.decode(
-      req.headers.authorization.split(' ')[1],
-    );
-    let user_id = payload.user_id;
-    let tour_post_result = await this.knex('post')
-      .insert({
-        user_id: user_id,
-        type: body.type,
-        title: body.title,
-        content: body.content,
-        country: body.trip_country,
-        time: body.trip_period,
-        headcount: body.trip_headcount,
-        budget: body.trip_budget,
-        gender: body.preferred_gender,
-        age: body.preferred_age,
-        language: body.preferred_language,
-        hobby: body.preferred_hobby,
-        status: 'open',
-        view: 0,
-        is_delete: false,
-      })
-      .returning('id');
-    console.log({ tour_post_result });
-    let tour_post_id = tour_post_result[0].id;
-    for (let location of body.trip_location) {
-      let system_location_record = await this.knex('system_location').where({
-        place_id: location.id,
-      });
-      console.log({ system_location_record });
-      if (system_location_record) {
-        continue;
-      } else {
-        let system_location_result = await this.knex('system_location')
-          .insert({
+    try {
+      const payload = this.jwtService.decode(
+        req.headers.authorization.split(' ')[1],
+      );
+      let user_id = payload.user_id;
+      let [tour_post_id] = await this.knex('post')
+        .insert({
+          user_id: user_id,
+          type: body.type,
+          title: body.title,
+          content: body.content,
+          country: body.trip_country,
+          time: body.trip_period,
+          headcount: body.trip_headcount,
+          budget: body.trip_budget,
+          gender: body.preferred_gender,
+          age: body.preferred_age,
+          language: body.preferred_language,
+          hobby: body.preferred_hobby,
+          status: 'open',
+          view: 0,
+          is_delete: false,
+        })
+        .returning('id');
+      for (let location of body.trip_location) {
+        let [system_location_record] = await this.knex
+          .select('id', 'place_id')
+          .from('system_location')
+          .where({
             place_id: location.id,
-            name: location.name,
-            address: location.address,
-            location: location.coordinates,
-          })
-          .returning('id');
-        console.log({ system_location_result });
-        let system_location_id = system_location_result[0].id;
-        let user_location_record = await this.knex('user_location').where({
-          location: location.coordinates,
-        });
-        if (user_location_record) {
-          continue;
-        } else {
-          let user_location_result = await this.knex('user_location')
+          });
+        let [user_location_record] = await this.knex
+          .select('id', 'place_id')
+          .from('user_location')
+          .where({
+            place_id: location.id,
+          });
+        if (!user_location_record) {
+          if (!system_location_record) {
+            let [system_location_id] = await this.knex('system_location')
+              .insert({
+                place_id: location.id,
+                name: location.name,
+                address: location.address,
+                latitude: location.lat,
+                longitude: location.lng,
+              })
+              .returning('id');
+            await this.knex('user_location')
+              .insert({
+                user_id: user_id,
+                post_id: tour_post_id.id,
+                system_location_id: system_location_id.id,
+                place_id: location.place_id,
+                is_delete: false,
+              })
+              .returning('id');
+          }
+          await this.knex('user_location')
             .insert({
               user_id: user_id,
-              post_id: tour_post_id,
-              system_location_id: system_location_id,
-              location: location.coordinates,
+              post_id: tour_post_id.id,
+              system_location_id: system_location_record.id,
+              place_id: system_location_record.place_id,
               is_delete: false,
             })
             .returning('id');
-          console.log({ user_location_result });
         }
       }
       return {};
+    } catch (err) {
+      throw err;
     }
   }
 

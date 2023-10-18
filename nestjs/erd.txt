@@ -159,7 +159,9 @@ user_id integer FK >- users.id
 post_id integer NULL FK >- post.id
 image_id integer NULL FK >- image.id
 system_location_id integer NULL FK >- system_location.id
-location point
+place_id varchar(255) NULL
+latitude decimal NULL
+longitude decimal NULL
 is_delete boolean
 
 
@@ -169,7 +171,8 @@ id integer PK
 place_id varchar(255)
 name varchar(255)
 address varchar(255)
-location point
+latitude decimal
+longitude decimal
 
 
 language
@@ -213,33 +216,33 @@ id integer PK
 name varchar(255)
 
 
-# zoom: 0.754
-# view: (0, 0)
+# zoom: 0.954
+# view: (-411, 251)
 # text-bg: #6495ed
 # text-color: #000000
 # diagram-bg: #f5f5f5
 # diagram-text: #f5f5f5
 # table-bg: #ffffff
 # table-text: #000000
-# users (726, 631)
-# comment (1371, 335)
-# application (1152, 41)
-# chatroom (331, 738)
-# chat_record (39, 605)
-# image (1784, 346)
-# post (727, 140)
-# hashtags (226, 16)
-# like (224, 207)
-# bookmark (223, 353)
-# complaint (716, 1073)
-# planing (1357, 586)
-# plan_detail (1821, 750)
-# daily_event (1798, 1007)
-# user_location (1741, 35)
-# system_location (1387, 76)
-# language (1484, 936)
+# users (726, 631, #283006)
+# comment (1371, 335, #18623c)
+# application (1152, 41, #393c07)
+# chatroom (331, 738, #51144d)
+# chat_record (39, 605, #0f1d59)
+# image (1784, 346, #232e3a)
+# post (727, 140, #5a6233)
+# hashtags (226, 16, #3e4856)
+# like (224, 207, #124546)
+# bookmark (223, 353, #093a1f)
+# complaint (716, 1073, #5f5730)
+# planing (1357, 586, #33325c)
+# plan_detail (1821, 750, #424616)
+# daily_event (1798, 1007, #4c1003)
+# user_location (1437, 1, #01081d)
+# system_location (1871, -22, #391f3e)
+# language (1484, 936, #4e334f)
 # user_language (1196, 870)
-# country_list (61, 961)
-# countries_travelled (334, 1052)
-# hobby (1201, 1071)
-# hobby_list (1481, 1116)
+# country_list (61, 961, #623a23)
+# countries_travelled (334, 1052, #293c4f)
+# hobby (1201, 1071, #575d06)
+# hobby_list (1481, 1116, #354a4c)

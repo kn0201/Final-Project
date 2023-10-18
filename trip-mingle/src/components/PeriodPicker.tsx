@@ -110,7 +110,7 @@ const PeriodPicker = ({
                 .substring(0, 10);
               setSelectedPeriod(selectedDay);
             } else {
-              setSelectedPeriod("Expected Period");
+              setSelectedPeriod("Trip Period");
             }
             const selectedDays = getSelectedDays(
               selectedStartDate,

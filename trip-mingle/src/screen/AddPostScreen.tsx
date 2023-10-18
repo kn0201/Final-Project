@@ -24,7 +24,6 @@ import MultipleSelector from "../components/MutlipleSelector";
 import SingleSelectorWithOther from "../components/SingleSelectorWithOther";
 import MultipleSelectorWithOther from "../components/MultipleSelectorWithOther";
 import {
-  LanguageListItem,
   addPostCountryListParser,
   addTourPostParser,
   languageListParser,
@@ -38,6 +37,7 @@ import TextButton from "../components/TextButton";
 import useBoolean from "../hooks/useBoolean";
 import { useSelection } from "../hooks/useSelection";
 import { theme } from "../theme/variables";
+import { boolean } from "cast.ts";
 
 export function AddPostScreen1() {
   const { token, payload, setToken } = useToken();
@@ -66,7 +66,7 @@ export function AddPostScreen1() {
   );
   const [country, setCountry] = useState("");
   const [code, setCode] = useState("");
-  const [selectedPeriod, setSelectedPeriod] = useState("Expected Period");
+  const [selectedPeriod, setSelectedPeriod] = useState("Trip Period");
   const [period, setPeriod] = useState<string[]>([]);
   const [languages, setLanguages] = useState<string[]>([]);
   const [selectedLanguagesText, setSelectedLanguagesText] = useState(
@@ -97,7 +97,7 @@ export function AddPostScreen1() {
     "48-54",
     ">55",
   ];
-  const countriesList = useGet("/login/country_list", addPostCountryListParser);
+  const countriesList = useGet("/country", addPostCountryListParser);
   const languagesList = useGet("/languages", languageListParser);
   const countriesListData = countriesList.state || [];
   const languagesListData = languagesList.state || [];
@@ -113,7 +113,7 @@ export function AddPostScreen1() {
     trip_period: "",
     trip_headcount: "",
     trip_budget: "",
-    preferred_gender: "",
+    preferred_gender: null,
     preferred_age: "",
     preferred_language: "",
     preferred_hobby: "",
@@ -144,14 +144,18 @@ export function AddPostScreen1() {
       } else {
         throw new Error("Missing preferred headcount");
       }
-      if (selectedPeriod !== "Expected Period") {
+      if (selectedPeriod !== "Trip Period") {
         updateInputText("trip_period", selectedPeriod);
       }
       if (budget !== "") {
         updateInputText("trip_budget", budget);
       }
       if (selectedGender !== "Preferred Gender") {
-        updateInputText("preferred_gender", selectedGender);
+        if (selectedGender === "Male") {
+          updateInputText("preferred_gender", true);
+        } else {
+          updateInputText("preferred_gender", false);
+        }
       }
       if (selectedAgesText != "Preferred Age(s)") {
         updateInputText("preferred_age", selectedAgesText);
@@ -178,7 +182,7 @@ export function AddPostScreen1() {
     }
   };
 
-  const updateInputText = (field: string, value: string) => {
+  const updateInputText = (field: string, value: string | boolean) => {
     //@ts-ignore
     postInfo[field as keyof PostInfo] = value;
   };
@@ -544,7 +548,7 @@ export function AddPostScreen1() {
                       .includes(searchLanguages.toLocaleLowerCase()),
                   ),
                 );
-              }, [searchLanguages, languagesList]);
+              }, [searchLanguages, languagesListData]);
 
               const updateSearch = (search: string) => {
                 setSearchLanguages(search);
@@ -693,7 +697,9 @@ export function AddPostScreen1() {
                 checkedIcon="dot-circle-o"
                 uncheckedIcon="circle-o"
                 checked={checkType === "blog"}
-                onPress={() => setCheckType("blog")}
+                onPress={() => {
+                  setCheckType("blog");
+                }}
                 size={20}
                 containerStyle={{ backgroundColor: "transparent" }}
               />
@@ -703,7 +709,9 @@ export function AddPostScreen1() {
                 checkedIcon="dot-circle-o"
                 uncheckedIcon="circle-o"
                 checked={checkType === "tour"}
-                onPress={() => setCheckType("tour")}
+                onPress={() => {
+                  setCheckType("tour");
+                }}
                 size={20}
                 containerStyle={{ backgroundColor: "transparent" }}
               />
@@ -725,7 +733,7 @@ export function AddPostScreen1() {
             ) : (
               <LocationInput code={code} updateInputText={updateInputText} />
             )}
-            {checkType === "tour" ? <PeriodSelector /> : <></>}
+            {checkType !== "enquire" ? <PeriodSelector /> : <></>}
             {checkType === "tour" ? BudgetInput() : <></>}
             {ContentInput()}
             {checkType === "tour" ? <HeadcountCheckbox /> : <></>}
