@@ -13,7 +13,7 @@ import {
   Platform,
   StyleSheet,
 } from "react-native";
-import { AddPostCountryList, LanguageList, PostInfo } from "../utils/types";
+import { PostInfo } from "../utils/types";
 
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
@@ -27,7 +27,6 @@ import {
   LanguageListItem,
   addPostCountryListParser,
   addTourPostParser,
-  countryListParser,
   languageListParser,
 } from "../utils/parser";
 import { api } from "../apis/api";
@@ -37,20 +36,19 @@ import { Modal } from "../components/Modal";
 import { Button, Checkbox } from "react-native-paper";
 import TextButton from "../components/TextButton";
 import useBoolean from "../hooks/useBoolean";
-import languagesList from "../source/languages";
 import { useSelection } from "../hooks/useSelection";
 import { theme } from "../theme/variables";
 
 export function AddPostScreen1() {
   const { token, payload, setToken } = useToken();
-  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
+  const { IonNeverDialog } = useIonNeverNotification();
   const [title, setTitle] = useState("");
   const [budget, setBudget] = useState("");
   const [content, setContent] = useState("");
   const [selectedGender, setSelectedGender] = useState("Preferred Gender");
   const [gender, setGender] = useState("");
   const [selectedHeadcount, setSelectedHeadcount] = useState<string>(
-    "Preferred Headcount *"
+    "Preferred Headcount *",
   );
   const [headcount, setHeadcount] = useState<string>("");
   const [headcountListData, setHeadcountListData] = useState<string[]>([
@@ -64,7 +62,7 @@ export function AddPostScreen1() {
     "8",
   ]);
   const [selectedCountry, setSelectedCountry] = useState(
-    "Destination Country *"
+    "Destination Country *",
   );
   const [country, setCountry] = useState("");
   const [code, setCode] = useState("");
@@ -72,7 +70,7 @@ export function AddPostScreen1() {
   const [period, setPeriod] = useState<string[]>([]);
   const [languages, setLanguages] = useState<string[]>([]);
   const [selectedLanguagesText, setSelectedLanguagesText] = useState(
-    "Preferred Languages(s)"
+    "Preferred Languages(s)",
   );
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
@@ -101,10 +99,8 @@ export function AddPostScreen1() {
   ];
   const countriesList = useGet("/login/country_list", addPostCountryListParser);
   const languagesList = useGet("/languages", languageListParser);
-
   const countriesListData = countriesList.state || [];
   const languagesListData = languagesList.state || [];
-
   const [checkType, setCheckType] = useState("none");
 
   // Submit
@@ -391,18 +387,17 @@ export function AddPostScreen1() {
               const [localCountry, setLocalCountry] = useState<string>(country);
               const [localCode, setLocalCode] = useState<string>(code);
               const [search, setSearch] = useState("");
-              const [countryList, setCountryList] = useState(countriesListData);
               const [matchedCountryList, setMatchedCountryList] =
                 useState(countriesListData);
               useEffect(() => {
                 setMatchedCountryList(
-                  countryList.filter((country) =>
+                  countriesListData.filter((country) =>
                     country.name
                       .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase())
-                  )
+                      .includes(search.toLocaleLowerCase()),
+                  ),
                 );
-              }, [search, countryList]);
+              }, [search, countriesListData]);
               const updateSearch = (search: string) => {
                 setSearch(search);
               };
@@ -520,8 +515,6 @@ export function AddPostScreen1() {
     );
   };
 
-  const [isSelectingLangauge, setIsSelectingLangauge] = useState(false);
-
   // Language checkbox
   const LanguagesCheckbox = () => {
     return (
@@ -532,10 +525,6 @@ export function AddPostScreen1() {
             focusInput;
           }
           Keyboard.dismiss();
-          setIsSelectingLangauge(true);
-          if ("dev") {
-            return;
-          }
           IonNeverDialog.show({
             dialogHeight: 560,
             component: () => {
@@ -549,11 +538,11 @@ export function AddPostScreen1() {
 
               useEffect(() => {
                 setMatchedLanguagesList(
-                  languagesList.filter((language) =>
+                  languagesListData.filter((language) =>
                     language.name
                       .toLocaleLowerCase()
-                      .includes(searchLanguages.toLocaleLowerCase())
-                  )
+                      .includes(searchLanguages.toLocaleLowerCase()),
+                  ),
                 );
               }, [searchLanguages, languagesList]);
 
@@ -565,8 +554,8 @@ export function AddPostScreen1() {
                 if (localLanguages.includes(name)) {
                   setLocalLanguages(
                     localLanguages.filter(
-                      (language: string) => language !== name
-                    )
+                      (language: string) => language !== name,
+                    ),
                   );
                 } else {
                   setLocalLanguages([...localLanguages, name]);
@@ -762,95 +751,70 @@ export function AddPostScreen1() {
   );
 }
 
-export function AddPostScreen2() {
-  const isSelectingLangauge = useBoolean();
-  const languageList = useGet("/languages", languageListParser);
-  const selectedLanguage = useSelection<LanguageListItem>();
-  return (
-    <>
-      <ScrollView>
-        <TextButton
-          text="Select Language"
-          onPress={isSelectingLangauge.on}
-        ></TextButton>
-        <View>
-          <Text>on? {isSelectingLangauge.value ? "yes" : "no"}</Text>
-        </View>
-        <View>
-          <Text>
-            selected:{" "}
-            {selectedLanguage.state.map((item) => item.name).join(", ")}
-          </Text>
-        </View>
-        <Modal state={isSelectingLangauge}>
-          <View>
-            <FlatList
-              style={{ maxHeight: 350 }}
-              data={languageList.state}
-              renderItem={({ item: language }) => (
-                <View>
-                  {/* <CheckBox
-                    title={language.name}
-                    containerStyle={{
-                      backgroundColor: "transparent",
-                      borderWidth: 0,
-                      padding: 3,
-                    }}
-                    textStyle={{ fontWeight: "normal" }}
-                    iconType="material-community"
-                    checkedIcon="checkbox-marked-outline"
-                    uncheckedIcon="checkbox-blank-outline"
-                    checked={selectedLanguage.includes(language)}
-                    onPress={() => selectedLanguage.toggle(language)}
-                  /> */}
-                  {/* <Checkbox.Item
-                    position="leading"
-                    labelStyle={styles.checkboxLabel}
-                    status={
-                      selectedLanguage.includes(language)
-                        ? "checked"
-                        : "unchecked"
-                    }
-                    onPress={() => selectedLanguage.toggle(language)}
-                    label={language.name}
-                  ></Checkbox.Item> */}
-                  <TouchableWithoutFeedback
-                    onPress={() => selectedLanguage.toggle(language)}
-                  >
-                    <View style={styles.checkboxItem}>
-                      <CheckBox
-                        checked={selectedLanguage.includes(language)}
-                        onPress={() => selectedLanguage.toggle(language)}
-                      ></CheckBox>
-                      <Text>{language.name}</Text>
-                    </View>
-                  </TouchableWithoutFeedback>
-                </View>
-              )}
-            />
-            <TextButton
-              text="Ok"
-              onPress={() => {
-                isSelectingLangauge.off();
-              }}
-            ></TextButton>
-          </View>
-        </Modal>
-      </ScrollView>
-    </>
-  );
-}
+// export function AddPostScreen2() {
+//   const isSelectingLangauge = useBoolean();
+//   const languageList = useGet("/languages", languageListParser);
+//   const selectedLanguage = useSelection<LanguageListItem>();
+//   return (
+//     <>
+//       <ScrollView>
+//         <TextButton
+//           text="Select Language"
+//           onPress={isSelectingLangauge.on}
+//         ></TextButton>
+//         <View>
+//           <Text>on? {isSelectingLangauge.value ? "yes" : "no"}</Text>
+//         </View>
+//         <View>
+//           <Text>
+//             selected:{" "}
+//             {selectedLanguage.state.map((item) => item.name).join(", ")}
+//           </Text>
+//         </View>
+//         <Modal state={isSelectingLangauge}>
+//           <View>
+//             <FlatList
+//               style={{ maxHeight: 350 }}
+//               data={languageList.state}
+//               renderItem={({ item: language }) => (
+//                 <View>
+//                   <TouchableWithoutFeedback
+//                     onPress={() => selectedLanguage.toggle(language)}
+//                   >
+//                     <View style={styles.checkboxItem}>
+//                       <CheckBox
+//                         checked={selectedLanguage.includes(language)}
+//                         onPress={() => selectedLanguage.toggle(language)}
+//                       ></CheckBox>
+//                       <Text>{language.name}</Text>
+//                     </View>
+//                   </TouchableWithoutFeedback>
+//                 </View>
+//               )}
+//             />
+//             <TextButton
+//               text="Ok"
+//               onPress={() => {
+//                 isSelectingLangauge.off();
+//               }}
+//             ></TextButton>
+//           </View>
+//         </Modal>
+//       </ScrollView>
+//     </>
+//   );
+// }
 
-let styles = StyleSheet.create({
-  checkboxItem: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: theme.white,
-  },
-  checkboxLabel: {
-    textAlign: "left",
-  },
-});
+// let styles = StyleSheet.create({
+//   checkboxItem: {
+//     display: "flex",
+//     flexDirection: "row",
+//     alignItems: "center",
+//     backgroundColor: theme.white,
+//   },
+//   checkboxLabel: {
+//     textAlign: "left",
+//   },
+// });
 
-export default AddPostScreen2;
+export default AddPostScreen1;

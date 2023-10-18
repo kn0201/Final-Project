@@ -11,6 +11,7 @@ import { PlanningController } from './planning/planning.controller';
 import { PlanningModule } from './planning/planning.module';
 import { BlogModule } from './blog/blog.module';
 import { LanguageModule } from './language/language.module';
+import { CountryModule } from './country/country.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { LanguageModule } from './language/language.module';
     UserModule,
     BlogModule,
     LanguageModule,
+    CountryModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService],

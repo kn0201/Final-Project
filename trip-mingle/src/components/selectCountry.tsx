@@ -3,7 +3,6 @@
 import { CheckBox, SearchBar } from "@rneui/base";
 import { useState, useEffect } from "react";
 import { View, FlatList, TouchableOpacity, Text } from "react-native";
-import { countriesList } from "../source/countries";
 import RegisterScreenStyleSheet from "../StyleSheet/RegisterScreenCss";
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
 import { api } from "../apis/api";
@@ -13,7 +12,7 @@ import { CountryList } from "../utils/types";
 //@ts-ignore
 export default function SelectCountry({ setSelectedCountry, updateInputText }) {
   const getList = async () => {
-    const json = await api.getList("/login/country_list", countryListParser);
+    const json = await api.get("/country", countryListParser);
 
     setCountryList(json);
     setMatchedCountryList(json);
@@ -30,14 +29,14 @@ export default function SelectCountry({ setSelectedCountry, updateInputText }) {
   const [countryList, setCountryList] = useState<CountryList[]>([]);
   const [countryID, setCountryID] = useState("");
   const [matchedCountryList, setMatchedCountryList] = useState<CountryList[]>(
-    []
+    [],
   );
 
   useEffect(() => {
     setMatchedCountryList(
       countryList.filter((country) =>
-        country.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-      )
+        country.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
+      ),
     );
   }, [search, countryList]);
 
