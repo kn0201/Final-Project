@@ -45,22 +45,20 @@ export type LanguageListItem = ParseResult<typeof languageListParser>[number];
 
 export const postInfoParser = array(
   object({
-    post: object({
-      id: number(),
-      title: string(),
-      content: string(),
-      trip_country: string(),
-      trip_period: nullable(string()),
-      trip_headcount: nullable(number()),
-      trip_budget: nullable(string()),
-      preferred_gender: nullable(boolean()),
-      preferred_age: nullable(string()),
-      preferred_language: nullable(string()),
-      preferred_hobby: nullable(string()),
-      status: nullable(string()),
-      view: number(),
-      created_at: string(),
-    }),
+    id: number(),
+    title: string(),
+    content: string(),
+    trip_country: string(),
+    trip_period: nullable(string()),
+    trip_headcount: nullable(number()),
+    trip_budget: nullable(string()),
+    preferred_gender: nullable(boolean()),
+    preferred_age: nullable(string()),
+    preferred_language: nullable(string()),
+    preferred_hobby: nullable(string()),
+    status: nullable(string()),
+    view: number(),
+    created_at: string(),
     trip_location: nullable(
       array(
         object({
@@ -71,11 +69,9 @@ export const postInfoParser = array(
         }),
       ),
     ),
-    user: object({
-      username: string(),
-      avatar_path: string(),
-      rating: number(),
-    }),
+    username: string(),
+    avatar_path: string(),
+    rating: number(),
     number_of_rating: number(),
     number_of_like: number(),
     number_of_reply: number(),

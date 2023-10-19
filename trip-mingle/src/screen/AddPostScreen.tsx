@@ -24,6 +24,7 @@ import MultipleSelector from "../components/MutlipleSelector";
 import SingleSelectorWithOther from "../components/SingleSelectorWithOther";
 import MultipleSelectorWithOther from "../components/MultipleSelectorWithOther";
 import {
+  LanguageListItem,
   addPostCountryListParser,
   addTourPostParser,
   languageListParser,
@@ -32,12 +33,10 @@ import { api } from "../apis/api";
 import { useToken } from "../hooks/useToken";
 import { useGet } from "../hooks/useGet";
 import { Modal } from "../components/Modal";
-import { Button, Checkbox } from "react-native-paper";
 import TextButton from "../components/TextButton";
 import useBoolean from "../hooks/useBoolean";
 import { useSelection } from "../hooks/useSelection";
 import { theme } from "../theme/variables";
-import { boolean } from "cast.ts";
 
 export function AddPostScreen1() {
   const { token, payload, setToken } = useToken();
@@ -784,70 +783,70 @@ export function AddPostScreen1() {
   );
 }
 
-// export function AddPostScreen2() {
-//   const isSelectingLangauge = useBoolean();
-//   const languageList = useGet("/languages", languageListParser);
-//   const selectedLanguage = useSelection<LanguageListItem>();
-//   return (
-//     <>
-//       <ScrollView>
-//         <TextButton
-//           text="Select Language"
-//           onPress={isSelectingLangauge.on}
-//         ></TextButton>
-//         <View>
-//           <Text>on? {isSelectingLangauge.value ? "yes" : "no"}</Text>
-//         </View>
-//         <View>
-//           <Text>
-//             selected:{" "}
-//             {selectedLanguage.state.map((item) => item.name).join(", ")}
-//           </Text>
-//         </View>
-//         <Modal state={isSelectingLangauge}>
-//           <View>
-//             <FlatList
-//               style={{ maxHeight: 350 }}
-//               data={languageList.state}
-//               renderItem={({ item: language }) => (
-//                 <View>
-//                   <TouchableWithoutFeedback
-//                     onPress={() => selectedLanguage.toggle(language)}
-//                   >
-//                     <View style={styles.checkboxItem}>
-//                       <CheckBox
-//                         checked={selectedLanguage.includes(language)}
-//                         onPress={() => selectedLanguage.toggle(language)}
-//                       ></CheckBox>
-//                       <Text>{language.name}</Text>
-//                     </View>
-//                   </TouchableWithoutFeedback>
-//                 </View>
-//               )}
-//             />
-//             <TextButton
-//               text="Ok"
-//               onPress={() => {
-//                 isSelectingLangauge.off();
-//               }}
-//             ></TextButton>
-//           </View>
-//         </Modal>
-//       </ScrollView>
-//     </>
-//   );
-// }
+export function AddPostScreen2() {
+  const isSelectingLangauge = useBoolean();
+  const languageList = useGet("/languages", languageListParser);
+  const selectedLanguage = useSelection<LanguageListItem>();
+  return (
+    <>
+      <ScrollView>
+        <TextButton
+          text="Select Language"
+          onPress={isSelectingLangauge.on}
+        ></TextButton>
+        <View>
+          <Text>on? {isSelectingLangauge.value ? "yes" : "no"}</Text>
+        </View>
+        <View>
+          <Text>
+            selected:{" "}
+            {selectedLanguage.state.map((item) => item.name).join(", ")}
+          </Text>
+        </View>
+        <Modal state={isSelectingLangauge}>
+          <View>
+            <FlatList
+              style={{ maxHeight: 350 }}
+              data={languageList.state}
+              renderItem={({ item: language }) => (
+                <View>
+                  <TouchableWithoutFeedback
+                    onPress={() => selectedLanguage.toggle(language)}
+                  >
+                    <View style={styles.checkboxItem}>
+                      <CheckBox
+                        checked={selectedLanguage.includes(language)}
+                        onPress={() => selectedLanguage.toggle(language)}
+                      ></CheckBox>
+                      <Text>{language.name}</Text>
+                    </View>
+                  </TouchableWithoutFeedback>
+                </View>
+              )}
+            />
+            <TextButton
+              text="Ok"
+              onPress={() => {
+                isSelectingLangauge.off();
+              }}
+            ></TextButton>
+          </View>
+        </Modal>
+      </ScrollView>
+    </>
+  );
+}
 
-// let styles = StyleSheet.create({
-//   checkboxItem: {
-//     display: "flex",
-//     flexDirection: "row",
-//     alignItems: "center",
-//     backgroundColor: theme.white,
-//   },
-//   checkboxLabel: {
-//     textAlign: "left",
-//   },
-// });
+let styles = StyleSheet.create({
+  checkboxItem: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: theme.white,
+  },
+  checkboxLabel: {
+    textAlign: "left",
+  },
+});
 
 export default AddPostScreen1;
