@@ -48,9 +48,9 @@ export type PostInfo = {
   title: string;
   content: string;
   trip_country: string;
-  trip_location: string | null;
+  trip_location: string[] | null;
   trip_period: string | null;
-  trip_headcount: string;
+  trip_headcount: string | null;
   trip_budget: string | null;
   preferred_gender: boolean | null;
   preferred_age: string | null;

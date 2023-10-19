@@ -42,7 +42,7 @@ export const addTourPostParser = object({
     ),
   ),
   trip_period: nullable(string()),
-  trip_headcount: string(),
+  trip_headcount: nullable(string()),
   trip_budget: nullable(string()),
   preferred_gender: nullable(boolean()),
   preferred_age: nullable(string()),

@@ -109,7 +109,7 @@ export function AddPostScreen1() {
     title: "",
     content: "",
     trip_country: "",
-    trip_location: "",
+    trip_location: [],
     trip_period: "",
     trip_headcount: "",
     trip_budget: "",
@@ -119,54 +119,76 @@ export function AddPostScreen1() {
     preferred_hobby: "",
   }).current;
 
+  const clearInputs = useRef({
+    type() {},
+    title() {},
+    content() {},
+    trip_country() {},
+    trip_location() {},
+    trip_period() {},
+    trip_headcount() {},
+    trip_budget() {},
+    preferred_gender() {},
+    preferred_age() {},
+    preferred_language() {},
+    preferred_hobby() {},
+  }).current;
+
   const addPost = async () => {
     try {
       if (checkType !== "none") {
         updateInputText("type", checkType);
+      } else {
+        throw new Error("Missing type");
       }
       if (title !== "") {
         updateInputText("title", title);
       } else {
         throw new Error("Missing title");
       }
-      if (selectedCountry !== "Destination Country *") {
-        updateInputText("trip_country", selectedCountry);
-      } else {
-        throw new Error("Missing destination country");
-      }
       if (content !== "") {
         updateInputText("content", content);
       } else {
         throw new Error("Missing content");
       }
-      if (selectedHeadcount !== "Preferred Headcount *") {
-        updateInputText("trip_headcount", selectedHeadcount);
-      } else {
-        throw new Error("Missing preferred headcount");
-      }
-      if (selectedPeriod !== "Trip Period") {
-        updateInputText("trip_period", selectedPeriod);
-      }
-      if (budget !== "") {
-        updateInputText("trip_budget", budget);
-      }
-      if (selectedGender !== "Preferred Gender") {
-        if (selectedGender === "Male") {
-          updateInputText("preferred_gender", true);
+      if (checkType !== "enquire") {
+        if (selectedCountry !== "Destination Country *") {
+          updateInputText("trip_country", selectedCountry);
         } else {
-          updateInputText("preferred_gender", false);
+          throw new Error("Missing destination country");
+        }
+        if (selectedPeriod !== "Trip Period") {
+          updateInputText("trip_period", selectedPeriod);
         }
       }
-      if (selectedAgesText != "Preferred Age(s)") {
-        updateInputText("preferred_age", selectedAgesText);
-      }
-      if (selectedLanguagesText != "Preferred Languages(s)") {
-        updateInputText("preferred_language", selectedLanguagesText);
-      }
-      if (selectedSkillsText != "Preferred Hobbies") {
-        updateInputText("preferred_hobby", selectedSkillsText);
+      if (checkType === "tour") {
+        if (selectedHeadcount !== "Preferred Headcount *") {
+          updateInputText("trip_headcount", selectedHeadcount);
+        } else {
+          throw new Error("Missing preferred headcount");
+        }
+        if (budget !== "") {
+          updateInputText("trip_budget", budget);
+        }
+        if (selectedGender !== "Preferred Gender") {
+          if (selectedGender === "Male") {
+            updateInputText("preferred_gender", true);
+          } else {
+            updateInputText("preferred_gender", false);
+          }
+        }
+        if (selectedAgesText != "Preferred Age(s)") {
+          updateInputText("preferred_age", selectedAgesText);
+        }
+        if (selectedLanguagesText != "Preferred Languages(s)") {
+          updateInputText("preferred_language", selectedLanguagesText);
+        }
+        if (selectedSkillsText != "Preferred Hobbies") {
+          updateInputText("preferred_hobby", selectedSkillsText);
+        }
       }
       await api.post("/blog/tour", postInfo, addTourPostParser, token);
+      Object.entries(clearInputs).map(([_key, clear]) => clear());
       console.log(postInfo);
     } catch (e) {
       IonNeverDialog.show({
@@ -182,7 +204,10 @@ export function AddPostScreen1() {
     }
   };
 
-  const updateInputText = (field: string, value: string | boolean) => {
+  const updateInputText = (
+    field: string,
+    value: string | boolean | string[],
+  ) => {
     //@ts-ignore
     postInfo[field as keyof PostInfo] = value;
   };
