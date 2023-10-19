@@ -26,28 +26,13 @@ export class BlogController {
     return this.blogService.addTourPost(input, req);
   }
 
-  @Post()
-  create(@Body() createBlogDto: CreateBlogDto) {
-    return this.blogService.create(createBlogDto);
-  }
-
   @Get()
-  findAll() {
-    return this.blogService.findAll();
+  getTourPostInfo() {
+    return this.blogService.getTourPostInfo();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.blogService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBlogDto: UpdateBlogDto) {
-    return this.blogService.update(+id, updateBlogDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.blogService.remove(+id);
+  getTourPostDetail(@Param('id') id: string) {
+    return this.blogService.getTourPostDetail(+id);
   }
 }

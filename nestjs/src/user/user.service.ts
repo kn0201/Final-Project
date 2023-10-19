@@ -118,10 +118,19 @@ export class UserService {
       req.headers.authorization.split(' ')[1],
     );
     let user_id = payload.user_id;
+
+    let avatar_id = await this.knex
+      .select('avatar_id')
+      .from('users')
+      .where('users.id', user_id)
+      .first();
+
     let result = await this.knex
-      .select('path')
-      .from('image')
+      .select('image.path as path')
+      .from('users')
       .where('user_id', user_id)
+      .andWhere('image.id', avatar_id.avatar_id)
+      .leftJoin('image', 'user_id', user_id)
       .first();
 
     // console.log(result);
@@ -130,9 +139,54 @@ export class UserService {
     }
     return result;
   }
-  // async uploadImage(image){
-  //   let imageName = image.filename
-  //   let result = await this.knex
-  //   .
-  // }
+
+  async updateIcon(image, req) {
+    const payload = this.jwtService.decode(
+      req.headers.authorization.split(' ')[1],
+    );
+    let user_id = payload.user_id;
+
+    let imageName = image.filename;
+
+    let avatar_id = await this.knex
+      .select('avatar_id')
+      .from('users')
+      .where('users.id', user_id)
+      .first();
+    console.log(avatar_id.avatar_id);
+
+    let path = await this.knex
+      .select('image.path')
+      .from('image')
+      .where('image.id', avatar_id.avatar_id)
+      .andWhere('image.user_id', user_id);
+
+    console.log(path);
+
+    let uploadResult = await this.knex('image')
+      .insert({
+        user_id: user_id,
+        path: imageName,
+        is_delete: false,
+      })
+      .returning('id');
+
+    let image_id = uploadResult[0].id;
+
+    await this.knex('users')
+      .update({
+        avatar_id: image_id,
+      })
+      .where('users.id', user_id);
+
+    await this.knex('image')
+      .update({
+        is_delete: true,
+      })
+      .where('image.id', avatar_id.avatar_id);
+
+    return { result: true };
+  }
+
+  async updateUsername(input);
 }

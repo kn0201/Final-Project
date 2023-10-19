@@ -83,7 +83,7 @@ export default function RegisterScreen({ navigation }) {
     setConfirmPassword(!showConfirmPassword);
   };
 
-  const updateInputText = (field: string, value: string) => {
+  const updateInputText = (field: string, value: string | boolean) => {
     //@ts-ignore
     regisInfo[field as keyof RegisInfo] = value;
   };
@@ -99,7 +99,7 @@ export default function RegisterScreen({ navigation }) {
     if (!imageAsset) return;
     let type = imageAsset.uri.endsWith(".png")
       ? "image/png"
-      : imageAsset.uri.endsWith(".jpg") || imageAsset.uri.endsWith(".jpg")
+      : imageAsset.uri.endsWith(".jpg") || imageAsset.uri.endsWith(".jpeg")
       ? "image/jpeg"
       : null;
     if (!type) return;
@@ -357,7 +357,9 @@ export default function RegisterScreen({ navigation }) {
             checkedIcon="dot-circle-o"
             uncheckedIcon="circle-o"
             checked={checkGender}
-            onPress={() => setCheck1(!checkGender)}
+            onPress={() => {
+              setCheck1(!checkGender), updateInputText("gender", checkGender);
+            }}
             size={20}
             containerStyle={{ backgroundColor: "transparent" }}
           />
@@ -367,7 +369,9 @@ export default function RegisterScreen({ navigation }) {
             checkedIcon="dot-circle-o"
             uncheckedIcon="circle-o"
             checked={!checkGender}
-            onPress={() => setCheck1(!checkGender)}
+            onPress={() => {
+              setCheck1(!checkGender), updateInputText("gender", checkGender);
+            }}
             size={20}
             containerStyle={{ backgroundColor: "transparent" }}
           />

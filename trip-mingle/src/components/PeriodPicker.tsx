@@ -61,7 +61,6 @@ const PeriodPicker = ({
           startFromMonday={false}
           allowRangeSelection={true}
           allowBackwardRangeSelect={true}
-          minDate={new Date(Date.now())}
           weekdays={["Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"]}
           months={[
             "January",

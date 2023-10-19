@@ -99,9 +99,11 @@ export class LoginService {
 
       let image_id = uploadResult[0].id;
 
-      await this.knex('users').update({
-        avatar_id: image_id,
-      });
+      await this.knex('users')
+        .update({
+          avatar_id: image_id,
+        })
+        .where('users.id', id);
     }
 
     let emailUsername = username[0].toUpperCase() + username.slice(1);

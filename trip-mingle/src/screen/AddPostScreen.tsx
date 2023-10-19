@@ -24,6 +24,7 @@ import MultipleSelector from "../components/MutlipleSelector";
 import SingleSelectorWithOther from "../components/SingleSelectorWithOther";
 import MultipleSelectorWithOther from "../components/MultipleSelectorWithOther";
 import {
+  LanguageListItem,
   addPostCountryListParser,
   addTourPostParser,
   languageListParser,
@@ -32,12 +33,10 @@ import { api } from "../apis/api";
 import { useToken } from "../hooks/useToken";
 import { useGet } from "../hooks/useGet";
 import { Modal } from "../components/Modal";
-import { Button, Checkbox } from "react-native-paper";
 import TextButton from "../components/TextButton";
 import useBoolean from "../hooks/useBoolean";
 import { useSelection } from "../hooks/useSelection";
 import { theme } from "../theme/variables";
-import { boolean } from "cast.ts";
 
 export function AddPostScreen1() {
   const { token, payload, setToken } = useToken();
@@ -109,7 +108,7 @@ export function AddPostScreen1() {
     title: "",
     content: "",
     trip_country: "",
-    trip_location: "",
+    trip_location: [],
     trip_period: "",
     trip_headcount: "",
     trip_budget: "",
@@ -119,54 +118,76 @@ export function AddPostScreen1() {
     preferred_hobby: "",
   }).current;
 
+  const clearInputs = useRef({
+    type() {},
+    title() {},
+    content() {},
+    trip_country() {},
+    trip_location() {},
+    trip_period() {},
+    trip_headcount() {},
+    trip_budget() {},
+    preferred_gender() {},
+    preferred_age() {},
+    preferred_language() {},
+    preferred_hobby() {},
+  }).current;
+
   const addPost = async () => {
     try {
       if (checkType !== "none") {
         updateInputText("type", checkType);
+      } else {
+        throw new Error("Missing type");
       }
       if (title !== "") {
         updateInputText("title", title);
       } else {
         throw new Error("Missing title");
       }
-      if (selectedCountry !== "Destination Country *") {
-        updateInputText("trip_country", selectedCountry);
-      } else {
-        throw new Error("Missing destination country");
-      }
       if (content !== "") {
         updateInputText("content", content);
       } else {
         throw new Error("Missing content");
       }
-      if (selectedHeadcount !== "Preferred Headcount *") {
-        updateInputText("trip_headcount", selectedHeadcount);
-      } else {
-        throw new Error("Missing preferred headcount");
-      }
-      if (selectedPeriod !== "Trip Period") {
-        updateInputText("trip_period", selectedPeriod);
-      }
-      if (budget !== "") {
-        updateInputText("trip_budget", budget);
-      }
-      if (selectedGender !== "Preferred Gender") {
-        if (selectedGender === "Male") {
-          updateInputText("preferred_gender", true);
+      if (checkType !== "enquire") {
+        if (selectedCountry !== "Destination Country *") {
+          updateInputText("trip_country", selectedCountry);
         } else {
-          updateInputText("preferred_gender", false);
+          throw new Error("Missing destination country");
+        }
+        if (selectedPeriod !== "Trip Period") {
+          updateInputText("trip_period", selectedPeriod);
         }
       }
-      if (selectedAgesText != "Preferred Age(s)") {
-        updateInputText("preferred_age", selectedAgesText);
-      }
-      if (selectedLanguagesText != "Preferred Languages(s)") {
-        updateInputText("preferred_language", selectedLanguagesText);
-      }
-      if (selectedSkillsText != "Preferred Hobbies") {
-        updateInputText("preferred_hobby", selectedSkillsText);
+      if (checkType === "tour") {
+        if (selectedHeadcount !== "Preferred Headcount *") {
+          updateInputText("trip_headcount", selectedHeadcount);
+        } else {
+          throw new Error("Missing preferred headcount");
+        }
+        if (budget !== "") {
+          updateInputText("trip_budget", budget);
+        }
+        if (selectedGender !== "Preferred Gender") {
+          if (selectedGender === "Male") {
+            updateInputText("preferred_gender", true);
+          } else {
+            updateInputText("preferred_gender", false);
+          }
+        }
+        if (selectedAgesText != "Preferred Age(s)") {
+          updateInputText("preferred_age", selectedAgesText);
+        }
+        if (selectedLanguagesText != "Preferred Languages(s)") {
+          updateInputText("preferred_language", selectedLanguagesText);
+        }
+        if (selectedSkillsText != "Preferred Hobbies") {
+          updateInputText("preferred_hobby", selectedSkillsText);
+        }
       }
       await api.post("/blog/tour", postInfo, addTourPostParser, token);
+      Object.entries(clearInputs).map(([_key, clear]) => clear());
       console.log(postInfo);
     } catch (e) {
       IonNeverDialog.show({
@@ -182,7 +203,10 @@ export function AddPostScreen1() {
     }
   };
 
-  const updateInputText = (field: string, value: string | boolean) => {
+  const updateInputText = (
+    field: string,
+    value: string | boolean | string[],
+  ) => {
     //@ts-ignore
     postInfo[field as keyof PostInfo] = value;
   };
@@ -759,70 +783,70 @@ export function AddPostScreen1() {
   );
 }
 
-// export function AddPostScreen2() {
-//   const isSelectingLangauge = useBoolean();
-//   const languageList = useGet("/languages", languageListParser);
-//   const selectedLanguage = useSelection<LanguageListItem>();
-//   return (
-//     <>
-//       <ScrollView>
-//         <TextButton
-//           text="Select Language"
-//           onPress={isSelectingLangauge.on}
-//         ></TextButton>
-//         <View>
-//           <Text>on? {isSelectingLangauge.value ? "yes" : "no"}</Text>
-//         </View>
-//         <View>
-//           <Text>
-//             selected:{" "}
-//             {selectedLanguage.state.map((item) => item.name).join(", ")}
-//           </Text>
-//         </View>
-//         <Modal state={isSelectingLangauge}>
-//           <View>
-//             <FlatList
-//               style={{ maxHeight: 350 }}
-//               data={languageList.state}
-//               renderItem={({ item: language }) => (
-//                 <View>
-//                   <TouchableWithoutFeedback
-//                     onPress={() => selectedLanguage.toggle(language)}
-//                   >
-//                     <View style={styles.checkboxItem}>
-//                       <CheckBox
-//                         checked={selectedLanguage.includes(language)}
-//                         onPress={() => selectedLanguage.toggle(language)}
-//                       ></CheckBox>
-//                       <Text>{language.name}</Text>
-//                     </View>
-//                   </TouchableWithoutFeedback>
-//                 </View>
-//               )}
-//             />
-//             <TextButton
-//               text="Ok"
-//               onPress={() => {
-//                 isSelectingLangauge.off();
-//               }}
-//             ></TextButton>
-//           </View>
-//         </Modal>
-//       </ScrollView>
-//     </>
-//   );
-// }
+export function AddPostScreen2() {
+  const isSelectingLangauge = useBoolean();
+  const languageList = useGet("/languages", languageListParser);
+  const selectedLanguage = useSelection<LanguageListItem>();
+  return (
+    <>
+      <ScrollView>
+        <TextButton
+          text="Select Language"
+          onPress={isSelectingLangauge.on}
+        ></TextButton>
+        <View>
+          <Text>on? {isSelectingLangauge.value ? "yes" : "no"}</Text>
+        </View>
+        <View>
+          <Text>
+            selected:{" "}
+            {selectedLanguage.state.map((item) => item.name).join(", ")}
+          </Text>
+        </View>
+        <Modal state={isSelectingLangauge}>
+          <View>
+            <FlatList
+              style={{ maxHeight: 350 }}
+              data={languageList.state}
+              renderItem={({ item: language }) => (
+                <View>
+                  <TouchableWithoutFeedback
+                    onPress={() => selectedLanguage.toggle(language)}
+                  >
+                    <View style={styles.checkboxItem}>
+                      <CheckBox
+                        checked={selectedLanguage.includes(language)}
+                        onPress={() => selectedLanguage.toggle(language)}
+                      ></CheckBox>
+                      <Text>{language.name}</Text>
+                    </View>
+                  </TouchableWithoutFeedback>
+                </View>
+              )}
+            />
+            <TextButton
+              text="Ok"
+              onPress={() => {
+                isSelectingLangauge.off();
+              }}
+            ></TextButton>
+          </View>
+        </Modal>
+      </ScrollView>
+    </>
+  );
+}
 
-// let styles = StyleSheet.create({
-//   checkboxItem: {
-//     display: "flex",
-//     flexDirection: "row",
-//     alignItems: "center",
-//     backgroundColor: theme.white,
-//   },
-//   checkboxLabel: {
-//     textAlign: "left",
-//   },
-// });
+let styles = StyleSheet.create({
+  checkboxItem: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: theme.white,
+  },
+  checkboxLabel: {
+    textAlign: "left",
+  },
+});
 
 export default AddPostScreen1;

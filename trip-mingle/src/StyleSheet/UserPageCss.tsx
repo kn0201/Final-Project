@@ -1,6 +1,6 @@
 //Buffer Line
 import { StyleSheet } from "react-native";
-import { center, flex, row } from "./StyleSheetHelper";
+import { center, flex, row, white } from "./StyleSheetHelper";
 
 const UserPageStyleSheet = StyleSheet.create({
   container: {
@@ -14,13 +14,13 @@ const UserPageStyleSheet = StyleSheet.create({
     fontWeight: "600",
   },
   AvatarContainer: {
+    position: "relative",
     marginTop: 24,
     marginBottom: 8,
     backgroundColor: "#ffffff",
   },
   username: {
-    marginBottom: 16,
-    fontSize: 24,
+    fontSize: 32,
   },
   rightComponent: {
     display: flex,
@@ -33,6 +33,33 @@ const UserPageStyleSheet = StyleSheet.create({
     justifyContent: "flex-end",
     marginTop: 8,
     marginEnd: "2.5%",
+  },
+  uploadBtnContainer: {
+    position: "absolute",
+    top: 150,
+    left: 235,
+    // backgroundColor: "lightgrey",
+  },
+  uploadBtn: {
+    height: 30,
+    width: 30,
+    backgroundColor: white,
+    borderRadius: 100,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  usernameContainer: {
+    display: flex,
+    alignItems: center,
+    justifyContent: center,
+    marginTop: 8,
+    marginBottom: 8,
+    gap: 5,
+  },
+  changeContainer: {
+    borderWidth: 1,
+    padding: 4,
   },
 });
 

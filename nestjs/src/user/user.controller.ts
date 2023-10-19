@@ -4,6 +4,7 @@ import {
   Get,
   Post,
   Req,
+  Patch,
   UseGuards,
   UseInterceptors,
   UploadedFile,
@@ -11,7 +12,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { sendProfileParser } from 'utils/parser';
+import { sendProfileParser, updateUsernameParser } from 'utils/parser';
 import multer from 'multer';
 import { randomUUID } from 'crypto';
 
@@ -26,6 +27,11 @@ let storage = multer.diskStorage({
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
+
+  @Get('hobby_list')
+  async getHobbyList() {
+    return this.userService.getHobbyList();
+  }
 
   @UseGuards(AuthGuard)
   @Get('profile')
@@ -45,15 +51,17 @@ export class UserController {
     return this.userService.sendProfile(input, req);
   }
 
-  @Get('hobby_list')
-  async getHobbyList() {
-    return this.userService.getHobbyList();
+  @UseGuards(AuthGuard)
+  @Patch('update_icon')
+  @UseInterceptors(FileInterceptor('image', { storage: storage }))
+  async updateIcon(@UploadedFile() image, @Req() req: Request) {
+    console.log('image:', image);
+    return this.userService.updateIcon(image, req);
   }
 
-  @Post('image')
-  @UseInterceptors(FileInterceptor('image', { storage: storage }))
-  async uploadImage(@UploadedFile() image) {
-    console.log('image:', image);
-    return;
+  @Patch('update_username')
+  async updateUsername(@Body() body: Body) {
+    let input = updateUsernameParser.parse(body);
+    return this.userService.updateUsername(input);
   }
 }

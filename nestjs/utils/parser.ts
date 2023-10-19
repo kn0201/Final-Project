@@ -50,7 +50,7 @@ export const addTourPostParser = object({
     ),
   ),
   trip_period: nullable(string()),
-  trip_headcount: string(),
+  trip_headcount: nullable(string()),
   trip_budget: nullable(string()),
   preferred_gender: nullable(boolean()),
   preferred_age: nullable(string()),
@@ -58,6 +58,7 @@ export const addTourPostParser = object({
   preferred_hobby: nullable(string()),
 });
 
+<<<<<<< HEAD
 export const addPlanParser = object({
   title: string(),
   uri: optional(string()),
@@ -73,4 +74,8 @@ export const addNewPlanParser = object({
   start_time: string(),
   end_time: string(),
   location: string(),
+=======
+export const updateUsernameParser = object({
+  username: string(),
+>>>>>>> refs/remotes/origin/main
 });
