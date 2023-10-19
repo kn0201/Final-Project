@@ -20,23 +20,16 @@ import { apiOrigin } from "../utils/apiOrigin";
 import { useGet } from "../hooks/useGet";
 import { AntDesign } from "@expo/vector-icons";
 
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import ProfileScreenStyleSheet from "../StyleSheet/ProfileScreenCss";
-import useBoolean from "../hooks/useBoolean";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
+import ChangeUsername from "../components/changeUsername";
 
 //@ts-ignore
 export default function UserPage({ navigation }) {
   const { token, payload, setToken } = useToken();
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
-  const [editableIcon, setEditableIcon] = useState(false);
-  const editable = useBoolean();
 
+  const [isUpload, setIsUpload] = useState(false);
   const [image, setImage] = useState<string>();
-  const [imageFile, setImageFile] = useState<any>();
-
-  const editProfile = "Edit Profile";
-  const submitProfile = "Submit";
 
   const addImage = async () => {
     let imagePickerResult = await ImagePicker.launchImageLibraryAsync({
@@ -60,11 +53,11 @@ export default function UserPage({ navigation }) {
       name: filename,
     };
     console.log("fileUri:", file);
-    setImageFile(file);
 
     if (!imagePickerResult.canceled) {
+      setImage(imagePickerResult.assets[0].uri);
       let formData = new FormData();
-      formData.append("image", imageFile as any);
+      formData.append("image", file as any);
 
       let res = await fetch(apiOrigin + "/user/update_icon", {
         method: "POST",
@@ -74,8 +67,8 @@ export default function UserPage({ navigation }) {
         body: formData,
       });
       let json = await res.json();
-      if (json.result == true) {
-        setImage(imagePickerResult.assets[0].uri);
+      if (json.result === true) {
+        setIsUpload(true);
       }
     }
   };
@@ -87,8 +80,7 @@ export default function UserPage({ navigation }) {
   };
 
   let result = useGet("/user/icon", getIconResult).state?.path;
-  console.log(result);
-
+  const username = payload?.username;
   return (
     <>
       <KeyboardAvoidingView
@@ -124,7 +116,7 @@ export default function UserPage({ navigation }) {
             rounded
             containerStyle={UserPageStyleSheet.AvatarContainer}
             source={{
-              uri: `${apiOrigin}/${result}`,
+              uri: isUpload ? image : `${apiOrigin}/${result}`,
             }}
           />
           <View style={UserPageStyleSheet.uploadBtnContainer}>
@@ -137,7 +129,16 @@ export default function UserPage({ navigation }) {
           </View>
           <View style={UserPageStyleSheet.usernameContainer}>
             <Text style={UserPageStyleSheet.username}>{payload?.username}</Text>
-            <TouchableOpacity style={UserPageStyleSheet.changeContainer}>
+            <TouchableOpacity
+              style={UserPageStyleSheet.changeContainer}
+              onPress={() => {
+                IonNeverDialog.show({
+                  component: () => {
+                    return <ChangeUsername username={username} />;
+                  },
+                });
+              }}
+            >
               <Text style={{ fontSize: 10 }}>Change Username</Text>
             </TouchableOpacity>
           </View>

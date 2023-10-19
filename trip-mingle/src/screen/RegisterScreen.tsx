@@ -99,7 +99,7 @@ export default function RegisterScreen({ navigation }) {
     if (!imageAsset) return;
     let type = imageAsset.uri.endsWith(".png")
       ? "image/png"
-      : imageAsset.uri.endsWith(".jpg") || imageAsset.uri.endsWith(".jpg")
+      : imageAsset.uri.endsWith(".jpg") || imageAsset.uri.endsWith(".jpeg")
       ? "image/jpeg"
       : null;
     if (!type) return;
