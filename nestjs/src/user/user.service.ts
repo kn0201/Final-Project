@@ -118,10 +118,19 @@ export class UserService {
       req.headers.authorization.split(' ')[1],
     );
     let user_id = payload.user_id;
+
+    let avatar_id = await this.knex
+      .select('avatar_id')
+      .from('users')
+      .where('users.id', user_id)
+      .first();
+
     let result = await this.knex
-      .select('path')
-      .from('image')
+      .select('image.path as path')
+      .from('users')
       .where('user_id', user_id)
+      .andWhere('image.id', avatar_id.avatar_id)
+      .leftJoin('image', 'user_id', user_id)
       .first();
 
     // console.log(result);
@@ -168,6 +177,12 @@ export class UserService {
         avatar_id: image_id,
       })
       .where('users.id', user_id);
+
+    await this.knex('image')
+      .update({
+        is_delete: true,
+      })
+      .where('image.id', avatar_id.avatar_id);
 
     return { result: true };
   }
