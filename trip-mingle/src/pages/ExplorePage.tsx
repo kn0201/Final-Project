@@ -6,26 +6,19 @@ import AddPostScreen from "../screen/AddPostScreen";
 import BuddiesPage from "../tabs/ExplorePageTopTab";
 import BlogDetailScreen from "../screen/BlogDetailScreen";
 import CommentScreen from "../screen/CommentScreen";
+import TourDetailScreen from "../screen/TourDetailScreen";
 
 const Stack = createStackNavigator();
 
 export default function ExplorePage() {
   return (
     <>
-      <Stack.Navigator
-      // screenOptions={{
-      //   presentation: "modal",
-      //   cardStyle: {
-      //     backgroundColor: "white",
-      //   },
-      // }}
-      >
+      <Stack.Navigator>
         <Stack.Screen
           name="Explore"
           component={BuddiesPage}
           options={{ headerShown: false }}
         />
-        {/* <Stack.Screen name="Posts" component={TourScreen} /> */}
         <Stack.Screen
           name="New Post"
           component={AddPostScreen}
@@ -38,6 +31,11 @@ export default function ExplorePage() {
         />
         <Stack.Screen name="Blog Detail" component={BlogDetailScreen} />
         <Stack.Screen name="Comment" component={CommentScreen} />
+        <Stack.Screen
+          name="Tour Detail"
+          component={TourDetailScreen}
+          initialParams={{ itemId: 0 }}
+        />
       </Stack.Navigator>
     </>
   );
