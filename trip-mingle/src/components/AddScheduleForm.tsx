@@ -8,10 +8,10 @@ import {
   TextInput,
   FlatList,
   Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
 import { AntDesign } from "@expo/vector-icons";
-import LoginPageStyleSheet from "../StyleSheet/LoginScreenCss";
 import { CheckBox, SearchBar } from "@rneui/base";
 import * as ImagePicker from "expo-image-picker";
 import { ScheduleCardInputInfo } from "../utils/types";
@@ -20,6 +20,17 @@ import { center } from "../StyleSheet/StyleSheetHelper";
 import PlannigStyleSheet from "../StyleSheet/PlanningStyleSheet";
 import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { apiOrigin } from "../utils/apiOrigin";
+import { useToken } from "../hooks/useToken";
+import { json } from "express";
+import { api } from "../apis/api";
+import { id, object, string } from "cast.ts";
+import TextButton from "./TextButton";
+
+type ImageFile = {
+  uri: string;
+  file: File;
+};
 
 function AddScheduleForm(props: {
   closeModal: () => void;
@@ -29,42 +40,103 @@ function AddScheduleForm(props: {
 
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const countriesListData = countriesList;
-
-  const [image, setImage] = useState<string>();
+  const [imageFile, setImageFile] = useState<ImageFile | null>(null);
+  const { token, payload, setToken } = useToken();
   const [country, setCountry] = useState("");
   const [code, setCode] = useState("");
   const [selectedCountry, setSelectedCountry] = useState(
     "Destination Country *"
   );
-  const schdeuleInfo = useRef<ScheduleCardInputInfo>({
+
+  const [state, setState] = useState({
     title: "",
-    uri: "",
-  }).current;
+    country: "",
+  });
 
-  const clearInputs = useRef({
-    uri() {},
-    title() {},
-    country() {},
-  }).current;
-
-  const updateInputText = (field: string, value: string) => {
-    schdeuleInfo[field as keyof ScheduleCardInputInfo] = value;
-  };
+  function reset() {
+    setState({ title: "", country: "" });
+    setImageFile(null);
+  }
 
   const addImage = async () => {
-    let _image = await ImagePicker.launchImageLibraryAsync({
+    console.log("addImage");
+    let imagePickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
-    // @ts-ignore
-    console.log(JSON.stringify(_image.assets[0].uri));
-    if (!_image.canceled) {
-      setImage(_image.assets[0].uri);
-      updateInputText("uri", _image.assets[0].uri);
+    if (imagePickerResult.canceled) return;
+    let imageAsset = imagePickerResult.assets?.[0];
+    if (!imageAsset) return;
+    let type = imageAsset.uri.endsWith(".png")
+      ? "image/png"
+      : imageAsset.uri.endsWith(".jpg") || imageAsset.uri.endsWith(".jpeg")
+      ? "image/jpeg"
+      : null;
+    if (!type) {
+      IonNeverDialog.show({
+        type: "warning",
+        title: "unknown image type: " + imageAsset.uri,
+        firstButtonVisible: true,
+      });
+      return;
     }
+    let filename = imageAsset.uri.split("/").pop();
+    let file = {
+      uri: imageAsset.uri,
+      type,
+      name: filename,
+    };
+    console.log("image file:", file);
+    setImageFile({
+      uri: file.uri,
+      file: file as unknown as File,
+    });
   };
+
+  async function addPlan() {
+    if (!state.title) {
+      IonNeverToast.show({
+        type: "warning",
+        title: "Please Input Title",
+      });
+      return;
+    }
+    Keyboard.dismiss;
+    console.log("add plan");
+    try {
+      let formData = new FormData();
+      if (imageFile) {
+        formData.append("image", imageFile.file);
+      }
+      formData.append("title", state.title);
+      formData.append("country", state.country);
+      let json = await api.upload(
+        "/planning/plan",
+        formData,
+        object({}),
+        token
+      );
+      console.log("add plan result:", json);
+      IonNeverDialog.show({
+        type: "success",
+        title: "Add a new plan",
+        firstButtonVisible: true,
+      });
+      addNewScheduleCard({ ...state, uri: imageFile?.uri });
+      closeModal();
+      reset();
+    } catch (error) {
+      let message = String(error);
+      IonNeverDialog.show({
+        type: "warning",
+        title: "Failed to add a new plan",
+        message,
+        firstButtonVisible: true,
+      });
+    }
+  }
 
   // Autofocus
   const inputRef = useRef<TextInput | null>(null);
@@ -172,7 +244,7 @@ function AddScheduleForm(props: {
                           ? setSelectedCountry(localCountry)
                           : setSelectedCountry("Destination Country *");
                         IonNeverDialog.dismiss();
-                        updateInputText("trip_country", country);
+                        setState({ ...state, country });
                       }}
                     >
                       <Text style={AddPostPageStyleSheet.ModalText}>OK</Text>
@@ -192,9 +264,9 @@ function AddScheduleForm(props: {
   return (
     <View style={{ flex: 1, alignItems: "center", backgroundColor: "white" }}>
       <View style={PlannigStyleSheet.uploadContainerSquare}>
-        {image && (
+        {imageFile && (
           <Image
-            source={{ uri: image }}
+            source={{ uri: imageFile.uri }}
             style={{
               width: 500,
               height: 300,
@@ -208,39 +280,19 @@ function AddScheduleForm(props: {
             onPress={addImage}
             style={PlannigStyleSheet.uploadBtn}
           >
-            <Text>{image ? "Edit" : "Upload"} Image</Text>
+            <Text>{imageFile ? "Edit" : "Upload"} Image</Text>
             <AntDesign name="camera" size={20} color="black" />
           </TouchableOpacity>
         </View>
       </View>
       <TextInput
         style={PlannigStyleSheet.inputContainer}
-        ref={(input: any) => {
-          clearInputs.title = () => input?.clear();
-        }}
-        onChangeText={(text) => {
-          updateInputText("title", text);
-        }}
         placeholder="Title"
+        value={state.title}
+        onChangeText={(text) => setState({ ...state, title: text })}
       />
       <CountryCheckbox />
-      <TouchableOpacity
-        style={LoginPageStyleSheet.login}
-        onPress={() => {
-          if (!schdeuleInfo.title) {
-            IonNeverToast.show({
-              type: "warning",
-              title: "Please Input Title",
-            });
-            return;
-          }
-          addNewScheduleCard(schdeuleInfo);
-          closeModal();
-          Keyboard.dismiss;
-        }}
-      >
-        <Text style={LoginPageStyleSheet.loginText}>Add New Plan</Text>
-      </TouchableOpacity>
+      <TextButton text="Add New Plan" onPress={addPlan}></TextButton>
     </View>
   );
 }

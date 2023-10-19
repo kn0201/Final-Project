@@ -48,7 +48,7 @@ export function AddPostScreen1() {
   const [selectedGender, setSelectedGender] = useState("Preferred Gender");
   const [gender, setGender] = useState("");
   const [selectedHeadcount, setSelectedHeadcount] = useState<string>(
-    "Preferred Headcount *",
+    "Preferred Headcount *"
   );
   const [headcount, setHeadcount] = useState<string>("");
   const [headcountListData, setHeadcountListData] = useState<string[]>([
@@ -62,7 +62,7 @@ export function AddPostScreen1() {
     "8",
   ]);
   const [selectedCountry, setSelectedCountry] = useState(
-    "Destination Country *",
+    "Destination Country *"
   );
   const [country, setCountry] = useState("");
   const [code, setCode] = useState("");
@@ -70,7 +70,7 @@ export function AddPostScreen1() {
   const [period, setPeriod] = useState<string[]>([]);
   const [languages, setLanguages] = useState<string[]>([]);
   const [selectedLanguagesText, setSelectedLanguagesText] = useState(
-    "Preferred Languages(s)",
+    "Preferred Languages(s)"
   );
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
@@ -398,8 +398,8 @@ export function AddPostScreen1() {
                   countriesListData.filter((country) =>
                     country.name
                       .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase()),
-                  ),
+                      .includes(search.toLocaleLowerCase())
+                  )
                 );
               }, [search, countriesListData]);
               const updateSearch = (search: string) => {
@@ -545,8 +545,8 @@ export function AddPostScreen1() {
                   languagesListData.filter((language) =>
                     language.name
                       .toLocaleLowerCase()
-                      .includes(searchLanguages.toLocaleLowerCase()),
-                  ),
+                      .includes(searchLanguages.toLocaleLowerCase())
+                  )
                 );
               }, [searchLanguages, languagesListData]);
 
@@ -558,8 +558,8 @@ export function AddPostScreen1() {
                 if (localLanguages.includes(name)) {
                   setLocalLanguages(
                     localLanguages.filter(
-                      (language: string) => language !== name,
-                    ),
+                      (language: string) => language !== name
+                    )
                   );
                 } else {
                   setLocalLanguages([...localLanguages, name]);

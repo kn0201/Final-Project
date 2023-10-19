@@ -9,6 +9,7 @@ import {
   Keyboard,
   Image,
   FlatList,
+  Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { RegisInfo, ScheduleCardInputInfo } from "../utils/types";
@@ -51,14 +52,13 @@ const NewPlanning = () => {
 
   let countriesListData = countriesList;
 
-  const clearInputs = useRef({
-    title() {},
-    country() {},
-  }).current;
-
   const planInfo = useRef<ScheduleCardInputInfo>({
     title: "",
     uri: "",
+  }).current;
+  const clearInputs = useRef({
+    title() {},
+    country() {},
   }).current;
 
   const updateInputText = (field: string, value: string) => {
@@ -67,6 +67,7 @@ const NewPlanning = () => {
   };
 
   const addPlan = async () => {
+    console.log("add plan");
     try {
       let formData = new FormData();
       formData.append("image", imageFile as any);
@@ -211,8 +212,11 @@ const NewPlanning = () => {
           />
           <Text>{selectedCountry}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={LoginPageStyleSheet.login} onPress={addPlan}>
-          <Text style={LoginPageStyleSheet.loginText}>Add New Plan</Text>
+        <TouchableOpacity
+          style={LoginPageStyleSheet.login}
+          onPress={() => console.log("add plan log")}
+        >
+          <Text style={LoginPageStyleSheet.loginText}>Add Plan</Text>
         </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>

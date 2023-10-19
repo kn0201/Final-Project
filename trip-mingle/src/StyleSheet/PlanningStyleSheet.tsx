@@ -15,8 +15,8 @@ const PlanningStyleSheet = StyleSheet.create({
     marginLeft: 8,
   },
   inputContainer: {
-    width: "95%",
-    height: 24,
+    width: "90%",
+    height: 50,
     marginLeft: 8,
     marginTop: 4,
     marginBottom: 20,

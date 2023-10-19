@@ -1,4 +1,12 @@
-import { array, boolean, nullable, number, object, string } from 'cast.ts';
+import {
+  array,
+  boolean,
+  nullable,
+  number,
+  object,
+  optional,
+  string,
+} from 'cast.ts';
 
 export const loginParser = object({
   username: string({ trim: true, nonEmpty: true }),
@@ -51,8 +59,9 @@ export const addTourPostParser = object({
 });
 
 export const addPlanParser = object({
-  tile: string(),
-  uri: string(),
+  title: string(),
+  uri: optional(string()),
+  country: string(),
 });
 
 export const addScheduleParser = object({

@@ -120,7 +120,7 @@ export default function RegisterScreen({ navigation }) {
 
   const checkUsername = async (text: string) => {
     try {
-      let checker = await api.loginSignUp(
+      let checker = await api.post(
         "/login/check",
         { username: text },
         checkResultParser

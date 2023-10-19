@@ -39,8 +39,9 @@ export type ScheduleCardInfo = {
 } & ScheduleCardInputInfo;
 
 export type ScheduleCardInputInfo = {
-  title: string;
   uri?: string;
+  title: string;
+  country?: string;
 };
 
 export type PostInfo = {

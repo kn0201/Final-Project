@@ -29,7 +29,7 @@ export default function MultipleCountryCheckbox({
   const [localCode, setLocalCode] = useState<string[]>(code);
 
   const getList = async () => {
-    const json = await api.getList("/country", countryListParser);
+    const json = await api.get("/country", countryListParser);
     setCountryList(json);
     setMatchedCountryList(json);
   };
