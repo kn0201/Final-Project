@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { center, flex, full, iosBlue, row, white } from "./StyleSheetHelper";
 
-const PlannigStyleSheet = StyleSheet.create({
+const PlanningStyleSheet = StyleSheet.create({
   center: {
     display: flex,
     justifyContent: center,
@@ -122,4 +122,4 @@ const PlannigStyleSheet = StyleSheet.create({
   },
 });
 
-export default PlannigStyleSheet;
+export default PlanningStyleSheet;

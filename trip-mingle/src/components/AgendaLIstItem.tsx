@@ -53,7 +53,7 @@ export default function AgendaListItem(props: {
     });
   };
 
-  useEffect(() => console.log(scheduleInfo), [scheduleInfo]);
+  // useEffect(() => console.log(scheduleInfo), [scheduleInfo]);
 
   return (
     <View>
@@ -63,10 +63,13 @@ export default function AgendaListItem(props: {
         </Text>
         <TextInput
           style={PlannigStyleSheet.inputContainer}
-          onChangeText={(text) => updateScheduleInfo("startTime", text)}
+          value={scheduleInfo.startTime}
+          onChangeText={(text) =>
+            updateScheduleInfo("startTime", checkTime(text))
+          }
           keyboardType="numeric"
           onEndEditing={() => Keyboard.dismiss()}
-          placeholder="Input Start time"
+          placeholder="Input Start time (e.g. 13:44)"
           placeholderTextColor="gray"
         ></TextInput>
         <Text style={PlannigStyleSheet.inputTitle}>End Time</Text>
@@ -193,3 +196,32 @@ const styles = StyleSheet.create({
     height: 550 * 0.75,
   },
 });
+
+function checkTime(text: string): string {
+  console.log("checkTime:", text);
+  if (text.length == 1) {
+    return "0" <= text && text <= "2" ? text : "";
+  }
+  if (text.length == 2) {
+    return "00" <= text && text <= "23" ? text : text.slice(0, 1);
+  }
+  if (text.length === 3 && text.endsWith(":")) {
+    return text.slice(0, 2);
+  }
+  if (text.length == 3) {
+    let h = text.slice(0, 2);
+    let m = text.slice(2);
+    text = h + ":" + m;
+  }
+  if (text.length === 4) {
+    let h = text.slice(0, 2);
+    let m = text.slice(3);
+    return "0" <= m && m <= "5" ? h + ":" + m : h;
+  }
+  if (text.length === 5) {
+    let h = text.slice(0, 2);
+    let m = text.slice(3);
+    return "00" <= m && m <= "59" ? h + ":" + m : h + ":" + m.slice(0, 1);
+  }
+  return text.slice(0, 5);
+}

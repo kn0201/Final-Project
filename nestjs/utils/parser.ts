@@ -48,3 +48,19 @@ export const addTourPostParser = object({
   preferred_language: nullable(string()),
   preferred_hobby: nullable(string()),
 });
+
+export const addPlanParser = object({
+  tile: string(),
+  uri: string(),
+});
+
+export const addScheduleParser = object({
+  start_date: string(),
+  end_date: string(),
+});
+
+export const addNewPlanParser = object({
+  start_time: string(),
+  end_time: string(),
+  location: string(),
+});
