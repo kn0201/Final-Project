@@ -113,31 +113,34 @@ export class UserService {
     return result;
   }
 
-  async getIcon(req) {
-    const payload = this.jwtService.decode(
-      req.headers.authorization.split(' ')[1],
-    );
-    let user_id = payload.user_id;
+  async getIcon(headers) {
+    if (headers) {
+      const payload = this.jwtService.decode(
+        headers.authorization.split(' ')[1],
+      );
+      let user_id = payload.user_id;
 
-    let avatar_id = await this.knex
-      .select('avatar_id')
-      .from('users')
-      .where('users.id', user_id)
-      .first();
+      let avatar_id = await this.knex
+        .select('avatar_id')
+        .from('users')
+        .where('users.id', user_id)
+        .first();
 
-    let result = await this.knex
-      .select('image.path as path')
-      .from('users')
-      .where('user_id', user_id)
-      .andWhere('image.id', avatar_id.avatar_id)
-      .leftJoin('image', 'user_id', user_id)
-      .first();
+      let result = await this.knex
+        .select('image.path as path')
+        .from('users')
+        .where('user_id', user_id)
+        .andWhere('image.id', avatar_id.avatar_id)
+        .andWhere('image.is_delete', 'false')
+        .leftJoin('image', 'user_id', user_id)
+        .first();
 
-    // console.log(result);
-    if (result === undefined) {
-      return { path: null };
+      // console.log(result);
+      if (result === undefined) {
+        return { path: 'yukimin.png' };
+      }
+      return result;
     }
-    return result;
   }
 
   async updateIcon(image, req) {
@@ -188,5 +191,19 @@ export class UserService {
     return { result: true };
   }
 
-  async updateUsername(input);
+  async updateUsername(input: { username: string }, headers) {
+    const payload = this.jwtService.decode(headers.authorization.split(' ')[1]);
+    let user_id = payload.user_id;
+
+    let result = await this.knex('users')
+      .update({
+        username: input.username,
+      })
+      .where('id', user_id);
+    console.log(result);
+
+    if (result) {
+      return { result: true };
+    }
+  }
 }

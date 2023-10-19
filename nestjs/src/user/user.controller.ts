@@ -8,6 +8,8 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFile,
+  Header,
+  Headers,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
@@ -39,10 +41,9 @@ export class UserController {
     return this.userService.getProfile(req);
   }
 
-  @UseGuards(AuthGuard)
   @Get('icon')
-  async getIcon(@Req() req: Request) {
-    return this.userService.getIcon(req);
+  async getIcon(@Headers() headers: Headers) {
+    return this.userService.getIcon(headers);
   }
   @UseGuards(AuthGuard)
   @Post('profile')
@@ -59,9 +60,10 @@ export class UserController {
     return this.userService.updateIcon(image, req);
   }
 
+  @UseGuards(AuthGuard)
   @Patch('update_username')
-  async updateUsername(@Body() body: Body) {
+  async updateUsername(@Body() body: Body, @Headers() headers: Headers) {
     let input = updateUsernameParser.parse(body);
-    return this.userService.updateUsername(input);
+    return this.userService.updateUsername(input, headers);
   }
 }

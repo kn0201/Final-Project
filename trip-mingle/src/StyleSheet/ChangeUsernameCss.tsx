@@ -13,7 +13,7 @@ export const ChangeUsernameStyleSheet = StyleSheet.create({
     flexDirection: row,
     alignItems: center,
     justifyContent: center,
-    marginBottom: 32,
+    marginBottom: 20,
   },
   newUsernameContainer: {
     alignItems: center,
@@ -67,10 +67,11 @@ export const ChangeUsernameStyleSheet = StyleSheet.create({
     backgroundColor: "#FF2C2C",
   },
   errorMsgContainer: {
+    marginTop: 8,
     display: flex,
     justifyContent: center,
     alignItems: center,
-    width: "100%",
+    // width: "100%",
     flexDirection: row,
   },
 });

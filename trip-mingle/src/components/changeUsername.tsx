@@ -8,19 +8,25 @@ import {
 } from "react-native";
 import { ChangeUsernameStyleSheet } from "../StyleSheet/ChangeUsernameCss";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 import { flex } from "../StyleSheet/StyleSheetHelper";
 import { api } from "../apis/api";
 import { useToken } from "../hooks/useToken";
-import { checkResultParser } from "../utils/parser";
+import { checkResultParser, updateUsernameResultParser } from "../utils/parser";
+import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
 
 //@ts-ignore
-export default function ChangeUsername({ username }) {
+export default function ChangeUsername({ username, navigation }) {
   const { token, payload, setToken } = useToken();
+  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
+
   const [newUsername, setNewUsername] = useState<string>();
+
   const [checkUsernameResult, setCheckUsernameResult] = useState(false);
+
   const usernameErrorMsg = "Username already exist";
+
   const checkUsername = async (text: string) => {
     try {
       let checker = await api.loginSignUp(
@@ -39,8 +45,29 @@ export default function ChangeUsername({ username }) {
     }
   };
 
+  const logout = async () => {
+    setToken("");
+    await AsyncStorage.removeItem("username");
+  };
+
   const submit = async () => {
-    let result = await api.patch("/user/");
+    let json = await api.patch(
+      "/user/update_username",
+      { username: newUsername },
+      updateUsernameResultParser,
+      token
+    );
+    if (json.result == true) {
+      IonNeverDialog.dismiss();
+      IonNeverDialog.show({
+        type: "success",
+        title: "Update Success",
+        message: "Please login again with new Username",
+        firstButtonVisible: true,
+        firstButtonFunction: () => {},
+      });
+      logout();
+    }
   };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -71,12 +98,13 @@ export default function ChangeUsername({ username }) {
               fontSize: 18,
               fontWeight: "bold",
               marginEnd: 8,
-              marginBottom: 16,
             }}
           >
             New Username
           </Text>
+          <Text style={{ fontSize: 12, marginBottom: 16 }}> Max 10 letter</Text>
           <TextInput
+            style={{ fontSize: 18 }}
             placeholder="Type Here"
             onChangeText={(text) => {
               setNewUsername(text);
@@ -90,10 +118,19 @@ export default function ChangeUsername({ username }) {
           </View>
         </View>
         <View style={ChangeUsernameStyleSheet.buttonContainer}>
-          <TouchableOpacity style={ChangeUsernameStyleSheet.submit}>
+          <TouchableOpacity
+            style={ChangeUsernameStyleSheet.submit}
+            onPress={submit}
+          >
             <Text style={ChangeUsernameStyleSheet.buttonText}>Submit</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={ChangeUsernameStyleSheet.cancel}>
+          <TouchableOpacity
+            style={ChangeUsernameStyleSheet.cancel}
+            onPress={() => {
+              IonNeverDialog.dismiss();
+              setNewUsername("");
+            }}
+          >
             <Text style={ChangeUsernameStyleSheet.buttonText}>Cancel</Text>
           </TouchableOpacity>
         </View>
