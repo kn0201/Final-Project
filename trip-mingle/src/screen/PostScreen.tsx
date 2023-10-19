@@ -19,7 +19,7 @@ import { api } from "../apis/api";
 import { apiOrigin } from "../utils/apiOrigin";
 
 //@ts-ignore
-export default function TourScreen() {
+export default function TourScreen({ navigation }) {
   // Star rating
   const setStarRating = (rating: number) => {
     rating = Math.round(rating * 2) / 2;
@@ -42,6 +42,7 @@ export default function TourScreen() {
   // Select post
   const [selectedPostID, setSelectedPostIDs] = useState(0);
   const handlePostClick = (id: number) => {
+    navigation.navigate("Tour Detail", { id });
     if (selectedPostID == id) {
       setSelectedPostIDs(0);
     } else {
