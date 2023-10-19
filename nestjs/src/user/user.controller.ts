@@ -27,6 +27,11 @@ let storage = multer.diskStorage({
 export class UserController {
   constructor(private userService: UserService) {}
 
+  @Get('hobby_list')
+  async getHobbyList() {
+    return this.userService.getHobbyList();
+  }
+
   @UseGuards(AuthGuard)
   @Get('profile')
   async getProfile(@Req() req: Request) {
@@ -45,15 +50,11 @@ export class UserController {
     return this.userService.sendProfile(input, req);
   }
 
-  @Get('hobby_list')
-  async getHobbyList() {
-    return this.userService.getHobbyList();
-  }
-
-  @Post('image')
+  @UseGuards(AuthGuard)
+  @Post('update_icon')
   @UseInterceptors(FileInterceptor('image', { storage: storage }))
-  async uploadImage(@UploadedFile() image) {
+  async updateIcon(@UploadedFile() image, @Req() req: Request) {
     console.log('image:', image);
-    return;
+    return this.userService.updateIcon(image, req);
   }
 }

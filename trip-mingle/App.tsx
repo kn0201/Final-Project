@@ -38,10 +38,10 @@ export default function App() {
   return (
     <Fragment>
       {Platform.OS === "ios" ? (
-        <KeyboardAvoidingView>
-          <Root />
-        </KeyboardAvoidingView>
+        // <KeyboardAvoidingView>
+        <Root />
       ) : (
+        // </KeyboardAvoidingView>
         <Root />
       )}
     </Fragment>
