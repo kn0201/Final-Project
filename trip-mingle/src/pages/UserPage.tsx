@@ -60,7 +60,7 @@ export default function UserPage({ navigation }) {
       formData.append("image", file as any);
 
       let res = await fetch(apiOrigin + "/user/update_icon", {
-        method: "POST",
+        method: "PATCH",
         headers: {
           Authorization: "Bearer " + token,
         },

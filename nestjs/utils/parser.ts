@@ -49,3 +49,7 @@ export const addTourPostParser = object({
   preferred_language: nullable(string()),
   preferred_hobby: nullable(string()),
 });
+
+export const updateUsernameParser = object({
+  username: string(),
+});

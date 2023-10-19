@@ -139,6 +139,7 @@ export class UserService {
     }
     return result;
   }
+
   async updateIcon(image, req) {
     const payload = this.jwtService.decode(
       req.headers.authorization.split(' ')[1],
@@ -186,4 +187,6 @@ export class UserService {
 
     return { result: true };
   }
+
+  async updateUsername(input);
 }
