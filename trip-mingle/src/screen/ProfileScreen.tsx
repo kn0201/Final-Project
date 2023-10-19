@@ -28,13 +28,13 @@ import MultipleCountryCheckbox from "../components/multipleCountryCheckbox";
 import MultipleHobbyCheckbox from "../components/multipleHobbyCheckbox";
 import useBoolean from "../hooks/useBoolean";
 
-export default function ProfileScreen({
+export default function ProfileScreen(props: {
   //@ts-ignore
-  navigation,
+  navigation;
   // //@ts-ignore
-  // setEditableIcon,
+  // setEditableIcon;
   // //@ts-ignore
-  // editableIcon,
+  // editableIcon;
 }) {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const { token, payload, setToken } = useToken();
@@ -106,12 +106,14 @@ export default function ProfileScreen({
   const [selectedHobby, setSelectedHobby] = useState<string[]>([]);
 
   const [editableText, setEditableText] = useState(false);
-  const editable = useBoolean().off;
+
   const updateInputText = (field: string, value: string) => {
     profileInfo[field as keyof ProfileInfo] = value;
   };
 
   const [editSubmit, setEditSubmit] = useState(true);
+
+  const editable = useBoolean();
 
   const editProfile = "Edit Profile";
   const submitProfile = "Submit";
@@ -138,6 +140,7 @@ export default function ProfileScreen({
       const errorObject: any = { ...(error as object) };
       console.log(errorObject);
     }
+    console.log(profileInfo);
   };
 
   return (
@@ -148,7 +151,7 @@ export default function ProfileScreen({
             <View style={ProfileScreenStyleSheet.editContainer}>
               <TouchableOpacity
                 onPress={() => {
-                  useBoolean().on;
+                  editable.on;
                   setEditableText(!editableText);
                   if (editableText) {
                     sendProfile();

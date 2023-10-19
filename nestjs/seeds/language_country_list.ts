@@ -22,14 +22,14 @@ export async function seed(knex: Knex): Promise<void> {
   for (let language of languages) {
     let row = await knex
       .select('id')
-      .from('language_list')
+      .from('language')
       .where('name', language.name)
       .first();
     if (!row) {
-      await knex.insert(language).into('language_list');
+      await knex.insert(language).into('language');
       continue;
     }
-    await knex.update(language).from('language_list').where('id', row.id);
+    await knex.update(language).from('language').where('id', row.id);
   }
 
   let hobbies = JSON.parse(readFileSync('source/hobby.json').toString());
@@ -37,7 +37,7 @@ export async function seed(knex: Knex): Promise<void> {
   for (let hobby of hobbies) {
     let row = await knex
       .select('id')
-      .from('language_list')
+      .from('hobby_list')
       .where('name', hobby.name)
       .first();
     if (!row) {

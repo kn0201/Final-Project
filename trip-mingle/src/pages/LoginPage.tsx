@@ -5,7 +5,7 @@ import Register from "../screen/RegisterScreen";
 
 const Stack = createStackNavigator();
 
-export default function UserPage() {
+export default function LoginPage() {
   return (
     <Stack.Navigator
       // initialRouteName="Login"

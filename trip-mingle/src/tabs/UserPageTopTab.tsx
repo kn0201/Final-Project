@@ -4,6 +4,7 @@ import SavedLocationScreen from "../screen/SavedLocationScreen";
 import MemoryScreen from "../screen/MemoryScreen";
 import ProfileScreen from "../screen/ProfileScreen";
 import LikedScreen from "../screen/LikedScreen";
+import BlogDetailScreen from "../screen/BlogDetailScreen";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -25,6 +26,7 @@ export default function UserPageTopTab() {
       <Tab.Screen
         name="Saved Location"
         component={SavedLocationScreen}
+        // component={SavedLocationScreen}
         options={{ tabBarLabel: "Saved Location" }}
       />
       <Tab.Screen

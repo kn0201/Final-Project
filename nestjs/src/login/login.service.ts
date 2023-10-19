@@ -132,9 +132,4 @@ export class LoginService {
     });
     return { token: token };
   }
-
-  async getCountryList() {
-    let result = await this.knex('country_list').select('id', 'name', 'code');
-    return result;
-  }
 }

@@ -45,8 +45,4 @@ export class LoginController {
     let input = checkerParser.parse(body);
     return this.loginService.checker(input);
   }
-  @Get('country_list')
-  async getCountryList() {
-    return this.loginService.getCountryList();
-  }
 }

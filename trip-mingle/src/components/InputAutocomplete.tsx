@@ -44,7 +44,7 @@ export default function InputAutocomplete({
       .map((location: { name: any }) => location.name)
       .join(", ");
     if (updatedSelectedLocationText == "") {
-      setSelectedLocationText("Destination Spot(s)");
+      setSelectedLocationText("Trip Spot(s)");
     } else {
       setSelectedLocationText(updatedSelectedLocationText);
     }
@@ -113,10 +113,8 @@ export default function InputAutocomplete({
                   address: details.formatted_address,
                   // website: details.website || null,
                   // opening_hours: details.opening_hours?.weekday_text || null,
-                  coordinates: {
-                    lat: details.geometry.location.lat,
-                    lng: details.geometry.location.lng,
-                  },
+                  lat: details.geometry.location.lat,
+                  lng: details.geometry.location.lng,
                   // type: details.types,
                   // photo: details.photos
                   //   ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${details.photos[1].photo_reference}&key=${query.key}`
@@ -134,10 +132,8 @@ export default function InputAutocomplete({
                       address: string;
                       // website: string | null;
                       // opening_hours: string[] | null;
-                      coordinates: {
-                        lat: string;
-                        lng: string;
-                      };
+                      lat: string;
+                      lng: string;
                       // types: string[];
                       // photo: string | null;
                     }) => loc.id === position.id,
