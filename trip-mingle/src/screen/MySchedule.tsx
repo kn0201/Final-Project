@@ -26,7 +26,7 @@ import { useAppNavigation } from "../../navigators";
 import { useGet } from "../hooks/useGet";
 import { ParseResult, array, number, object, string } from "cast.ts";
 import { apiOrigin } from "../utils/apiOrigin";
-import { api } from "../apis/api";
+import { api, api2 } from "../apis/api";
 
 const Stack = createStackNavigator();
 
@@ -168,7 +168,7 @@ function ScheduleCard(props: { item: PlanListItem }) {
         <Card.Image
           style={{ padding: 0, height: 200 }}
           source={{
-            uri: api.toImageURI(item.image_path),
+            uri: api2.toImageURI(item.image_path),
           }}
         />
       </Card>

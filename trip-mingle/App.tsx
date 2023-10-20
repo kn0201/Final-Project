@@ -24,7 +24,7 @@ function Root() {
   return (
     <TokenProvider>
       <ModalRoot />
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         <IonNeverNotificationRoot>
           <MyBottomTab />
           <Bar.StatusBar style="auto" />
