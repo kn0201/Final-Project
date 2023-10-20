@@ -41,7 +41,35 @@ type Place = {
 const GOOGLE_API_KEY = "AIzaSyDkl6HfJvmSSKDGWH0L0Y183PbBuY9fjdo";
 const placeType = "tourist_attraction";
 
-export default function MapPage() {
+export default function MapPage({
+  route,
+  navigation,
+}: {
+  route: any;
+  navigation: any;
+}) {
+  const [givenLocation, setGivenLocation] = useState(false);
+  const [latitude, setLatitude] = useState<any>();
+  const [longitude, setLongitude] = useState<any>();
+
+  useEffect(() => {
+    if (route.params) {
+      const { latitude, longitude } = route.params;
+      setGivenLocation(true);
+      setLatitude(latitude);
+      setLongitude(longitude);
+    }
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
+
   // Custom Marker
   const [state, setState] = useState({});
 
@@ -110,17 +138,6 @@ export default function MapPage() {
   // Get current location
   const [location, setLocation] = useState<LocationObject | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-    })();
-  }, []);
 
   // Fetch places from google map
   const [places, setPlaces] = useState<Place[]>([]);
@@ -155,10 +172,12 @@ export default function MapPage() {
 
   const fetchPlacesFromGoogleMaps = async (
     location: LocationObject,
-    placeType: string,
+    placeType: string
   ) => {
-    let radius = 2 * 1000;
-    const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location?.coords.latitude},${location?.coords.longitude}&radius=${radius}&type=${placeType}&key=${GOOGLE_API_KEY}`;
+    let radius = givenLocation ? 20 * 1000 : 2 * 1000;
+    const url = givenLocation
+      ? `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radius}&type=${placeType}&key=${GOOGLE_API_KEY}`
+      : `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location?.coords.latitude},${location?.coords.longitude}&radius=${radius}&type=${placeType}&key=${GOOGLE_API_KEY}`;
     try {
       const res = await fetch(url);
       if (!res.ok) {
@@ -202,8 +221,8 @@ export default function MapPage() {
             provider={PROVIDER_GOOGLE}
             style={styles.map}
             initialRegion={{
-              latitude: location?.coords.latitude,
-              longitude: location?.coords.longitude,
+              latitude: givenLocation ? latitude : location?.coords.latitude,
+              longitude: givenLocation ? longitude : location?.coords.longitude,
               latitudeDelta: latitudeDelta,
               longitudeDelta: longitudeDelta,
             }}

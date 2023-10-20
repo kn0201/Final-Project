@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { Card } from "@rneui/themed";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import {
   RegisInfo,
   ScheduleCardInfo,
@@ -127,14 +128,15 @@ const Schedule = ({ navigation }) => {
         style={{ height: Dimensions.get("screen").height - 180, zIndex: 0.9 }}
       >
         <FlatList data={cardList} renderItem={renderItem} />
-        <MaterialIcons
+        <Ionicons
           name="add-circle"
           size={60}
           style={{
             position: "absolute",
             bottom: 10,
             right: 10,
-            backgroundColor: "white",
+            // backgroundColor: "white",
+            // color: "white",
             borderRadius: 32,
             zIndex: 0.95,
           }}

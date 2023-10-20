@@ -11,7 +11,6 @@ import TourDetailScreen from "../screen/TourDetailScreen";
 const Stack = createStackNavigator();
 
 export default function ExplorePage() {
-  const [title, setTitle] = useState("Blog Detail");
   return (
     <>
       <Stack.Navigator>
@@ -30,6 +29,7 @@ export default function ExplorePage() {
             },
           }}
         />
+
         <Stack.Screen
           name="Blog Detail"
           component={BlogDetailScreen}
