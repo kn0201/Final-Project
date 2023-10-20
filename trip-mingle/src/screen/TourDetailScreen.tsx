@@ -7,9 +7,10 @@ import { useGet } from "../hooks/useGet";
 import { apiOrigin } from "../utils/apiOrigin";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Fontisto from "react-native-vector-icons/Fontisto";
-import { setStarRating } from "./PostScreen";
+import { ItemSeparatorView, setStarRating } from "./PostScreen";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import TourDetailScreenStyleSheet from "../StyleSheet/TourDetailScreenCss";
+import { Card } from "react-native-paper";
 
 const TourDetailScreen = ({
   route,
@@ -40,69 +41,177 @@ const TourDetailScreen = ({
     getPostDetail();
     setPost(post);
   }, [postDetailData]);
+  const locationNames = post?.trip_location?.map((location) => location.name);
+  const locationNamesString = Array.isArray(locationNames)
+    ? locationNames.join(", ")
+    : "";
   return (
     <>
-      <View style={TourDetailScreenStyleSheet.postContainer}>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <Image
-            style={TourDetailScreenStyleSheet.avatar}
-            source={{
-              uri: `${apiOrigin}/${post?.avatar_path}`,
-            }}
-          />
-          <Text
+      <Card style={{ margin: 15, marginRight: 20, height: "96%" }}>
+        <View style={TourDetailScreenStyleSheet.postContainer}>
+          <View
             style={{
-              marginRight: 5,
-              fontWeight: "600",
+              flexDirection: "row",
+              alignItems: "center",
             }}
           >
-            {post?.username}
-          </Text>
-          {setStarRating(post?.rating ? post.rating : 0)}
-          <Text> ({post?.number_of_rating})</Text>
-        </View>
-        <View style={TourDetailScreenStyleSheet.row}>
-          <Text style={{ fontWeight: "800" }}>#{post?.id}</Text>
-          {post?.status === "open" ? (
-            <Fontisto name="radio-btn-active" color="#0CD320" size={16} />
-          ) : post?.status === "complete" ? (
-            <MaterialIcons
-              name="remove-circle-outline"
-              color="grey"
-              size={20}
+            <Image
+              style={TourDetailScreenStyleSheet.avatar}
+              source={{
+                uri: `${apiOrigin}/${post?.avatar_path}`,
+              }}
             />
-          ) : (
-            <Fontisto name="close" color="red" size={16} />
-          )}
-          <Text style={TourDetailScreenStyleSheet.titleKey}>
-            {post?.created_at?.substring(0, 10)}
-          </Text>
+            <Text
+              style={{
+                marginRight: 5,
+                fontWeight: "600",
+              }}
+            >
+              {post?.username}
+            </Text>
+            {setStarRating(post?.rating ? post.rating : 0)}
+            <Text> ({post?.number_of_rating})</Text>
+          </View>
+          <View style={TourDetailScreenStyleSheet.row}>
+            <Text style={{ fontWeight: "800" }}>#{post?.id}</Text>
+            {post?.status === "open" ? (
+              <Fontisto name="radio-btn-active" color="#0CD320" size={16} />
+            ) : post?.status === "complete" ? (
+              <MaterialIcons
+                name="remove-circle-outline"
+                color="grey"
+                size={20}
+              />
+            ) : (
+              <Fontisto name="close" color="red" size={16} />
+            )}
+            <Text style={TourDetailScreenStyleSheet.titleKey}>
+              {post?.created_at?.substring(0, 10)}
+            </Text>
+          </View>
         </View>
-      </View>
-      <View style={TourDetailScreenStyleSheet.rowContainer}>
-        <View style={TourDetailScreenStyleSheet.row}>
-          <Text style={TourDetailScreenStyleSheet.titleKey}>Title:</Text>
-          <Text>{post?.title}</Text>
+        {post?.trip_period ? (
+          <>
+            <View style={TourDetailScreenStyleSheet.rowContainer}>
+              <View style={TourDetailScreenStyleSheet.row}>
+                <Text style={TourDetailScreenStyleSheet.titleKey}>Period:</Text>
+                <Text>{post?.trip_period ? post.trip_period : "Pending"}</Text>
+              </View>
+            </View>
+          </>
+        ) : null}
+        <View style={TourDetailScreenStyleSheet.rowContainer}>
+          <Text style={TourDetailScreenStyleSheet.titleKey}>Destination:</Text>
+          <Text>{post?.trip_country}</Text>
         </View>
-      </View>
-      <View style={TourDetailScreenStyleSheet.rowContainer}>
-        <Text style={TourDetailScreenStyleSheet.titleKey}>Destination:</Text>
-        <Text>{post?.trip_country}</Text>
-      </View>
-      <View style={TourDetailScreenStyleSheet.rowContainer}>
-        <View style={TourDetailScreenStyleSheet.row}>
-          <Text style={TourDetailScreenStyleSheet.titleKey}>Period:</Text>
-          <Text>{post?.trip_period}</Text>
+        {post?.trip_location?.length !== undefined &&
+        post?.trip_location?.length > 0 ? (
+          <>
+            <View style={TourDetailScreenStyleSheet.rowContainer}>
+              <View style={TourDetailScreenStyleSheet.row}>
+                <Text style={TourDetailScreenStyleSheet.titleKey}>Spot:</Text>
+                <Text>{locationNamesString}</Text>
+              </View>
+            </View>
+          </>
+        ) : null}
+        {post?.trip_budget ? (
+          <>
+            <View style={TourDetailScreenStyleSheet.rowContainer}>
+              <View style={TourDetailScreenStyleSheet.row}>
+                <Text style={TourDetailScreenStyleSheet.titleKey}>Budget:</Text>
+                <Text>{post?.trip_budget ? post.trip_budget : "Pending"}</Text>
+              </View>
+            </View>
+          </>
+        ) : null}
+        <View style={TourDetailScreenStyleSheet.rowContainer}>
+          <View style={TourDetailScreenStyleSheet.row}>
+            <Text style={TourDetailScreenStyleSheet.titleKey}>Headcount:</Text>
+            <Text>{post?.trip_headcount}</Text>
+          </View>
         </View>
-        <View style={{ marginRight: 15 }}>
-          <MaterialCommunityIcons name="comment-plus" size={16} />
+        {post?.preferred_gender ? (
+          <>
+            <View style={TourDetailScreenStyleSheet.rowContainer}>
+              <View style={TourDetailScreenStyleSheet.row}>
+                <Text style={TourDetailScreenStyleSheet.titleKey}>
+                  Preferred Gender:
+                </Text>
+                <Text>{post?.preferred_gender}</Text>
+              </View>
+            </View>
+          </>
+        ) : null}
+        {post?.preferred_age ? (
+          <>
+            <View style={TourDetailScreenStyleSheet.rowContainer}>
+              <View style={TourDetailScreenStyleSheet.row}>
+                <Text style={TourDetailScreenStyleSheet.titleKey}>
+                  Preferred Age:
+                </Text>
+              </View>
+            </View>
+            <View style={TourDetailScreenStyleSheet.rowContainer}>
+              <View style={TourDetailScreenStyleSheet.row}>
+                <Text>{post?.preferred_age}</Text>
+              </View>
+            </View>
+          </>
+        ) : null}
+        {post?.preferred_language ? (
+          <>
+            <View style={TourDetailScreenStyleSheet.rowContainer}>
+              <View style={TourDetailScreenStyleSheet.row}>
+                <Text style={TourDetailScreenStyleSheet.titleKey}>
+                  Preferred Language:
+                </Text>
+              </View>
+            </View>
+            <View style={TourDetailScreenStyleSheet.rowContainer}>
+              <View style={TourDetailScreenStyleSheet.row}>
+                <Text>
+                  {post?.preferred_language ? post.preferred_language : "Any"}
+                </Text>
+              </View>
+            </View>
+          </>
+        ) : null}
+        {post?.preferred_hobby ? (
+          <>
+            <View style={TourDetailScreenStyleSheet.rowContainer}>
+              <View style={TourDetailScreenStyleSheet.row}>
+                <Text style={TourDetailScreenStyleSheet.titleKey}>
+                  Preferred Hobby:
+                </Text>
+              </View>
+            </View>
+            <View style={TourDetailScreenStyleSheet.rowContainer}>
+              <View style={TourDetailScreenStyleSheet.row}>
+                <Text>
+                  {post?.preferred_hobby ? post.preferred_hobby : "Any"}
+                </Text>
+              </View>
+            </View>
+          </>
+        ) : null}
+        <View style={TourDetailScreenStyleSheet.rowContainer}>
+          <View style={TourDetailScreenStyleSheet.row}>
+            <Text style={TourDetailScreenStyleSheet.titleKey}>Content:</Text>
+          </View>
         </View>
-      </View>
+        <View style={TourDetailScreenStyleSheet.rowContainer}>
+          <View style={TourDetailScreenStyleSheet.rowContent}>
+            <Text>{post?.content}</Text>
+          </View>
+        </View>
+        <ItemSeparatorView />
+        <View style={TourDetailScreenStyleSheet.rowContainer}>
+          <View style={{ marginRight: 15 }}>
+            <MaterialCommunityIcons name="comment-plus" size={16} />
+          </View>
+        </View>
+      </Card>
     </>
   );
 };

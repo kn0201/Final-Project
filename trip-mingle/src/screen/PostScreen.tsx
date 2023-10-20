@@ -7,19 +7,18 @@ import {
   FlatList,
   ListRenderItemInfo,
 } from "react-native";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import BuddiesPageStyleSheet from "../StyleSheet/BuddiesPageCss";
-import { useGet } from "../hooks/useGet";
 import { postInfoParser } from "../utils/parser";
 import { PostInfoItem } from "../utils/types";
 import { api } from "../apis/api";
 import { apiOrigin } from "../utils/apiOrigin";
 import TourDetailScreenStyleSheet from "../StyleSheet/TourDetailScreenCss";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import AddPostScreen1 from "./AddPostScreen";
+import React from "react";
 
 // Star rating
 export const setStarRating = (rating: number) => {
@@ -38,6 +37,19 @@ export const setStarRating = (rating: number) => {
       size={16}
     />
   ));
+};
+
+// Separator
+export const ItemSeparatorView = () => {
+  return (
+    <View
+      style={{
+        height: 0.5,
+        width: "100%",
+        backgroundColor: "#C8C8C8",
+      }}
+    />
+  );
 };
 
 //@ts-ignore
@@ -69,6 +81,17 @@ export default function TourScreen({ navigation }) {
   const [filteredPosts, setFilteredPosts] = useState<PostInfoItem[]>([]);
   const [posts, setPosts] = useState<PostInfoItem[]>([]);
 
+  const [search, setSearch] = useState("");
+  const [filteredPosts, setFilteredPosts] = useState<PostInfoItem[]>([]);
+  const [posts, setPosts] = useState<PostInfoItem[]>([]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      getPostInfo();
+    });
+    return unsubscribe;
+  }, [navigation]);
+
   useEffect(() => {
     getPostInfo();
   }, []);
@@ -98,8 +121,8 @@ export default function TourScreen({ navigation }) {
     setFilteredPosts(newData);
     setSearch(text);
   };
-  const ItemView = ({ item }: ListRenderItemInfo<PostInfoItem>) => {
-    return (
+  const ItemView = useCallback(
+    ({ item }: ListRenderItemInfo<PostInfoItem>) => (
       <TouchableOpacity
         key={item.id}
         onPress={() => handlePostClick(item.id, item.title)}
@@ -163,7 +186,7 @@ export default function TourScreen({ navigation }) {
         <View style={TourDetailScreenStyleSheet.rowContainerWithEnd}>
           <View style={TourDetailScreenStyleSheet.row}>
             <Text style={TourDetailScreenStyleSheet.titleKey}>Period:</Text>
-            <Text>{item.trip_period}</Text>
+            <Text>{item.trip_period ? item.trip_period : "Pending"}</Text>
           </View>
           <View style={TourDetailScreenStyleSheet.rowWithEnd}>
             <AntDesign name={"like1"} size={16} />
@@ -173,19 +196,9 @@ export default function TourScreen({ navigation }) {
           </View>
         </View>
       </TouchableOpacity>
-    );
-  };
-  const ItemSeparatorView = () => {
-    return (
-      <View
-        style={{
-          height: 0.5,
-          width: "100%",
-          backgroundColor: "#C8C8C8",
-        }}
-      />
-    );
-  };
+    ),
+    []
+  );
 
   // Display
   return (
@@ -201,8 +214,8 @@ export default function TourScreen({ navigation }) {
         <FlatList
           data={filteredPosts}
           keyExtractor={(item, index) => index.toString()}
-          ItemSeparatorComponent={ItemSeparatorView}
           renderItem={ItemView}
+          ItemSeparatorComponent={ItemSeparatorView}
         />
       </View>
       {/* <MaterialIcons

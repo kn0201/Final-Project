@@ -184,7 +184,7 @@ export function AddPostScreen1({ navigation }) {
         message: `Created new post #${result.id}`,
         firstButtonVisible: true,
         firstButtonFunction: () => {
-          navigation.navigate("Explore");
+          navigation.navigate("Tour");
         },
         secondButtonVisible: false,
       });
