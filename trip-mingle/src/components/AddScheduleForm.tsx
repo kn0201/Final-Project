@@ -34,7 +34,11 @@ type ImageFile = {
 
 function AddScheduleForm(props: {
   closeModal: () => void;
-  addNewScheduleCard: (newScheduleInfo: ScheduleCardInputInfo) => void;
+  addNewScheduleCard: (newScheduleInfo: {
+    plan_id: number;
+    plan_title: string;
+    image_path: string;
+  }) => void;
 }) {
   const { closeModal, addNewScheduleCard } = props;
 
@@ -115,7 +119,10 @@ function AddScheduleForm(props: {
       let json = await api.upload(
         "/planning/plan",
         formData,
-        object({}),
+        object({
+          plan_id: id(),
+          image_path: string(),
+        }),
         token
       );
       console.log("add plan result:", json);
@@ -124,7 +131,11 @@ function AddScheduleForm(props: {
         title: "Add a new plan",
         firstButtonVisible: true,
       });
-      addNewScheduleCard({ ...state, uri: imageFile?.uri });
+      addNewScheduleCard({
+        plan_id: json.plan_id,
+        plan_title: state.title,
+        image_path: json.image_path,
+      });
       closeModal();
       reset();
     } catch (error) {

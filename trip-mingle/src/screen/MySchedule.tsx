@@ -91,14 +91,13 @@ const Schedule = () => {
     }).start();
   };
 
-  const addNewScheduleCard = (newScheduleInfo: ScheduleCardInputInfo) => {
-    setCardList((currentList) => {
-      const newID = (currentList.pop()?.id || -1) + 1;
-      return [...currentList, { ...newScheduleInfo, id: newID }];
-    });
-  };
-
   const myPlanListResult = useGet("/planning/my-plans", getMyPlanListParser);
+
+  const addNewScheduleCard = (newScheduleInfo: PlanListItem) => {
+    myPlanListResult.setState((state) => ({
+      planList: [...state!.planList, newScheduleInfo],
+    }));
+  };
 
   return (
     <SafeAreaView>
