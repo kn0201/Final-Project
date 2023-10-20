@@ -1,4 +1,11 @@
-import { Text, View, Image, ScrollView } from "react-native";
+import {
+  Text,
+  View,
+  Image,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import { api } from "../apis/api";
 import { postDetailParser } from "../utils/parser";
 import { PostDetailItem } from "../utils/types";
@@ -11,6 +18,11 @@ import { ItemSeparatorView, setStarRating } from "./PostScreen";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import TourDetailScreenStyleSheet from "../StyleSheet/TourDetailScreenCss";
 import { Card } from "react-native-paper";
+import CommentScreenStyleSheet from "../StyleSheet/CommentScreenCss";
+import { Avatar } from "@rneui/themed";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useToken } from "../hooks/useToken";
+import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 
 const TourDetailScreen = ({
   route,
@@ -19,12 +31,15 @@ const TourDetailScreen = ({
   route: any;
   navigation: any;
 }) => {
+  const { token, payload, setToken } = useToken();
+  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
+  const [keyboardShow, setKeyboardShow] = useState(false);
   const { id, title } = route.params || {
     id: 0,
-    title: "Default Title",
+    title: "Tour Detail",
   };
   useEffect(() => {
-    navigation.setOptions({ headerTitle: title });
+    navigation.setOptions({ headerTitle: `#${id} ${title}` });
   }, [title]);
   const postDetail = useGet(`/blog/${id}`, postDetailParser);
   const postDetailData = postDetail.state || null;
@@ -45,10 +60,24 @@ const TourDetailScreen = ({
   const locationNamesString = Array.isArray(locationNames)
     ? locationNames.join(", ")
     : "";
+
+  const submit = () => {
+    if (token != "") {
+      console.log("ok");
+    } else {
+      IonNeverDialog.show({
+        type: "warning",
+        title: "Guest cannot Comment",
+        message: "Please Login",
+        firstButtonVisible: true,
+      });
+    }
+  };
+
   return (
     <>
       <Card style={{ margin: 15, marginRight: 20, height: "96%" }}>
-        <View style={TourDetailScreenStyleSheet.postContainer}>
+        <View style={TourDetailScreenStyleSheet.postDetailContainer}>
           <View
             style={{
               flexDirection: "row",
@@ -73,7 +102,6 @@ const TourDetailScreen = ({
             <Text> ({post?.number_of_rating})</Text>
           </View>
           <View style={TourDetailScreenStyleSheet.row}>
-            <Text style={{ fontWeight: "800" }}>#{post?.id}</Text>
             {post?.status === "open" ? (
               <Fontisto name="radio-btn-active" color="#0CD320" size={16} />
             ) : post?.status === "complete" ? (
@@ -85,10 +113,12 @@ const TourDetailScreen = ({
             ) : (
               <Fontisto name="close" color="red" size={16} />
             )}
-            <Text style={TourDetailScreenStyleSheet.titleKey}>
-              {post?.created_at?.substring(0, 10)}
-            </Text>
           </View>
+        </View>
+        <View style={TourDetailScreenStyleSheet.rowContainer}>
+          <Text style={TourDetailScreenStyleSheet.titleKey}>
+            {post?.created_at?.substring(0, 10)}
+          </Text>
         </View>
         {post?.trip_period ? (
           <>
@@ -206,7 +236,10 @@ const TourDetailScreen = ({
           </View>
         </View>
         <ItemSeparatorView />
-        <Text>Reply:</Text>
+        <View style={TourDetailScreenStyleSheet.replyContainer}>
+          <Text style={TourDetailScreenStyleSheet.titleKey}>Reply:</Text>
+        </View>
+        <ItemSeparatorView />
         <ScrollView style={{ height: "100%" }}>
           <View style={TourDetailScreenStyleSheet.postContainer}>
             <View
@@ -234,25 +267,9 @@ const TourDetailScreen = ({
             </View>
             <View style={TourDetailScreenStyleSheet.row}>
               <Text style={{ fontWeight: "800" }}>#{post?.id}</Text>
-              {post?.status === "open" ? (
-                <Fontisto name="radio-btn-active" color="#0CD320" size={16} />
-              ) : post?.status === "complete" ? (
-                <MaterialIcons
-                  name="remove-circle-outline"
-                  color="grey"
-                  size={20}
-                />
-              ) : (
-                <Fontisto name="close" color="red" size={16} />
-              )}
               <Text style={TourDetailScreenStyleSheet.titleKey}>
                 {post?.created_at?.substring(0, 10)}
               </Text>
-            </View>
-          </View>
-          <View style={TourDetailScreenStyleSheet.rowContainer}>
-            <View style={TourDetailScreenStyleSheet.row}>
-              <Text style={TourDetailScreenStyleSheet.titleKey}>Reply:</Text>
             </View>
           </View>
           <View style={TourDetailScreenStyleSheet.rowContainer}>
@@ -262,6 +279,30 @@ const TourDetailScreen = ({
           </View>
           <ItemSeparatorView />
         </ScrollView>
+        <View style={CommentScreenStyleSheet.bottomContainer}>
+          <Avatar
+            size={35}
+            rounded
+            source={{
+              uri: `${apiOrigin}/${post?.avatar_path}`,
+            }}
+          />
+          <View style={CommentScreenStyleSheet.textInputContainer}>
+            <TextInput
+              onBlur={() => {
+                setKeyboardShow(!keyboardShow);
+              }}
+              onFocus={() => {
+                setKeyboardShow(!keyboardShow);
+              }}
+              style={CommentScreenStyleSheet.textInput}
+            ></TextInput>
+          </View>
+
+          <TouchableOpacity onPress={submit}>
+            <Ionicons name="send" size={20} />
+          </TouchableOpacity>
+        </View>
       </Card>
     </>
   );
