@@ -40,13 +40,19 @@ export class PlanningService {
         .returning('id');
       image_id = id;
     }
-    return await this.knex('plan').insert({
-      title: input.title,
-      user_id: input.user_id,
-      // country,
-      privacy: false,
-      image_id,
-    });
+    let addPlan = await this.knex('plan')
+      .insert({
+        title: input.title,
+        user_id: input.user_id,
+        // country,
+        privacy: false,
+        image_id,
+      })
+      .returning('id');
+
+    let plan_id = addPlan[0].id;
+
+    return { plan_id, image_path: input.image_file };
   }
 
   async getImage(user_id: number) {
