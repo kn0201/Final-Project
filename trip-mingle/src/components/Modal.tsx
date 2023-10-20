@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
 export function ModalRoot() {
   const [content, setContent] = useState<any>();
   const dispatch = useEvent<ModalEvent>("modal", (event) => {
-    setContent(event.content);
+    setContent(() => event.content);
   });
   if (!content) {
     return <></>;

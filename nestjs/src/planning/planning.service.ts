@@ -1,66 +1,85 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { InjectKnex } from 'nestjs-knex';
-import { JwtService } from 'src/jwt/jwt.service';
 
 @Injectable()
 export class PlanningService {
-  constructor(
-    @InjectKnex() private readonly knex: Knex,
-    private jwtService: JwtService,
-  ) {}
-  //   async getPlanning(req) {
-  //     const payload = this.jwtService.decode(
-  //       req.headers.authorization.split(' ')[1],
-  //     );
-  //     let user_id = payload.user_id;
+  constructor(@InjectKnex() private readonly knex: Knex) {}
 
-  //     let intro = await this.knex('users')
-  //       .select('intro')
-  //       .where('id', user_id)
-  //       .first();
-  //     console.log(intro);
+  async getMyPlanList(user_id: number) {
+    type Row = {
+      plan_id: number;
+      plan_title: string;
+      image_path: string;
+    };
+    let planList: Row[] = await this.knex
+      .from('plan')
+      .innerJoin('image', 'image.id', 'plan.image_id')
+      .select(
+        'plan.id as plan_id',
+        'plan.title as plan_title',
+        'image.path as image_path',
+      )
+      .where({ 'plan.user_id': user_id });
+    return { planList };
+  }
 
-  //     let title = await this.knex('title')
-  //       .select('title')
-  //       .where('id', user_id)
-  //       .first();
-  //     console.log(title);
+  async addNewPlan(input: {
+    user_id: number;
+    title: string;
+    image_file: string | undefined;
+  }) {
+    let image_id: number | null = null;
+    if (input.image_file) {
+      let [{ id }] = await this.knex('image')
+        .insert({
+          user_id: input.user_id,
+          path: input.image_file,
+          is_delete: false,
+        })
+        .returning('id');
+      image_id = id;
+    }
+    return await this.knex('plan').insert({
+      title: input.title,
+      user_id: input.user_id,
+      // country,
+      privacy: false,
+      image_id,
+    });
+  }
 
-  //     let image = await this.knex('image')
-  //       .select('image_id')
-  //       .where('id', user_id)
-  //       .first();
-  //     console.log(image);
+  async getImage(user_id: number) {
+    let result = await this.knex
+      .select('path')
+      .from('image')
+      .where('user_id', user_id)
+      .first();
 
-  //     let country = await this.knex('country')
-  //       .select('country')
-  //       .where('id', user_id)
-  //       .first();
-  //     console.log(country);
+    console.log(result);
+    if (result === undefined) {
+      return { path: null };
+    }
+    console.log(result);
+  }
 
-  //     return {
-  //       intro: intro.intro,
-  //       title: title,
-  //       image: image,
-  //       country: country,
-  //     };
-  //   }
-
-  // async addPlanning(input, req) {
-  //     const payload = this.jwtService.decode(
-  //         req.headers.authorization.split(' ')[1],
-  //       );
-  //       let user_id = payload.user_id;
-  //       await this.knex('users').where({ id: user_id }).update({
-  //         intro: input.intro,
-  //       });
-
-  //   let plan = await this.knex('planing')
-  //   .select('title')
-  //   .where({id: user_id}).update({
-
-  //   })
-  //   .first()
-  // }
+  async addNewMark(
+    user_id: number,
+    input: {
+      planning_id: number;
+      start_date: string;
+      end_date: string;
+    },
+  ) {
+    let row = await this.knex
+      .select('plan')
+      .where({
+        id: input.planning_id,
+        user_id,
+      })
+      .first();
+    if (!row) throw new ForbiddenException('you are not the planing owner');
+    await this.knex('plan_detail').insert(input);
+  }
+  // async addNewEvent(detail_id, body: { location; start_time; end_time }) {}
 }

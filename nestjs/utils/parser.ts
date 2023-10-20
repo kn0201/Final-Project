@@ -1,4 +1,12 @@
-import { array, boolean, nullable, number, object, string } from 'cast.ts';
+import {
+  array,
+  boolean,
+  nullable,
+  number,
+  object,
+  optional,
+  string,
+} from 'cast.ts';
 
 export const loginParser = object({
   username: string({ trim: true, nonEmpty: true }),
@@ -54,6 +62,11 @@ export const addTourPostParser = object({
   preferred_hobby: nullable(string()),
 });
 
+export const addNewPlanParser = object({
+  start_time: string(),
+  end_time: string(),
+  location: string(),
+});
 export const updateUsernameParser = object({
   username: string(),
 });

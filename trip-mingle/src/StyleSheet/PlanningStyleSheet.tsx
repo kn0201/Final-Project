@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { center, flex, full, iosBlue, row, white } from "./StyleSheetHelper";
 
-const PlannigStyleSheet = StyleSheet.create({
+const PlanningStyleSheet = StyleSheet.create({
   center: {
     display: flex,
     justifyContent: center,
@@ -15,8 +15,8 @@ const PlannigStyleSheet = StyleSheet.create({
     marginLeft: 8,
   },
   inputContainer: {
-    width: "95%",
-    height: 24,
+    width: "90%",
+    height: 50,
     marginLeft: 8,
     marginTop: 4,
     marginBottom: 20,
@@ -122,4 +122,4 @@ const PlannigStyleSheet = StyleSheet.create({
   },
 });
 
-export default PlannigStyleSheet;
+export default PlanningStyleSheet;

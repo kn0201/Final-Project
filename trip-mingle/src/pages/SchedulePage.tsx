@@ -33,4 +33,7 @@ const SchedulePage = () => {
   );
 };
 
+// my schedule (get schedule list)
+// add schedule (post schedule)
+
 export default SchedulePage;

@@ -27,7 +27,7 @@ export default function MultipleHobbyCheckbox({
   const [localCode, setLocalCode] = useState<string[]>(code);
 
   const getList = async () => {
-    const json = await api.getList("/user/hobby_list", countryListParser);
+    const json = await api.get("/user/hobby_list", countryListParser);
     setHobbyList(json);
     setMatchedHobbyList(json);
   };
