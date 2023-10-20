@@ -201,8 +201,7 @@ export class BlogService {
 
   async getTourPostDetail(id: number) {
     try {
-      let postInfo = [];
-      let post_results = await this.knex
+      let post = await this.knex
         .select(
           'id',
           'user_id',
@@ -221,91 +220,81 @@ export class BlogService {
           'created_at',
         )
         .from('post')
-        .where('type', 'tour')
-        .andWhere('is_delete', false)
-        .orderBy('created_at', 'desc');
-      if (post_results.length > 0) {
-        for (let post of post_results) {
-          let system_location_results = await this.knex('user_location')
-            .leftJoin('post', { 'user_location.post_id': 'post.id' })
-            .leftJoin('system_location', {
-              'user_location.system_location_id': 'system_location.id',
-            })
-            .select(
-              'system_location.name as name',
-              'system_location.address as address',
-              'system_location.latitude as latitude',
-              'system_location.longitude as longitude',
-            )
-            .where('user_location.post_id', post.id);
-          let user_location_results = await this.knex('user_location')
-            .leftJoin('post', { 'user_location.post_id': 'post.id' })
-            .select(
-              'user_location.name as name',
-              'user_location.address as address',
-              'user_location.latitude as latitude',
-              'user_location.longitude as longitude',
-            )
-            .where('user_location.post_id', post.id)
-            .andWhere('user_location.system_location_id', null);
-          let trip_location =
-            system_location_results && !user_location_results
-              ? [...system_location_results]
-              : !system_location_results && user_location_results
-              ? [...user_location_results]
-              : system_location_results && user_location_results
-              ? [...user_location_results, ...system_location_results]
-              : [];
-          let user = await this.knex('users')
-            .leftJoin('image', { 'users.avatar_id': 'image.id' })
-            .select(
-              'users.username',
-              'image.path as avatar_path',
-              'users.rating',
-            )
-            .where('users.id', post.user_id)
-            .first();
-          let number_of_rating = await this.knex
-            .count('id')
-            .from('rating')
-            .where('user1_id', post.user_id)
-            .first();
-          let number_of_like = await this.knex
-            .count('id')
-            .from('like')
-            .where('post_id', post.id)
-            .first();
-          let number_of_reply = await this.knex
-            .count('id')
-            .from('comment')
-            .where('post_id', post.id)
-            .first();
-          await postInfo.push({
-            id: post.id,
-            title: post.title,
-            content: post.content,
-            trip_country: post.trip_country,
-            trip_location,
-            trip_period: post.trip_period,
-            trip_headcount: +post.trip_headcount,
-            trip_budget: post.trip_budget,
-            preferred_gender: post.preferred_gender,
-            preferred_age: post.preferred_age,
-            preferred_language: post.preferred_language,
-            preferred_hobby: post.preferred_hobby,
-            status: post.status,
-            view: post.view,
-            created_at: post.created_at,
-            username: user.username,
-            avatar_path: user.avatar_path ? user.avatar_path : 'yukimin.png',
-            rating: +user.rating,
-            number_of_rating: +number_of_rating.count,
-            number_of_like: +number_of_like.count,
-            number_of_reply: +number_of_reply.count,
-          });
-        }
-      }
-      return postInfo;
+        .where('id', id)
+        .first();
+      let system_location_results = await this.knex('user_location')
+        .leftJoin('post', { 'user_location.post_id': 'post.id' })
+        .leftJoin('system_location', {
+          'user_location.system_location_id': 'system_location.id',
+        })
+        .select(
+          'system_location.name as name',
+          'system_location.address as address',
+          'system_location.latitude as latitude',
+          'system_location.longitude as longitude',
+        )
+        .where('user_location.post_id', id);
+      let user_location_results = await this.knex('user_location')
+        .leftJoin('post', { 'user_location.post_id': 'post.id' })
+        .select(
+          'user_location.name as name',
+          'user_location.address as address',
+          'user_location.latitude as latitude',
+          'user_location.longitude as longitude',
+        )
+        .where('user_location.post_id', id)
+        .andWhere('user_location.system_location_id', null);
+      let trip_location =
+        system_location_results && !user_location_results
+          ? [...system_location_results]
+          : !system_location_results && user_location_results
+          ? [...user_location_results]
+          : system_location_results && user_location_results
+          ? [...user_location_results, ...system_location_results]
+          : [];
+      let user = await this.knex('users')
+        .leftJoin('image', { 'users.avatar_id': 'image.id' })
+        .select('users.username', 'image.path as avatar_path', 'users.rating')
+        .where('users.id', post.user_id)
+        .first();
+      let number_of_rating = await this.knex
+        .count('id')
+        .from('rating')
+        .where('user1_id', post.user_id)
+        .first();
+      let number_of_like = await this.knex
+        .count('id')
+        .from('like')
+        .where('post_id', id)
+        .first();
+      let number_of_reply = await this.knex
+        .count('id')
+        .from('comment')
+        .where('post_id', id)
+        .first();
+      return {
+        id: post.id,
+        title: post.title,
+        content: post.content,
+        trip_country: post.trip_country,
+        trip_location,
+        trip_period: post.trip_period,
+        trip_headcount: +post.trip_headcount,
+        trip_budget: post.trip_budget,
+        preferred_gender: post.preferred_gender,
+        preferred_age: post.preferred_age,
+        preferred_language: post.preferred_language,
+        preferred_hobby: post.preferred_hobby,
+        status: post.status,
+        view: post.view,
+        created_at: post.created_at,
+        username: user.username,
+        avatar_path: user.avatar_path ? user.avatar_path : 'yukimin.png',
+        rating: +user.rating,
+        number_of_rating: +number_of_rating.count,
+        number_of_like: +number_of_like.count,
+        number_of_reply: +number_of_reply.count,
+      };
     } catch (err) {
       throw err;
     }

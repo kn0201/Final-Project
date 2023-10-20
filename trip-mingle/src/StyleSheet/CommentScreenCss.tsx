@@ -27,7 +27,7 @@ const CommentScreenStyleSheet = StyleSheet.create({
     paddingHorizontal: 8,
   },
   textInput: {
-    backgroundColor: "red",
+    backgroundColor: "#eeeeee",
     borderRadius: 10,
     height: 37,
     paddingHorizontal: 8,

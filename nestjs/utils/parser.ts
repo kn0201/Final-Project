@@ -22,8 +22,12 @@ export const signUpParser = object({
   country_id: number(),
 });
 
-export const checkerParser = object({
+export const checkUsernameParser = object({
   username: string(),
+});
+
+export const checkEmailParser = object({
+  email: string(),
 });
 
 export const sendProfileParser = object({

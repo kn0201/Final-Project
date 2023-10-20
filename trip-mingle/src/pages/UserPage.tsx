@@ -133,8 +133,14 @@ export default function UserPage({ navigation }) {
               style={UserPageStyleSheet.changeContainer}
               onPress={() => {
                 IonNeverDialog.show({
+                  dialogHeight: 320,
                   component: () => {
-                    return <ChangeUsername username={username} />;
+                    return (
+                      <ChangeUsername
+                        username={username}
+                        navigation={navigation}
+                      />
+                    );
                   },
                 });
               }}

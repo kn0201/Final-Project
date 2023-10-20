@@ -8,7 +8,12 @@ import {
 } from '@nestjs/common';
 
 import { LoginService } from './login.service';
-import { checkerParser, loginParser, signUpParser } from 'utils/parser';
+import {
+  checkEmailParser,
+  checkUsernameParser,
+  loginParser,
+  signUpParser,
+} from 'utils/parser';
 import multer from 'multer';
 import { randomUUID } from 'crypto';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -40,9 +45,15 @@ export class LoginController {
     return this.loginService.register(input, image);
   }
 
-  @Post('check')
-  async checker(@Body() body: Body) {
-    let input = checkerParser.parse(body);
-    return this.loginService.checker(input);
+  @Post('check_username')
+  async checkUsername(@Body() body: Body) {
+    let input = checkUsernameParser.parse(body);
+    return this.loginService.checkUsername(input);
+  }
+
+  @Post('check_email')
+  async checkEmail(@Body() body: Body) {
+    let input = checkEmailParser.parse(body);
+    return this.loginService.checkEmail(input);
   }
 }

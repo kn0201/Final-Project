@@ -43,13 +43,13 @@ function ExplorePageTopTab({ navigation }) {
         containerStyle={{ width: "100%" }}
         placement="center"
       />
-      <TextInput
+      {/* <TextInput
         style={BuddiesPageStyleSheet.textInputStyle}
         // onChangeText={(text) => searchFilterFunction(text)}
         // value={text}
         underlineColorAndroid="transparent"
         placeholder="Search..."
-      />
+      /> */}
       <Tab.Navigator
         initialRouteName="Blog"
         screenOptions={{

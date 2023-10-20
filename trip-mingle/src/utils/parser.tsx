@@ -78,6 +78,39 @@ export const postInfoParser = array(
   }),
 );
 
+export const postDetailParser = object({
+  id: number(),
+  title: string(),
+  content: string(),
+  trip_country: string(),
+  trip_period: nullable(string()),
+  trip_headcount: nullable(number()),
+  trip_budget: nullable(string()),
+  preferred_gender: nullable(boolean()),
+  preferred_age: nullable(string()),
+  preferred_language: nullable(string()),
+  preferred_hobby: nullable(string()),
+  status: nullable(string()),
+  view: number(),
+  created_at: string(),
+  trip_location: nullable(
+    array(
+      object({
+        name: string(),
+        address: string(),
+        latitude: string(),
+        longitude: string(),
+      }),
+    ),
+  ),
+  username: string(),
+  avatar_path: string(),
+  rating: number(),
+  number_of_rating: number(),
+  number_of_like: number(),
+  number_of_reply: number(),
+});
+
 export const addPostCountryListParser = array(
   object({
     id: string(),
@@ -92,4 +125,8 @@ export const addTourPostParser = object({});
 
 export const getIconResult = object({
   path: nullable(string()),
+});
+
+export const updateUsernameResultParser = object({
+  result: boolean(),
 });

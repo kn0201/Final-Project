@@ -20,20 +20,30 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { apiOrigin } from "../utils/apiOrigin";
 import useBoolean from "../hooks/useBoolean";
 import { useEffect, useState } from "react";
+import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 
 export default function CommentScreen() {
   const { token, payload, setToken } = useToken();
-  const isKeyboardShow = useBoolean();
+  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
+
   const [keyboardShow, setKeyboardShow] = useState(false);
   let result = useGet("/user/icon", getIconResult).state?.path;
+  console.log(result);
 
-  const dismiss = () => {
-    isKeyboardShow.off();
+  const submit = () => {
+    if (token != "") {
+      console.log("ok");
+    } else {
+      IonNeverDialog.show({
+        type: "warning",
+        title: "Guest cannot Comment",
+        message: "Please Login",
+        firstButtonVisible: true,
+      });
+    }
   };
-  // useEffect(() => {
-  //   isKeyboardShow.off;
-  //   console.log({ isKeyboardShowOFF: isKeyboardShow.value });
-  // }, [Keyboard.dismiss()]);
+
+  useEffect(() => {}, [useToken()]);
   return (
     <TouchableWithoutFeedback>
       <>
@@ -72,7 +82,7 @@ export default function CommentScreen() {
               ></TextInput>
             </View>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={submit}>
               <Ionicons name="send" size={20} />
             </TouchableOpacity>
           </View>

@@ -20,13 +20,26 @@ export class LoginService {
     private jwtService: JwtService,
   ) {}
 
-  async checker(input) {
-    let foundUser = await this.knex('users')
+  async checkUsername(input) {
+    let foundUsername = await this.knex('users')
       .select('username')
       .where('username', input.username)
       .first();
 
-    if (foundUser === undefined) {
+    if (foundUsername === undefined) {
+      return { result: false };
+    } else {
+      return { result: true };
+    }
+  }
+
+  async checkEmail(input) {
+    let foundEmail = await this.knex('users')
+      .select('email')
+      .where('email', input.email)
+      .first();
+
+    if (foundEmail === undefined) {
       return { result: false };
     } else {
       return { result: true };
@@ -93,6 +106,22 @@ export class LoginService {
         .insert({
           user_id: id,
           path: imageName,
+          is_delete: false,
+        })
+        .returning('id');
+
+      let image_id = uploadResult[0].id;
+
+      await this.knex('users')
+        .update({
+          avatar_id: image_id,
+        })
+        .where('users.id', id);
+    } else {
+      let uploadResult = await this.knex('image')
+        .insert({
+          user_id: id,
+          path: 'yukimin.png',
           is_delete: false,
         })
         .returning('id');

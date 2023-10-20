@@ -28,7 +28,6 @@ import {
 } from "../utils/parser";
 import { JWTPayload, useToken } from "../hooks/useToken";
 import decode from "jwt-decode";
-import { basename } from "path";
 import { apiOrigin } from "../utils/apiOrigin";
 import { useGet } from "../hooks/useGet";
 
@@ -49,10 +48,11 @@ export default function RegisterScreen({ navigation }) {
   const [checkConfirmPassword, setCheckConfirmPassword] = useState("");
 
   const [checkUsernameResult, setCheckUsernameResult] = useState(false);
+  const [checkEmailResult, setCheckEmailResult] = useState(false);
 
   const errMsg = "Password Not Match!";
   const usernameErrorMsg = "Username already exist";
-
+  const emailErrorMsg = "Email already exist";
   const regisInfo = useRef<RegisInfo>({
     username: "",
     email: "",
@@ -120,8 +120,8 @@ export default function RegisterScreen({ navigation }) {
 
   const checkUsername = async (text: string) => {
     try {
-      let checker = await api.post(
-        "/login/check",
+      let checker = await api.loginSignUp(
+        "/login/check_username",
         { username: text },
         checkResultParser
       );
@@ -129,6 +129,24 @@ export default function RegisterScreen({ navigation }) {
         setCheckUsernameResult(true);
       } else if (checker.result === false) {
         setCheckUsernameResult(false);
+      }
+    } catch (error) {
+      const errorObject: any = { ...(error as object) };
+      console.log(errorObject);
+    }
+  };
+
+  const checkEmail = async (text: string) => {
+    try {
+      let checker = await api.loginSignUp(
+        "/login/check_email",
+        { email: text },
+        checkResultParser
+      );
+      if (checker.result === true) {
+        setCheckEmailResult(true);
+      } else if (checker.result === false) {
+        setCheckEmailResult(false);
       }
     } catch (error) {
       const errorObject: any = { ...(error as object) };
@@ -262,13 +280,21 @@ export default function RegisterScreen({ navigation }) {
               ref={(input: any) => {
                 clearInputs.email = () => input?.clear();
               }}
-              onChangeText={(text: string) => updateInputText("email", text)}
+              onChangeText={(text: string) => {
+                updateInputText("email", text);
+                checkEmail(text);
+              }}
               onEndEditing={() => Keyboard.dismiss()}
               keyboardType="email-address"
               placeholder="Email"
               style={RegisterScreenStyleSheet.textInput}
             ></TextInput>
             <Icon name="close" size={20} onPress={() => clearInputs.email()} />
+          </View>
+          <View style={RegisterScreenStyleSheet.center}>
+            <Text style={{ color: "red" }}>
+              {checkEmailResult ? emailErrorMsg : ""}
+            </Text>
           </View>
         </View>
         <View style={RegisterScreenStyleSheet.passwordContainer}>
