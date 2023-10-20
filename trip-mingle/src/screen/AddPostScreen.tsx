@@ -37,6 +37,8 @@ import TextButton from "../components/TextButton";
 import useBoolean from "../hooks/useBoolean";
 import { useSelection } from "../hooks/useSelection";
 import { theme } from "../theme/variables";
+import useEvent from "react-use-event";
+import { AddPostEvent } from "../utils/events";
 
 //@ts-ignore
 export function AddPostScreen1({ navigation }) {
@@ -101,7 +103,9 @@ export function AddPostScreen1({ navigation }) {
   const languagesList = useGet("/languages", languageListParser);
   const countriesListData = countriesList.state || [];
   const languagesListData = languagesList.state || [];
-  const [checkType, setCheckType] = useState("none");
+  const [checkType, setCheckType] = useState<"blog" | "tour" | "enquire">();
+
+  const dispatchAddPostEvent = useEvent<AddPostEvent>("AddPost");
 
   // Submit
   const postInfo = useRef<PostInfo>({
@@ -121,7 +125,7 @@ export function AddPostScreen1({ navigation }) {
 
   const addPost = async () => {
     try {
-      if (checkType !== "none") {
+      if (checkType) {
         updateInputText("type", checkType);
       } else {
         throw new Error("Missing type");
@@ -178,6 +182,7 @@ export function AddPostScreen1({ navigation }) {
         addTourPostParser,
         token
       );
+      dispatchAddPostEvent({ post_type: checkType });
       IonNeverDialog.show({
         type: "success",
         title: `Success`,

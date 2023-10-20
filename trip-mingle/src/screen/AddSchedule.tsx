@@ -12,7 +12,7 @@ import AgendaListItem from "../components/AgendaLIstItem";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import { ScheduleDate, ScheduleItem, ScheduleItemInfo } from "../utils/types";
 import PlanningStyleSheet from "../StyleSheet/PlanningStyleSheet";
-import { api } from "../apis/api";
+import { api, api2 } from "../apis/api";
 import { object } from "cast.ts";
 import { useToken } from "../hooks/useToken";
 import TextButton from "../components/TextButton";
@@ -75,7 +75,7 @@ const AddSchedule = () => {
       formData.append("start_date", startDate);
       formData.append("end_date", endDate);
       console.log(formData);
-      let json = await api.upload(
+      let json = await api2.upload(
         `/planning/${planId}/mark`,
         formData,
         object({}),

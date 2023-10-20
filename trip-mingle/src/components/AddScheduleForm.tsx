@@ -23,7 +23,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { apiOrigin } from "../utils/apiOrigin";
 import { useToken } from "../hooks/useToken";
 import { json } from "express";
-import { api } from "../apis/api";
+import { api, api2 } from "../apis/api";
 import { id, object, string } from "cast.ts";
 import TextButton from "./TextButton";
 
@@ -116,7 +116,7 @@ function AddScheduleForm(props: {
       }
       formData.append("title", state.title);
       formData.append("country", state.country);
-      let json = await api.upload(
+      let json = await api2.upload(
         "/planning/plan",
         formData,
         object({
