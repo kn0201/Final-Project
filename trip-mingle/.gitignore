@@ -43,5 +43,5 @@ eas.json
 app.json
 src/utils/apiOrigin.tsx
 uploads/
-
+src/utils/apiOrigin.tsx
 %ProgramData%
