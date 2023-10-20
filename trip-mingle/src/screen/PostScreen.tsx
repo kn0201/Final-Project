@@ -81,10 +81,6 @@ export default function TourScreen({ navigation }) {
   const [filteredPosts, setFilteredPosts] = useState<PostInfoItem[]>([]);
   const [posts, setPosts] = useState<PostInfoItem[]>([]);
 
-  const [search, setSearch] = useState("");
-  const [filteredPosts, setFilteredPosts] = useState<PostInfoItem[]>([]);
-  const [posts, setPosts] = useState<PostInfoItem[]>([]);
-
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       getPostInfo();
