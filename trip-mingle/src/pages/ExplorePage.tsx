@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import TourScreen from "../screen/PostScreen";
@@ -29,13 +29,16 @@ export default function ExplorePage() {
             },
           }}
         />
-        <Stack.Screen name="Blog Detail" component={BlogDetailScreen} />
-        <Stack.Screen name="Comment" component={CommentScreen} />
+
         <Stack.Screen
-          name="Tour Detail"
-          component={TourDetailScreen}
-          initialParams={{ itemId: 0 }}
+          name="Blog Detail"
+          component={BlogDetailScreen}
+          options={{
+            title: "testing",
+          }}
         />
+        <Stack.Screen name="Comment" component={CommentScreen} />
+        <Stack.Screen name="Tour Detail" component={TourDetailScreen} />
       </Stack.Navigator>
     </>
   );

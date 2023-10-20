@@ -31,10 +31,6 @@ import useBoolean from "../hooks/useBoolean";
 export default function ProfileScreen(props: {
   //@ts-ignore
   navigation;
-  // //@ts-ignore
-  // setEditableIcon;
-  // //@ts-ignore
-  // editableIcon;
 }) {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const { token, payload, setToken } = useToken();

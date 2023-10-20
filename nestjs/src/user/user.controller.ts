@@ -46,6 +46,7 @@ export class UserController {
   async getIcon(@Headers() headers: Headers) {
     return this.userService.getIcon(headers);
   }
+
   @UseGuards(AuthGuard)
   @Post('profile')
   async sendProfile(@Body() body: Body, @Req() req: Request) {

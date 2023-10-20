@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { Card } from "@rneui/themed";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import {
   RegisInfo,
   ScheduleCardInfo,
@@ -113,7 +114,8 @@ const Schedule = () => {
             position: "absolute",
             bottom: 10,
             right: 10,
-            backgroundColor: "white",
+            // backgroundColor: "white",
+            // color: "white",
             borderRadius: 32,
             zIndex: 0.95,
           }}

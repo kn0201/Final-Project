@@ -17,7 +17,7 @@ export class BlogService {
         req.headers.authorization.split(' ')[1],
       );
       let user_id = payload.user_id;
-      let [tour_post_result] = await this.knex('post')
+      let tour_post_result = await this.knex('post')
         .insert({
           user_id: user_id,
           type: body.type,
@@ -38,52 +38,53 @@ export class BlogService {
         .returning('id');
       if (body.trip_location.length > 0) {
         for (let location of body.trip_location) {
-          let [system_location_record] = await this.knex
+          let system_location_record = await this.knex
             .select('id', 'place_id')
             .from('system_location')
             .where({
-              place_id: location.id,
-            });
-          let [user_location_record] = await this.knex
+              place_id: location.place_id,
+            })
+            .first();
+          let user_location_record = await this.knex
             .select('id', 'place_id')
             .from('user_location')
             .where({
-              place_id: location.id,
-            });
-          if (!user_location_record) {
-            if (!system_location_record) {
-              let [system_location_result] = await this.knex('system_location')
+              place_id: location.place_id,
+            })
+            .first();
+          if (user_location_record === undefined) {
+            if (system_location_record === undefined) {
+              let system_location_result = await this.knex('system_location')
                 .insert({
-                  place_id: location.id,
+                  place_id: location.place_id,
                   name: location.name,
                   address: location.address,
-                  latitude: location.lat,
-                  longitude: location.lng,
+                  latitude: location.latitude,
+                  longitude: location.longitude,
                 })
                 .returning('id');
               await this.knex('user_location').insert({
                 user_id: user_id,
-                post_id: tour_post_result.id,
-                system_location_id: system_location_result.id,
+                post_id: tour_post_result[0].id,
+                system_location_id: system_location_result[0].id,
                 place_id: location.place_id,
                 is_delete: false,
               });
-            }
-            await this.knex('user_location')
-              .insert({
+            } else {
+              await this.knex('user_location').insert({
                 user_id: user_id,
-                post_id: tour_post_result.id,
+                post_id: tour_post_result[0].id,
                 system_location_id: system_location_record.id,
                 place_id: system_location_record.place_id,
                 is_delete: false,
-              })
-              .returning('id');
+              });
+            }
           }
         }
       }
-      return {};
+      return { id: tour_post_result[0].id };
     } catch (err) {
-      throw err;
+      throw new Error(err);
     }
   }
 

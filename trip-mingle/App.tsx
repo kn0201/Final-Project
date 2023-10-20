@@ -16,6 +16,7 @@ import TestingApp from "./src/components/IonNeverNotification/testingApp";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TokenProvider } from "./src/hooks/useToken";
 import { Modal, ModalRoot } from "./src/components/Modal";
+import { navigationRef } from "./src/tabs/RootNavigation";
 
 // const Stack = createNativeStackNavigator();
 

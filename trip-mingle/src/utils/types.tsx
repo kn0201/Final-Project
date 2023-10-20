@@ -49,7 +49,7 @@ export type PostInfo = {
   title: string;
   content: string;
   trip_country: string;
-  trip_location: string[] | null;
+  trip_location: LocationPost[] | null;
   trip_period: string | null;
   trip_headcount: string | null;
   trip_budget: string | null;
@@ -59,7 +59,14 @@ export type PostInfo = {
   preferred_hobby: string | null;
 };
 
-type Location = {
+type LocationPost = {
+  place_id: string;
+  name: string;
+  address: string;
+  latitude: string;
+  longitude: string;
+};
+type LocationGet = {
   name: string;
   address: string;
   latitude: string;
@@ -80,7 +87,7 @@ export type PostInfoItem = {
   status: string | null;
   view: number;
   created_at: string;
-  trip_location: Location[] | null;
+  trip_location: LocationGet[] | null;
   username: string;
   avatar_path: string;
   rating: number;
@@ -104,7 +111,7 @@ export type PostDetailItem = {
   status: string | null;
   view: number;
   created_at: string;
-  trip_location: Location[] | null;
+  trip_location: LocationGet[] | null;
   username: string;
   avatar_path: string;
   rating: number;

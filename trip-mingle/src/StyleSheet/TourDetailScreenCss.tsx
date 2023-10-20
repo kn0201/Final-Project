@@ -19,12 +19,21 @@ const TourDetailScreenStyleSheet = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginRight: 20,
+    flexWrap: "wrap",
     gap: 6,
   },
   row: {
     flexDirection: "row",
     alignItems: "center",
     marginRight: 10,
+    flexWrap: "wrap",
+    gap: 6,
+  },
+  rowContent: {
+    flexDirection: "row",
+    marginRight: 10,
+    paddingBottom: 10,
+    flexWrap: "wrap",
     gap: 6,
   },
   rowContainerWithEnd: {

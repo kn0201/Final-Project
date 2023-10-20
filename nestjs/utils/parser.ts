@@ -45,11 +45,11 @@ export const addTourPostParser = object({
   trip_location: nullable(
     array(
       object({
-        id: string(),
+        place_id: string(),
         name: string(),
         address: string(),
-        lat: number(),
-        lng: number(),
+        latitude: number(),
+        longitude: number(),
       }),
     ),
   ),
