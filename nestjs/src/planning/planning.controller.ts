@@ -13,7 +13,11 @@ import {
 import { UserService } from 'src/user/user.service';
 import { PlanningService } from './planning.service';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { addNewPlanParser, addPlanParser } from '../../utils/parser';
+import {
+  addMarkParser,
+  addNewPlanParser,
+  addPlanParser,
+} from '../../utils/parser';
 import multer from 'multer';
 import { randomUUID } from 'crypto';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -50,5 +54,14 @@ export class PlanningController {
   async uploadImage(@UploadedFile() image) {
     console.log('image:', image);
     return;
+  }
+
+  @Post('addNewMark')
+  addNewMark(@Body() body, @Request() req: any) {
+    console.log({ body });
+    let input = addMarkParser.parse(body);
+    console.log({ input });
+    console.log(req.payload);
+    return this.planningService.addNewMark(req.payload.user_id, body);
   }
 }

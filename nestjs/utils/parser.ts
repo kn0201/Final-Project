@@ -58,14 +58,13 @@ export const addTourPostParser = object({
   preferred_hobby: nullable(string()),
 });
 
-<<<<<<< HEAD
 export const addPlanParser = object({
   title: string(),
   uri: optional(string()),
   country: string(),
 });
 
-export const addScheduleParser = object({
+export const addMarkParser = object({
   start_date: string(),
   end_date: string(),
 });
@@ -74,8 +73,7 @@ export const addNewPlanParser = object({
   start_time: string(),
   end_time: string(),
   location: string(),
-=======
+});
 export const updateUsernameParser = object({
   username: string(),
->>>>>>> refs/remotes/origin/main
 });

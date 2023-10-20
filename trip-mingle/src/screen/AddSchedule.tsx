@@ -1,17 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Input, SpeedDial } from "@rneui/themed";
 import { View, Text, StyleSheet, Keyboard } from "react-native";
-import { Card } from "react-native-paper";
+import { Button, Card } from "react-native-paper";
 import { Agenda, AgendaEntry } from "react-native-calendars";
 import Constants from "expo-constants";
 import { TextInput } from "react-native-gesture-handler";
 import { MarkedDates } from "react-native-calendars/src/types";
 import { DAY } from "@beenotung/tslib/time";
 import { format_2_digit } from "@beenotung/tslib/format";
-import PlannigStyleSheet from "../StyleSheet/PlanningStyleSheet";
 import AgendaListItem from "../components/AgendaLIstItem";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
-import { ScheduleItem, ScheduleItemInfo } from "../utils/types";
+import { ScheduleDate, ScheduleItem, ScheduleItemInfo } from "../utils/types";
+import PlanningStyleSheet from "../StyleSheet/PlanningStyleSheet";
+import { api } from "../apis/api";
+import { object } from "cast.ts";
+import { useToken } from "../hooks/useToken";
+import TextButton from "../components/TextButton";
 
 const styles = StyleSheet.create({
   view: {
@@ -38,119 +42,163 @@ const AddSchedule = () => {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const [selectedDate, setSelectedDate] = useState<any>();
   const [open, setOpen] = useState(false);
-
   const [scheduleItems, setScheduleItems] = useState<ScheduleItem[]>([]);
+  const { token, payload, setToken } = useToken();
 
+  const addNewMarker = useRef<ScheduleDate>({
+    startDate: "",
+    endDate: "",
+  }).current;
+
+  async function addMarkDate() {
+    if (!startDate) {
+      IonNeverToast.show({
+        type: "warning",
+        title: "Please input start date",
+      });
+      if (!endDate)
+        IonNeverToast.show({
+          type: "warning",
+          title: "Please input end date",
+        });
+      return;
+    }
+    try {
+      let formData = new FormData();
+      formData.append("startDate", addNewMarker.startDate);
+      formData.append("endDate", addNewMarker.endDate);
+      let json = await api.upload(
+        "/planning/addNewMark",
+        formData,
+        object({}),
+        token
+      );
+      console.log("add mark:", json);
+      IonNeverDialog.show({
+        type: "success",
+        title: "Add a new mark",
+        firstButtonVisible: true,
+      });
+    } catch (error) {
+      let message = String(error);
+      IonNeverDialog.show({
+        type: "warning",
+        title: "Failed to add a new mark",
+        message,
+        firstButtonVisible: true,
+      });
+    }
+  }
   useEffect(() => {
     setScheduleItems([
       {
         id: 1,
-        date: "2023-10-16",
+        selectedDate: "2023-10-16",
         startTime: "13:00",
         endTime: "15:00",
         location: "Place 1",
       },
       {
         id: 2,
-        date: "2023-10-16",
+        selectedDate: "2023-10-16",
         startTime: "15:30",
         endTime: "15:45",
         location: "Place 2",
       },
       {
         id: 3,
-        date: "2023-10-17",
+        selectedDate: "2023-10-17",
         startTime: "15:30",
         endTime: "15:45",
         location: "Place 3",
       },
       {
         id: 4,
-        date: "2023-10-17",
+        selectedDate: "2023-10-17",
         startTime: "13:00",
         endTime: "15:00",
         location: "Place 1",
       },
       {
         id: 5,
-        date: "2023-10-18",
+        selectedDate: "2023-10-18",
         startTime: "15:30",
         endTime: "15:45",
         location: "Place 2",
       },
       {
         id: 6,
-        date: "2023-10-18",
+        selectedDate: "2023-10-18",
         startTime: "16:00",
         endTime: "16:30",
         location: "Place 3",
       },
       {
         id: 7,
-        date: "2023-10-19",
+        selectedDate: "2023-10-19",
         startTime: "16:45",
         endTime: "16:55",
         location: "Place 4",
       },
       {
         id: 1,
-        date: "2023-10-19",
+        selectedDate: "2023-10-19",
         startTime: "13:00",
         endTime: "15:00",
         location: "Place 1",
       },
       {
         id: 2,
-        date: "2023-10-20",
+        selectedDate: "2023-10-20",
         startTime: "15:30",
         endTime: "15:45",
         location: "Place 2",
       },
       {
         id: 3,
-        date: "2023-10-20",
+        selectedDate: "2023-10-20",
         startTime: "15:30",
         endTime: "15:45",
         location: "Place 3",
       },
       {
         id: 4,
-        date: "2023-10-20",
+        selectedDate: "2023-10-20",
         startTime: "13:00",
         endTime: "15:00",
         location: "Place 1",
       },
       {
         id: 5,
-        date: "2023-10-21",
+        selectedDate: "2023-10-21",
         startTime: "15:30",
         endTime: "15:45",
         location: "Place 2",
       },
       {
         id: 6,
-        date: "2023-10-21",
+        selectedDate: "2023-10-21",
         startTime: "16:00",
         endTime: "16:30",
         location: "Place 3",
       },
       {
         id: 7,
-        date: "2023-10-21",
+        selectedDate: "2023-10-21",
         startTime: "16:45",
         endTime: "16:55",
         location: "Place 4",
       },
       {
         id: 7,
-        date: "2023-10-21",
+        selectedDate: "2023-10-21",
         startTime: "16:45",
         endTime: "16:55",
         location: "Place 4",
       },
       {
         id: 7,
-        date: "2023-10-21",
+        selectedDate: "2023-10-21",
         startTime: "16:45",
         endTime: "16:55",
         location: "Place 4",
@@ -160,7 +208,7 @@ const AddSchedule = () => {
 
   const data: Record<string, ScheduleItem[]> = {};
   scheduleItems.forEach((item) => {
-    let date = item.date;
+    let date = item.selectedDate;
     let items = data[date];
     if (items) {
       items.push(item);
@@ -171,6 +219,10 @@ const AddSchedule = () => {
 
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
+
+  // const function addNewMarkDate() {
+
+  // }
 
   const markedDates: MarkedDates = {
     [startDate]: { startingDay: true, color: "lightgreen" },
@@ -208,20 +260,21 @@ const AddSchedule = () => {
         <Space height={10}></Space>
         <Text>Starting Date</Text>
         <TextInput
-          style={PlannigStyleSheet.inputContainer}
+          style={PlanningStyleSheet.inputContainer}
           value={startDate}
           onChangeText={setStartDate}
           onEndEditing={() => Keyboard.dismiss()}
-          placeholder="Input your start travl date"
+          placeholder="Input your start travel date"
         ></TextInput>
         <Text>Ending Date</Text>
         <TextInput
-          style={PlannigStyleSheet.inputContainer}
+          style={PlanningStyleSheet.inputContainer}
           value={endDate}
           onChangeText={setEndDate}
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input your end travel date"
         ></TextInput>
+        <TextButton text="Add New Mark" onPress={addMarkDate}></TextButton>
       </View>
       <Space height={10}></Space>
       <View style={{ flex: 1 }}>
@@ -247,20 +300,6 @@ const AddSchedule = () => {
               <Text>empty date</Text>
             </View>
           )}
-          // renderList={(listProps) => (
-          //   <AgendaListItem
-          //     data={listProps.items}
-          //     selectedDate={selectedDate}
-          //   ></AgendaListItem>
-          // )}
-
-          // renderItem={(reservation: AgendaEntry, isFirst: boolean) => (
-          //     <AgendaListItem
-          //       data={data}
-          //       selectedDate={selectedDate}
-          //     ></AgendaListItem>
-          // )}
-
           renderItem={(reservation: AgendaEntry, isFirst: boolean) => {
             let scheduleItem: ScheduleItem = reservation as any;
             return (
@@ -281,7 +320,7 @@ const AddSchedule = () => {
                     }}
                   >
                     <Text style={{ textShadowColor: "#ff0000" }}>
-                      {scheduleItem.date}
+                      {scheduleItem.selectedDate}
                     </Text>
                     <Text>
                       {scheduleItem.startTime} - {scheduleItem.endTime}

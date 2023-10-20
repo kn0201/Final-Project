@@ -12,7 +12,6 @@ import {
 } from "react-native";
 import { Avatar, Card, TextInput } from "react-native-paper";
 import reservation from "react-native-calendars/src/agenda/reservation-list/reservation";
-import PlannigStyleSheet from "../StyleSheet/PlanningStyleSheet";
 import LocationInput from "./locationInput";
 import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
@@ -21,6 +20,7 @@ import { ScheduleItemInfo, UserLocation } from "../utils/types";
 import InputAutocomplete from "./InputAutocomplete";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import query from "../utils/googleAPIQuery";
+import PlanningStyleSheet from "../StyleSheet/PlanningStyleSheet";
 
 function Space(props: { height: number }) {
   return (
@@ -39,7 +39,7 @@ export default function AgendaListItem(props: {
   const { IonNeverToast } = useIonNeverNotification();
 
   const [scheduleInfo, setScheduleInfo] = useState<ScheduleItemInfo>({
-    date: selectedDate,
+    selectedDate: selectedDate,
     startTime: "",
     endTime: "",
     location: "",
@@ -58,11 +58,11 @@ export default function AgendaListItem(props: {
   return (
     <View>
       <TouchableOpacity>
-        <Text style={[PlannigStyleSheet.inputTitle, { marginTop: 6 }]}>
+        <Text style={[PlanningStyleSheet.inputTitle, { marginTop: 6 }]}>
           Staring Time
         </Text>
         <TextInput
-          style={PlannigStyleSheet.inputContainer}
+          style={PlanningStyleSheet.inputContainer}
           value={scheduleInfo.startTime}
           onChangeText={(text) =>
             updateScheduleInfo("startTime", checkTime(text))
@@ -72,16 +72,16 @@ export default function AgendaListItem(props: {
           placeholder="Input Start time (e.g. 13:44)"
           placeholderTextColor="gray"
         ></TextInput>
-        <Text style={PlannigStyleSheet.inputTitle}>End Time</Text>
+        <Text style={PlanningStyleSheet.inputTitle}>End Time</Text>
         <TextInput
-          style={PlannigStyleSheet.inputContainer}
+          style={PlanningStyleSheet.inputContainer}
           onChangeText={(text) => updateScheduleInfo("endTime", text)}
           keyboardType="numeric"
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input End time"
           placeholderTextColor="gray"
         ></TextInput>
-        <Text style={PlannigStyleSheet.inputTitle}>Location</Text>
+        <Text style={PlanningStyleSheet.inputTitle}>Location</Text>
         {/* <Space height={50} /> */}
         <View style={{ height: 250 }}>
           <GooglePlacesAutocomplete
@@ -105,7 +105,7 @@ export default function AgendaListItem(props: {
           />
         </View>
         <TouchableOpacity
-          style={PlannigStyleSheet.buttonStyle}
+          style={PlanningStyleSheet.buttonStyle}
           onPress={() => {
             if (!scheduleInfo.location) {
               IonNeverToast.show({
@@ -119,7 +119,7 @@ export default function AgendaListItem(props: {
             updateScheduleList(scheduleInfo);
           }}
         >
-          <Text style={PlannigStyleSheet.loginText}>Add New Event</Text>
+          <Text style={PlanningStyleSheet.loginText}>Add New Event</Text>
         </TouchableOpacity>
       </TouchableOpacity>
     </View>

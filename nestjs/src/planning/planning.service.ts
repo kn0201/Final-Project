@@ -52,4 +52,18 @@ export class PlanningService {
     }
     console.log(result);
   }
+
+  // async getSchedule(req){
+  //   await
+  // }
+
+  async addNewMark(planing_id, body: { start_date: any; end_date: any }) {
+    const { start_date, end_date } = body;
+    let result = await this.knex('plan_detail').insert({
+      start_date,
+      end_date,
+    });
+  }
+
+  async addNewEvent(detail_id, body: { location; start_time; end_time }) {}
 }
