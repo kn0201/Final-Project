@@ -7,7 +7,7 @@ import BuddiesPage from "../tabs/ExplorePageTopTab";
 
 import CommentScreen from "../screen/CommentScreen";
 import TourDetailScreen from "../screen/TourDetailScreen";
-import BlogDetailScreen from "../screen/blogDetailScreen";
+import BlogDetailScreen from "../screen/BlogDetailScreen";
 
 const Stack = createStackNavigator();
 

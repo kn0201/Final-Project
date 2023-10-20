@@ -91,7 +91,7 @@ export let api2 = {
     if (image_path.startsWith("http://") || image_path.startsWith("https://")) {
       return image_path;
     }
-    return apiOrigin + "/uploads/" + image_path;
+    return apiOrigin + "/" + image_path;
   },
 };
 
