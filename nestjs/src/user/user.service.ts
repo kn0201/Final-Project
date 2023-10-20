@@ -114,10 +114,11 @@ export class UserService {
   }
 
   async getIcon(headers) {
-    if (headers) {
-      const payload = this.jwtService.decode(
-        headers.authorization.split(' ')[1],
-      );
+    let token = headers.authorization.split(' ')[1];
+    if (token == undefined) {
+      return { path: 'yukimin.png' };
+    } else {
+      const payload = this.jwtService.decode(token);
       let user_id = payload.user_id;
 
       let avatar_id = await this.knex
@@ -156,15 +157,12 @@ export class UserService {
       .from('users')
       .where('users.id', user_id)
       .first();
-    console.log(avatar_id.avatar_id);
 
     let path = await this.knex
       .select('image.path')
       .from('image')
       .where('image.id', avatar_id.avatar_id)
       .andWhere('image.user_id', user_id);
-
-    console.log(path);
 
     let uploadResult = await this.knex('image')
       .insert({
@@ -200,7 +198,6 @@ export class UserService {
         username: input.username,
       })
       .where('id', user_id);
-    console.log(result);
 
     if (result) {
       return { result: true };

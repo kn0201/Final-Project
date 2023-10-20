@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import TourScreen from "../screen/PostScreen";
@@ -11,6 +11,7 @@ import TourDetailScreen from "../screen/TourDetailScreen";
 const Stack = createStackNavigator();
 
 export default function ExplorePage() {
+  const [title, setTitle] = useState("Blog Detail");
   return (
     <>
       <Stack.Navigator>
@@ -29,7 +30,13 @@ export default function ExplorePage() {
             },
           }}
         />
-        <Stack.Screen name="Blog Detail" component={BlogDetailScreen} />
+        <Stack.Screen
+          name="Blog Detail"
+          component={BlogDetailScreen}
+          options={{
+            title: "testing",
+          }}
+        />
         <Stack.Screen name="Comment" component={CommentScreen} />
         <Stack.Screen name="Tour Detail" component={TourDetailScreen} />
       </Stack.Navigator>
