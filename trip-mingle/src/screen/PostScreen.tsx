@@ -7,18 +7,18 @@ import {
   FlatList,
   ListRenderItemInfo,
 } from "react-native";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import BuddiesPageStyleSheet from "../StyleSheet/BuddiesPageCss";
-import { useGet } from "../hooks/useGet";
 import { postInfoParser } from "../utils/parser";
 import { PostInfoItem } from "../utils/types";
 import { api } from "../apis/api";
 import { apiOrigin } from "../utils/apiOrigin";
 import TourDetailScreenStyleSheet from "../StyleSheet/TourDetailScreenCss";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import React from "react";
 
 // Star rating
 export const setStarRating = (rating: number) => {
@@ -39,6 +39,19 @@ export const setStarRating = (rating: number) => {
   ));
 };
 
+// Separator
+export const ItemSeparatorView = () => {
+  return (
+    <View
+      style={{
+        height: 0.5,
+        width: "100%",
+        backgroundColor: "#C8C8C8",
+      }}
+    />
+  );
+};
+
 //@ts-ignore
 export default function TourScreen({ navigation }) {
   // Select post
@@ -53,25 +66,30 @@ export default function TourScreen({ navigation }) {
   };
 
   // Search bar
-  const [search, setSearch] = useState("");
-  const postInfo = useGet("/blog", postInfoParser);
-  const postInfoData = postInfo.state || [];
-  const [filteredPosts, setFilteredPosts] = useState<PostInfoItem[]>([]);
-  const [posts, setPosts] = useState<PostInfoItem[]>(postInfoData);
-
   const getPostInfo = async () => {
     try {
       let postInfoData = await api.get("/blog", postInfoParser);
       setPosts(postInfoData);
+      setFilteredPosts(postInfoData);
     } catch (err) {
       console.log(err);
     }
   };
 
+  const [search, setSearch] = useState("");
+  const [filteredPosts, setFilteredPosts] = useState<PostInfoItem[]>([]);
+  const [posts, setPosts] = useState<PostInfoItem[]>([]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      getPostInfo();
+    });
+    return unsubscribe;
+  }, [navigation]);
+
   useEffect(() => {
     getPostInfo();
-    setFilteredPosts(posts);
-  }, [postInfoData]);
+  }, []);
 
   const searchFilterFunction = (text: string) => {
     const newData = text
@@ -98,8 +116,8 @@ export default function TourScreen({ navigation }) {
     setFilteredPosts(newData);
     setSearch(text);
   };
-  const ItemView = ({ item }: ListRenderItemInfo<PostInfoItem>) => {
-    return (
+  const ItemView = useCallback(
+    ({ item }: ListRenderItemInfo<PostInfoItem>) => (
       <TouchableOpacity
         key={item.id}
         onPress={() => handlePostClick(item.id, item.title)}
@@ -163,7 +181,7 @@ export default function TourScreen({ navigation }) {
         <View style={TourDetailScreenStyleSheet.rowContainerWithEnd}>
           <View style={TourDetailScreenStyleSheet.row}>
             <Text style={TourDetailScreenStyleSheet.titleKey}>Period:</Text>
-            <Text>{item.trip_period}</Text>
+            <Text>{item.trip_period ? item.trip_period : "Pending"}</Text>
           </View>
           <View style={TourDetailScreenStyleSheet.rowWithEnd}>
             <AntDesign name={"like1"} size={16} />
@@ -173,19 +191,9 @@ export default function TourScreen({ navigation }) {
           </View>
         </View>
       </TouchableOpacity>
-    );
-  };
-  const ItemSeparatorView = () => {
-    return (
-      <View
-        style={{
-          height: 0.5,
-          width: "100%",
-          backgroundColor: "#C8C8C8",
-        }}
-      />
-    );
-  };
+    ),
+    [],
+  );
 
   // Display
   return (
@@ -201,8 +209,8 @@ export default function TourScreen({ navigation }) {
         <FlatList
           data={filteredPosts}
           keyExtractor={(item, index) => index.toString()}
-          ItemSeparatorComponent={ItemSeparatorView}
           renderItem={ItemView}
+          ItemSeparatorComponent={ItemSeparatorView}
         />
       </View>
       {/* <MaterialIcons
