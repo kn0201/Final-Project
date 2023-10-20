@@ -1,45 +1,55 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { InjectKnex } from 'nestjs-knex';
-import { title } from 'process';
-import { JwtService } from 'src/jwt/jwt.service';
 
 @Injectable()
 export class PlanningService {
-  constructor(
-    @InjectKnex() private readonly knex: Knex,
-    private jwtService: JwtService,
-  ) {}
-  async addNewPlan(user_id, body: { title: any; country: any }, image) {
-    const { title, country } = body;
+  constructor(@InjectKnex() private readonly knex: Knex) {}
 
+  async getMyPlanList(user_id: number) {
+    type Row = {
+      plan_id: number;
+      plan_title: string;
+      image_path: string;
+    };
+    let planList: Row[] = await this.knex
+      .from('plan')
+      .innerJoin('image', 'image.id', 'plan.image_id')
+      .select(
+        'plan.id as plan_id',
+        'plan.title as plan_title',
+        'image.path as image_path',
+      )
+      .where({ 'plan.user_id': user_id });
+    return { planList };
+  }
+
+  async addNewPlan(input: {
+    user_id: number;
+    title: string;
+    image_file: string | undefined;
+  }) {
     let image_id: number | null = null;
-    if (image) {
-      let imageName = image.filename;
+    if (input.image_file) {
       let [{ id }] = await this.knex('image')
         .insert({
-          user_id,
-          path: imageName,
+          user_id: input.user_id,
+          path: input.image_file,
           is_delete: false,
         })
         .returning('id');
       image_id = id;
     }
-    return await this.knex('planing').insert({
-      title,
-      user_id,
+    return await this.knex('plan').insert({
+      title: input.title,
+      user_id: input.user_id,
       // country,
       privacy: false,
       image_id,
     });
   }
 
-  async getImage(req) {
-    const payload = this.jwtService.decode(
-      req.headers.authorization.split(' ')[1],
-    );
-    let user_id = payload.user_id;
-
+  async getImage(user_id: number) {
     let result = await this.knex
       .select('path')
       .from('image')
@@ -53,17 +63,23 @@ export class PlanningService {
     console.log(result);
   }
 
-  // async getSchedule(req){
-  //   await
-  // }
-
-  async addNewMark(planing_id, body: { start_date: any; end_date: any }) {
-    const { start_date, end_date } = body;
-    let result = await this.knex('plan_detail').insert({
-      start_date,
-      end_date,
-    });
+  async addNewMark(
+    user_id: number,
+    input: {
+      planning_id: number;
+      start_date: string;
+      end_date: string;
+    },
+  ) {
+    let row = await this.knex
+      .select('plan')
+      .where({
+        id: input.planning_id,
+        user_id,
+      })
+      .first();
+    if (!row) throw new ForbiddenException('you are not the planing owner');
+    await this.knex('plan_detail').insert(input);
   }
-
-  async addNewEvent(detail_id, body: { location; start_time; end_time }) {}
+  // async addNewEvent(detail_id, body: { location; start_time; end_time }) {}
 }

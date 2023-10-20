@@ -45,15 +45,15 @@ export let api = {
     parser: Parser<T>,
     token: string
   ) {
-    let res = await fetch(apiOrigin + path, {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + token,
+    return handleFetch(
+      path,
+      {
+        method: "POST",
+        body,
       },
-      body,
-    });
-    let json = await res.json();
-    return parser.parse(json);
+      parser,
+      token
+    );
   },
 
   async patch<T>(path: string, body: object, parser: Parser<T>, token: string) {

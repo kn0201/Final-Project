@@ -16,6 +16,12 @@ import { api } from "../apis/api";
 import { object } from "cast.ts";
 import { useToken } from "../hooks/useToken";
 import TextButton from "../components/TextButton";
+import { AppParamList, useAppNavigation, useAppRoute } from "../../navigators";
+import {
+  RouteProp,
+  useNavigationState,
+  useRoute,
+} from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   view: {
@@ -45,10 +51,11 @@ const AddSchedule = () => {
   const [scheduleItems, setScheduleItems] = useState<ScheduleItem[]>([]);
   const { token, payload, setToken } = useToken();
 
-  const addNewMarker = useRef<ScheduleDate>({
-    startDate: "",
-    endDate: "",
-  }).current;
+  const navigation = useAppNavigation();
+  const routeState = navigation.getState();
+  console.log("route state:", routeState);
+
+  const planId = useAppRoute<"AddSchedule">().planId;
 
   async function addMarkDate() {
     if (!startDate) {
@@ -65,10 +72,11 @@ const AddSchedule = () => {
     }
     try {
       let formData = new FormData();
-      formData.append("startDate", addNewMarker.startDate);
-      formData.append("endDate", addNewMarker.endDate);
+      formData.append("start_date", startDate);
+      formData.append("end_date", endDate);
+      console.log(formData);
       let json = await api.upload(
-        "/planning/addNewMark",
+        `/planning/${planId}/mark`,
         formData,
         object({}),
         token
@@ -217,8 +225,8 @@ const AddSchedule = () => {
     }
   });
 
-  const [startDate, setStartDate] = useState<string>("");
-  const [endDate, setEndDate] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>("2023-10-16");
+  const [endDate, setEndDate] = useState<string>("2023-10-27");
 
   // const function addNewMarkDate() {
 
@@ -258,6 +266,7 @@ const AddSchedule = () => {
       {/* <Space height={40} /> */}
       <View>
         <Space height={10}></Space>
+        <Text>plan id: {planId}</Text>
         <Text>Starting Date</Text>
         <TextInput
           style={PlanningStyleSheet.inputContainer}

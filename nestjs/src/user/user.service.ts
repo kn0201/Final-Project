@@ -191,15 +191,12 @@ export class UserService {
     return { result: true };
   }
 
-  async updateUsername(input: { username: string }, headers) {
-    const payload = this.jwtService.decode(headers.authorization.split(' ')[1]);
-    let user_id = payload.user_id;
-
+  async updateUsername(input: { user_id: number; username: string }) {
     let result = await this.knex('users')
       .update({
         username: input.username,
       })
-      .where('id', user_id);
+      .where('id', input.user_id);
     console.log(result);
 
     if (result) {

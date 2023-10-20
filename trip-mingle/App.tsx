@@ -17,7 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TokenProvider } from "./src/hooks/useToken";
 import { Modal, ModalRoot } from "./src/components/Modal";
 
-const Stack = createNativeStackNavigator();
+// const Stack = createNativeStackNavigator();
 
 function Root() {
   return (

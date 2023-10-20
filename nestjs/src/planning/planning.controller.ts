@@ -2,7 +2,10 @@ import {
   Body,
   Controller,
   Get,
+  Header,
+  Headers,
   NotImplementedException,
+  Param,
   Post,
   Req,
   Request,
@@ -13,14 +16,11 @@ import {
 import { UserService } from 'src/user/user.service';
 import { PlanningService } from './planning.service';
 import { AuthGuard } from 'src/auth/auth.guard';
-import {
-  addMarkParser,
-  addNewPlanParser,
-  addPlanParser,
-} from '../../utils/parser';
-import multer from 'multer';
+import multer, { Multer, Field } from 'multer';
 import { randomUUID } from 'crypto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { getJWTPayload } from 'src/jwt';
+import { id, object, string } from 'cast.ts';
 
 let storage = multer.diskStorage({
   destination: 'uploads',
@@ -31,24 +31,40 @@ let storage = multer.diskStorage({
   },
 });
 
-@UseGuards(AuthGuard)
+// @UseGuards(AuthGuard)
 @Controller('planning')
 export class PlanningController {
   constructor(private planningService: PlanningService) {}
 
+  @Get('my-plans')
+  getMyPlans(@Headers() headers: {}) {
+    let jwt = getJWTPayload(headers);
+    return this.planningService.getMyPlanList(jwt.user_id);
+  }
+
   @Post('plan')
   @UseInterceptors(FileInterceptor('image', { storage: storage }))
-  addNewPlan(@Body() body, @UploadedFile() image, @Request() req: any) {
-    console.log({ body, image });
-    let input = addPlanParser.parse(body);
-    console.log({ input });
-    console.log(req.payload);
+  addNewPlan(
+    @Body() body,
+    @UploadedFile() image: Express.Multer.File | undefined,
+    @Headers() headers: {},
+  ) {
+    let jwt = getJWTPayload(headers);
 
-    return this.planningService.addNewPlan(req.payload.user_id, body, image);
-    // return { success: true };
+    let input = object({
+      body: object({
+        title: string(),
+        // country: string(),
+      }),
+    }).parse({ body });
 
-    throw new NotImplementedException('todo');
+    return this.planningService.addNewPlan({
+      user_id: jwt.user_id,
+      title: input.body.title,
+      image_file: image?.filename,
+    });
   }
+
   @Post('image')
   @UseInterceptors(FileInterceptor('image', { storage: storage }))
   async uploadImage(@UploadedFile() image) {
@@ -56,12 +72,22 @@ export class PlanningController {
     return;
   }
 
-  @Post('addNewMark')
-  addNewMark(@Body() body, @Request() req: any) {
-    console.log({ body });
-    let input = addMarkParser.parse(body);
-    console.log({ input });
-    console.log(req.payload);
-    return this.planningService.addNewMark(req.payload.user_id, body);
+  @Post(':plan_id/mark')
+  addNewMark(@Body() body, @Headers() headers: {}, @Param() params: {}) {
+    let jwt = getJWTPayload(headers);
+    let input = object({
+      body: object({
+        start_date: string(),
+        end_date: string(),
+      }),
+      params: object({
+        plan_id: id(),
+      }),
+    }).parse({ body, params });
+    return this.planningService.addNewMark(jwt.user_id, {
+      planning_id: input.params.plan_id,
+      start_date: input.body.start_date,
+      end_date: input.body.end_date,
+    });
   }
 }
