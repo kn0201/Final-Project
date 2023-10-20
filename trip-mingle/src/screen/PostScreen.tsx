@@ -17,32 +17,34 @@ import { postInfoParser } from "../utils/parser";
 import { PostInfoItem } from "../utils/types";
 import { api } from "../apis/api";
 import { apiOrigin } from "../utils/apiOrigin";
+import TourDetailScreenStyleSheet from "../StyleSheet/TourDetailScreenCss";
+import AntDesign from "react-native-vector-icons/AntDesign";
+
+// Star rating
+export const setStarRating = (rating: number) => {
+  rating = Math.round(rating * 2) / 2;
+  let output = [];
+  for (var i = rating; i >= 1; i--) output.push(1);
+  if (i >= 0.5 && i < 1) output.push(0.5);
+  for (let i = 5 - rating; i >= 1; i--) output.push(0);
+  return output.map((star, index) => (
+    <MaterialCommunityIcons
+      key={index}
+      name={
+        star === 1 ? "star" : star === 0.5 ? "star-half-full" : "star-outline"
+      }
+      color={"#DEB934"}
+      size={16}
+    />
+  ));
+};
 
 //@ts-ignore
 export default function TourScreen({ navigation }) {
-  // Star rating
-  const setStarRating = (rating: number) => {
-    rating = Math.round(rating * 2) / 2;
-    let output = [];
-    for (var i = rating; i >= 1; i--) output.push(1);
-    if (i >= 0.5 && i < 1) output.push(0.5);
-    for (let i = 5 - rating; i >= 1; i--) output.push(0);
-    return output.map((star, index) => (
-      <MaterialCommunityIcons
-        key={index}
-        name={
-          star === 1 ? "star" : star === 0.5 ? "star-half-full" : "star-outline"
-        }
-        color={"#DEB934"}
-        size={16}
-      />
-    ));
-  };
-
   // Select post
   const [selectedPostID, setSelectedPostIDs] = useState(0);
-  const handlePostClick = (id: number) => {
-    navigation.navigate("Tour Detail", { id });
+  const handlePostClick = (id: number, title: string) => {
+    navigation.navigate("Tour Detail", { id, title });
     if (selectedPostID == id) {
       setSelectedPostIDs(0);
     } else {
@@ -55,7 +57,7 @@ export default function TourScreen({ navigation }) {
   const postInfo = useGet("/blog", postInfoParser);
   const postInfoData = postInfo.state || [];
   const [filteredPosts, setFilteredPosts] = useState<PostInfoItem[]>([]);
-  const [posts, setPosts] = useState<PostInfoItem[]>([]);
+  const [posts, setPosts] = useState<PostInfoItem[]>(postInfoData);
 
   const getPostInfo = async () => {
     try {
@@ -100,21 +102,13 @@ export default function TourScreen({ navigation }) {
     return (
       <TouchableOpacity
         key={item.id}
-        onPress={() => handlePostClick(item.id)}
+        onPress={() => handlePostClick(item.id, item.title)}
         style={[
           { flex: 1 },
           selectedPostID === item.id ? { backgroundColor: "#E7FFF0" } : null,
         ]}
       >
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 10,
-            padding: 10,
-          }}
-        >
+        <View style={TourDetailScreenStyleSheet.postContainer}>
           <View
             style={{
               flexDirection: "row",
@@ -122,13 +116,7 @@ export default function TourScreen({ navigation }) {
             }}
           >
             <Image
-              style={{
-                width: 30,
-                height: 30,
-                borderRadius: 20,
-                resizeMode: "contain",
-                marginRight: 10,
-              }}
+              style={TourDetailScreenStyleSheet.avatar}
               source={{
                 uri: `${apiOrigin}/${item.avatar_path}`,
               }}
@@ -144,14 +132,7 @@ export default function TourScreen({ navigation }) {
             {setStarRating(item.rating)}
             <Text> ({item.number_of_rating})</Text>
           </View>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginRight: 10,
-              gap: 6,
-            }}
-          >
+          <View style={TourDetailScreenStyleSheet.row}>
             <Text style={{ fontWeight: "800" }}>#{item.id}</Text>
             {item.status === "open" ? (
               <Fontisto name="radio-btn-active" color="#0CD320" size={16} />
@@ -164,64 +145,31 @@ export default function TourScreen({ navigation }) {
             ) : (
               <Fontisto name="close" color="red" size={16} />
             )}
-            <Text style={{ fontWeight: "600" }}>
+            <Text style={TourDetailScreenStyleSheet.titleKey}>
               {item.created_at?.substring(0, 10)}
             </Text>
           </View>
         </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginLeft: 50,
-            paddingBottom: 10,
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 6,
-            }}
-          >
-            <Text style={{ fontWeight: "600" }}>Title:</Text>
+        <View style={TourDetailScreenStyleSheet.rowContainer}>
+          <View style={TourDetailScreenStyleSheet.row}>
+            <Text style={TourDetailScreenStyleSheet.titleKey}>Title:</Text>
             <Text>{item.title}</Text>
           </View>
         </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 6,
-            marginLeft: 50,
-            paddingBottom: 10,
-          }}
-        >
-          <Text style={{ fontWeight: "600" }}>Destination:</Text>
+        <View style={TourDetailScreenStyleSheet.rowContainer}>
+          <Text style={TourDetailScreenStyleSheet.titleKey}>Destination:</Text>
           <Text>{item.trip_country}</Text>
         </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginLeft: 50,
-            paddingBottom: 20,
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 6,
-            }}
-          >
-            <Text style={{ fontWeight: "600" }}>Period:</Text>
+        <View style={TourDetailScreenStyleSheet.rowContainerWithEnd}>
+          <View style={TourDetailScreenStyleSheet.row}>
+            <Text style={TourDetailScreenStyleSheet.titleKey}>Period:</Text>
             <Text>{item.trip_period}</Text>
           </View>
-          <View style={{ marginRight: 15 }}>
-            <MaterialCommunityIcons name="comment-plus" size={16} />
+          <View style={TourDetailScreenStyleSheet.rowWithEnd}>
+            <AntDesign name={"like1"} size={16} />
+            <Text>{item.number_of_like}</Text>
+            <MaterialCommunityIcons name="comment" size={16} />
+            <Text>{item.number_of_reply}</Text>
           </View>
         </View>
       </TouchableOpacity>
