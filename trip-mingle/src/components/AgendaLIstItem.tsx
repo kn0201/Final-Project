@@ -12,7 +12,6 @@ import {
 } from "react-native";
 import { Avatar, Card, TextInput } from "react-native-paper";
 import reservation from "react-native-calendars/src/agenda/reservation-list/reservation";
-import PlannigStyleSheet from "../StyleSheet/PlanningStyleSheet";
 import LocationInput from "./locationInput";
 import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
@@ -21,6 +20,7 @@ import { ScheduleItemInfo, UserLocation } from "../utils/types";
 import InputAutocomplete from "./InputAutocomplete";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import query from "../utils/googleAPIQuery";
+import PlanningStyleSheet from "../StyleSheet/PlanningStyleSheet";
 
 function Space(props: { height: number }) {
   return (
@@ -39,7 +39,7 @@ export default function AgendaListItem(props: {
   const { IonNeverToast } = useIonNeverNotification();
 
   const [scheduleInfo, setScheduleInfo] = useState<ScheduleItemInfo>({
-    date: selectedDate,
+    selectedDate: selectedDate,
     startTime: "",
     endTime: "",
     location: "",
@@ -53,32 +53,35 @@ export default function AgendaListItem(props: {
     });
   };
 
-  useEffect(() => console.log(scheduleInfo), [scheduleInfo]);
+  // useEffect(() => console.log(scheduleInfo), [scheduleInfo]);
 
   return (
     <View>
       <TouchableOpacity>
-        <Text style={[PlannigStyleSheet.inputTitle, { marginTop: 6 }]}>
+        <Text style={[PlanningStyleSheet.inputTitle, { marginTop: 6 }]}>
           Staring Time
         </Text>
         <TextInput
-          style={PlannigStyleSheet.inputContainer}
-          onChangeText={(text) => updateScheduleInfo("startTime", text)}
+          style={PlanningStyleSheet.inputContainer}
+          value={scheduleInfo.startTime}
+          onChangeText={(text) =>
+            updateScheduleInfo("startTime", checkTime(text))
+          }
           keyboardType="numeric"
           onEndEditing={() => Keyboard.dismiss()}
-          placeholder="Input Start time"
+          placeholder="Input Start time (e.g. 13:44)"
           placeholderTextColor="gray"
         ></TextInput>
-        <Text style={PlannigStyleSheet.inputTitle}>End Time</Text>
+        <Text style={PlanningStyleSheet.inputTitle}>End Time</Text>
         <TextInput
-          style={PlannigStyleSheet.inputContainer}
+          style={PlanningStyleSheet.inputContainer}
           onChangeText={(text) => updateScheduleInfo("endTime", text)}
           keyboardType="numeric"
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input End time"
           placeholderTextColor="gray"
         ></TextInput>
-        <Text style={PlannigStyleSheet.inputTitle}>Location</Text>
+        <Text style={PlanningStyleSheet.inputTitle}>Location</Text>
         {/* <Space height={50} /> */}
         <View style={{ height: 250 }}>
           <GooglePlacesAutocomplete
@@ -102,7 +105,7 @@ export default function AgendaListItem(props: {
           />
         </View>
         <TouchableOpacity
-          style={PlannigStyleSheet.buttonStyle}
+          style={PlanningStyleSheet.buttonStyle}
           onPress={() => {
             if (!scheduleInfo.location) {
               IonNeverToast.show({
@@ -116,7 +119,7 @@ export default function AgendaListItem(props: {
             updateScheduleList(scheduleInfo);
           }}
         >
-          <Text style={PlannigStyleSheet.loginText}>Add New Event</Text>
+          <Text style={PlanningStyleSheet.loginText}>Add New Event</Text>
         </TouchableOpacity>
       </TouchableOpacity>
     </View>
@@ -193,3 +196,32 @@ const styles = StyleSheet.create({
     height: 550 * 0.75,
   },
 });
+
+function checkTime(text: string): string {
+  console.log("checkTime:", text);
+  if (text.length == 1) {
+    return "0" <= text && text <= "2" ? text : "";
+  }
+  if (text.length == 2) {
+    return "00" <= text && text <= "23" ? text : text.slice(0, 1);
+  }
+  if (text.length === 3 && text.endsWith(":")) {
+    return text.slice(0, 2);
+  }
+  if (text.length == 3) {
+    let h = text.slice(0, 2);
+    let m = text.slice(2);
+    text = h + ":" + m;
+  }
+  if (text.length === 4) {
+    let h = text.slice(0, 2);
+    let m = text.slice(3);
+    return "0" <= m && m <= "5" ? h + ":" + m : h;
+  }
+  if (text.length === 5) {
+    let h = text.slice(0, 2);
+    let m = text.slice(3);
+    return "00" <= m && m <= "59" ? h + ":" + m : h + ":" + m.slice(0, 1);
+  }
+  return text.slice(0, 5);
+}

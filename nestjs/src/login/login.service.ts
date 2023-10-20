@@ -156,6 +156,7 @@ export class LoginService {
         console.log('Email sent:' + info.response);
       }
     });
+    ``;
     const token = this.jwtService.encode({
       username: username,
       role: 'member',

@@ -37,6 +37,8 @@ import TextButton from "../components/TextButton";
 import useBoolean from "../hooks/useBoolean";
 import { useSelection } from "../hooks/useSelection";
 import { theme } from "../theme/variables";
+import useEvent from "react-use-event";
+import { AddPostEvent } from "../utils/events";
 
 //@ts-ignore
 export function AddPostScreen1({ navigation }) {
@@ -48,7 +50,7 @@ export function AddPostScreen1({ navigation }) {
   const [selectedGender, setSelectedGender] = useState("Preferred Gender");
   const [gender, setGender] = useState("");
   const [selectedHeadcount, setSelectedHeadcount] = useState<string>(
-    "Preferred Headcount *",
+    "Preferred Headcount *"
   );
   const [headcount, setHeadcount] = useState<string>("");
   const [headcountListData, setHeadcountListData] = useState<string[]>([
@@ -62,7 +64,7 @@ export function AddPostScreen1({ navigation }) {
     "8",
   ]);
   const [selectedCountry, setSelectedCountry] = useState(
-    "Destination Country *",
+    "Destination Country *"
   );
   const [country, setCountry] = useState("");
   const [code, setCode] = useState("");
@@ -70,7 +72,7 @@ export function AddPostScreen1({ navigation }) {
   const [period, setPeriod] = useState<string[]>([]);
   const [languages, setLanguages] = useState<string[]>([]);
   const [selectedLanguagesText, setSelectedLanguagesText] = useState(
-    "Preferred Languages(s)",
+    "Preferred Languages(s)"
   );
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
@@ -101,7 +103,9 @@ export function AddPostScreen1({ navigation }) {
   const languagesList = useGet("/languages", languageListParser);
   const countriesListData = countriesList.state || [];
   const languagesListData = languagesList.state || [];
-  const [checkType, setCheckType] = useState("none");
+  const [checkType, setCheckType] = useState<"blog" | "tour" | "enquire">();
+
+  const dispatchAddPostEvent = useEvent<AddPostEvent>("AddPost");
 
   // Submit
   const postInfo = useRef<PostInfo>({
@@ -121,7 +125,7 @@ export function AddPostScreen1({ navigation }) {
 
   const addPost = async () => {
     try {
-      if (checkType !== "none") {
+      if (checkType) {
         updateInputText("type", checkType);
       } else {
         throw new Error("Missing type");
@@ -176,8 +180,9 @@ export function AddPostScreen1({ navigation }) {
         "/blog/tour",
         postInfo,
         addTourPostParser,
-        token,
+        token
       );
+      dispatchAddPostEvent({ post_type: checkType });
       IonNeverDialog.show({
         type: "success",
         title: `Success`,
@@ -205,7 +210,7 @@ export function AddPostScreen1({ navigation }) {
 
   const updateInputText = (
     field: string,
-    value: string | boolean | string[],
+    value: string | boolean | string[]
   ) => {
     //@ts-ignore
     postInfo[field as keyof PostInfo] = value;
@@ -422,8 +427,8 @@ export function AddPostScreen1({ navigation }) {
                   countriesListData.filter((country) =>
                     country.name
                       .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase()),
-                  ),
+                      .includes(search.toLocaleLowerCase())
+                  )
                 );
               }, [search, countriesListData]);
               const updateSearch = (search: string) => {
@@ -569,8 +574,8 @@ export function AddPostScreen1({ navigation }) {
                   languagesListData.filter((language) =>
                     language.name
                       .toLocaleLowerCase()
-                      .includes(searchLanguages.toLocaleLowerCase()),
-                  ),
+                      .includes(searchLanguages.toLocaleLowerCase())
+                  )
                 );
               }, [searchLanguages, languagesListData]);
 
@@ -582,8 +587,8 @@ export function AddPostScreen1({ navigation }) {
                 if (localLanguages.includes(name)) {
                   setLocalLanguages(
                     localLanguages.filter(
-                      (language: string) => language !== name,
-                    ),
+                      (language: string) => language !== name
+                    )
                   );
                 } else {
                   setLocalLanguages([...localLanguages, name]);
@@ -783,59 +788,59 @@ export function AddPostScreen1({ navigation }) {
   );
 }
 
-export function AddPostScreen2() {
-  const isSelectingLangauge = useBoolean();
-  const languageList = useGet("/languages", languageListParser);
-  const selectedLanguage = useSelection<LanguageListItem>();
-  return (
-    <>
-      <ScrollView>
-        <TextButton
-          text="Select Language"
-          onPress={isSelectingLangauge.on}
-        ></TextButton>
-        <View>
-          <Text>on? {isSelectingLangauge.value ? "yes" : "no"}</Text>
-        </View>
-        <View>
-          <Text>
-            selected:{" "}
-            {selectedLanguage.state.map((item) => item.name).join(", ")}
-          </Text>
-        </View>
-        <Modal state={isSelectingLangauge}>
-          <View>
-            <FlatList
-              style={{ maxHeight: 350 }}
-              data={languageList.state}
-              renderItem={({ item: language }) => (
-                <View>
-                  <TouchableWithoutFeedback
-                    onPress={() => selectedLanguage.toggle(language)}
-                  >
-                    <View style={styles.checkboxItem}>
-                      <CheckBox
-                        checked={selectedLanguage.includes(language)}
-                        onPress={() => selectedLanguage.toggle(language)}
-                      ></CheckBox>
-                      <Text>{language.name}</Text>
-                    </View>
-                  </TouchableWithoutFeedback>
-                </View>
-              )}
-            />
-            <TextButton
-              text="Ok"
-              onPress={() => {
-                isSelectingLangauge.off();
-              }}
-            ></TextButton>
-          </View>
-        </Modal>
-      </ScrollView>
-    </>
-  );
-}
+// export function AddPostScreen2() {
+//   const isSelectingLangauge = useBoolean();
+//   const languageList = useGet("/languages", languageListParser);
+//   const selectedLanguage = useSelection<LanguageListItem>();
+//   return (
+//     <>
+//       <ScrollView>
+//         <TextButton
+//           text="Select Language"
+//           onPress={isSelectingLangauge.on}
+//         ></TextButton>
+//         <View>
+//           <Text>on? {isSelectingLangauge.value ? "yes" : "no"}</Text>
+//         </View>
+//         <View>
+//           <Text>
+//             selected:{" "}
+//             {selectedLanguage.state.map((item) => item.name).join(", ")}
+//           </Text>
+//         </View>
+//         <Modal state={isSelectingLangauge}>
+//           <View>
+//             <FlatList
+//               style={{ maxHeight: 350 }}
+//               data={languageList.state}
+//               renderItem={({ item: language }) => (
+//                 <View>
+//                   <TouchableWithoutFeedback
+//                     onPress={() => selectedLanguage.toggle(language)}
+//                   >
+//                     <View style={styles.checkboxItem}>
+//                       <CheckBox
+//                         checked={selectedLanguage.includes(language)}
+//                         onPress={() => selectedLanguage.toggle(language)}
+//                       ></CheckBox>
+//                       <Text>{language.name}</Text>
+//                     </View>
+//                   </TouchableWithoutFeedback>
+//                 </View>
+//               )}
+//             />
+//             <TextButton
+//               text="Ok"
+//               onPress={() => {
+//                 isSelectingLangauge.off();
+//               }}
+//             ></TextButton>
+//           </View>
+//         </Modal>
+//       </ScrollView>
+//     </>
+//   );
+// }
 
 let styles = StyleSheet.create({
   checkboxItem: {

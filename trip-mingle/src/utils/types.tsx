@@ -39,8 +39,9 @@ export type ScheduleCardInfo = {
 } & ScheduleCardInputInfo;
 
 export type ScheduleCardInputInfo = {
-  title: string;
   uri?: string;
+  title: string;
+  country?: string;
 };
 
 export type PostInfo = {
@@ -137,10 +138,15 @@ export type LanguageList = {
 export type ScheduleItem = { id: number } & ScheduleItemInfo;
 
 export type ScheduleItemInfo = {
-  date: string;
+  selectedDate: string;
   startTime: string;
   endTime: string;
   location: string;
+};
+
+export type ScheduleDate = {
+  startDate: string;
+  endDate: string;
 };
 
 export type UserLocation = {

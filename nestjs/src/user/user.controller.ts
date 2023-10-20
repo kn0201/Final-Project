@@ -17,15 +17,9 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { sendProfileParser, updateUsernameParser } from 'utils/parser';
 import multer from 'multer';
 import { randomUUID } from 'crypto';
+import { getJWTPayload } from 'src/jwt';
+import { storage } from 'src/uploads';
 
-let storage = multer.diskStorage({
-  destination: 'uploads',
-  filename(req, file, callback) {
-    let ext = file.mimetype.match(/^image\/([\w-]+)/)?.[1] || 'bin';
-    let filename = randomUUID() + '.' + ext;
-    callback(null, filename);
-  },
-});
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
@@ -63,8 +57,12 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Patch('update_username')
-  async updateUsername(@Body() body: Body, @Headers() headers: Headers) {
+  async updateUsername(@Body() body: Body, @Headers() headers: {}) {
     let input = updateUsernameParser.parse(body);
-    return this.userService.updateUsername(input, headers);
+    let jwt = getJWTPayload(headers);
+    return this.userService.updateUsername({
+      user_id: jwt.user_id,
+      username: input.username,
+    });
   }
 }

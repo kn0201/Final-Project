@@ -111,7 +111,7 @@ rating
 id integer PK
 user1_id FK >- users.id
 user2_id FK >- users.id
-planing_id FK >- planing.id
+plan_id FK >- plan.id
 
 
 like
@@ -137,7 +137,7 @@ content text
 is_finish boolean
 
 
-planing
+plan
 -------
 id integer PK
 user_id integer FK >- users.id
@@ -149,7 +149,7 @@ title varchar(255)
 plan_detail
 -----------
 id integer PK
-planing_id integer FK >- planing.id
+plan_id integer FK >- plan.id
 start_date timestamp
 end_date timestamp
 
@@ -158,8 +158,8 @@ daily_event
 -----------
 id integer PK
 detail_id integer FK >- plan_detail.id
-start_time integer
-end_time integer
+start_time timestamp
+end_time timestamp
 location varchar(255)
 remark varchar(255)
 
@@ -174,8 +174,8 @@ system_location_id integer NULL FK >- system_location.id
 place_id varchar(255) NULL
 name varchar(255) NULL
 address varchar(255) NULL
-latitude decimal NULL
-longitude decimal NULL
+latitude real NULL
+longitude real NULL
 is_delete boolean
 
 
@@ -185,8 +185,8 @@ id integer PK
 place_id varchar(255)
 name varchar(255)
 address varchar(255)
-latitude decimal
-longitude decimal
+latitude real
+longitude real
 
 
 language
@@ -251,7 +251,7 @@ name varchar(255)
 # like (224, 207)
 # bookmark (223, 353)
 # complaint (716, 1073, #600e12)
-# planing (1357, 586, #433660)
+# plan (1357, 586, #433660)
 # plan_detail (1821, 750, #510650)
 # daily_event (1798, 1007, #4f5d2b)
 # user_location (1426, -27, #290432)

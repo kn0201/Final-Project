@@ -153,9 +153,6 @@ export default function RegisterScreen({ navigation }) {
       console.log(errorObject);
     }
   };
-
-  const countriesListData = useGet("/login/country_list", countryListParser);
-
   const register = async () => {
     try {
       let formData = new FormData();
@@ -286,6 +283,7 @@ export default function RegisterScreen({ navigation }) {
               }}
               onEndEditing={() => Keyboard.dismiss()}
               keyboardType="email-address"
+              autoCapitalize="none"
               placeholder="Email"
               style={RegisterScreenStyleSheet.textInput}
             ></TextInput>

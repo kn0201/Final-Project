@@ -18,13 +18,12 @@ import { TokenProvider } from "./src/hooks/useToken";
 import { Modal, ModalRoot } from "./src/components/Modal";
 import { navigationRef } from "./src/tabs/RootNavigation";
 
-const Stack = createNativeStackNavigator();
+// const Stack = createNativeStackNavigator();
 
 function Root() {
   return (
     <TokenProvider>
-      {/* <ModalRoot /> */}
-      {/* <Modal isOpen></Modal> */}
+      <ModalRoot />
       <NavigationContainer ref={navigationRef}>
         <IonNeverNotificationRoot>
           <MyBottomTab />

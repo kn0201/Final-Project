@@ -49,7 +49,7 @@ export default function LoginScreen({ navigation }) {
   };
   const login = async () => {
     try {
-      let json = await api.loginSignUp("/login", loginInfo, loginResultParser);
+      let json = await api.post("/login", loginInfo, loginResultParser);
       setToken(json.token);
       const username = decode<JWTPayload>(json.token).username;
 

@@ -10,11 +10,13 @@ import { Icon } from "@rneui/themed";
 import { iosBlue } from "../StyleSheet/StyleSheetHelper";
 import UserPageStyleSheet from "../StyleSheet/UserPageCss";
 import BuddiesPageStyleSheet from "../StyleSheet/BuddiesPageCss";
+import { useToken } from "../hooks/useToken";
 
 const Tab = createMaterialTopTabNavigator();
 
 //@ts-ignore
 function ExplorePageTopTab({ navigation }) {
+  const { token, payload, setToken } = useToken();
   return (
     <>
       <Header
@@ -24,34 +26,32 @@ function ExplorePageTopTab({ navigation }) {
           style: { color: "#000000", fontSize: 17, fontWeight: "600" },
         }}
         rightComponent={
-          <View>
-            <TouchableOpacity
-              style={UserPageStyleSheet.rightComponent}
-              onPress={() => navigation.navigate("New Post")}
-            >
-              <Text style={{ color: iosBlue }}>New Post </Text>
-              <Icon
-                name="new-message"
-                type="entypo"
-                color={iosBlue}
-                size={20}
-                style={{ marginEnd: 8 }}
-              ></Icon>
-            </TouchableOpacity>
-          </View>
+          token ? (
+            <View>
+              <TouchableOpacity
+                style={UserPageStyleSheet.rightComponent}
+                onPress={() => navigation.navigate("New Post")}
+              >
+                <Text style={{ color: iosBlue }}>New Post </Text>
+                <Icon
+                  name="new-message"
+                  type="entypo"
+                  color={iosBlue}
+                  size={20}
+                  style={{ marginEnd: 8 }}
+                ></Icon>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <></>
+          )
         }
         containerStyle={{ width: "100%" }}
         placement="center"
       />
-      {/* <TextInput
-        style={BuddiesPageStyleSheet.textInputStyle}
-        // onChangeText={(text) => searchFilterFunction(text)}
-        // value={text}
-        underlineColorAndroid="transparent"
-        placeholder="Search..."
-      /> */}
+
       <Tab.Navigator
-        initialRouteName="Blog"
+        initialRouteName="Tour"
         screenOptions={{
           tabBarActiveTintColor: "#0a1128",
           tabBarLabelStyle: { fontSize: 10 },
@@ -73,6 +73,7 @@ function ExplorePageTopTab({ navigation }) {
           component={TourScreen}
           options={{
             tabBarLabel: "Tour",
+
             // tabBarIcon: ({ color }) => (
             //   <MaterialCommunityIcons
             //     name="transit-detour"

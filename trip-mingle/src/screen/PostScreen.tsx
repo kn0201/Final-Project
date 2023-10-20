@@ -19,6 +19,8 @@ import { apiOrigin } from "../utils/apiOrigin";
 import TourDetailScreenStyleSheet from "../StyleSheet/TourDetailScreenCss";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import React from "react";
+import useEvent from "react-use-event";
+import { AddPostEvent } from "../utils/events";
 
 // Star rating
 export const setStarRating = (rating: number) => {
@@ -64,8 +66,6 @@ export default function TourScreen({ navigation }) {
       setSelectedPostIDs(id);
     }
   };
-
-  // Search bar
   const getPostInfo = async () => {
     try {
       let postInfoData = await api.get("/blog", postInfoParser);
@@ -76,16 +76,18 @@ export default function TourScreen({ navigation }) {
     }
   };
 
+  useEvent<AddPostEvent>("AddPost", (event) => {
+    if (event.post_type == "tour") {
+      getPostInfo();
+    }
+  });
+
+  // Search bar
   const [search, setSearch] = useState("");
+  // const postInfo = useGet("/blog", postInfoParser);
+  // const postInfoData = postInfo.state || [];
   const [filteredPosts, setFilteredPosts] = useState<PostInfoItem[]>([]);
   const [posts, setPosts] = useState<PostInfoItem[]>([]);
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      getPostInfo();
-    });
-    return unsubscribe;
-  }, [navigation]);
 
   useEffect(() => {
     getPostInfo();
@@ -102,11 +104,11 @@ export default function TourScreen({ navigation }) {
               item.trip_country.toUpperCase().includes(textData)) ||
             (item.trip_location &&
               item.trip_location.some((location) =>
-                location.name.toUpperCase().includes(textData),
+                location.name.toUpperCase().includes(textData)
               )) ||
             (item.trip_location &&
               item.trip_location.some((location) =>
-                location.address.toUpperCase().includes(textData),
+                location.address.toUpperCase().includes(textData)
               )) ||
             (item.preferred_hobby &&
               item.preferred_hobby.toUpperCase().includes(textData))
@@ -192,7 +194,7 @@ export default function TourScreen({ navigation }) {
         </View>
       </TouchableOpacity>
     ),
-    [],
+    []
   );
 
   // Display
