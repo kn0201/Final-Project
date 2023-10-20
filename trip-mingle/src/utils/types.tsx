@@ -88,6 +88,30 @@ export type PostInfoItem = {
   number_of_reply: number;
 };
 
+export type PostDetailItem = {
+  id: number;
+  title: string;
+  content: string;
+  trip_country: string;
+  trip_period: string | null;
+  trip_headcount: number | null;
+  trip_budget: string | null;
+  preferred_gender: boolean | null;
+  preferred_age: string | null;
+  preferred_language: string | null;
+  preferred_hobby: string | null;
+  status: string | null;
+  view: number;
+  created_at: string;
+  trip_location: Location[] | null;
+  username: string;
+  avatar_path: string;
+  rating: number;
+  number_of_rating: number;
+  number_of_like: number;
+  number_of_reply: number;
+};
+
 export type CountryList = {
   id: string;
   name: string;
