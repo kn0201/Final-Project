@@ -31,11 +31,7 @@ export default function ExplorePage() {
         />
         <Stack.Screen name="Blog Detail" component={BlogDetailScreen} />
         <Stack.Screen name="Comment" component={CommentScreen} />
-        <Stack.Screen
-          name="Tour Detail"
-          component={TourDetailScreen}
-          initialParams={{ itemId: 0 }}
-        />
+        <Stack.Screen name="Tour Detail" component={TourDetailScreen} />
       </Stack.Navigator>
     </>
   );

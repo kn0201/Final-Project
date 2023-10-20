@@ -1,5 +1,5 @@
 import { CheckBox, SearchBar } from "@rneui/themed";
-import { isValidElement, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Text,
   TouchableOpacity,
@@ -38,7 +38,8 @@ import useBoolean from "../hooks/useBoolean";
 import { useSelection } from "../hooks/useSelection";
 import { theme } from "../theme/variables";
 
-export function AddPostScreen1() {
+//@ts-ignore
+export function AddPostScreen1({ navigation }) {
   const { token, payload, setToken } = useToken();
   const { IonNeverDialog } = useIonNeverNotification();
   const [title, setTitle] = useState("");
@@ -118,21 +119,6 @@ export function AddPostScreen1() {
     preferred_hobby: "",
   }).current;
 
-  const clearInputs = useRef({
-    type() {},
-    title() {},
-    content() {},
-    trip_country() {},
-    trip_location() {},
-    trip_period() {},
-    trip_headcount() {},
-    trip_budget() {},
-    preferred_gender() {},
-    preferred_age() {},
-    preferred_language() {},
-    preferred_hobby() {},
-  }).current;
-
   const addPost = async () => {
     try {
       if (checkType !== "none") {
@@ -186,8 +172,22 @@ export function AddPostScreen1() {
           updateInputText("preferred_hobby", selectedSkillsText);
         }
       }
-      await api.post("/blog/tour", postInfo, addTourPostParser, token);
-      Object.entries(clearInputs).map(([_key, clear]) => clear());
+      let result = await api.post(
+        "/blog/tour",
+        postInfo,
+        addTourPostParser,
+        token,
+      );
+      IonNeverDialog.show({
+        type: "success",
+        title: `Success`,
+        message: `Created new post #${result.id}`,
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          navigation.navigate("Explore");
+        },
+        secondButtonVisible: false,
+      });
       console.log(postInfo);
     } catch (e) {
       IonNeverDialog.show({

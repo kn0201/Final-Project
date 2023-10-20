@@ -121,7 +121,7 @@ export const addPostCountryListParser = array(
 
 export const getPostResultListParser = array(object({}));
 
-export const addTourPostParser = object({});
+export const addTourPostParser = object({ id: number() });
 
 export const getIconResult = object({
   path: nullable(string()),

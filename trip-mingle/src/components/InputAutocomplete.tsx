@@ -96,7 +96,7 @@ export default function InputAutocomplete({
             onPress={(data, details) => {
               if (details) {
                 const position = {
-                  id: details.place_id,
+                  place_id: details.place_id,
                   name: details.name,
                   // country:
                   //   details.address_components.find((component) =>
@@ -113,8 +113,8 @@ export default function InputAutocomplete({
                   address: details.formatted_address,
                   // website: details.website || null,
                   // opening_hours: details.opening_hours?.weekday_text || null,
-                  lat: details.geometry.location.lat,
-                  lng: details.geometry.location.lng,
+                  latitude: details.geometry.location.lat,
+                  longitude: details.geometry.location.lng,
                   // type: details.types,
                   // photo: details.photos
                   //   ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${details.photos[1].photo_reference}&key=${query.key}`
@@ -123,7 +123,7 @@ export default function InputAutocomplete({
                 if (
                   selectedLocationList.some(
                     (loc: {
-                      id: string;
+                      place_id: string;
                       name: string;
                       // overview: string | null;
                       // country: string | null;
@@ -132,11 +132,11 @@ export default function InputAutocomplete({
                       address: string;
                       // website: string | null;
                       // opening_hours: string[] | null;
-                      lat: string;
-                      lng: string;
+                      latitude: string;
+                      longitude: string;
                       // types: string[];
                       // photo: string | null;
-                    }) => loc.id === position.id,
+                    }) => loc.place_id === position.place_id,
                   )
                 ) {
                   IonNeverToast.show({
