@@ -8,6 +8,14 @@ const TourDetailScreenStyleSheet = StyleSheet.create({
     gap: 10,
     padding: 10,
   },
+  postDetailContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 10,
+    padding: 10,
+    paddingBottom: 0,
+  },
   avatar: {
     width: 30,
     height: 30,
@@ -35,6 +43,15 @@ const TourDetailScreenStyleSheet = StyleSheet.create({
     paddingBottom: 10,
     flexWrap: "wrap",
     gap: 6,
+  },
+  replyContainer: {
+    flexDirection: "row",
+    paddingLeft: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    flexWrap: "wrap",
+    gap: 6,
+    backgroundColor: "white",
   },
   rowContainerWithEnd: {
     flexDirection: "row",
