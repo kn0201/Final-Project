@@ -20,6 +20,7 @@ import {
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 
 import AddScheduleForm from "../components/AddScheduleForm";
+import { apiOrigin } from "../utils/apiOrigin";
 
 const Stack = createStackNavigator();
 
@@ -104,13 +105,18 @@ const Schedule = ({ navigation }) => {
     setCardList([
       {
         id: 0,
-        title: "Sample",
-        uri: "https://res.klook.com/image/upload/q_85/c_fill,w_1360/v1674030135/blog/bnbtltnp5nqbdevfcbmn.webp",
+        title: "Kyoto",
+        uri: `${apiOrigin}/kyoto_trip.jpg`,
       },
       {
         id: 1,
-        title: "Sample",
-        uri: "https://res.klook.com/image/upload/fl_lossy.progressive,q_85/c_fill,w_1000/v1674014276/blog/wsqagneebxdvvquuk9db.webp",
+        title: "Tokyo",
+        uri: `${apiOrigin}/tokyo_trip.jpg`,
+      },
+      {
+        id: 2,
+        title: "Taipei",
+        uri: `${apiOrigin}/taipei_trip.jpg`,
       },
     ]);
   }, []);

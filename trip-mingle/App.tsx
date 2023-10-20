@@ -16,6 +16,7 @@ import TestingApp from "./src/components/IonNeverNotification/testingApp";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TokenProvider } from "./src/hooks/useToken";
 import { Modal, ModalRoot } from "./src/components/Modal";
+import { navigationRef } from "./src/tabs/RootNavigation";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,7 +25,7 @@ function Root() {
     <TokenProvider>
       {/* <ModalRoot /> */}
       {/* <Modal isOpen></Modal> */}
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         <IonNeverNotificationRoot>
           <MyBottomTab />
           <Bar.StatusBar style="auto" />

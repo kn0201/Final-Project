@@ -28,7 +28,6 @@ export default function CommentScreen() {
 
   const [keyboardShow, setKeyboardShow] = useState(false);
   let result = useGet("/user/icon", getIconResult).state?.path;
-  console.log(result);
 
   const submit = () => {
     if (token != "") {
