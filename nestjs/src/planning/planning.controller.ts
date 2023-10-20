@@ -21,15 +21,8 @@ import { randomUUID } from 'crypto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { getJWTPayload } from 'src/jwt';
 import { id, object, string } from 'cast.ts';
-
-let storage = multer.diskStorage({
-  destination: 'uploads',
-  filename(req, file, callback) {
-    let ext = file.mimetype.match(/^image\/([\w-]+)/)?.[1] || 'bin';
-    let filename = randomUUID() + '.' + ext;
-    callback(null, filename);
-  },
-});
+import { env } from 'src/env';
+import { storage } from 'src/uploads';
 
 // @UseGuards(AuthGuard)
 @Controller('planning')

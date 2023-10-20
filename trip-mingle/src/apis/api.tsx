@@ -86,4 +86,11 @@ export let api = {
     let json = await res.json();
     return parser.parse(json);
   },
+
+  toImageURI(image_path: string) {
+    if (image_path.startsWith("http://") || image_path.startsWith("https://")) {
+      return image_path;
+    }
+    return apiOrigin + "/uploads/" + image_path;
+  },
 };
