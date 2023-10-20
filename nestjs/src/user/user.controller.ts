@@ -18,15 +18,8 @@ import { sendProfileParser, updateUsernameParser } from 'utils/parser';
 import multer from 'multer';
 import { randomUUID } from 'crypto';
 import { getJWTPayload } from 'src/jwt';
+import { storage } from 'src/uploads';
 
-let storage = multer.diskStorage({
-  destination: 'uploads',
-  filename(req, file, callback) {
-    let ext = file.mimetype.match(/^image\/([\w-]+)/)?.[1] || 'bin';
-    let filename = randomUUID() + '.' + ext;
-    callback(null, filename);
-  },
-});
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}

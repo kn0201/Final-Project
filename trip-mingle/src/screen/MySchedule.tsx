@@ -26,6 +26,7 @@ import { useAppNavigation } from "../../navigators";
 import { useGet } from "../hooks/useGet";
 import { ParseResult, array, number, object, string } from "cast.ts";
 import { apiOrigin } from "../utils/apiOrigin";
+import { api } from "../apis/api";
 
 const Stack = createStackNavigator();
 
@@ -90,14 +91,13 @@ const Schedule = () => {
     }).start();
   };
 
-  const addNewScheduleCard = (newScheduleInfo: ScheduleCardInputInfo) => {
-    setCardList((currentList) => {
-      const newID = (currentList.pop()?.id || -1) + 1;
-      return [...currentList, { ...newScheduleInfo, id: newID }];
-    });
-  };
-
   const myPlanListResult = useGet("/planning/my-plans", getMyPlanListParser);
+
+  const addNewScheduleCard = (newScheduleInfo: PlanListItem) => {
+    myPlanListResult.setState((state) => ({
+      planList: [...state!.planList, newScheduleInfo],
+    }));
+  };
 
   return (
     <SafeAreaView>
@@ -168,7 +168,7 @@ function ScheduleCard(props: { item: PlanListItem }) {
         <Card.Image
           style={{ padding: 0, height: 200 }}
           source={{
-            uri: apiOrigin + "/uploads/" + item.image_path,
+            uri: api.toImageURI(item.image_path),
           }}
         />
       </Card>

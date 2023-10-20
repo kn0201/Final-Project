@@ -15,6 +15,7 @@ export let env = {
   EMAIL_ADDRESS: '',
   EMAIL_PASSWORD: '',
   APP_NAME: 'Trip Mingle',
+  UPLOAD_DIR: 'public/uploads',
 };
 
 populateEnv(env, { mode: 'halt' });

@@ -4,9 +4,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import TourScreen from "../screen/PostScreen";
 import AddPostScreen from "../screen/AddPostScreen";
 import BuddiesPage from "../tabs/ExplorePageTopTab";
-import BlogDetailScreen from "../screen/BlogDetailScreen";
+
 import CommentScreen from "../screen/CommentScreen";
 import TourDetailScreen from "../screen/TourDetailScreen";
+import BlogDetailScreen from "../screen/blogDetailScreen";
 
 const Stack = createStackNavigator();
 
