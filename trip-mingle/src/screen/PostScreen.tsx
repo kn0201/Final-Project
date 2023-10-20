@@ -19,6 +19,8 @@ import { apiOrigin } from "../utils/apiOrigin";
 import TourDetailScreenStyleSheet from "../StyleSheet/TourDetailScreenCss";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import React from "react";
+import useEvent from "react-use-event";
+import { AddPostEvent } from "../utils/events";
 
 // Star rating
 export const setStarRating = (rating: number) => {
@@ -74,19 +76,18 @@ export default function TourScreen({ navigation }) {
     }
   };
 
+  useEvent<AddPostEvent>("AddPost", (event) => {
+    if (event.post_type == "tour") {
+      getPostInfo();
+    }
+  });
+
   // Search bar
   const [search, setSearch] = useState("");
   // const postInfo = useGet("/blog", postInfoParser);
   // const postInfoData = postInfo.state || [];
   const [filteredPosts, setFilteredPosts] = useState<PostInfoItem[]>([]);
   const [posts, setPosts] = useState<PostInfoItem[]>([]);
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      getPostInfo();
-    });
-    return unsubscribe;
-  }, [navigation]);
 
   useEffect(() => {
     getPostInfo();

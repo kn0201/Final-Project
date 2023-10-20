@@ -2,9 +2,11 @@ import { View, Text, TouchableOpacity } from "react-native";
 import BuddiesPageStyleSheet from "../StyleSheet/BuddiesPageCss";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { center, flex } from "../StyleSheet/StyleSheetHelper";
+import useEvent from "react-use-event";
+import { AddPostEvent } from "../utils/events";
 
-//@ts-ignore
-export default function BlogScreen({ navigation }) {
+export default function BlogScreen({ navigation }: { navigation: any }) {
+  useEvent<AddPostEvent>("AddPost", (event) => {});
   return (
     <>
       <View style={BuddiesPageStyleSheet.container}>
