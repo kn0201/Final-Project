@@ -13,7 +13,7 @@ import { useIonNeverNotification } from "../components/IonNeverNotification/Noti
 import { ScheduleDate, ScheduleItem, ScheduleItemInfo } from "../utils/types";
 import PlanningStyleSheet from "../StyleSheet/PlanningStyleSheet";
 import { api, api2 } from "../apis/api";
-import { object } from "cast.ts";
+import { boolean, object } from "cast.ts";
 import { useToken } from "../hooks/useToken";
 import TextButton from "../components/TextButton";
 import { AppParamList, useAppNavigation, useAppRoute } from "../../navigators";
@@ -22,6 +22,7 @@ import {
   useNavigationState,
   useRoute,
 } from "@react-navigation/native";
+import { apiOrigin } from "../utils/apiOrigin";
 
 const styles = StyleSheet.create({
   view: {
@@ -53,7 +54,7 @@ const AddSchedule = () => {
 
   const navigation = useAppNavigation();
   const routeState = navigation.getState();
-  console.log("route state:", routeState);
+  // console.log("route state:", routeState);
 
   const planId = useAppRoute<"AddSchedule">().planId;
 
@@ -71,22 +72,24 @@ const AddSchedule = () => {
       return;
     }
     try {
-      let formData = new FormData();
-      formData.append("start_date", startDate);
-      formData.append("end_date", endDate);
-      console.log(formData);
-      let json = await api2.upload(
+      let data = {
+        start_date: startDate,
+        end_date: endDate,
+      };
+
+      let res = await api.post(
         `/planning/${planId}/mark`,
-        formData,
-        object({}),
+        data,
+        object({ result: boolean() }),
         token
       );
-      console.log("add mark:", json);
-      IonNeverDialog.show({
-        type: "success",
-        title: "Add a new mark",
-        firstButtonVisible: true,
-      });
+      if (res.result) {
+        IonNeverDialog.show({
+          type: "success",
+          title: "Add a new mark",
+          firstButtonVisible: true,
+        });
+      }
     } catch (error) {
       let message = String(error);
       IonNeverDialog.show({

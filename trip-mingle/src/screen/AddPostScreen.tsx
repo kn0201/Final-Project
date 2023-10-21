@@ -40,6 +40,8 @@ import { useSelection } from "../hooks/useSelection";
 import { theme } from "../theme/variables";
 import useEvent from "react-use-event";
 import { AddPostEvent } from "../utils/events";
+import blogContent from "../components/blogContent";
+import BlogContent from "../components/blogContent";
 
 //@ts-ignore
 export function AddPostScreen1({ navigation }) {

@@ -9,6 +9,7 @@ import {
   Post,
   Req,
   Request,
+  UnauthorizedException,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -66,8 +67,13 @@ export class PlanningController {
   }
 
   @Post(':plan_id/mark')
-  addNewMark(@Body() body, @Headers() headers: {}, @Param() params: {}) {
+  async addNewMark(
+    @Body() body: Body,
+    @Headers() headers: {},
+    @Param() params: {},
+  ) {
     let jwt = getJWTPayload(headers);
+
     let input = object({
       body: object({
         start_date: string(),
@@ -77,10 +83,12 @@ export class PlanningController {
         plan_id: id(),
       }),
     }).parse({ body, params });
+
     return this.planningService.addNewMark(jwt.user_id, {
       planning_id: input.params.plan_id,
       start_date: input.body.start_date,
       end_date: input.body.end_date,
     });
+    // throw new UnauthorizedException('Wrong Username/Password');
   }
 }

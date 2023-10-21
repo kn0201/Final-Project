@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import MapView, {
   Callout,
+  Details,
   LatLng,
   Marker,
   PROVIDER_GOOGLE,
+  Region,
 } from "react-native-maps";
 import {
   GooglePlacesAutocomplete,
@@ -52,6 +54,10 @@ export default function MapPage({
   const [latitude, setLatitude] = useState<any>();
   const [longitude, setLongitude] = useState<any>();
 
+  // Get current location
+  const [location, setLocation] = useState<LocationObject | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
   useEffect(() => {
     if (route.params) {
       const { latitude, longitude } = route.params;
@@ -72,7 +78,10 @@ export default function MapPage({
 
   // Custom Marker
   const [state, setState] = useState({});
-
+  const [markerCoordinate, setMarkerCoordinate] = useState({
+    latitude: givenLocation ? latitude : location?.coords.latitude,
+    longitude: givenLocation ? longitude : location?.coords.longitude,
+  });
   const MyCustomMarkerView = () => {
     return (
       <Image
@@ -135,9 +144,16 @@ export default function MapPage({
     moveTo(position);
   };
 
-  // Get current location
-  const [location, setLocation] = useState<LocationObject | null>(null);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  //marker on Change
+  const onRegionChange = (region: Region) => {
+    setMarkerCoordinate({
+      latitude: region.latitude,
+      longitude: region.longitude,
+    });
+  };
+  const onRegionChangeComplete = async (region: Region, details: Details) => {
+    await fetchPlacesFromGoogleMaps;
+  };
 
   // Fetch places from google map
   const [places, setPlaces] = useState<Place[]>([]);
@@ -217,6 +233,8 @@ export default function MapPage({
             />
           </View>
           <MapView
+            onRegionChangeComplete={onRegionChangeComplete}
+            onRegionChange={onRegionChange}
             ref={mapRef}
             provider={PROVIDER_GOOGLE}
             style={styles.map}
@@ -254,10 +272,7 @@ export default function MapPage({
             })}
             <Marker
               draggable
-              coordinate={{
-                latitude: location?.coords.latitude,
-                longitude: location?.coords.longitude,
-              }}
+              coordinate={markerCoordinate}
               onDragEnd={(e) => setState({ x: e.nativeEvent.coordinate })}
             >
               <MyCustomMarkerView />
