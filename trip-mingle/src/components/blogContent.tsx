@@ -53,18 +53,9 @@ export default function BlogContent() {
           {image && (
             <Image
               source={{ uri: image }}
-              style={{ width: 300, height: 300, alignItems: center }}
+              style={{ width: 100, height: 100, alignItems: center }}
             />
           )}
-          <View style={BlogContentStyleSheet.uploadBtnContainerSquare}>
-            <TouchableOpacity
-              onPress={addImage}
-              style={BlogContentStyleSheet.uploadBtn}
-            >
-              <Text>{image ? "Edit" : "Upload"} Image</Text>
-              <AntDesign name="camera" size={20} color="black" />
-            </TouchableOpacity>
-          </View>
         </View>
       </View>
     </>

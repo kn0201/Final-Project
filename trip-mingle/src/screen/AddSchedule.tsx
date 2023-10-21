@@ -13,7 +13,7 @@ import { useIonNeverNotification } from "../components/IonNeverNotification/Noti
 import { ScheduleDate, ScheduleItem, ScheduleItemInfo } from "../utils/types";
 import PlanningStyleSheet from "../StyleSheet/PlanningStyleSheet";
 import { api, api2 } from "../apis/api";
-import { object } from "cast.ts";
+import { boolean, object } from "cast.ts";
 import { useToken } from "../hooks/useToken";
 import TextButton from "../components/TextButton";
 import { AppParamList, useAppNavigation, useAppRoute } from "../../navigators";
@@ -72,10 +72,6 @@ const AddSchedule = () => {
       return;
     }
     try {
-      let formData = new FormData();
-      formData.append("start_date", startDate);
-      formData.append("end_date", endDate);
-
       let data = {
         start_date: startDate,
         end_date: endDate,
@@ -84,16 +80,16 @@ const AddSchedule = () => {
       let res = await api.post(
         `/planning/${planId}/mark`,
         data,
-        object({}),
+        object({ result: boolean() }),
         token
       );
-
-      console.log("add mark:", res);
-      IonNeverDialog.show({
-        type: "success",
-        title: "Add a new mark",
-        firstButtonVisible: true,
-      });
+      if (res.result) {
+        IonNeverDialog.show({
+          type: "success",
+          title: "Add a new mark",
+          firstButtonVisible: true,
+        });
+      }
     } catch (error) {
       let message = String(error);
       IonNeverDialog.show({
