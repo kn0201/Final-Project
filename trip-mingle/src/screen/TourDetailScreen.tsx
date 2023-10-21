@@ -45,7 +45,7 @@ const TourDetailScreen = ({
   navigation: any;
 }) => {
   const { token, payload, setToken } = useToken();
-  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
+  const { IonNeverDialog } = useIonNeverNotification();
   const [keyboardShow, setKeyboardShow] = useState(false);
   const { id, title, status } = route.params || {
     id: 0,
@@ -156,7 +156,6 @@ const TourDetailScreen = ({
       );
       dispatchAddCommentEvent("AddComment");
       inputRef?.current?.clear();
-      Keyboard.dismiss();
       //@ts-ignore
       flatListRef?.current?.scrollToEnd();
       IonNeverDialog.show({
@@ -166,6 +165,7 @@ const TourDetailScreen = ({
         firstButtonVisible: true,
         firstButtonFunction: () => {
           IonNeverDialog.dismiss();
+          Keyboard.dismiss();
         },
       });
     } catch (e) {
@@ -243,7 +243,11 @@ const TourDetailScreen = ({
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
             style={{
-              flex: keyboardShow ? 0.839 : 1,
+              flex: keyboardShow
+                ? comments?.length != undefined && comments?.length > 0
+                  ? 0.839
+                  : 0.634
+                : 1,
             }}
           >
             <View style={{ maxHeight: "50%" }}>
@@ -443,10 +447,10 @@ const TourDetailScreen = ({
                 <TextInput
                   multiline
                   onBlur={() => {
-                    setKeyboardShow(!keyboardShow);
+                    setKeyboardShow(false);
                   }}
                   onFocus={() => {
-                    setKeyboardShow(!keyboardShow);
+                    setKeyboardShow(true);
                   }}
                   style={CommentScreenStyleSheet.textInput}
                   onChangeText={(content) => {
