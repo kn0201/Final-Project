@@ -128,6 +128,9 @@ export function AddPostScreen1({ navigation }) {
 
   const addPost = async () => {
     try {
+      if (token === "") {
+        throw new Error("Please login to add new post");
+      }
       if (checkType) {
         updateInputText("type", checkType);
       } else {

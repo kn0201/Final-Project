@@ -143,6 +143,8 @@ export const getPostResultListParser = array(object({}));
 
 export const addTourPostParser = object({ id: number() });
 
+export const addCommentParser = object({ id: number() });
+
 export const getIconResult = object({
   path: nullable(string()),
 });

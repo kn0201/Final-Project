@@ -13,9 +13,14 @@ import {
   ScrollView,
 } from "react-native";
 import { api } from "../apis/api";
-import { commentInfoParser, postDetailParser } from "../utils/parser";
-import { PostDetailItem, ReplyInfoItem } from "../utils/types";
-import { useCallback, useEffect, useState } from "react";
+import {
+  addCommentParser,
+  commentInfoParser,
+  getIconResult,
+  postDetailParser,
+} from "../utils/parser";
+import { CommentInfo, PostDetailItem, ReplyInfoItem } from "../utils/types";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { apiOrigin } from "../utils/apiOrigin";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import { ItemSeparatorView, setStarRating } from "./PostScreen";
@@ -28,6 +33,9 @@ import { useToken } from "../hooks/useToken";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { Card } from "react-native-paper";
+import useEvent from "react-use-event";
+import { AddCommentEvent } from "../utils/events";
+import { useGet } from "../hooks/useGet";
 
 const TourDetailScreen = ({
   route,
@@ -114,25 +122,73 @@ const TourDetailScreen = ({
       console.log(err);
     }
   };
+  let avatar = useGet("/user/icon", getIconResult).state?.path;
+
   useEffect(() => {
     getCommentInfo();
+    console.log(avatar);
   }, []);
+  useEvent<AddCommentEvent>("AddComment", (event) => {
+    getCommentInfo();
+  });
 
-  const submit = () => {
-    if (token != "") {
-      console.log("ok");
-    } else {
+  const [content, setContent] = useState<string>("");
+  const dispatchAddCommentEvent = useEvent<AddCommentEvent>("AddComment");
+  const commentInfo = useRef<CommentInfo>({
+    content: "",
+  }).current;
+  const inputRef = useRef<TextInput | null>(null);
+  const submit = async () => {
+    try {
+      if (token === "") {
+        throw new Error("Please login to add new post");
+      }
+      if (content !== "") {
+        updateInputText("content", content);
+      } else {
+        throw new Error("Missing content");
+      }
+      let result = await api.post(
+        `/comment/${id}/add`,
+        commentInfo,
+        addCommentParser,
+        token,
+      );
+      dispatchAddCommentEvent("AddComment");
+      inputRef?.current?.clear();
+      Keyboard.dismiss();
+      //@ts-ignore
+      flatListRef?.current?.scrollToEnd();
+      IonNeverDialog.show({
+        type: "success",
+        title: `Success`,
+        message: `Added new comment #${result.id} to post #${id}`,
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          IonNeverDialog.dismiss();
+        },
+      });
+    } catch (e) {
       IonNeverDialog.show({
         type: "warning",
-        title: "Guest cannot Comment",
-        message: "Please Login",
+        title: "Error",
+        message: `${e}`,
         firstButtonVisible: true,
+        firstButtonFunction: () => {
+          IonNeverDialog.dismiss();
+        },
       });
+      console.log({ e });
     }
   };
+  const updateInputText = (field: string, value: string) => {
+    //@ts-ignore
+    commentInfo[field as keyof CommentInfo] = value;
+  };
 
+  const flatListRef = useRef(null);
   const ItemView = useCallback(
-    ({ item }: ListRenderItemInfo<ReplyInfoItem>) => (
+    ({ item, index }: ListRenderItemInfo<ReplyInfoItem>) => (
       <>
         <View style={TourDetailScreenStyleSheet.postDetailContainer}>
           <View
@@ -159,7 +215,7 @@ const TourDetailScreen = ({
             <Text> ({item.number_of_rating})</Text>
           </View>
           <View style={TourDetailScreenStyleSheet.row}>
-            <Text style={{ fontWeight: "800" }}>#{item.id}</Text>
+            <Text style={{ fontWeight: "800" }}>#{index + 1}</Text>
             <Text style={TourDetailScreenStyleSheet.titleKey}>
               {item.created_at.substring(0, 10)}
             </Text>
@@ -369,6 +425,7 @@ const TourDetailScreen = ({
             </View>
             <ItemSeparatorView />
             <FlatList
+              ref={flatListRef}
               data={comments}
               keyExtractor={(item, index) => index.toString()}
               renderItem={ItemView}
@@ -379,7 +436,7 @@ const TourDetailScreen = ({
                 size={30}
                 rounded
                 source={{
-                  uri: `${apiOrigin}/${post?.avatar_path}`,
+                  uri: `${apiOrigin}/${avatar}`,
                 }}
               />
               <View style={CommentScreenStyleSheet.textInputContainer}>
@@ -392,6 +449,11 @@ const TourDetailScreen = ({
                     setKeyboardShow(!keyboardShow);
                   }}
                   style={CommentScreenStyleSheet.textInput}
+                  onChangeText={(content) => {
+                    setContent(content);
+                  }}
+                  value={content}
+                  ref={inputRef}
                 ></TextInput>
               </View>
               <TouchableOpacity style={{ paddingRight: 10 }} onPress={submit}>

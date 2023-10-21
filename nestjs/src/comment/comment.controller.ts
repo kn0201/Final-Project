@@ -1,5 +1,6 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
 import { CommentService } from './comment.service';
+import { addCommentParser } from 'utils/parser';
 
 @Controller('comment')
 export class CommentController {
@@ -8,5 +9,14 @@ export class CommentController {
   @Get(':id')
   getCommentInfo(@Param('id') id: string) {
     return this.commentService.getCommentInfo(+id);
+  }
+  @Post(':id/add')
+  postCommentInfo(
+    @Param('id') id: string,
+    @Body() body: Body,
+    @Req() req: Request,
+  ) {
+    let input = addCommentParser.parse(body);
+    return this.commentService.addComment(+id, input, req);
   }
 }

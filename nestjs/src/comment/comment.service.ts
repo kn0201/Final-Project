@@ -9,6 +9,26 @@ export class CommentService {
     private jwtService: JwtService,
   ) {}
 
+  async addComment(id, body, req) {
+    try {
+      const payload = this.jwtService.decode(
+        req.headers.authorization.split(' ')[1],
+      );
+      let user_id = payload.user_id;
+      let comment_result = await this.knex('comment')
+        .insert({
+          user_id: user_id,
+          post_id: id,
+          content: body.content,
+          is_delete: false,
+        })
+        .returning('id');
+      return { id: comment_result[0].id };
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
   async getCommentInfo(id: number) {
     try {
       let commentInfo = [];

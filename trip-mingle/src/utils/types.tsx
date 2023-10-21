@@ -59,6 +59,10 @@ export type PostInfo = {
   preferred_hobby: string | null;
 };
 
+export type CommentInfo = {
+  content: string;
+};
+
 type LocationPost = {
   place_id: string;
   name: string;
