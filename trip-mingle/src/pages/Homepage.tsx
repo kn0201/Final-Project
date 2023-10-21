@@ -13,15 +13,20 @@ import { HomePageStyleSheet } from "../StyleSheet/HomePageCss";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Fontisto from "react-native-vector-icons/Fontisto";
-
+import { navigate } from "../tabs/RootNavigation";
 import { iosBlue } from "../StyleSheet/StyleSheetHelper";
 import { apiOrigin } from "../utils/apiOrigin";
-import { navigate } from "../tabs/RootNavigation";
+import useEvent from "react-use-event";
+import { MapEvent } from "../utils/events";
+import { useAppNavigation } from "../../navigators";
 
 export default function HomePage() {
+  const navigation = useAppNavigation();
   const handleMapClick = (latitude: number, longitude: number) => {
-    navigate("Map", { latitude, longitude });
+    dispatchMapEvent({ map_type: "given" });
+    navigation.navigate("Map", { center: { latitude, longitude } });
   };
+  const dispatchMapEvent = useEvent<MapEvent>("FetchMap");
   return (
     <>
       <Header

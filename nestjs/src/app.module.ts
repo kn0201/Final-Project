@@ -14,6 +14,7 @@ import { CountryModule } from './country/country.module';
 import { ServeStaticModule } from '@nestjs/serve-static/dist/serve-static.module';
 import { resolve } from 'path';
 import { PlanningModule } from './planning/planning.module';
+import { LocationModule } from './location/location.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
@@ -43,6 +44,7 @@ import { PlanningModule } from './planning/planning.module';
     LanguageModule,
     CountryModule,
     PlanningModule,
+    LocationModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService],

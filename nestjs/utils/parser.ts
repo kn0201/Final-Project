@@ -70,3 +70,15 @@ export const addNewPlanParser = object({
 export const updateUsernameParser = object({
   username: string(),
 });
+
+export const markerParser = array(
+  object({
+    address: string(),
+    coordinate: object({
+      latitude: number(),
+      longitude: number(),
+    }),
+    placeId: string(),
+    placeName: string(),
+  }),
+);

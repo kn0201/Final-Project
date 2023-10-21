@@ -12,6 +12,7 @@ import LoginPage from "../pages/LoginPage";
 import ExplorePage from "../pages/ExplorePage";
 import SchedulePage from "../pages/SchedulePage";
 import { useToken } from "../hooks/useToken";
+import MapPageBackUP from "../pages/MapPageBackup";
 
 const Tab = createBottomTabNavigator();
 
@@ -63,7 +64,7 @@ function MyTab() {
       {token ? (
         <Tab.Screen
           name="Users"
-          component={UserPage}
+          component={MapPageBackUP}
           options={{
             // tabBarHideOnKeyboard: true,
             tabBarLabel: "Users",
