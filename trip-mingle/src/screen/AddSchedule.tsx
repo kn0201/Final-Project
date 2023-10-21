@@ -17,8 +17,6 @@ import { object } from "cast.ts";
 import { useToken } from "../hooks/useToken";
 import TextButton from "../components/TextButton";
 import { AppParamList, useAppNavigation, useAppRoute } from "../../navigators";
-<<<<<<< HEAD
-=======
 import {
   RouteProp,
   useNavigationState,
@@ -36,7 +34,6 @@ const styles = StyleSheet.create({
     selectedDay: "red",
   },
 });
->>>>>>> refs/remotes/origin/main
 
 function Space(props: { height: number }) {
   return (
@@ -62,12 +59,12 @@ const AddSchedule = () => {
   const planId = useAppRoute<"AddSchedule">().planId;
 
   async function addMarkDate() {
-    if (!start_date) {
+    if (!startDate) {
       IonNeverToast.show({
         type: "warning",
         title: "Please input start date",
       });
-      if (!end_date)
+      if (!endDate)
         IonNeverToast.show({
           type: "warning",
           title: "Please input end date",
@@ -76,11 +73,6 @@ const AddSchedule = () => {
     }
     try {
       let formData = new FormData();
-<<<<<<< HEAD
-      formData.append("start_date", start_date);
-      formData.append("end_date", end_date);
-      let json = await api2.upload(
-=======
       formData.append("start_date", startDate);
       formData.append("end_date", endDate);
 
@@ -90,18 +82,13 @@ const AddSchedule = () => {
       };
 
       let res = await api.post(
->>>>>>> refs/remotes/origin/main
         `/planning/${planId}/mark`,
         data,
         object({}),
         token
       );
-<<<<<<< HEAD
-      console.log(formData);
-=======
 
       console.log("add mark:", res);
->>>>>>> refs/remotes/origin/main
       IonNeverDialog.show({
         type: "success",
         title: "Add a new mark",
@@ -245,12 +232,16 @@ const AddSchedule = () => {
     }
   });
 
-  const [start_date, setStartDate] = useState<string>("2023-10-16");
-  const [end_date, setEndDate] = useState<string>("2023-10-27");
+  const [startDate, setStartDate] = useState<string>("2023-10-16");
+  const [endDate, setEndDate] = useState<string>("2023-10-27");
+
+  // const function addNewMarkDate() {
+
+  // }
 
   const markedDates: MarkedDates = {
-    [start_date]: { startingDay: true, color: "lightgreen" },
-    [end_date]: { endingDay: true, color: "lightgreen" },
+    [startDate]: { startingDay: true, color: "lightgreen" },
+    [endDate]: { endingDay: true, color: "lightgreen" },
     [selectedDate]: {
       selected: true,
       disableTouchEvent: true,
@@ -258,10 +249,10 @@ const AddSchedule = () => {
     },
   };
 
-  for (let date = start_date; date <= end_date; date = nextDate(date)) {
+  for (let date = startDate; date <= endDate; date = nextDate(date)) {
     markedDates[date] = {
-      startingDay: date == start_date,
-      endingDay: date == end_date,
+      startingDay: date == startDate,
+      endingDay: date == endDate,
       color: "lightgreen",
     };
   }
@@ -286,7 +277,7 @@ const AddSchedule = () => {
         <Text>Starting Date</Text>
         <TextInput
           style={PlanningStyleSheet.inputContainer}
-          value={start_date}
+          value={startDate}
           onChangeText={setStartDate}
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input your start travel date"
@@ -294,7 +285,7 @@ const AddSchedule = () => {
         <Text>Ending Date</Text>
         <TextInput
           style={PlanningStyleSheet.inputContainer}
-          value={end_date}
+          value={endDate}
           onChangeText={setEndDate}
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input your end travel date"

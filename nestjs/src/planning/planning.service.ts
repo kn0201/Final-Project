@@ -77,8 +77,8 @@ export class PlanningService {
       end_date: string;
     },
   ) {
-    let row = await this.knex
-      .select('plan')
+    let row = await this.knex('plan_detail')
+      .select('plan_id')
       .where({
         id: input.planning_id,
         user_id,
@@ -87,4 +87,5 @@ export class PlanningService {
     if (!row) throw new ForbiddenException('you are not the planing owner');
     await this.knex('plan_detail').insert(input);
   }
+  // async addNewEvent(detail_id, body: { location; start_time; end_time }) {}
 }
