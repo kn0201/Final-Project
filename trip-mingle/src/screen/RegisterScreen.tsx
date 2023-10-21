@@ -37,10 +37,10 @@ export default function RegisterScreen({ navigation }) {
   const { token, payload, setToken } = useToken();
   const [checkGender, setCheck1] = useState(true);
   const [imageFile, setImageFile] = useState<any>();
-  const [selectedAge, setSelectedAge] = useState("Select Your Age Group");
+  const [selectedAge, setSelectedAge] = useState("Select Your Age Group*");
   const [age, setAge] = useState("");
 
-  const [selectedCountry, setSelectedCountry] = useState("Country");
+  const [selectedCountry, setSelectedCountry] = useState("Country*");
 
   const [image, setImage] = useState<string>();
 

@@ -1,0 +1,70 @@
+//Buffer Line
+import { StyleSheet } from "react-native";
+import { center, flex, full, iosBlue, row, white } from "./StyleSheetHelper";
+
+export const BlogContentStyleSheet = StyleSheet.create({
+  contentContainer: {
+    // flexDirection: row,
+    // alignItems: center,
+    justifyContent: "space-between",
+    height: 300,
+    width: "90%",
+    margin: 8,
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
+    textDecorationLine: "none",
+  },
+  uploadContainerSquare: {
+    elevation: 2,
+    height: 100,
+    width: full,
+    backgroundColor: "#efefef",
+    position: "relative",
+    overflow: "hidden",
+    // marginBottom: 12,
+    justifyContent: center,
+  },
+  uploadBtnContainerSquare: {
+    opacity: 0.7,
+    position: "absolute",
+    right: 0,
+    bottom: 0,
+    backgroundColor: "lightgrey",
+    width: "100%",
+    height: 30,
+    color: "red",
+    justifyContent: center,
+    alignItems: center,
+  },
+  backgroundColor: {
+    backgroundColor: "#ffffff",
+  },
+  uploadBtn: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  addButtonContainer: {
+    flexDirection: row,
+    alignItems: center,
+    justifyContent: "space-between",
+    width: "90%",
+    margin: 8,
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
+    textDecorationLine: "none",
+  },
+  addButton: {
+    flexDirection: row,
+    alignItems: center,
+    justifyContent: "space-between",
+    width: "90%",
+    margin: 8,
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
+    textDecorationLine: "none",
+  },
+});

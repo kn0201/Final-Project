@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import MapView, {
   Callout,
+  Details,
   LatLng,
   Marker,
   PROVIDER_GOOGLE,
+  Region,
 } from "react-native-maps";
 import {
   GooglePlacesAutocomplete,
@@ -72,7 +74,10 @@ export default function MapPage({
 
   // Custom Marker
   const [state, setState] = useState({});
-
+  const [markerCoordinate, setMarkerCoordinate] = useState({
+    latitude: 22.316668,
+    longitude: 114.183334,
+  });
   const MyCustomMarkerView = () => {
     return (
       <Image
@@ -133,6 +138,17 @@ export default function MapPage({
     };
     setBookmark([...bookmark, position]);
     moveTo(position);
+  };
+
+  //marker on Change
+  const onRegionChange = (region: Region) => {
+    setMarkerCoordinate({
+      latitude: region.latitude,
+      longitude: region.longitude,
+    });
+  };
+  const onRegionChangeComplete = (region: Region, details: Details) => {
+    console.log(region);
   };
 
   // Get current location
@@ -217,6 +233,8 @@ export default function MapPage({
             />
           </View>
           <MapView
+            onRegionChangeComplete={onRegionChangeComplete}
+            onRegionChange={onRegionChange}
             ref={mapRef}
             provider={PROVIDER_GOOGLE}
             style={styles.map}

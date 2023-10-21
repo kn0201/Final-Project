@@ -22,6 +22,7 @@ import {
   useNavigationState,
   useRoute,
 } from "@react-navigation/native";
+import { apiOrigin } from "../utils/apiOrigin";
 
 const styles = StyleSheet.create({
   view: {
@@ -53,7 +54,7 @@ const AddSchedule = () => {
 
   const navigation = useAppNavigation();
   const routeState = navigation.getState();
-  console.log("route state:", routeState);
+  // console.log("route state:", routeState);
 
   const planId = useAppRoute<"AddSchedule">().planId;
 
@@ -74,14 +75,20 @@ const AddSchedule = () => {
       let formData = new FormData();
       formData.append("start_date", startDate);
       formData.append("end_date", endDate);
-      console.log(formData);
-      let json = await api2.upload(
+
+      let data = {
+        start_date: startDate,
+        end_date: endDate,
+      };
+
+      let res = await api.post(
         `/planning/${planId}/mark`,
-        formData,
+        data,
         object({}),
         token
       );
-      console.log("add mark:", json);
+
+      console.log("add mark:", res);
       IonNeverDialog.show({
         type: "success",
         title: "Add a new mark",
