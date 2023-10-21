@@ -6,3 +6,7 @@ export type MapEvent = {
   type: "FetchMap";
   map_type: "given" | "current" | "clickIn";
 };
+
+export type AddCommentEvent = {
+  type: "AddComment";
+};

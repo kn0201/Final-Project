@@ -8,7 +8,6 @@ const CommentScreenStyleSheet = StyleSheet.create({
     justifyContent: center,
     alignItems: center,
   },
-
   bottomContainer: {
     backgroundColor: white,
     height: 45,
@@ -16,13 +15,12 @@ const CommentScreenStyleSheet = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: center,
     flexDirection: row,
-    paddingHorizontal: 16,
+    paddingHorizontal: 10,
     gap: 3,
   },
   textInputContainer: {
     flex: 1,
     height: 45,
-
     justifyContent: center,
     paddingHorizontal: 8,
   },
@@ -30,7 +28,7 @@ const CommentScreenStyleSheet = StyleSheet.create({
     backgroundColor: "#eeeeee",
     borderRadius: 10,
     height: 37,
-    paddingHorizontal: 8,
+    paddingHorizontal: 5,
   },
 });
 export default CommentScreenStyleSheet;

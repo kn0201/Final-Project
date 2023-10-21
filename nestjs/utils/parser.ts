@@ -62,6 +62,10 @@ export const addTourPostParser = object({
   preferred_hobby: nullable(string()),
 });
 
+export const addCommentParser = object({
+  content: string(),
+});
+
 export const addNewPlanParser = object({
   start_time: string(),
   end_time: string(),

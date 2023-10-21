@@ -59,6 +59,10 @@ export type PostInfo = {
   preferred_hobby: string | null;
 };
 
+export type CommentInfo = {
+  content: string;
+};
+
 type LocationPost = {
   place_id: string;
   name: string;
@@ -118,6 +122,22 @@ export type PostDetailItem = {
   number_of_rating: number;
   number_of_like: number;
   number_of_reply: number;
+};
+
+export type ReplyInfoItem = {
+  id: number;
+  content: string;
+  created_at: string;
+  username: string;
+  avatar_path: string;
+  rating: number;
+  gender: boolean;
+  age: string;
+  country: string;
+  language: string[] | null;
+  hobby: string[] | null;
+  countries_travelled: string[] | null;
+  number_of_rating: number;
 };
 
 export type CountryList = {
