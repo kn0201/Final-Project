@@ -47,11 +47,15 @@ const TourDetailScreen = ({
   const { token, payload, setToken } = useToken();
   const { IonNeverDialog } = useIonNeverNotification();
   const [keyboardShow, setKeyboardShow] = useState(false);
+
+  // Params
   const { id, title, status } = route.params || {
     id: 0,
     title: "Tour Detail",
     status: "",
   };
+
+  // Header
   const maxTitleLength = 16;
   const limitedTitle =
     title.length > maxTitleLength
@@ -86,15 +90,20 @@ const TourDetailScreen = ({
       ),
     });
   }, [title, status]);
+
+  // Likes
   const [isLike, setIsLike] = useState(false);
-  const [isBookmark, setIsBookmark] = useState(false);
   const like = () => {
     setIsLike(!isLike);
   };
+
+  // Bookmarks
+  const [isBookmark, setIsBookmark] = useState(false);
   const bookmark = () => {
     setIsBookmark(!isBookmark);
   };
 
+  // Get post detail
   const [post, setPost] = useState<PostDetailItem | null>();
   const getPostDetail = async () => {
     try {
@@ -113,6 +122,7 @@ const TourDetailScreen = ({
     ? locationNames.join(", ")
     : "";
 
+  // Get comments list
   const [comments, setComments] = useState<ReplyInfoItem[] | null>([]);
   const getCommentInfo = async () => {
     try {
@@ -122,16 +132,17 @@ const TourDetailScreen = ({
       console.log(err);
     }
   };
-  let avatar = useGet("/user/icon", getIconResult).state?.path;
-
   useEffect(() => {
     getCommentInfo();
-    console.log(avatar);
   }, []);
   useEvent<AddCommentEvent>("AddComment", (event) => {
     getCommentInfo();
   });
 
+  // Get login user avatar
+  let avatar = useGet("/user/icon", getIconResult).state?.path;
+
+  // Add comment
   const [content, setContent] = useState<string>("");
   const dispatchAddCommentEvent = useEvent<AddCommentEvent>("AddComment");
   const commentInfo = useRef<CommentInfo>({
@@ -141,7 +152,7 @@ const TourDetailScreen = ({
   const submit = async () => {
     try {
       if (token === "") {
-        throw new Error("Please login to add new post");
+        throw new Error("Please login to add comment");
       }
       if (content !== "") {
         updateInputText("content", content);
@@ -186,6 +197,7 @@ const TourDetailScreen = ({
     commentInfo[field as keyof CommentInfo] = value;
   };
 
+  // Display comments list
   const flatListRef = useRef(null);
   const ItemView = useCallback(
     ({ item, index }: ListRenderItemInfo<ReplyInfoItem>) => (
@@ -231,6 +243,7 @@ const TourDetailScreen = ({
     [],
   );
 
+  // Display
   return (
     <>
       <TouchableWithoutFeedback
