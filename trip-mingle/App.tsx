@@ -17,8 +17,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TokenProvider } from "./src/hooks/useToken";
 import { Modal, ModalRoot } from "./src/components/Modal";
 import { navigationRef } from "./src/tabs/RootNavigation";
+import { LogBox } from "react-native";
 
 // const Stack = createNativeStackNavigator();
+LogBox.ignoreLogs([
+  "Sending `onAnimatedValueUpdate` with no listeners registered",
+]);
 
 function Root() {
   return (

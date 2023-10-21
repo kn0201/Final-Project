@@ -25,7 +25,7 @@ export const getProfileResultParser = object({
   language: nullable(array(object({ name: string(), id: string() }))),
   hobby: nullable(array(object({ name: string(), id: string() }))),
   countries_travelled: nullable(
-    array(object({ name: string(), id: string() }))
+    array(object({ name: string(), id: string() })),
   ),
 });
 
@@ -37,7 +37,7 @@ export const countryListParser = array(
   object({
     id: string(),
     name: string(),
-  })
+  }),
 );
 
 export const languageListParser = countryListParser;
@@ -66,8 +66,8 @@ export const postInfoParser = array(
           address: string(),
           latitude: string(),
           longitude: string(),
-        })
-      )
+        }),
+      ),
     ),
     username: string(),
     avatar_path: string(),
@@ -75,7 +75,7 @@ export const postInfoParser = array(
     number_of_rating: number(),
     number_of_like: number(),
     number_of_reply: number(),
-  })
+  }),
 );
 
 export const postDetailParser = object({
@@ -100,8 +100,8 @@ export const postDetailParser = object({
         address: string(),
         latitude: string(),
         longitude: string(),
-      })
-    )
+      }),
+    ),
   ),
   username: string(),
   avatar_path: string(),
@@ -111,12 +111,32 @@ export const postDetailParser = object({
   number_of_reply: number(),
 });
 
+export const commentInfoParser = nullable(
+  array(
+    object({
+      id: number(),
+      content: string(),
+      created_at: string(),
+      username: string(),
+      avatar_path: string(),
+      rating: number(),
+      gender: boolean(),
+      age: string(),
+      country: string(),
+      language: nullable(array(string())),
+      hobby: nullable(array(string())),
+      countries_travelled: nullable(array(string())),
+      number_of_rating: number(),
+    }),
+  ),
+);
+
 export const addPostCountryListParser = array(
   object({
     id: string(),
     name: string(),
     code: string(),
-  })
+  }),
 );
 
 export const getPostResultListParser = array(object({}));

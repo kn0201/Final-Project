@@ -27,6 +27,7 @@ import {
   LanguageListItem,
   addPostCountryListParser,
   addTourPostParser,
+  countryListParser,
   languageListParser,
 } from "../utils/parser";
 import { api } from "../apis/api";
@@ -50,7 +51,7 @@ export function AddPostScreen1({ navigation }) {
   const [selectedGender, setSelectedGender] = useState("Preferred Gender");
   const [gender, setGender] = useState("");
   const [selectedHeadcount, setSelectedHeadcount] = useState<string>(
-    "Preferred Headcount *"
+    "Preferred Headcount *",
   );
   const [headcount, setHeadcount] = useState<string>("");
   const [headcountListData, setHeadcountListData] = useState<string[]>([
@@ -64,7 +65,7 @@ export function AddPostScreen1({ navigation }) {
     "8",
   ]);
   const [selectedCountry, setSelectedCountry] = useState(
-    "Destination Country *"
+    "Destination Country *",
   );
   const [country, setCountry] = useState("");
   const [code, setCode] = useState("");
@@ -72,7 +73,7 @@ export function AddPostScreen1({ navigation }) {
   const [period, setPeriod] = useState<string[]>([]);
   const [languages, setLanguages] = useState<string[]>([]);
   const [selectedLanguagesText, setSelectedLanguagesText] = useState(
-    "Preferred Languages(s)"
+    "Preferred Languages(s)",
   );
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
@@ -180,7 +181,7 @@ export function AddPostScreen1({ navigation }) {
         "/blog/tour",
         postInfo,
         addTourPostParser,
-        token
+        token,
       );
       dispatchAddPostEvent({ post_type: checkType });
       IonNeverDialog.show({
@@ -210,7 +211,7 @@ export function AddPostScreen1({ navigation }) {
 
   const updateInputText = (
     field: string,
-    value: string | boolean | string[]
+    value: string | boolean | string[],
   ) => {
     //@ts-ignore
     postInfo[field as keyof PostInfo] = value;
@@ -236,6 +237,7 @@ export function AddPostScreen1({ navigation }) {
         value={title}
         placeholder="Post Title *"
         returnKeyType="done"
+        maxLength={44}
       />
     );
   };
@@ -427,8 +429,8 @@ export function AddPostScreen1({ navigation }) {
                   countriesListData.filter((country) =>
                     country.name
                       .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase())
-                  )
+                      .includes(search.toLocaleLowerCase()),
+                  ),
                 );
               }, [search, countriesListData]);
               const updateSearch = (search: string) => {
@@ -574,8 +576,8 @@ export function AddPostScreen1({ navigation }) {
                   languagesListData.filter((language) =>
                     language.name
                       .toLocaleLowerCase()
-                      .includes(searchLanguages.toLocaleLowerCase())
-                  )
+                      .includes(searchLanguages.toLocaleLowerCase()),
+                  ),
                 );
               }, [searchLanguages, languagesListData]);
 
@@ -587,8 +589,8 @@ export function AddPostScreen1({ navigation }) {
                 if (localLanguages.includes(name)) {
                   setLocalLanguages(
                     localLanguages.filter(
-                      (language: string) => language !== name
-                    )
+                      (language: string) => language !== name,
+                    ),
                   );
                 } else {
                   setLocalLanguages([...localLanguages, name]);
@@ -713,76 +715,76 @@ export function AddPostScreen1({ navigation }) {
           Keyboard.dismiss();
         }}
       >
-        {/* <KeyboardAvoidingView
+        <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{ flex: 1 }}
-        > */}
-        <ScrollView>
-          <View style={{ height: "auto", alignItems: "center" }}>
-            <View style={AddPostPageStyleSheet.typeContainer}>
-              <CheckBox
-                center
-                title="BLOG"
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checked={checkType === "blog"}
-                onPress={() => {
-                  setCheckType("blog");
-                }}
-                size={20}
-                containerStyle={{ backgroundColor: "transparent" }}
-              />
-              <CheckBox
-                center
-                title="TOUR"
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checked={checkType === "tour"}
-                onPress={() => {
-                  setCheckType("tour");
-                }}
-                size={20}
-                containerStyle={{ backgroundColor: "transparent" }}
-              />
-              <CheckBox
-                center
-                title="ENQUIRE"
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checked={checkType === "enquire"}
-                onPress={() => setCheckType("enquire")}
-                size={20}
-                containerStyle={{ backgroundColor: "transparent" }}
-              />
+        >
+          <ScrollView>
+            <View style={{ height: "auto", alignItems: "center" }}>
+              <View style={AddPostPageStyleSheet.typeContainer}>
+                <CheckBox
+                  center
+                  title="BLOG"
+                  checkedIcon="dot-circle-o"
+                  uncheckedIcon="circle-o"
+                  checked={checkType === "blog"}
+                  onPress={() => {
+                    setCheckType("blog");
+                  }}
+                  size={20}
+                  containerStyle={{ backgroundColor: "transparent" }}
+                />
+                <CheckBox
+                  center
+                  title="TOUR"
+                  checkedIcon="dot-circle-o"
+                  uncheckedIcon="circle-o"
+                  checked={checkType === "tour"}
+                  onPress={() => {
+                    setCheckType("tour");
+                  }}
+                  size={20}
+                  containerStyle={{ backgroundColor: "transparent" }}
+                />
+                <CheckBox
+                  center
+                  title="ENQUIRE"
+                  checkedIcon="dot-circle-o"
+                  uncheckedIcon="circle-o"
+                  checked={checkType === "enquire"}
+                  onPress={() => setCheckType("enquire")}
+                  size={20}
+                  containerStyle={{ backgroundColor: "transparent" }}
+                />
+              </View>
+              {TitleInput()}
+              {checkType === "enquire" ? <></> : <CountryCheckbox />}
+              {checkType === "enquire" ? (
+                <></>
+              ) : (
+                <LocationInput code={code} updateInputText={updateInputText} />
+              )}
+              {checkType !== "enquire" ? <PeriodSelector /> : <></>}
+              {checkType === "tour" ? BudgetInput() : <></>}
+              {ContentInput()}
+              {checkType === "tour" ? <HeadcountCheckbox /> : <></>}
+              {checkType === "tour" ? <GenderCheckbox /> : <></>}
+              {checkType === "tour" ? <AgeCheckbox /> : <></>}
+              {checkType === "tour" ? <LanguagesCheckbox /> : <></>}
+              {checkType === "tour" ? <SkillCheckbox /> : <></>}
+              <View style={AddPostPageStyleSheet.center}>
+                <TouchableOpacity
+                  style={AddPostPageStyleSheet.addPost}
+                  onPress={addPost}
+                >
+                  <Text style={AddPostPageStyleSheet.addPostText}>
+                    Create New Post
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            {TitleInput()}
-            {checkType === "enquire" ? <></> : <CountryCheckbox />}
-            {checkType === "enquire" ? (
-              <></>
-            ) : (
-              <LocationInput code={code} updateInputText={updateInputText} />
-            )}
-            {checkType !== "enquire" ? <PeriodSelector /> : <></>}
-            {checkType === "tour" ? BudgetInput() : <></>}
-            {ContentInput()}
-            {checkType === "tour" ? <HeadcountCheckbox /> : <></>}
-            {checkType === "tour" ? <GenderCheckbox /> : <></>}
-            {checkType === "tour" ? <AgeCheckbox /> : <></>}
-            {checkType === "tour" ? <LanguagesCheckbox /> : <></>}
-            {checkType === "tour" ? <SkillCheckbox /> : <></>}
-            <View style={AddPostPageStyleSheet.center}>
-              <TouchableOpacity
-                style={AddPostPageStyleSheet.addPost}
-                onPress={addPost}
-              >
-                <Text style={AddPostPageStyleSheet.addPostText}>
-                  Create New Post
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </ScrollView>
-        {/* </KeyboardAvoidingView> */}
+          </ScrollView>
+        </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
     </>
   );
