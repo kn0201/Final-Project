@@ -54,6 +54,10 @@ export default function MapPage({
   const [latitude, setLatitude] = useState<any>();
   const [longitude, setLongitude] = useState<any>();
 
+  // Get current location
+  const [location, setLocation] = useState<LocationObject | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
   useEffect(() => {
     if (route.params) {
       const { latitude, longitude } = route.params;
@@ -75,8 +79,8 @@ export default function MapPage({
   // Custom Marker
   const [state, setState] = useState({});
   const [markerCoordinate, setMarkerCoordinate] = useState({
-    latitude: 22.316668,
-    longitude: 114.183334,
+    latitude: givenLocation ? latitude : location?.coords.latitude,
+    longitude: givenLocation ? longitude : location?.coords.longitude,
   });
   const MyCustomMarkerView = () => {
     return (
@@ -147,13 +151,9 @@ export default function MapPage({
       longitude: region.longitude,
     });
   };
-  const onRegionChangeComplete = (region: Region, details: Details) => {
-    console.log(region);
+  const onRegionChangeComplete = async (region: Region, details: Details) => {
+    await fetchPlacesFromGoogleMaps;
   };
-
-  // Get current location
-  const [location, setLocation] = useState<LocationObject | null>(null);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   // Fetch places from google map
   const [places, setPlaces] = useState<Place[]>([]);
@@ -272,10 +272,7 @@ export default function MapPage({
             })}
             <Marker
               draggable
-              coordinate={{
-                latitude: location?.coords.latitude,
-                longitude: location?.coords.longitude,
-              }}
+              coordinate={markerCoordinate}
               onDragEnd={(e) => setState({ x: e.nativeEvent.coordinate })}
             >
               <MyCustomMarkerView />

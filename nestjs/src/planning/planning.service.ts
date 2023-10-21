@@ -77,15 +77,22 @@ export class PlanningService {
       end_date: string;
     },
   ) {
-    let row = await this.knex('plan_detail')
-      .select('plan_id')
-      .where({
-        id: input.planning_id,
-        user_id,
-      })
+    let row = await this.knex
+      .select('id')
+      .from('plan')
+      .where('id', input.planning_id)
+      .andWhere('user_id', user_id)
       .first();
-    if (!row) throw new ForbiddenException('you are not the planing owner');
-    await this.knex('plan_detail').insert(input);
+    if (row == undefined) {
+      throw new ForbiddenException('you are not the planing owner');
+    } else {
+      await this.knex('plan_detail').insert({
+        plan_id: input.planning_id,
+        start_date: input.start_date,
+        end_date: input.end_date,
+      });
+      return { result: true };
+    }
   }
   // async addNewEvent(detail_id, body: { location; start_time; end_time }) {}
 }

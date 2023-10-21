@@ -6,7 +6,7 @@ export const BlogContentStyleSheet = StyleSheet.create({
   contentContainer: {
     // flexDirection: row,
     // alignItems: center,
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     height: 300,
     width: "90%",
     margin: 8,
@@ -18,7 +18,7 @@ export const BlogContentStyleSheet = StyleSheet.create({
   uploadContainerSquare: {
     elevation: 2,
     height: 100,
-    width: full,
+    width: 100,
     backgroundColor: "#efefef",
     position: "relative",
     overflow: "hidden",
