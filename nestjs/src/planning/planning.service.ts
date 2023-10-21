@@ -87,5 +87,4 @@ export class PlanningService {
     if (!row) throw new ForbiddenException('you are not the planing owner');
     await this.knex('plan_detail').insert(input);
   }
-  // async addNewEvent(detail_id, body: { location; start_time; end_time }) {}
 }

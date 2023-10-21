@@ -38,29 +38,6 @@ export let api2 = {
       token
     );
   },
-};
-
-export let api = {
-  async get<T>(path: string, parser: Parser<T>, token?: string) {
-    return handleFetch(path, {}, parser, token);
-  },
-
-  async post<T>(path: string, body: object, parser: Parser<T>, token?: string) {
-    let res = await fetch(apiOrigin + path, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
-      body: JSON.stringify(body),
-    });
-    let json = await res.json();
-    if (json.error) {
-      //   this.alertService.showError(json.error)
-      throw new Error(json.error);
-    }
-    return parser.parse(json);
-  },
 
   async upload<T>(
     path: string,
@@ -114,7 +91,7 @@ export let api = {
     if (image_path.startsWith("http://") || image_path.startsWith("https://")) {
       return image_path;
     }
-    return apiOrigin + "/uploads/" + image_path;
+    return apiOrigin + "/" + image_path;
   },
 };
 

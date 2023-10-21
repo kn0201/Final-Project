@@ -17,22 +17,6 @@ import { object } from "cast.ts";
 import { useToken } from "../hooks/useToken";
 import TextButton from "../components/TextButton";
 import { AppParamList, useAppNavigation, useAppRoute } from "../../navigators";
-import {
-  RouteProp,
-  useNavigationState,
-  useRoute,
-} from "@react-navigation/native";
-
-const styles = StyleSheet.create({
-  view: {
-    margin: 20,
-    backgroundColor: "#FFF",
-    top: Constants.statusBarHeight,
-    borderRadius: 8,
-    selectedDayTextColor: "yellow",
-    selectedDay: "red",
-  },
-});
 
 function Space(props: { height: number }) {
   return (
@@ -58,12 +42,12 @@ const AddSchedule = () => {
   const planId = useAppRoute<"AddSchedule">().planId;
 
   async function addMarkDate() {
-    if (!startDate) {
+    if (!start_date) {
       IonNeverToast.show({
         type: "warning",
         title: "Please input start date",
       });
-      if (!endDate)
+      if (!end_date)
         IonNeverToast.show({
           type: "warning",
           title: "Please input end date",
@@ -72,16 +56,15 @@ const AddSchedule = () => {
     }
     try {
       let formData = new FormData();
-      formData.append("start_date", startDate);
-      formData.append("end_date", endDate);
-      console.log(formData);
+      formData.append("start_date", start_date);
+      formData.append("end_date", end_date);
       let json = await api2.upload(
         `/planning/${planId}/mark`,
         formData,
         object({}),
         token
       );
-      console.log("add mark:", json);
+      console.log(formData);
       IonNeverDialog.show({
         type: "success",
         title: "Add a new mark",
@@ -225,16 +208,12 @@ const AddSchedule = () => {
     }
   });
 
-  const [startDate, setStartDate] = useState<string>("2023-10-16");
-  const [endDate, setEndDate] = useState<string>("2023-10-27");
-
-  // const function addNewMarkDate() {
-
-  // }
+  const [start_date, setStartDate] = useState<string>("2023-10-16");
+  const [end_date, setEndDate] = useState<string>("2023-10-27");
 
   const markedDates: MarkedDates = {
-    [startDate]: { startingDay: true, color: "lightgreen" },
-    [endDate]: { endingDay: true, color: "lightgreen" },
+    [start_date]: { startingDay: true, color: "lightgreen" },
+    [end_date]: { endingDay: true, color: "lightgreen" },
     [selectedDate]: {
       selected: true,
       disableTouchEvent: true,
@@ -242,10 +221,10 @@ const AddSchedule = () => {
     },
   };
 
-  for (let date = startDate; date <= endDate; date = nextDate(date)) {
+  for (let date = start_date; date <= end_date; date = nextDate(date)) {
     markedDates[date] = {
-      startingDay: date == startDate,
-      endingDay: date == endDate,
+      startingDay: date == start_date,
+      endingDay: date == end_date,
       color: "lightgreen",
     };
   }
@@ -270,7 +249,7 @@ const AddSchedule = () => {
         <Text>Starting Date</Text>
         <TextInput
           style={PlanningStyleSheet.inputContainer}
-          value={startDate}
+          value={start_date}
           onChangeText={setStartDate}
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input your start travel date"
@@ -278,7 +257,7 @@ const AddSchedule = () => {
         <Text>Ending Date</Text>
         <TextInput
           style={PlanningStyleSheet.inputContainer}
-          value={endDate}
+          value={end_date}
           onChangeText={setEndDate}
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input your end travel date"

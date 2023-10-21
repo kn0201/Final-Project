@@ -66,7 +66,7 @@ export class PlanningController {
   }
 
   @Post(':plan_id/mark')
-  addNewMark(@Body() body, @Headers() headers: {}, @Param() params: {}) {
+  addNewMark(@Body() body: Body, @Headers() headers: {}, @Param() params: {}) {
     let jwt = getJWTPayload(headers);
     let input = object({
       body: object({
