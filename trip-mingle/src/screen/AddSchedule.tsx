@@ -17,6 +17,26 @@ import { object } from "cast.ts";
 import { useToken } from "../hooks/useToken";
 import TextButton from "../components/TextButton";
 import { AppParamList, useAppNavigation, useAppRoute } from "../../navigators";
+<<<<<<< HEAD
+=======
+import {
+  RouteProp,
+  useNavigationState,
+  useRoute,
+} from "@react-navigation/native";
+import { apiOrigin } from "../utils/apiOrigin";
+
+const styles = StyleSheet.create({
+  view: {
+    margin: 20,
+    backgroundColor: "#FFF",
+    top: Constants.statusBarHeight,
+    borderRadius: 8,
+    selectedDayTextColor: "yellow",
+    selectedDay: "red",
+  },
+});
+>>>>>>> refs/remotes/origin/main
 
 function Space(props: { height: number }) {
   return (
@@ -37,7 +57,7 @@ const AddSchedule = () => {
 
   const navigation = useAppNavigation();
   const routeState = navigation.getState();
-  console.log("route state:", routeState);
+  // console.log("route state:", routeState);
 
   const planId = useAppRoute<"AddSchedule">().planId;
 
@@ -56,15 +76,32 @@ const AddSchedule = () => {
     }
     try {
       let formData = new FormData();
+<<<<<<< HEAD
       formData.append("start_date", start_date);
       formData.append("end_date", end_date);
       let json = await api2.upload(
+=======
+      formData.append("start_date", startDate);
+      formData.append("end_date", endDate);
+
+      let data = {
+        start_date: startDate,
+        end_date: endDate,
+      };
+
+      let res = await api.post(
+>>>>>>> refs/remotes/origin/main
         `/planning/${planId}/mark`,
-        formData,
+        data,
         object({}),
         token
       );
+<<<<<<< HEAD
       console.log(formData);
+=======
+
+      console.log("add mark:", res);
+>>>>>>> refs/remotes/origin/main
       IonNeverDialog.show({
         type: "success",
         title: "Add a new mark",
