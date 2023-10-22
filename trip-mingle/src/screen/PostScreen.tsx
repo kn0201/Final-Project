@@ -20,7 +20,7 @@ import TourDetailScreenStyleSheet from "../StyleSheet/TourDetailScreenCss";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import React from "react";
 import useEvent from "react-use-event";
-import { AddPostEvent } from "../utils/events";
+import { AddCommentEvent, AddPostEvent, LikeEvent } from "../utils/events";
 
 // Star rating
 export const setStarRating = (rating: number) => {
@@ -58,8 +58,8 @@ export const ItemSeparatorView = () => {
 export default function TourScreen({ navigation }) {
   // Select post
   const [selectedPostID, setSelectedPostIDs] = useState(0);
-  const handlePostClick = (id: number, title: string) => {
-    navigation.navigate("Tour Detail", { id, title });
+  const handlePostClick = (id: number, title: string, status: string) => {
+    navigation.navigate("Tour Detail", { id, title, status });
     if (selectedPostID == id) {
       setSelectedPostIDs(0);
     } else {
@@ -76,16 +76,21 @@ export default function TourScreen({ navigation }) {
     }
   };
 
+  // Update post list
   useEvent<AddPostEvent>("AddPost", (event) => {
     if (event.post_type == "tour") {
       getPostInfo();
     }
   });
+  useEvent<LikeEvent>("Like", (event) => {
+    getPostInfo();
+  });
+  useEvent<AddCommentEvent>("AddComment", (event) => {
+    getPostInfo();
+  });
 
   // Search bar
   const [search, setSearch] = useState("");
-  // const postInfo = useGet("/blog", postInfoParser);
-  // const postInfoData = postInfo.state || [];
   const [filteredPosts, setFilteredPosts] = useState<PostInfoItem[]>([]);
   const [posts, setPosts] = useState<PostInfoItem[]>([]);
 
@@ -104,11 +109,11 @@ export default function TourScreen({ navigation }) {
               item.trip_country.toUpperCase().includes(textData)) ||
             (item.trip_location &&
               item.trip_location.some((location) =>
-                location.name.toUpperCase().includes(textData)
+                location.name.toUpperCase().includes(textData),
               )) ||
             (item.trip_location &&
               item.trip_location.some((location) =>
-                location.address.toUpperCase().includes(textData)
+                location.address.toUpperCase().includes(textData),
               )) ||
             (item.preferred_hobby &&
               item.preferred_hobby.toUpperCase().includes(textData))
@@ -118,11 +123,14 @@ export default function TourScreen({ navigation }) {
     setFilteredPosts(newData);
     setSearch(text);
   };
+
   const ItemView = useCallback(
     ({ item }: ListRenderItemInfo<PostInfoItem>) => (
       <TouchableOpacity
         key={item.id}
-        onPress={() => handlePostClick(item.id, item.title)}
+        onPress={() =>
+          handlePostClick(item.id, item.title, item.status ? item.status : "")
+        }
         style={[
           { flex: 1 },
           selectedPostID === item.id ? { backgroundColor: "#E7FFF0" } : null,
@@ -194,7 +202,7 @@ export default function TourScreen({ navigation }) {
         </View>
       </TouchableOpacity>
     ),
-    []
+    [],
   );
 
   // Display

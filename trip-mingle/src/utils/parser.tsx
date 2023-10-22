@@ -25,7 +25,7 @@ export const getProfileResultParser = object({
   language: nullable(array(object({ name: string(), id: string() }))),
   hobby: nullable(array(object({ name: string(), id: string() }))),
   countries_travelled: nullable(
-    array(object({ name: string(), id: string() }))
+    array(object({ name: string(), id: string() })),
   ),
 });
 
@@ -37,7 +37,7 @@ export const countryListParser = array(
   object({
     id: string(),
     name: string(),
-  })
+  }),
 );
 
 export const languageListParser = countryListParser;
@@ -66,8 +66,8 @@ export const postInfoParser = array(
           address: string(),
           latitude: string(),
           longitude: string(),
-        })
-      )
+        }),
+      ),
     ),
     username: string(),
     avatar_path: string(),
@@ -75,7 +75,7 @@ export const postInfoParser = array(
     number_of_rating: number(),
     number_of_like: number(),
     number_of_reply: number(),
-  })
+  }),
 );
 
 export const postDetailParser = object({
@@ -100,9 +100,10 @@ export const postDetailParser = object({
         address: string(),
         latitude: string(),
         longitude: string(),
-      })
-    )
+      }),
+    ),
   ),
+  user_id: number(),
   username: string(),
   avatar_path: string(),
   rating: number(),
@@ -111,17 +112,40 @@ export const postDetailParser = object({
   number_of_reply: number(),
 });
 
+export const commentInfoParser = nullable(
+  array(
+    object({
+      id: number(),
+      content: string(),
+      created_at: string(),
+      user_id: number(),
+      username: string(),
+      avatar_path: string(),
+      rating: number(),
+      gender: boolean(),
+      age: string(),
+      country: string(),
+      language: nullable(array(string())),
+      hobby: nullable(array(string())),
+      countries_travelled: nullable(array(string())),
+      number_of_rating: number(),
+    }),
+  ),
+);
+
 export const addPostCountryListParser = array(
   object({
     id: string(),
     name: string(),
     code: string(),
-  })
+  }),
 );
 
 export const getPostResultListParser = array(object({}));
 
 export const addTourPostParser = object({ id: number() });
+
+export const addCommentParser = object({ id: number() });
 
 export const getIconResult = object({
   path: nullable(string()),
@@ -129,4 +153,55 @@ export const getIconResult = object({
 
 export const updateUsernameResultParser = object({
   result: boolean(),
+});
+
+export const markerParser = array(
+  object({
+    address: string(),
+    latitude: number(),
+    longitude: number(),
+    place_id: string(),
+    name: string(),
+  }),
+);
+
+export const likeParser = object({ number_of_like: number() });
+
+export const likeStatusParser = object({ isLike: boolean() });
+
+export const bookmarkParser = object({ number_of_bookmark: number() });
+
+export const bookmarkStatusParser = object({ isBookmark: boolean() });
+
+export const getOtherProfileParser = object({
+  avatar_path: string(),
+  rating: number(),
+  intro: nullable(string()),
+  gender: boolean(),
+  age: string(),
+  country: string(),
+  language: nullable(array(string())),
+  hobby: nullable(array(string())),
+  countries_travelled: nullable(array(string())),
+  number_of_rating: number(),
+  // application_status: nullable(boolean()),
+});
+
+export const applicationInfoParser = nullable(
+  array(
+    object({
+      id: number(),
+      user_id: number(),
+      username: string(),
+      avatar_path: string(),
+      status: boolean(),
+      created_at: string(),
+    }),
+  ),
+);
+
+export const applyTourParser = object({});
+
+export const applicationStatusParser = object({
+  status: boolean(),
 });

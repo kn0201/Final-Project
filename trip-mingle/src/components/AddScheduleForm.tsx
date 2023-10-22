@@ -34,6 +34,7 @@ type ImageFile = {
 
 function AddScheduleForm(props: {
   closeModal: () => void;
+
   addNewScheduleCard: (newScheduleInfo: {
     plan_id: number;
     plan_title: string;
@@ -137,6 +138,7 @@ function AddScheduleForm(props: {
         image_path: json.image_path,
       });
       closeModal();
+
       reset();
     } catch (error) {
       let message = String(error);

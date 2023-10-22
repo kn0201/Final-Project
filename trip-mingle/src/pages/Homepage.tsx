@@ -13,15 +13,28 @@ import { HomePageStyleSheet } from "../StyleSheet/HomePageCss";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Fontisto from "react-native-vector-icons/Fontisto";
-
+import { navigate } from "../tabs/RootNavigation";
 import { iosBlue } from "../StyleSheet/StyleSheetHelper";
 import { apiOrigin } from "../utils/apiOrigin";
-import { navigate } from "../tabs/RootNavigation";
+import useEvent from "react-use-event";
+import { MapEvent, MapPositionEvent } from "../utils/events";
+import { useAppNavigation } from "../../navigators";
 
 export default function HomePage() {
+  const navigation = useAppNavigation();
   const handleMapClick = (latitude: number, longitude: number) => {
-    navigate("Map", { latitude, longitude });
+    const center = { latitude, longitude };
+    const params = { center };
+    console.log("HomePage, go to map:", params);
+    dispatchMapEvent(params);
+    navigation.navigate("MapPage", {
+      screen: "MapScreen",
+      params: {
+        center,
+      },
+    });
   };
+  const dispatchMapEvent = useEvent<MapPositionEvent>("MapPosition");
   return (
     <>
       <Header

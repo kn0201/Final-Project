@@ -62,11 +62,40 @@ export const addTourPostParser = object({
   preferred_hobby: nullable(string()),
 });
 
+export const addCommentParser = object({
+  content: string(),
+});
+
 export const addNewPlanParser = object({
   start_time: string(),
   end_time: string(),
   location: string(),
 });
+
 export const updateUsernameParser = object({
   username: string(),
+});
+
+export const likeParser = object({
+  id: string(),
+});
+
+export const bookmarkParser = object({
+  id: string(),
+});
+
+export const markerParser = array(
+  object({
+    address: string(),
+    coordinate: object({
+      latitude: number(),
+      longitude: number(),
+    }),
+    placeId: string(),
+    placeName: string(),
+  }),
+);
+
+export const applyTourParser = object({
+  id: string(),
 });

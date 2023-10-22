@@ -8,15 +8,13 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFile,
-  Header,
   Headers,
+  Param,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { sendProfileParser, updateUsernameParser } from 'utils/parser';
-import multer from 'multer';
-import { randomUUID } from 'crypto';
 import { getJWTPayload } from 'src/jwt';
 import { storage } from 'src/uploads';
 
@@ -27,6 +25,14 @@ export class UserController {
   @Get('hobby_list')
   async getHobbyList() {
     return this.userService.getHobbyList();
+  }
+
+  @Get(':post_id/:id')
+  async getOtherProfile(
+    @Param('post_id') post_id: string,
+    @Param('id') id: string,
+  ) {
+    return this.userService.getOtherProfile(+post_id, +id);
   }
 
   @UseGuards(AuthGuard)
@@ -64,5 +70,10 @@ export class UserController {
       user_id: jwt.user_id,
       username: input.username,
     });
+  }
+
+  @Get('userIcon')
+  async getUserIcon(@Req() req: Request) {
+    return this.userService.getUserIcon(req);
   }
 }

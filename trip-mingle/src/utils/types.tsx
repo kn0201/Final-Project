@@ -59,6 +59,10 @@ export type PostInfo = {
   preferred_hobby: string | null;
 };
 
+export type CommentInfo = {
+  content: string;
+};
+
 type LocationPost = {
   place_id: string;
   name: string;
@@ -112,12 +116,30 @@ export type PostDetailItem = {
   view: number;
   created_at: string;
   trip_location: LocationGet[] | null;
+  user_id: number;
   username: string;
   avatar_path: string;
   rating: number;
   number_of_rating: number;
   number_of_like: number;
   number_of_reply: number;
+};
+
+export type ReplyInfoItem = {
+  id: number;
+  content: string;
+  created_at: string;
+  user_id: number;
+  username: string;
+  avatar_path: string;
+  rating: number;
+  gender: boolean;
+  age: string;
+  country: string;
+  language: string[] | null;
+  hobby: string[] | null;
+  countries_travelled: string[] | null;
+  number_of_rating: number;
 };
 
 export type CountryList = {
@@ -154,11 +176,25 @@ export type UserLocation = {
   name: string;
 };
 
-export type Reply = {
-  id: number;
+export type ProfileInfoItem = {
   avatar_path: string;
+  rating: number;
+  intro: string | null;
+  gender: boolean;
+  age: string;
+  country: string;
+  language: string[] | null;
+  hobby: string[] | null;
+  countries_travelled: string[] | null;
+  number_of_rating: number;
+  // application_status: boolean | null;
+};
+
+export type ApplicationInfoItem = {
+  id: number;
+  user_id: number;
   username: string;
-  content: string;
-  application: boolean;
+  avatar_path: string;
+  status: boolean;
   created_at: string;
 };
