@@ -4,15 +4,12 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import HomeScreen from "../pages/Homepage";
-
-import MapPage from "../pages/MapPage";
-
 import UserPage from "../pages/UserPage";
 import LoginPage from "../pages/LoginPage";
 import ExplorePage from "../pages/ExplorePage";
 import SchedulePage from "../pages/SchedulePage";
 import { useToken } from "../hooks/useToken";
-import MapPageBackUP from "../pages/MapPageBackup";
+import MapPage from "../pages/MapPage";
 
 const Tab = createBottomTabNavigator();
 
@@ -52,7 +49,7 @@ function MyTab() {
         }}
       />
       <Tab.Screen
-        name="Map"
+        name="MapPage"
         component={MapPage}
         options={{
           tabBarLabel: "Map",

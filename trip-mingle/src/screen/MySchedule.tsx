@@ -10,7 +10,7 @@ import {
   Animated,
   SafeAreaView,
 } from "react-native";
-import { Card } from "@rneui/themed";
+import { Card, Header } from "@rneui/themed";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {
@@ -27,6 +27,9 @@ import { useGet } from "../hooks/useGet";
 import { ParseResult, array, number, object, string } from "cast.ts";
 import { apiOrigin } from "../utils/apiOrigin";
 import { api, api2 } from "../apis/api";
+import UserPageStyleSheet from "../StyleSheet/UserPageCss";
+import useBoolean from "../hooks/useBoolean";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const Stack = createStackNavigator();
 
@@ -107,7 +110,7 @@ const Schedule = () => {
         {myPlanListResult.render((json) => (
           <FlatList data={json.planList} renderItem={renderItem} />
         ))}
-        <MaterialIcons
+        <Ionicons
           name="add-circle"
           size={60}
           style={{
@@ -119,7 +122,9 @@ const Schedule = () => {
             borderRadius: 32,
             zIndex: 0.95,
           }}
-          onPress={openModal}
+          onPress={() => {
+            openModal();
+          }}
         />
       </View>
       <Animated.View

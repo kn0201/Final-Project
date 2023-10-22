@@ -18,11 +18,15 @@ import { TokenProvider } from "./src/hooks/useToken";
 import { Modal, ModalRoot } from "./src/components/Modal";
 import { navigationRef } from "./src/tabs/RootNavigation";
 import { LogBox } from "react-native";
+import { createStackNavigator } from "@react-navigation/stack";
+import MapScreen from "./src/screen/MapScreen";
+import PlaceDetail from "./src/screen/PlaceDetail";
 
 // const Stack = createNativeStackNavigator();
 LogBox.ignoreLogs([
   "Sending `onAnimatedValueUpdate` with no listeners registered",
 ]);
+const Stack = createStackNavigator();
 
 function Root() {
   return (
