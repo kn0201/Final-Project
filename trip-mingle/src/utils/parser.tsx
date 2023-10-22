@@ -160,5 +160,5 @@ export const markerParser = array(
     longitude: number(),
     place_id: string(),
     name: string(),
-  })
+  }),
 );
