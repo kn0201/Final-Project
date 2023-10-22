@@ -30,7 +30,7 @@ export default function ChangeUsername({ username, navigation }) {
   const checkUsername = async (text: string) => {
     try {
       let checker = await api.loginSignUp(
-        "/login/check",
+        "/login/check_username",
         { username: text },
         checkResultParser
       );

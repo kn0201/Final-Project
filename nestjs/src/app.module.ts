@@ -45,6 +45,8 @@ import { LocationModule } from './location/location.module';
     LanguageModule,
     CountryModule,
     PlanningModule,
+    CommentModule,
+    LocationModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService],

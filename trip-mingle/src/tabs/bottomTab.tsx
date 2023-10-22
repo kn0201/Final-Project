@@ -64,7 +64,7 @@ function MyTab() {
       {token ? (
         <Tab.Screen
           name="Users"
-          component={MapPageBackUP}
+          component={UserPage}
           options={{
             // tabBarHideOnKeyboard: true,
             tabBarLabel: "Users",

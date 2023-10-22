@@ -60,18 +60,21 @@ type DataBaseMarker = {
 const GOOGLE_API_KEY = "AIzaSyDkl6HfJvmSSKDGWH0L0Y183PbBuY9fjdo";
 const placeType = "tourist_attraction";
 
-const defaultCenter = {
-  latitude: 22.2773199,
-  longitude: 114.173206,
-};
-
 export default function MapPage({ route }: { route: any }) {
+  const defaultCenter = {
+    latitude: 22.2773199,
+    longitude: 114.173206,
+  };
+
   const params = useAppRoute<"Map">();
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [center, setCenter] = useState(params.center || defaultCenter);
+  const [center, setCenter] = useState(defaultCenter);
 
-  type LatLng = typeof center;
+  type LatLng = {
+    latitude: number;
+    longitude: number;
+  };
 
   useEffect(() => {
     if (params.center) {
@@ -81,13 +84,7 @@ export default function MapPage({ route }: { route: any }) {
       }
       return;
     }
-    // if (route.params) {
-    //   const { latitude, longitude } = route.params;
-    //   setGivenLocation("given");
-    //   console.log({ useEffect: givenLocation });
-    //   setLatitude(latitude);
-    //   setLongitude(longitude);
-    // }
+
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
@@ -96,12 +93,10 @@ export default function MapPage({ route }: { route: any }) {
       }
       let location = await Location.getCurrentPositionAsync({});
       moveTo(location.coords);
-      // setLocation(location.coords);
     })();
   }, [params.center]);
 
   // Custom Marker
-  // const [state, setState] = useState({});
   const [markerCoordinate, setMarkerCoordinate] = useState(center);
 
   // Move to search place
@@ -152,9 +147,6 @@ export default function MapPage({ route }: { route: any }) {
   //marker on Change
   const onRegionChange = (region: Region) => {
     setMarkerCoordinate(region);
-    // setCenter(region);
-    // setCurrentLatitude(region.latitude);
-    // setCurrentLongitude(region.longitude);
   };
   const onRegionChangeComplete = async (region: Region, details: Details) => {
     setCenter(region);
@@ -164,37 +156,6 @@ export default function MapPage({ route }: { route: any }) {
 
   // Fetch places from google map
   const [places, setPlaces] = useState<Place[]>([]);
-  // const [markersList, setMarkersList] = useState([
-  //   {
-  //     id: 1,
-  //     latitude: 35.652832,
-  //     longitude: 139.839478,
-  //     title: "Tokyo",
-  //     description: "",
-  //   },
-  //   {
-  //     id: 2,
-  //     latitude: 34.672314,
-  //     longitude: 135.484802,
-  //     title: "Osaka",
-  //     description: "",
-  //   },
-  // ]);
-
-  useEvent<MapEvent>("FetchMap", (event) => {
-    if (event.map_type == "given") {
-      console.log({ useEvent: "given" });
-      // if (route.params) {
-      //   const { latitude, longitude } = route.params;
-      //   setGivenLocation("given");
-      //   console.log({ useEffect: givenLocation });
-      //   setLatitude(latitude);
-      //   setLongitude(longitude);
-      //   fetchPlacesFromGoogleMaps;
-      // }
-    }
-    console.log(route.params);
-  });
 
   useEffect(() => {
     fetchPlacesFromGoogleMaps(center)
@@ -205,33 +166,6 @@ export default function MapPage({ route }: { route: any }) {
         console.error("Error fetching places:", error);
       });
   }, [center]);
-
-  // useEffect(() => {
-  //   fetchPlacesFormDB();
-  // }, []);
-
-  // const fetchPlacesFormDB = async () => {
-  //   const result = await api.get("/location", markerParser);
-  //   // console.log(result);
-
-  //   const places = result.map((dataBaseMarker: any) => {
-  //     const coordinate = {
-  //       latitude: dataBaseMarker.latitude,
-  //       longitude: dataBaseMarker.longitude,
-  //     };
-  //     const placeId = dataBaseMarker.place_id;
-  //     const placeName = dataBaseMarker.name;
-  //     // const address = dataBaseMarker.address;
-  //     return {
-  //       coordinate,
-  //       placeId,
-  //       placeName,
-  //     };
-  //   });
-  //   console.log(places);
-
-  //   setPlaces(places);
-  // };
 
   if (errorMsg) {
     return (
@@ -369,7 +303,7 @@ const fetchPlacesFromGoogleMaps = async (center: LatLng) => {
       address: googlePlace.vicinity,
     };
   });
-  console.log(places);
+
   // let json = await api.post("/location/Marker", places, object({}));
   return places;
 };
