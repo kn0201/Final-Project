@@ -8,6 +8,8 @@ import BuddiesPage from "../tabs/ExplorePageTopTab";
 import CommentScreen from "../screen/CommentScreen";
 import TourDetailScreen from "../screen/TourDetailScreen";
 import BlogDetailScreen from "../screen/BlogDetailScreen";
+import OtherProfileScreen from "../screen/OtherProfileScreen";
+import { Modal } from "../components/Modal";
 
 const Stack = createStackNavigator();
 
@@ -40,6 +42,16 @@ export default function ExplorePage() {
         />
         <Stack.Screen name="Comment" component={CommentScreen} />
         <Stack.Screen name="Tour Detail" component={TourDetailScreen} />
+        <Stack.Screen
+          name="Other Profile"
+          component={OtherProfileScreen}
+          options={{
+            presentation: "modal",
+            cardStyle: {
+              backgroundColor: "white",
+            },
+          }}
+        />
       </Stack.Navigator>
     </>
   );

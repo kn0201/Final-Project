@@ -203,20 +203,89 @@ export class UserService {
   }
 
   async getUserIcon(req) {
-    const payload = this.jwtService.decode(
-      req.headers.authorization.split(' ')[1],
-    );
-    let user_id = payload.user_id;
-    if (user_id === undefined) {
-      return { path: 'yukimin.png' };
-    } else {
+    try {
+      const payload = this.jwtService.decode(
+        req.headers.authorization.split(' ')[1],
+      );
+      let user_id = payload.user_id;
+      if (user_id === undefined) {
+        return { path: 'yukimin.png' };
+      } else {
+        let user = await this.knex('users')
+          .leftJoin('image', { 'users.avatar_id': 'image.id' })
+          .select('image.path as avatar_path')
+          .where('users.id', user_id)
+          .andWhere('users.is_delete', false)
+          .first();
+        return { path: user.avatar_path ? user.avatar_path : 'yukimin.png' };
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async getOtherProfile(post_id, id) {
+    try {
       let user = await this.knex('users')
         .leftJoin('image', { 'users.avatar_id': 'image.id' })
-        .select('image.path as avatar_path')
-        .where('users.id', user_id)
+        .leftJoin('country_list', { 'users.country_id': 'country_list.id' })
+        .select(
+          'image.path as avatar_path',
+          'users.rating',
+          'users.intro',
+          'users.gender',
+          'users.age',
+          'country_list.name as country',
+        )
+        .where('users.id', id)
         .andWhere('users.is_delete', false)
         .first();
-      return { path: user.avatar_path ? user.avatar_path : 'yukimin.png' };
+      let language_results = await this.knex('user_language')
+        .leftJoin('language', {
+          'user_language.language_id': 'language.id',
+        })
+        .select('language.name as language')
+        .where('user_language.user_id', id);
+      let language = language_results.map((language_result) => {
+        return language_result.language;
+      });
+      let hobby_results = await this.knex('hobby')
+        .leftJoin('hobby_list', {
+          'hobby.hobby_id': 'hobby_list.id',
+        })
+        .select('hobby_list.name as hobby')
+        .where('hobby.user_id', id);
+      let hobby = hobby_results.map((hobby_result) => {
+        return hobby_result.hobby;
+      });
+      let travelled_results = await this.knex('countries_travelled')
+        .leftJoin('country_list', {
+          'countries_travelled.country_id': 'country_list.id',
+        })
+        .select('country_list.name as countrires_travelled')
+        .where('countries_travelled.user_id', id);
+      let countries_travelled = travelled_results.map((travelled_result) => {
+        return travelled_result.countrires_travelled;
+      });
+      let number_of_rating = await this.knex
+        .count('id')
+        .from('rating')
+        .where('user1_id', id)
+        .first();
+      return {
+        avatar_path: user.avatar_path ? user.avatar_path : 'yukimin.png',
+        rating: +user.rating,
+        intro: user.intro,
+        gender: user.gender,
+        age: user.age,
+        country: user.country,
+        language: language,
+        hobby: hobby,
+        countries_travelled: countries_travelled,
+        number_of_rating: +number_of_rating.count,
+      };
+    } catch (err) {
+      console.log(err);
     }
   }
 }

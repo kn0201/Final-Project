@@ -289,6 +289,7 @@ export class BlogService {
         status: post.status,
         view: post.view,
         created_at: post.created_at,
+        user_id: post.user_id,
         username: user.username,
         avatar_path: user.avatar_path ? user.avatar_path : 'yukimin.png',
         rating: +user.rating,

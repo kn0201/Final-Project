@@ -103,6 +103,7 @@ export const postDetailParser = object({
       }),
     ),
   ),
+  user_id: number(),
   username: string(),
   avatar_path: string(),
   rating: number(),
@@ -117,6 +118,7 @@ export const commentInfoParser = nullable(
       id: number(),
       content: string(),
       created_at: string(),
+      user_id: number(),
       username: string(),
       avatar_path: string(),
       rating: number(),
@@ -170,3 +172,17 @@ export const likeStatusParser = object({ isLike: boolean() });
 export const bookmarkParser = object({ number_of_bookmark: number() });
 
 export const bookmarkStatusParser = object({ isBookmark: boolean() });
+
+export const getOtherProfileParser = object({
+  avatar_path: string(),
+  rating: number(),
+  intro: nullable(string()),
+  gender: boolean(),
+  age: string(),
+  country: string(),
+  language: nullable(array(string())),
+  hobby: nullable(array(string())),
+  countries_travelled: nullable(array(string())),
+  number_of_rating: number(),
+  // application_status: nullable(boolean()),
+});

@@ -269,6 +269,11 @@ const TourDetailScreen = ({
     commentInfo[field as keyof CommentInfo] = value;
   };
 
+  // Select avatar
+  const handleAvatarClick = (id: number, username: string, post_id: string) => {
+    navigation.navigate("Other Profile", { id, username, post_id });
+  };
+
   // Display comments list
   const flatListRef = useRef(null);
   const ItemView = useCallback(
@@ -281,12 +286,17 @@ const TourDetailScreen = ({
               alignItems: "center",
             }}
           >
-            <Image
-              style={TourDetailScreenStyleSheet.avatar}
-              source={{
-                uri: `${apiOrigin}/${item.avatar_path}`,
-              }}
-            />
+            <TouchableWithoutFeedback
+              key={item.user_id}
+              onPress={() => handleAvatarClick(item.user_id, item.username, id)}
+            >
+              <Image
+                style={TourDetailScreenStyleSheet.avatar}
+                source={{
+                  uri: `${apiOrigin}/${item.avatar_path}`,
+                }}
+              />
+            </TouchableWithoutFeedback>
             <Text
               style={{
                 marginRight: 5,
@@ -344,12 +354,22 @@ const TourDetailScreen = ({
                       alignItems: "center",
                     }}
                   >
-                    <Image
-                      style={TourDetailScreenStyleSheet.avatar}
-                      source={{
-                        uri: `${apiOrigin}/${post?.avatar_path}`,
+                    <TouchableWithoutFeedback
+                      onPress={() => {
+                        if (post && post.user_id) {
+                          handleAvatarClick(post.user_id, post.username, id);
+                        } else {
+                          return;
+                        }
                       }}
-                    />
+                    >
+                      <Image
+                        style={TourDetailScreenStyleSheet.avatar}
+                        source={{
+                          uri: `${apiOrigin}/${post?.avatar_path}`,
+                        }}
+                      />
+                    </TouchableWithoutFeedback>
                     <Text
                       style={{
                         marginRight: 5,

@@ -16,7 +16,6 @@ export class LikeService {
         .from('like')
         .where('post_id', id)
         .first();
-      console.log({ number_of_like });
       return {
         number_of_like: number_of_like.count ? number_of_like.count : 0,
       };
