@@ -173,12 +173,3 @@ export type UserLocation = {
   id: string;
   name: string;
 };
-
-export type Reply = {
-  id: number;
-  avatar_path: string;
-  username: string;
-  content: string;
-  application: boolean;
-  created_at: string;
-};

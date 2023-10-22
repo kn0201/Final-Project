@@ -89,7 +89,7 @@ const TourDetailScreen = ({
         </View>
       ),
     });
-  }, [title, status]);
+  }, [status]);
 
   // Likes
   const [isLike, setIsLike] = useState(false);
@@ -140,7 +140,7 @@ const TourDetailScreen = ({
   });
 
   // Get login user avatar
-  let avatar = useGet("/user/icon", getIconResult).state?.path;
+  let avatar = useGet("/user/userIcon", getIconResult).state?.path;
 
   // Add comment
   const [content, setContent] = useState<string>("");

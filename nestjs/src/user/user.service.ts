@@ -201,4 +201,22 @@ export class UserService {
       return { result: true };
     }
   }
+
+  async getUserIcon(req) {
+    const payload = this.jwtService.decode(
+      req.headers.authorization.split(' ')[1],
+    );
+    let user_id = payload.user_id;
+    if (user_id === undefined) {
+      return { path: 'yukimin.png' };
+    } else {
+      let user = await this.knex('users')
+        .leftJoin('image', { 'users.avatar_id': 'image.id' })
+        .select('image.path as avatar_path')
+        .where('users.id', user_id)
+        .andWhere('users.is_delete', false)
+        .first();
+      return { path: user.avatar_path ? user.avatar_path : 'yukimin.png' };
+    }
+  }
 }

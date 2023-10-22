@@ -65,4 +65,9 @@ export class UserController {
       username: input.username,
     });
   }
+
+  @Get('userIcon')
+  async getUserIcon(@Req() req: Request) {
+    return this.userService.getUserIcon(req);
+  }
 }
