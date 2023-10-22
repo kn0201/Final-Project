@@ -99,3 +99,11 @@ export const markerParser = array(
 export const applyTourParser = object({
   id: string(),
 });
+
+export const locationImageParser = object({
+  image: string(),
+});
+
+export const addBookmarkParser = object({
+  place_id: string(),
+});

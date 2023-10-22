@@ -52,18 +52,8 @@ type Place = {
   coordinate: LatLng;
   placeId: string;
   placeName: string;
-  //   opening_hours: [Object];
-  //   photos: string;
   address: string;
   rating?: number;
-};
-
-type DataBaseMarker = {
-  address: string;
-  latitude: number;
-  longitude: number;
-  place_id: string;
-  name: string;
 };
 
 const GOOGLE_API_KEY = "AIzaSyDkl6HfJvmSSKDGWH0L0Y183PbBuY9fjdo";

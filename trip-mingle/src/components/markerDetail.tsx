@@ -5,19 +5,7 @@ import { Geometry } from "react-native-google-places-autocomplete";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { center, row } from "../StyleSheet/StyleSheetHelper";
 import { useAppNavigation } from "../../navigators";
-import { navigate } from "../tabs/RootNavigation";
 
-type place = {
-  coordinate: Geometry;
-  placeName: string;
-  opening_hours: [Object];
-  photos: string;
-  placeId: string;
-  rating: number;
-  address: string;
-};
-
-const GOOGLE_API_KEY = "AIzaSyDkl6HfJvmSSKDGWH0L0Y183PbBuY9fjdo";
 //@ts-ignore
 export default function MarkerDetail({ place }) {
   const navigation = useAppNavigation();
