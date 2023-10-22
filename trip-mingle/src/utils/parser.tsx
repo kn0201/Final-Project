@@ -152,3 +152,13 @@ export const getIconResult = object({
 export const updateUsernameResultParser = object({
   result: boolean(),
 });
+
+export const markerParser = array(
+  object({
+    address: string(),
+    latitude: number(),
+    longitude: number(),
+    place_id: string(),
+    name: string(),
+  })
+);

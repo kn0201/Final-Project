@@ -15,6 +15,7 @@ import { ServeStaticModule } from '@nestjs/serve-static/dist/serve-static.module
 import { resolve } from 'path';
 import { PlanningModule } from './planning/planning.module';
 import { CommentModule } from './comment/comment.module';
+import { LocationModule } from './location/location.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
@@ -44,7 +45,6 @@ import { CommentModule } from './comment/comment.module';
     LanguageModule,
     CountryModule,
     PlanningModule,
-    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService],

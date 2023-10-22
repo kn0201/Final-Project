@@ -17,6 +17,12 @@ export interface AppParamList {
     planId: number;
   };
   DemoPage: undefined;
+  Map: {
+    center?: {
+      latitude: number;
+      longitude: number;
+    };
+  };
 }
 
 export function useAppNavigation() {
