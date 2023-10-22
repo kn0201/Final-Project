@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { theme } from "../theme/variables";
 
 const TourDetailScreenStyleSheet = StyleSheet.create({
   postContainer: {
@@ -85,6 +86,35 @@ const TourDetailScreenStyleSheet = StyleSheet.create({
     backgroundColor: "white",
   },
   titleKey: { fontWeight: "600" },
+  applyContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 10,
+    backgroundColor: "#c4ffdb",
+  },
+  applyRowContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
+    gap: 2,
+    width: "85%",
+  },
+  button: {
+    width: 55,
+    height: 33,
+    marginRight: 13,
+    justifyContent: "center",
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: theme.primaryColor,
+    backgroundColor: theme.primaryColor,
+  },
+  text: {
+    fontSize: 14,
+    color: theme.primaryTextColor,
+    textAlign: "center",
+  },
 });
 
 export default TourDetailScreenStyleSheet;

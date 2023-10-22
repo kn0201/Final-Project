@@ -186,3 +186,22 @@ export const getOtherProfileParser = object({
   number_of_rating: number(),
   // application_status: nullable(boolean()),
 });
+
+export const applicationInfoParser = nullable(
+  array(
+    object({
+      id: number(),
+      user_id: number(),
+      username: string(),
+      avatar_path: string(),
+      status: boolean(),
+      created_at: string(),
+    }),
+  ),
+);
+
+export const applyTourParser = object({});
+
+export const applicationStatusParser = object({
+  status: boolean(),
+});

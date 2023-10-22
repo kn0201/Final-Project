@@ -19,6 +19,7 @@ import { LocationModule } from './location/location.module';
 import { LikeModule } from './like/like.module';
 import { BookmarkModule } from './bookmark/bookmark.module';
 import { RatingModule } from './rating/rating.module';
+import { ApplicationModule } from './application/application.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
@@ -52,6 +53,7 @@ import { RatingModule } from './rating/rating.module';
     LikeModule,
     BookmarkModule,
     RatingModule,
+    ApplicationModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService],

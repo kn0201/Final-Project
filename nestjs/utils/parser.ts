@@ -95,3 +95,7 @@ export const markerParser = array(
     placeName: string(),
   }),
 );
+
+export const applyTourParser = object({
+  id: string(),
+});

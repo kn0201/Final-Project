@@ -15,6 +15,9 @@ import {
 import { api } from "../apis/api";
 import {
   addCommentParser,
+  applicationInfoParser,
+  applicationStatusParser,
+  applyTourParser,
   bookmarkParser,
   bookmarkStatusParser,
   commentInfoParser,
@@ -23,7 +26,12 @@ import {
   likeStatusParser,
   postDetailParser,
 } from "../utils/parser";
-import { CommentInfo, PostDetailItem, ReplyInfoItem } from "../utils/types";
+import {
+  ApplicationInfoItem,
+  CommentInfo,
+  PostDetailItem,
+  ReplyInfoItem,
+} from "../utils/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { apiOrigin } from "../utils/apiOrigin";
 import Fontisto from "react-native-vector-icons/Fontisto";
@@ -38,8 +46,14 @@ import { useIonNeverNotification } from "../components/IonNeverNotification/Noti
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { Card } from "react-native-paper";
 import useEvent from "react-use-event";
-import { AddCommentEvent, BookmarkEvent, LikeEvent } from "../utils/events";
+import {
+  AddCommentEvent,
+  ApplyTourEvent,
+  BookmarkEvent,
+  LikeEvent,
+} from "../utils/events";
 import { useGet } from "../hooks/useGet";
+import TextButton from "../components/TextButton";
 
 const TourDetailScreen = ({
   route,
@@ -49,6 +63,7 @@ const TourDetailScreen = ({
   navigation: any;
 }) => {
   const { token, payload, setToken } = useToken();
+  let login_user_id = payload?.user_id;
   const { IonNeverDialog } = useIonNeverNotification();
   const [keyboardShow, setKeyboardShow] = useState(false);
 
@@ -244,7 +259,7 @@ const TourDetailScreen = ({
       IonNeverDialog.show({
         type: "success",
         title: `Success`,
-        message: `Added new comment to post #${id}`,
+        message: `Added new comment to tour #${id}`,
         firstButtonVisible: true,
         firstButtonFunction: () => {
           IonNeverDialog.dismiss();
@@ -272,6 +287,168 @@ const TourDetailScreen = ({
   // Select avatar
   const handleAvatarClick = (id: number, username: string, post_id: string) => {
     navigation.navigate("Other Profile", { id, username, post_id });
+  };
+
+  // Manage application
+  const manage = (id: number) => {
+    navigation.navigate("Manage Tour", { id });
+  };
+
+  // Apply to join/ cancel
+  const [applicationStatus, setApplicationStatus] = useState(false);
+  const dispatchApplyTourEvent = useEvent<ApplyTourEvent>("ApplyTour");
+  const apply = async () => {
+    try {
+      if (token === "") {
+        throw new Error("Please login to join tour");
+      }
+      let result = await api.post(
+        `/application/${id}`,
+        { id },
+        applyTourParser,
+        token,
+      );
+      dispatchApplyTourEvent("ApplyTour");
+      if (applicationStatus === false) {
+        setApplicationStatus(true);
+        IonNeverDialog.show({
+          type: "success",
+          title: `Success`,
+          message: `Applied to join tour #${id}`,
+          firstButtonVisible: true,
+          firstButtonFunction: () => {
+            IonNeverDialog.dismiss();
+          },
+        });
+      } else {
+        setApplicationStatus(false);
+        IonNeverDialog.show({
+          type: "success",
+          title: `Success`,
+          message: `Cancelled application to\n join tour #${id}`,
+          firstButtonVisible: true,
+          firstButtonFunction: () => {
+            IonNeverDialog.dismiss();
+          },
+        });
+      }
+    } catch (e) {
+      IonNeverDialog.show({
+        type: "warning",
+        title: "Error",
+        message: `${e}`,
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          IonNeverDialog.dismiss();
+        },
+      });
+      console.log({ e });
+    }
+  };
+  useEvent<AddCommentEvent>("AddComment", (event) => {
+    getApplicationStatus();
+  });
+
+  // Get applications status
+  const getApplicationStatus = async () => {
+    try {
+      let applicationStatus = await api.get(
+        `/application/status/${id}`,
+        applicationStatusParser,
+        token,
+      );
+      setApplicationStatus(applicationStatus.status);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    getApplicationStatus();
+  }, []);
+
+  // Get applications list
+  const [applications, setApplications] = useState<
+    ApplicationInfoItem[] | null
+  >([]);
+  const getApplicationList = async () => {
+    try {
+      let applicationList = await api.get(
+        `/application/${id}`,
+        applicationInfoParser,
+      );
+      setApplications(applicationList);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    getApplicationList();
+  }, []);
+  // useEvent<AddCommentEvent>("AddComment", (event) => {
+  //   getCommentInfo();
+  // });
+
+  // Display applications list
+  const ApplicationAvatar = ({ headcount }: { headcount: number }) => {
+    return (
+      <View style={TourDetailScreenStyleSheet.applyContainer}>
+        <View style={TourDetailScreenStyleSheet.applyRowContainer}>
+          {Array.from({ length: headcount }, (_, index) => {
+            if (applications && index < applications.length) {
+              const application = applications[index];
+              return (
+                <TouchableWithoutFeedback
+                  onPress={() => {
+                    handleAvatarClick(
+                      application.user_id,
+                      application.username,
+                      id,
+                    );
+                  }}
+                >
+                  <Image
+                    key={`application-${application.id}`}
+                    style={TourDetailScreenStyleSheet.avatar}
+                    source={{
+                      uri: `${apiOrigin}/${
+                        application.avatar_path || "yukimin.png"
+                      }`,
+                    }}
+                  />
+                </TouchableWithoutFeedback>
+              );
+            } else {
+              return (
+                <Image
+                  key={`default-${index}`}
+                  style={TourDetailScreenStyleSheet.avatar}
+                  source={{ uri: `${apiOrigin}/yukimin.png` }}
+                />
+              );
+            }
+          })}
+        </View>
+        {login_user_id !== post?.user_id ? (
+          <TouchableOpacity
+            style={TourDetailScreenStyleSheet.button}
+            onPress={apply}
+          >
+            <Text style={TourDetailScreenStyleSheet.text}>
+              {applicationStatus === false ? "Apply" : "Applied"}
+            </Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={TourDetailScreenStyleSheet.button}
+            onPress={() => {
+              manage(id);
+            }}
+          >
+            <Text style={TourDetailScreenStyleSheet.text}>Manage</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    );
   };
 
   // Display comments list
@@ -529,6 +706,11 @@ const TourDetailScreen = ({
                 </Card>
               </ScrollView>
             </View>
+            <ItemSeparatorView />
+            <ApplicationAvatar
+              headcount={post?.trip_headcount ? post.trip_headcount : 0}
+            />
+            <ItemSeparatorView />
             <View style={TourDetailScreenStyleSheet.replyContainer}>
               <Text style={TourDetailScreenStyleSheet.titleKey}>REPLY</Text>
             </View>
@@ -540,6 +722,7 @@ const TourDetailScreen = ({
               renderItem={ItemView}
               ItemSeparatorComponent={ItemSeparatorView}
             />
+            <ItemSeparatorView />
             <View style={CommentScreenStyleSheet.bottomContainer}>
               <Avatar
                 size={30}

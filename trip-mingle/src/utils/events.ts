@@ -18,3 +18,7 @@ export type LikeEvent = {
 export type BookmarkEvent = {
   type: "Bookmark";
 };
+
+export type ApplyTourEvent = {
+  type: "ApplyTour";
+};

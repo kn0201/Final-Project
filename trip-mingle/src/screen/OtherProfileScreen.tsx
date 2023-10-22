@@ -1,6 +1,5 @@
 //Buffer Line
 import { View, Text, ScrollView } from "react-native";
-import { center, full } from "../StyleSheet/StyleSheetHelper";
 import { useEffect, useState } from "react";
 import { ProfileInfoItem } from "../utils/types";
 import { api } from "../apis/api";

@@ -189,3 +189,12 @@ export type ProfileInfoItem = {
   number_of_rating: number;
   // application_status: boolean | null;
 };
+
+export type ApplicationInfoItem = {
+  id: number;
+  user_id: number;
+  username: string;
+  avatar_path: string;
+  status: boolean;
+  created_at: string;
+};
