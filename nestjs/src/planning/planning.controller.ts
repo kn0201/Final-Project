@@ -91,4 +91,33 @@ export class PlanningController {
     });
     // throw new UnauthorizedException('Wrong Username/Password');
   }
+
+  @Post(':plan_id/event')
+  async addNewEvent(
+    @Body() body: Body,
+    @Headers() headers: {},
+    @Param() params: {},
+  ) {
+    let jwt = getJWTPayload(headers);
+
+    let input = object({
+      body: object({
+        selected_date: string(),
+        start_time: string(),
+        end_time: string(),
+        location: string(),
+      }),
+      params: object({
+        plan_id: id(),
+      }),
+    }).parse({ body, params });
+
+    return this.planningService.addNewEvent(jwt.user_id, {
+      planning_id: input.params.plan_id,
+      selected_date: input.body.selected_date,
+      start_time: input.body.start_time,
+      end_time: input.body.end_time,
+      location: input.body.location,
+    });
+  }
 }

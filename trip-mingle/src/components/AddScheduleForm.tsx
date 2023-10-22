@@ -17,7 +17,7 @@ import * as ImagePicker from "expo-image-picker";
 import { ScheduleCardInputInfo } from "../utils/types";
 import { countriesList } from "../source/countries";
 import { center } from "../StyleSheet/StyleSheetHelper";
-import PlannigStyleSheet from "../StyleSheet/PlanningStyleSheet";
+import PlanningStyleSheet from "../StyleSheet/PlanningStyleSheet";
 import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { apiOrigin } from "../utils/apiOrigin";
@@ -276,7 +276,7 @@ function AddScheduleForm(props: {
   };
   return (
     <View style={{ flex: 1, alignItems: "center", backgroundColor: "white" }}>
-      <View style={PlannigStyleSheet.uploadContainerSquare}>
+      <View style={PlanningStyleSheet.uploadContainerSquare}>
         {imageFile && (
           <Image
             source={{ uri: imageFile.uri }}
@@ -288,10 +288,10 @@ function AddScheduleForm(props: {
             }}
           />
         )}
-        <View style={PlannigStyleSheet.uploadBtnContainerSquare}>
+        <View style={PlanningStyleSheet.uploadBtnContainerSquare}>
           <TouchableOpacity
             onPress={addImage}
-            style={PlannigStyleSheet.uploadBtn}
+            style={PlanningStyleSheet.uploadBtn}
           >
             <Text>{imageFile ? "Edit" : "Upload"} Image</Text>
             <AntDesign name="camera" size={20} color="black" />
@@ -299,7 +299,7 @@ function AddScheduleForm(props: {
         </View>
       </View>
       <TextInput
-        style={PlannigStyleSheet.inputContainer}
+        style={PlanningStyleSheet.inputContainer}
         placeholder="Title"
         value={state.title}
         onChangeText={(text) => setState({ ...state, title: text })}

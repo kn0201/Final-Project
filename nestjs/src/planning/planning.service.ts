@@ -94,5 +94,33 @@ export class PlanningService {
       return { result: true };
     }
   }
-  // async addNewEvent(detail_id, body: { location; start_time; end_time }) {}
+  async addNewEvent(
+    user_id: number,
+    input: {
+      planning_id: number;
+      selected_date: string;
+      start_time: string;
+      end_time: string;
+      location: string;
+    },
+  ) {
+    let row = await this.knex
+      .select('id')
+      .from('daily_event')
+      .where('id', input.planning_id)
+      .andWhere('detail.id', user_id)
+      .first();
+    if (row == undefined) {
+      throw new ForbiddenException('you are not the planing owner');
+    } else {
+      await this.knex('daily_event').insert({
+        plan_id: input.planning_id,
+        selected_date: input.selected_date,
+        start_time: input.start_time,
+        end_time: input.end_time,
+        location: input.location,
+      });
+      return { result: true };
+    }
+  }
 }

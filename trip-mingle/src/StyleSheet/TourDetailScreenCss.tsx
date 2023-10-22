@@ -88,9 +88,11 @@ const TourDetailScreenStyleSheet = StyleSheet.create({
   titleKey: { fontWeight: "600" },
   applyContainer: {
     flexDirection: "row",
-    alignItems: "center",
+    height: "100%",
     justifyContent: "space-between",
-    padding: 10,
+    paddingTop: 10,
+    paddingLeft: 10,
+    paddingBottom: 10,
     backgroundColor: "#c4ffdb",
   },
   applyRowContainer: {
@@ -98,7 +100,6 @@ const TourDetailScreenStyleSheet = StyleSheet.create({
     alignItems: "center",
     flexWrap: "wrap",
     gap: 2,
-    width: "85%",
   },
   button: {
     width: 55,
