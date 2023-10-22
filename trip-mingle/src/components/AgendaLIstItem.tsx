@@ -11,16 +11,16 @@ import {
   Dimensions,
 } from "react-native";
 import { Avatar, Card, TextInput } from "react-native-paper";
-import reservation from "react-native-calendars/src/agenda/reservation-list/reservation";
-import LocationInput from "./locationInput";
-import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
-import { Agenda } from "react-native-calendars";
 import { ScheduleItemInfo, UserLocation } from "../utils/types";
-import InputAutocomplete from "./InputAutocomplete";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import query from "../utils/googleAPIQuery";
 import PlanningStyleSheet from "../StyleSheet/PlanningStyleSheet";
+import { api, api2 } from "../apis/api";
+import { boolean, object } from "cast.ts";
+import { useToken } from "../hooks/useToken";
+import { useAppRoute } from "../../navigators";
+import TextButton from "./TextButton";
 
 function Space(props: { height: number }) {
   return (
@@ -36,8 +36,9 @@ export default function AgendaListItem(props: {
   updateScheduleList: (scheduleInfo: ScheduleItemInfo) => void;
 }) {
   const { selectedDate, updateScheduleList } = props;
-  const { IonNeverToast } = useIonNeverNotification();
-
+  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
+  const { token, payload, setToken } = useToken();
+  const planId = useAppRoute<"AddSchedule">().planId;
   const [scheduleInfo, setScheduleInfo] = useState<ScheduleItemInfo>({
     selectedDate: selectedDate,
     startTime: "",
@@ -53,7 +54,44 @@ export default function AgendaListItem(props: {
     });
   };
 
-  // useEffect(() => console.log(scheduleInfo), [scheduleInfo]);
+  async function addNewEvent() {
+    if (!selectedDate) {
+      IonNeverToast.show({
+        type: "warning",
+        title: "Please select a day",
+      });
+      return;
+    }
+    try {
+      let data = {
+        selected_date: selectedDate,
+        start_time: scheduleInfo.startTime,
+        end_time: scheduleInfo.endTime,
+        location: scheduleInfo.location,
+      };
+      let res = await api.post(
+        `/planning/${planId}/event`,
+        data,
+        object({ result: boolean() }),
+        token
+      );
+      if (res.result) {
+        IonNeverDialog.show({
+          type: "success",
+          title: "Add a new event",
+          firstButtonVisible: true,
+        });
+      }
+    } catch (error) {
+      let message = String(error);
+      IonNeverDialog.show({
+        type: "warning",
+        title: "Failed to add event",
+        message,
+        firstButtonVisible: true,
+      });
+    }
+  }
 
   return (
     <View>
@@ -119,58 +157,13 @@ export default function AgendaListItem(props: {
             updateScheduleList(scheduleInfo);
           }}
         >
-          <Text style={PlanningStyleSheet.loginText}>Add New Event</Text>
+          <TextButton text="Add New Event" onPress={addNewEvent}></TextButton>
+          {/* <Text style={PlanningStyleSheet.loginText}>Add New Event</Text> */}
         </TouchableOpacity>
       </TouchableOpacity>
     </View>
   );
 }
-//   const [eventList, setEventList] = useState<AgendaEventListItem[]>([]);
-
-//   const renderItem = (listItem: ListRenderItemInfo<AgendaEventListItem>) => {
-//     const index = listItem.index;
-//     const { date, name, day } = listItem.item;
-
-//     return (
-//       <TouchableOpacity style={{ marginRight: 10, marginTop: 17 }}>
-//         <Card>
-//           <Card.Content>
-//             <View
-//               style={{
-//                 flexDirection: "row",
-//                 justifyContent: "space-between",
-//                 alignItems: "center",
-//               }}
-//             >
-//               <Text>{date}</Text>
-//               <Text>{name}</Text>
-//               <Avatar.Text label={day} />
-//             </View>
-//           </Card.Content>
-//         </Card>
-//       </TouchableOpacity>
-//     );
-//   };
-
-//   useEffect(() => {
-//     const eventItems: AgendaEventListItem[] = [];
-//     if (!props.data) return;
-
-//     const dateEventObject = props.data;
-//     for (const date in dateEventObject) {
-//       if (props.selectedDate && props.selectedDate !== date) {
-//         continue;
-//       }
-
-//       (dateEventObject[date as keyof AgendaSchedule] as NewType[]).map((info) =>
-//         eventItems.push({ ...info, date } as AgendaEventListItem)
-//       );
-//     }
-
-//     setEventList(eventItems);
-//   }, [props.data, props.selectedDate]);
-
-//   return <FlatList data={eventList} renderItem={renderItem}></FlatList>;
 
 const { width } = Dimensions.get("screen");
 const styles = StyleSheet.create({

@@ -3,7 +3,6 @@ import { Input, SpeedDial } from "@rneui/themed";
 import { View, Text, StyleSheet, Keyboard } from "react-native";
 import { Button, Card } from "react-native-paper";
 import { Agenda, AgendaEntry } from "react-native-calendars";
-import Constants from "expo-constants";
 import { TextInput } from "react-native-gesture-handler";
 import { MarkedDates } from "react-native-calendars/src/types";
 import { DAY } from "@beenotung/tslib/time";
@@ -17,23 +16,6 @@ import { boolean, object } from "cast.ts";
 import { useToken } from "../hooks/useToken";
 import TextButton from "../components/TextButton";
 import { AppParamList, useAppNavigation, useAppRoute } from "../../navigators";
-import {
-  RouteProp,
-  useNavigationState,
-  useRoute,
-} from "@react-navigation/native";
-import { apiOrigin } from "../utils/apiOrigin";
-
-const styles = StyleSheet.create({
-  view: {
-    margin: 20,
-    backgroundColor: "#FFF",
-    top: Constants.statusBarHeight,
-    borderRadius: 8,
-    selectedDayTextColor: "yellow",
-    selectedDay: "red",
-  },
-});
 
 function Space(props: { height: number }) {
   return (
@@ -94,7 +76,7 @@ const AddSchedule = () => {
       let message = String(error);
       IonNeverDialog.show({
         type: "warning",
-        title: "Failed to add a new mark",
+        title: "Failed to add a mark",
         message,
         firstButtonVisible: true,
       });
