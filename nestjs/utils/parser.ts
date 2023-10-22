@@ -71,8 +71,17 @@ export const addNewPlanParser = object({
   end_time: string(),
   location: string(),
 });
+
 export const updateUsernameParser = object({
   username: string(),
+});
+
+export const likeParser = object({
+  id: string(),
+});
+
+export const bookmarkParser = object({
+  id: string(),
 });
 
 export const markerParser = array(

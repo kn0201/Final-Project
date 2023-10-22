@@ -162,3 +162,11 @@ export const markerParser = array(
     name: string(),
   }),
 );
+
+export const likeParser = object({ number_of_like: number() });
+
+export const likeStatusParser = object({ isLike: boolean() });
+
+export const bookmarkParser = object({ number_of_bookmark: number() });
+
+export const bookmarkStatusParser = object({ isBookmark: boolean() });

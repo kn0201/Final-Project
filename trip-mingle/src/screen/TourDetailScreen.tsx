@@ -15,8 +15,12 @@ import {
 import { api } from "../apis/api";
 import {
   addCommentParser,
+  bookmarkParser,
+  bookmarkStatusParser,
   commentInfoParser,
   getIconResult,
+  likeParser,
+  likeStatusParser,
   postDetailParser,
 } from "../utils/parser";
 import { CommentInfo, PostDetailItem, ReplyInfoItem } from "../utils/types";
@@ -34,7 +38,7 @@ import { useIonNeverNotification } from "../components/IonNeverNotification/Noti
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { Card } from "react-native-paper";
 import useEvent from "react-use-event";
-import { AddCommentEvent } from "../utils/events";
+import { AddCommentEvent, BookmarkEvent, LikeEvent } from "../utils/events";
 import { useGet } from "../hooks/useGet";
 
 const TourDetailScreen = ({
@@ -93,15 +97,81 @@ const TourDetailScreen = ({
 
   // Likes
   const [isLike, setIsLike] = useState(false);
-  const like = () => {
-    setIsLike(!isLike);
+  const [likeNumber, setLikeNumber] = useState(0);
+  const dispatchLikeEvent = useEvent<LikeEvent>("Like");
+  const like = async () => {
+    try {
+      let likeResult = await api.post(`/like/${id}`, { id }, likeParser, token);
+      setLikeNumber(likeResult.number_of_like);
+      setIsLike(!isLike);
+      dispatchLikeEvent("Like");
+    } catch (err) {
+      console.log(err);
+    }
   };
+  useEvent<LikeEvent>("Like", (event) => {
+    getLikeNumber();
+  });
+
+  // Get like number
+  const getLikeNumber = async () => {
+    try {
+      let result = await api.get(`/like/${id}`, likeParser);
+      setLikeNumber(result.number_of_like);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const getUserLikeStatus = async () => {
+    try {
+      let result = await api.get(`/like/status/${id}`, likeStatusParser, token);
+      setIsLike(result.isLike);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    getLikeNumber();
+    getUserLikeStatus();
+  }, []);
 
   // Bookmarks
   const [isBookmark, setIsBookmark] = useState(false);
-  const bookmark = () => {
-    setIsBookmark(!isBookmark);
+  const dispatchBookmarkEvent = useEvent<BookmarkEvent>("Bookmark");
+  const bookmark = async () => {
+    try {
+      let bookmarkResult = await api.post(
+        `/bookmark/${id}`,
+        { id },
+        bookmarkParser,
+        token,
+      );
+      setIsBookmark(!isBookmark);
+      dispatchBookmarkEvent("Bookmark");
+    } catch (err) {
+      console.log(err);
+    }
   };
+  useEvent<BookmarkEvent>("Bookmark", (event) => {
+    getUserBookmarkStatus();
+  });
+
+  // Get bookmark status
+  const getUserBookmarkStatus = async () => {
+    try {
+      let result = await api.get(
+        `/bookmark/${id}`,
+        bookmarkStatusParser,
+        token,
+      );
+      setIsBookmark(result.isBookmark);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    getUserBookmarkStatus();
+  }, []);
 
   // Get post detail
   const [post, setPost] = useState<PostDetailItem | null>();
@@ -109,6 +179,7 @@ const TourDetailScreen = ({
     try {
       let postDetailData = await api.get(`/blog/${id}`, postDetailParser);
       setPost(postDetailData);
+      setLikeNumber(postDetailData.number_of_like);
     } catch (err) {
       console.log(err);
     }
@@ -116,6 +187,7 @@ const TourDetailScreen = ({
   useEffect(() => {
     getPostDetail();
     setPost(post);
+    setLikeNumber(likeNumber);
   }, []);
   const locationNames = post?.trip_location?.map((location) => location.name);
   const locationNamesString = Array.isArray(locationNames)
@@ -172,7 +244,7 @@ const TourDetailScreen = ({
       IonNeverDialog.show({
         type: "success",
         title: `Success`,
-        message: `Added new comment #${result.id} to post #${id}`,
+        message: `Added new comment to post #${id}`,
         firstButtonVisible: true,
         firstButtonFunction: () => {
           IonNeverDialog.dismiss();
@@ -299,7 +371,7 @@ const TourDetailScreen = ({
                       }}
                     >
                       <AntDesign name={isLike ? "like1" : "like2"} size={20} />
-                      <Text>{post?.number_of_like}</Text>
+                      <Text>{likeNumber}</Text>
                       <TouchableOpacity onPress={bookmark}>
                         <Ionicons
                           name={isBookmark ? "bookmark" : "bookmark-outline"}

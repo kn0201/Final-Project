@@ -10,3 +10,11 @@ export type MapEvent = {
 export type AddCommentEvent = {
   type: "AddComment";
 };
+
+export type LikeEvent = {
+  type: "Like";
+};
+
+export type BookmarkEvent = {
+  type: "Bookmark";
+};
