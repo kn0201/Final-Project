@@ -391,62 +391,66 @@ const TourDetailScreen = ({
   // Display applications list
   const ApplicationAvatar = ({ headcount }: { headcount: number }) => {
     return (
-      <View style={TourDetailScreenStyleSheet.applyContainer}>
-        <View style={TourDetailScreenStyleSheet.applyRowContainer}>
-          {Array.from({ length: headcount }, (_, index) => {
-            if (applications && index < applications.length) {
-              const application = applications[index];
-              return (
-                <TouchableWithoutFeedback
-                  onPress={() => {
-                    handleAvatarClick(
-                      application.user_id,
-                      application.username,
-                      id,
-                    );
-                  }}
-                >
-                  <Image
-                    key={`application-${application.id}`}
-                    style={TourDetailScreenStyleSheet.avatar}
-                    source={{
-                      uri: `${apiOrigin}/${
-                        application.avatar_path || "yukimin.png"
-                      }`,
-                    }}
-                  />
-                </TouchableWithoutFeedback>
-              );
-            } else {
-              return (
-                <Image
-                  key={`default-${index}`}
-                  style={TourDetailScreenStyleSheet.avatar}
-                  source={{ uri: `${apiOrigin}/yukimin.png` }}
-                />
-              );
-            }
-          })}
+      <View style={{ maxHeight: 50 }}>
+        <View style={TourDetailScreenStyleSheet.applyContainer}>
+          <ScrollView style={{ flex: 0 }}>
+            <View style={TourDetailScreenStyleSheet.applyRowContainer}>
+              {Array.from({ length: headcount }, (_, index) => {
+                if (applications && index < applications.length) {
+                  const application = applications[index];
+                  return (
+                    <TouchableWithoutFeedback
+                      onPress={() => {
+                        handleAvatarClick(
+                          application.user_id,
+                          application.username,
+                          id,
+                        );
+                      }}
+                    >
+                      <Image
+                        key={`application-${application.id}`}
+                        style={TourDetailScreenStyleSheet.avatar}
+                        source={{
+                          uri: `${apiOrigin}/${
+                            application.avatar_path || "yukimin.png"
+                          }`,
+                        }}
+                      />
+                    </TouchableWithoutFeedback>
+                  );
+                } else {
+                  return (
+                    <Image
+                      key={`default-${index}`}
+                      style={TourDetailScreenStyleSheet.avatar}
+                      source={{ uri: `${apiOrigin}/yukimin.png` }}
+                    />
+                  );
+                }
+              })}
+            </View>
+          </ScrollView>
+          {login_user_id !== post?.user_id ? (
+            <TouchableOpacity
+              style={TourDetailScreenStyleSheet.button}
+              onPress={apply}
+            >
+              <Text style={TourDetailScreenStyleSheet.text}>
+                {applicationStatus === false ? "Apply" : "Applied"}
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={TourDetailScreenStyleSheet.button}
+              onPress={() => {
+                manage(id);
+              }}
+            >
+              <Text style={TourDetailScreenStyleSheet.text}>Manage</Text>
+            </TouchableOpacity>
+          )}
         </View>
-        {login_user_id !== post?.user_id ? (
-          <TouchableOpacity
-            style={TourDetailScreenStyleSheet.button}
-            onPress={apply}
-          >
-            <Text style={TourDetailScreenStyleSheet.text}>
-              {applicationStatus === false ? "Apply" : "Applied"}
-            </Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={TourDetailScreenStyleSheet.button}
-            onPress={() => {
-              manage(id);
-            }}
-          >
-            <Text style={TourDetailScreenStyleSheet.text}>Manage</Text>
-          </TouchableOpacity>
-        )}
       </View>
     );
   };
@@ -516,10 +520,10 @@ const TourDetailScreen = ({
             behavior={Platform.OS == "ios" ? "padding" : "height"}
             style={{
               flex: keyboardShow
-                ? comments?.length != undefined && comments?.length > 0
-                  ? 0.839
-                  : 0.634
-                : 1,
+                ? // ? comments?.length != undefined && comments?.length > 0
+                  0.839
+                : // : 0.634
+                  1,
             }}
           >
             <View style={{ maxHeight: "50%" }}>
@@ -705,12 +709,13 @@ const TourDetailScreen = ({
                   </View>
                 </Card>
               </ScrollView>
+
+              <ItemSeparatorView />
+              <ApplicationAvatar
+                headcount={post?.trip_headcount ? post.trip_headcount : 0}
+              />
+              <ItemSeparatorView />
             </View>
-            <ItemSeparatorView />
-            <ApplicationAvatar
-              headcount={post?.trip_headcount ? post.trip_headcount : 0}
-            />
-            <ItemSeparatorView />
             <View style={TourDetailScreenStyleSheet.replyContainer}>
               <Text style={TourDetailScreenStyleSheet.titleKey}>REPLY</Text>
             </View>
