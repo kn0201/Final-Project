@@ -20,7 +20,7 @@ import TourDetailScreenStyleSheet from "../StyleSheet/TourDetailScreenCss";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import React from "react";
 import useEvent from "react-use-event";
-import { AddPostEvent } from "../utils/events";
+import { AddCommentEvent, AddPostEvent, LikeEvent } from "../utils/events";
 
 // Star rating
 export const setStarRating = (rating: number) => {
@@ -76,10 +76,17 @@ export default function TourScreen({ navigation }) {
     }
   };
 
+  // Update post list
   useEvent<AddPostEvent>("AddPost", (event) => {
     if (event.post_type == "tour") {
       getPostInfo();
     }
+  });
+  useEvent<LikeEvent>("Like", (event) => {
+    getPostInfo();
+  });
+  useEvent<AddCommentEvent>("AddComment", (event) => {
+    getPostInfo();
   });
 
   // Search bar

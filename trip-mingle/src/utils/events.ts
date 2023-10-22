@@ -16,3 +16,15 @@ export type MapPositionEvent = {
 export type AddCommentEvent = {
   type: "AddComment";
 };
+
+export type LikeEvent = {
+  type: "Like";
+};
+
+export type BookmarkEvent = {
+  type: "Bookmark";
+};
+
+export type ApplyTourEvent = {
+  type: "ApplyTour";
+};

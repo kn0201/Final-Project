@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-
-import TourScreen from "../screen/PostScreen";
 import AddPostScreen from "../screen/AddPostScreen";
 import BuddiesPage from "../tabs/ExplorePageTopTab";
-
 import CommentScreen from "../screen/CommentScreen";
 import TourDetailScreen from "../screen/TourDetailScreen";
 import BlogDetailScreen from "../screen/BlogDetailScreen";
+import OtherProfileScreen from "../screen/OtherProfileScreen";
+import ManageTourScreen from "../screen/ManageTourScreen";
 
 const Stack = createStackNavigator();
 
@@ -40,6 +39,26 @@ export default function ExplorePage() {
         />
         <Stack.Screen name="Comment" component={CommentScreen} />
         <Stack.Screen name="Tour Detail" component={TourDetailScreen} />
+        <Stack.Screen
+          name="Other Profile"
+          component={OtherProfileScreen}
+          options={{
+            presentation: "modal",
+            cardStyle: {
+              backgroundColor: "white",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Manage Tour"
+          component={ManageTourScreen}
+          options={{
+            presentation: "modal",
+            cardStyle: {
+              backgroundColor: "white",
+            },
+          }}
+        />
       </Stack.Navigator>
     </>
   );

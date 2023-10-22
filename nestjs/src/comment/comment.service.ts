@@ -44,6 +44,7 @@ export class CommentService {
             .leftJoin('image', { 'users.avatar_id': 'image.id' })
             .leftJoin('country_list', { 'users.country_id': 'country_list.id' })
             .select(
+              'users.id as user_id',
               'users.username',
               'image.path as avatar_path',
               'users.rating',
@@ -92,6 +93,7 @@ export class CommentService {
             id: comment.id,
             content: comment.content,
             created_at: comment.created_at,
+            user_id: user.user_id,
             username: user.username,
             avatar_path: user.avatar_path ? user.avatar_path : 'yukimin.png',
             rating: +user.rating,

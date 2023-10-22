@@ -15,11 +15,23 @@ import {
 import { api } from "../apis/api";
 import {
   addCommentParser,
+  applicationInfoParser,
+  applicationStatusParser,
+  applyTourParser,
+  bookmarkParser,
+  bookmarkStatusParser,
   commentInfoParser,
   getIconResult,
+  likeParser,
+  likeStatusParser,
   postDetailParser,
 } from "../utils/parser";
-import { CommentInfo, PostDetailItem, ReplyInfoItem } from "../utils/types";
+import {
+  ApplicationInfoItem,
+  CommentInfo,
+  PostDetailItem,
+  ReplyInfoItem,
+} from "../utils/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { apiOrigin } from "../utils/apiOrigin";
 import Fontisto from "react-native-vector-icons/Fontisto";
@@ -34,8 +46,14 @@ import { useIonNeverNotification } from "../components/IonNeverNotification/Noti
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { Card } from "react-native-paper";
 import useEvent from "react-use-event";
-import { AddCommentEvent } from "../utils/events";
+import {
+  AddCommentEvent,
+  ApplyTourEvent,
+  BookmarkEvent,
+  LikeEvent,
+} from "../utils/events";
 import { useGet } from "../hooks/useGet";
+import TextButton from "../components/TextButton";
 
 const TourDetailScreen = ({
   route,
@@ -45,13 +63,18 @@ const TourDetailScreen = ({
   navigation: any;
 }) => {
   const { token, payload, setToken } = useToken();
+  let login_user_id = payload?.user_id;
   const { IonNeverDialog } = useIonNeverNotification();
   const [keyboardShow, setKeyboardShow] = useState(false);
+
+  // Params
   const { id, title, status } = route.params || {
     id: 0,
     title: "Tour Detail",
     status: "",
   };
+
+  // Header
   const maxTitleLength = 16;
   const limitedTitle =
     title.length > maxTitleLength
@@ -85,21 +108,93 @@ const TourDetailScreen = ({
         </View>
       ),
     });
-  }, [title, status]);
-  const [isLike, setIsLike] = useState(false);
-  const [isBookmark, setIsBookmark] = useState(false);
-  const like = () => {
-    setIsLike(!isLike);
-  };
-  const bookmark = () => {
-    setIsBookmark(!isBookmark);
-  };
+  }, [status]);
 
+  // Likes
+  const [isLike, setIsLike] = useState(false);
+  const [likeNumber, setLikeNumber] = useState(0);
+  const dispatchLikeEvent = useEvent<LikeEvent>("Like");
+  const like = async () => {
+    try {
+      let likeResult = await api.post(`/like/${id}`, { id }, likeParser, token);
+      setLikeNumber(likeResult.number_of_like);
+      setIsLike(!isLike);
+      dispatchLikeEvent("Like");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEvent<LikeEvent>("Like", (event) => {
+    getLikeNumber();
+  });
+
+  // Get like number
+  const getLikeNumber = async () => {
+    try {
+      let result = await api.get(`/like/${id}`, likeParser);
+      setLikeNumber(result.number_of_like);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const getUserLikeStatus = async () => {
+    try {
+      let result = await api.get(`/like/status/${id}`, likeStatusParser, token);
+      setIsLike(result.isLike);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    getLikeNumber();
+    getUserLikeStatus();
+  }, []);
+
+  // Bookmarks
+  const [isBookmark, setIsBookmark] = useState(false);
+  const dispatchBookmarkEvent = useEvent<BookmarkEvent>("Bookmark");
+  const bookmark = async () => {
+    try {
+      let bookmarkResult = await api.post(
+        `/bookmark/${id}`,
+        { id },
+        bookmarkParser,
+        token,
+      );
+      setIsBookmark(!isBookmark);
+      dispatchBookmarkEvent("Bookmark");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEvent<BookmarkEvent>("Bookmark", (event) => {
+    getUserBookmarkStatus();
+  });
+
+  // Get bookmark status
+  const getUserBookmarkStatus = async () => {
+    try {
+      let result = await api.get(
+        `/bookmark/${id}`,
+        bookmarkStatusParser,
+        token,
+      );
+      setIsBookmark(result.isBookmark);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    getUserBookmarkStatus();
+  }, []);
+
+  // Get post detail
   const [post, setPost] = useState<PostDetailItem | null>();
   const getPostDetail = async () => {
     try {
       let postDetailData = await api.get(`/blog/${id}`, postDetailParser);
       setPost(postDetailData);
+      setLikeNumber(postDetailData.number_of_like);
     } catch (err) {
       console.log(err);
     }
@@ -107,12 +202,14 @@ const TourDetailScreen = ({
   useEffect(() => {
     getPostDetail();
     setPost(post);
+    setLikeNumber(likeNumber);
   }, []);
   const locationNames = post?.trip_location?.map((location) => location.name);
   const locationNamesString = Array.isArray(locationNames)
     ? locationNames.join(", ")
     : "";
 
+  // Get comments list
   const [comments, setComments] = useState<ReplyInfoItem[] | null>([]);
   const getCommentInfo = async () => {
     try {
@@ -122,16 +219,17 @@ const TourDetailScreen = ({
       console.log(err);
     }
   };
-  let avatar = useGet("/user/icon", getIconResult).state?.path;
-
   useEffect(() => {
     getCommentInfo();
-    console.log(avatar);
   }, []);
   useEvent<AddCommentEvent>("AddComment", (event) => {
     getCommentInfo();
   });
 
+  // Get login user avatar
+  let avatar = useGet("/user/userIcon", getIconResult).state?.path;
+
+  // Add comment
   const [content, setContent] = useState<string>("");
   const dispatchAddCommentEvent = useEvent<AddCommentEvent>("AddComment");
   const commentInfo = useRef<CommentInfo>({
@@ -141,7 +239,7 @@ const TourDetailScreen = ({
   const submit = async () => {
     try {
       if (token === "") {
-        throw new Error("Please login to add new post");
+        throw new Error("Please login to add comment");
       }
       if (content !== "") {
         updateInputText("content", content);
@@ -161,7 +259,7 @@ const TourDetailScreen = ({
       IonNeverDialog.show({
         type: "success",
         title: `Success`,
-        message: `Added new comment #${result.id} to post #${id}`,
+        message: `Added new comment to tour #${id}`,
         firstButtonVisible: true,
         firstButtonFunction: () => {
           IonNeverDialog.dismiss();
@@ -186,6 +284,174 @@ const TourDetailScreen = ({
     commentInfo[field as keyof CommentInfo] = value;
   };
 
+  // Select avatar
+  const handleAvatarClick = (id: number, username: string, post_id: string) => {
+    navigation.navigate("Other Profile", { id, username, post_id });
+  };
+
+  // Manage application
+  const manage = (id: number) => {
+    navigation.navigate("Manage Tour", { id });
+  };
+
+  // Apply to join/ cancel
+  const [applicationStatus, setApplicationStatus] = useState(false);
+  const dispatchApplyTourEvent = useEvent<ApplyTourEvent>("ApplyTour");
+  const apply = async () => {
+    try {
+      if (token === "") {
+        throw new Error("Please login to join tour");
+      }
+      let result = await api.post(
+        `/application/${id}`,
+        { id },
+        applyTourParser,
+        token,
+      );
+      dispatchApplyTourEvent("ApplyTour");
+      if (applicationStatus === false) {
+        setApplicationStatus(true);
+        IonNeverDialog.show({
+          type: "success",
+          title: `Success`,
+          message: `Applied to join tour #${id}`,
+          firstButtonVisible: true,
+          firstButtonFunction: () => {
+            IonNeverDialog.dismiss();
+          },
+        });
+      } else {
+        setApplicationStatus(false);
+        IonNeverDialog.show({
+          type: "success",
+          title: `Success`,
+          message: `Cancelled application to\n join tour #${id}`,
+          firstButtonVisible: true,
+          firstButtonFunction: () => {
+            IonNeverDialog.dismiss();
+          },
+        });
+      }
+    } catch (e) {
+      IonNeverDialog.show({
+        type: "warning",
+        title: "Error",
+        message: `${e}`,
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          IonNeverDialog.dismiss();
+        },
+      });
+      console.log({ e });
+    }
+  };
+  useEvent<AddCommentEvent>("AddComment", (event) => {
+    getApplicationStatus();
+  });
+
+  // Get applications status
+  const getApplicationStatus = async () => {
+    try {
+      let applicationStatus = await api.get(
+        `/application/status/${id}`,
+        applicationStatusParser,
+        token,
+      );
+      setApplicationStatus(applicationStatus.status);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    getApplicationStatus();
+  }, []);
+
+  // Get applications list
+  const [applications, setApplications] = useState<
+    ApplicationInfoItem[] | null
+  >([]);
+  const getApplicationList = async () => {
+    try {
+      let applicationList = await api.get(
+        `/application/${id}`,
+        applicationInfoParser,
+      );
+      setApplications(applicationList);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    getApplicationList();
+  }, []);
+  // useEvent<AddCommentEvent>("AddComment", (event) => {
+  //   getCommentInfo();
+  // });
+
+  // Display applications list
+  const ApplicationAvatar = ({ headcount }: { headcount: number }) => {
+    return (
+      <View style={TourDetailScreenStyleSheet.applyContainer}>
+        <View style={TourDetailScreenStyleSheet.applyRowContainer}>
+          {Array.from({ length: headcount }, (_, index) => {
+            if (applications && index < applications.length) {
+              const application = applications[index];
+              return (
+                <TouchableWithoutFeedback
+                  onPress={() => {
+                    handleAvatarClick(
+                      application.user_id,
+                      application.username,
+                      id,
+                    );
+                  }}
+                >
+                  <Image
+                    key={`application-${application.id}`}
+                    style={TourDetailScreenStyleSheet.avatar}
+                    source={{
+                      uri: `${apiOrigin}/${
+                        application.avatar_path || "yukimin.png"
+                      }`,
+                    }}
+                  />
+                </TouchableWithoutFeedback>
+              );
+            } else {
+              return (
+                <Image
+                  key={`default-${index}`}
+                  style={TourDetailScreenStyleSheet.avatar}
+                  source={{ uri: `${apiOrigin}/yukimin.png` }}
+                />
+              );
+            }
+          })}
+        </View>
+        {login_user_id !== post?.user_id ? (
+          <TouchableOpacity
+            style={TourDetailScreenStyleSheet.button}
+            onPress={apply}
+          >
+            <Text style={TourDetailScreenStyleSheet.text}>
+              {applicationStatus === false ? "Apply" : "Applied"}
+            </Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={TourDetailScreenStyleSheet.button}
+            onPress={() => {
+              manage(id);
+            }}
+          >
+            <Text style={TourDetailScreenStyleSheet.text}>Manage</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    );
+  };
+
+  // Display comments list
   const flatListRef = useRef(null);
   const ItemView = useCallback(
     ({ item, index }: ListRenderItemInfo<ReplyInfoItem>) => (
@@ -197,12 +463,17 @@ const TourDetailScreen = ({
               alignItems: "center",
             }}
           >
-            <Image
-              style={TourDetailScreenStyleSheet.avatar}
-              source={{
-                uri: `${apiOrigin}/${item.avatar_path}`,
-              }}
-            />
+            <TouchableWithoutFeedback
+              key={item.user_id}
+              onPress={() => handleAvatarClick(item.user_id, item.username, id)}
+            >
+              <Image
+                style={TourDetailScreenStyleSheet.avatar}
+                source={{
+                  uri: `${apiOrigin}/${item.avatar_path}`,
+                }}
+              />
+            </TouchableWithoutFeedback>
             <Text
               style={{
                 marginRight: 5,
@@ -231,6 +502,7 @@ const TourDetailScreen = ({
     [],
   );
 
+  // Display
   return (
     <>
       <TouchableWithoutFeedback
@@ -259,12 +531,22 @@ const TourDetailScreen = ({
                       alignItems: "center",
                     }}
                   >
-                    <Image
-                      style={TourDetailScreenStyleSheet.avatar}
-                      source={{
-                        uri: `${apiOrigin}/${post?.avatar_path}`,
+                    <TouchableWithoutFeedback
+                      onPress={() => {
+                        if (post && post.user_id) {
+                          handleAvatarClick(post.user_id, post.username, id);
+                        } else {
+                          return;
+                        }
                       }}
-                    />
+                    >
+                      <Image
+                        style={TourDetailScreenStyleSheet.avatar}
+                        source={{
+                          uri: `${apiOrigin}/${post?.avatar_path}`,
+                        }}
+                      />
+                    </TouchableWithoutFeedback>
                     <Text
                       style={{
                         marginRight: 5,
@@ -286,7 +568,7 @@ const TourDetailScreen = ({
                       }}
                     >
                       <AntDesign name={isLike ? "like1" : "like2"} size={20} />
-                      <Text>{post?.number_of_like}</Text>
+                      <Text>{likeNumber}</Text>
                       <TouchableOpacity onPress={bookmark}>
                         <Ionicons
                           name={isBookmark ? "bookmark" : "bookmark-outline"}
@@ -424,6 +706,11 @@ const TourDetailScreen = ({
                 </Card>
               </ScrollView>
             </View>
+            <ItemSeparatorView />
+            <ApplicationAvatar
+              headcount={post?.trip_headcount ? post.trip_headcount : 0}
+            />
+            <ItemSeparatorView />
             <View style={TourDetailScreenStyleSheet.replyContainer}>
               <Text style={TourDetailScreenStyleSheet.titleKey}>REPLY</Text>
             </View>
@@ -435,6 +722,7 @@ const TourDetailScreen = ({
               renderItem={ItemView}
               ItemSeparatorComponent={ItemSeparatorView}
             />
+            <ItemSeparatorView />
             <View style={CommentScreenStyleSheet.bottomContainer}>
               <Avatar
                 size={30}

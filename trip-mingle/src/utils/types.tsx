@@ -116,6 +116,7 @@ export type PostDetailItem = {
   view: number;
   created_at: string;
   trip_location: LocationGet[] | null;
+  user_id: number;
   username: string;
   avatar_path: string;
   rating: number;
@@ -128,6 +129,7 @@ export type ReplyInfoItem = {
   id: number;
   content: string;
   created_at: string;
+  user_id: number;
   username: string;
   avatar_path: string;
   rating: number;
@@ -174,11 +176,25 @@ export type UserLocation = {
   name: string;
 };
 
-export type Reply = {
-  id: number;
+export type ProfileInfoItem = {
   avatar_path: string;
+  rating: number;
+  intro: string | null;
+  gender: boolean;
+  age: string;
+  country: string;
+  language: string[] | null;
+  hobby: string[] | null;
+  countries_travelled: string[] | null;
+  number_of_rating: number;
+  // application_status: boolean | null;
+};
+
+export type ApplicationInfoItem = {
+  id: number;
+  user_id: number;
   username: string;
-  content: string;
-  application: boolean;
+  avatar_path: string;
+  status: boolean;
   created_at: string;
 };

@@ -16,6 +16,10 @@ import { resolve } from 'path';
 import { PlanningModule } from './planning/planning.module';
 import { CommentModule } from './comment/comment.module';
 import { LocationModule } from './location/location.module';
+import { LikeModule } from './like/like.module';
+import { BookmarkModule } from './bookmark/bookmark.module';
+import { RatingModule } from './rating/rating.module';
+import { ApplicationModule } from './application/application.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
@@ -47,6 +51,11 @@ import { LocationModule } from './location/location.module';
     PlanningModule,
     CommentModule,
     LocationModule,
+    CommentModule,
+    LikeModule,
+    BookmarkModule,
+    RatingModule,
+    ApplicationModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService],
