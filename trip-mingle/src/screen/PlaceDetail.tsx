@@ -5,16 +5,13 @@ import {
   Text,
   Dimensions,
   Image,
-  FlatList,
   ScrollView,
   TouchableOpacity,
+  Linking,
 } from "react-native";
 import { useAppRoute } from "../../navigators";
-import { Header } from "@rneui/themed";
 import PlaceDetailStyleSheet from "../StyleSheet/PlaceDetailCss";
-import { center, flex, iosBlue, row } from "../StyleSheet/StyleSheetHelper";
-import AntDesign from "react-native-vector-icons/AntDesign";
-import MapView, { LatLng, Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { iosBlue, row } from "../StyleSheet/StyleSheetHelper";
 import { useEffect, useState } from "react";
 import {
   array,
@@ -25,13 +22,13 @@ import {
   optional,
   string,
 } from "cast.ts";
-import { Geometry } from "react-native-google-places-autocomplete";
 import { api } from "../apis/api";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import BlogDetailScreenStyleSheet from "../StyleSheet/BlogDetailScreenCss";
+import Foundation from "react-native-vector-icons/Foundation";
 import { useToken } from "../hooks/useToken";
 import useEvent from "react-use-event";
 import { SaveLocationEvent } from "../utils/events";
+import Entypo from "react-native-vector-icons/Entypo";
 
 const { width, height } = Dimensions.get("window");
 const aspect_ratio = width / height;
@@ -81,7 +78,7 @@ export default function PlaceDetail({ navigation }) {
     let json = await api.get(
       `/location/${id}/checkBookmark`,
       object({ result: boolean() }),
-      token
+      token,
     );
     console.log(json.result);
 
@@ -104,7 +101,7 @@ export default function PlaceDetail({ navigation }) {
         geometry: places?.geometry,
       },
       object({ result: boolean() }),
-      token
+      token,
     );
     if (json.result == true) {
       setIsBookmark(true);
@@ -119,7 +116,7 @@ export default function PlaceDetail({ navigation }) {
       "/location/bookmark",
       { place_id: places?.place_id },
       object({ result: boolean() }),
-      token
+      token,
     );
     if (json.result == false) {
       setIsBookmark(false);
@@ -180,7 +177,7 @@ export default function PlaceDetail({ navigation }) {
       opening_hours: optional(
         object({
           weekday_text: array(string()),
-        })
+        }),
       ),
       international_phone_number: optional(string()),
       website: optional(string()),
@@ -228,80 +225,104 @@ export default function PlaceDetail({ navigation }) {
           height: "100%",
           width: "100%",
           backgroundColor: "#fff",
-
           borderRadius: 10,
         }}
       >
         <Text style={PlaceDetailStyleSheet.header}>{params.name}</Text>
-        <View style={PlaceDetailStyleSheet.imageContainer}>
-          {imagePlace ? (
+        {imagePlace ? (
+          <View style={PlaceDetailStyleSheet.imageContainer}>
             <Image
               source={{ uri: imagePlace }}
               style={{ width: "100%", height: 350, borderRadius: 10 }}
             />
-          ) : (
-            <></>
-          )}
-        </View>
-        <View style={PlaceDetailStyleSheet.buttonContainer}>
-          <Text style={PlaceDetailStyleSheet.bookmarkText}>
-            {isBookmark ? "Bookmarked" : "Bookmark"}
-          </Text>
-          <TouchableOpacity
-            onPress={() => {
-              isBookmark ? deleteBookmark() : bookmark();
-            }}
-          >
-            <MaterialCommunityIcons
-              name={isBookmark ? "bookmark" : "bookmark-outline"}
-              size={22}
-              style={{ color: iosBlue }}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={PlaceDetailStyleSheet.contentContainer}>
-          <View style={PlaceDetailStyleSheet.nameContainer}>
-            <Text style={PlaceDetailStyleSheet.allText}>
-              Name: {places?.name}
-            </Text>
-            <View style={{ flexDirection: row }}>
-              <Text style={PlaceDetailStyleSheet.allText}>Rating : </Text>
-              {setStarRating(places?.rating)}
-            </View>
           </View>
-          {places?.phone ? (
-            <Text style={PlaceDetailStyleSheet.allText}>
-              Phone: {places?.phone}
-            </Text>
-          ) : (
-            <></>
-          )}
-          <Text style={PlaceDetailStyleSheet.allText}>
-            Address: {places?.address}
-          </Text>
-
-          {places?.openDate ? (
-            <>
-              <Text style={PlaceDetailStyleSheet.dateText}>
-                Open Date & Time
+        ) : (
+          <></>
+        )}
+        <View style={PlaceDetailStyleSheet.contentContainer}>
+          <ScrollView style={{ flex: 0 }}>
+            <View style={PlaceDetailStyleSheet.nameContainer}>
+              <Text style={PlaceDetailStyleSheet.allText}>{places?.name}</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  isBookmark ? deleteBookmark() : bookmark();
+                }}
+              >
+                {/* <Text style={PlaceDetailStyleSheet.bookmarkText}>
+          {isBookmark ? "Bookmarked" : "Bookmark"}
+        </Text> */}
+                <MaterialCommunityIcons
+                  name={isBookmark ? "bookmark" : "bookmark-outline"}
+                  size={22}
+                  style={{ color: iosBlue, marginBottom: 2, marginLeft: 2 }}
+                />
+              </TouchableOpacity>
+            </View>
+            {places?.rating ? (
+              <View style={{ flexDirection: row, marginBottom: 4 }}>
+                {setStarRating(places?.rating)}
+              </View>
+            ) : (
+              <></>
+            )}
+            {places?.phone ? (
+              <Text style={{ fontSize: 16, marginBottom: 4, marginLeft: 4 }}>
+                <Entypo name="phone" size={16} /> <Text> </Text>
+                {places?.phone}
               </Text>
-              <FlatList
-                data={places?.openDate.weekday_text}
-                renderItem={({ item }) => (
-                  <Text style={PlaceDetailStyleSheet.allText}>{item}</Text>
-                )}
-              />
-            </>
-          ) : (
-            <></>
-          )}
-          {places?.website ? (
-            <Text style={PlaceDetailStyleSheet.allText}>
-              Website : {places.website}
+            ) : (
+              <></>
+            )}
+            <Text style={{ fontSize: 16, marginBottom: 4, marginLeft: 4 }}>
+              <Entypo name="address" size={16} /> <Text> </Text>
+              {places?.address}
             </Text>
-          ) : (
-            <></>
-          )}
+            {places?.website && typeof places.website === "string" ? (
+              <View style={{ flexDirection: "row" }}>
+                <Text style={{ fontSize: 16, marginBottom: 4 }}>
+                  {" "}
+                  <MaterialCommunityIcons name="web" size={16} />{" "}
+                </Text>
+                <Text> </Text>
+                <Text
+                  style={{ color: "blue", textDecorationLine: "underline" }}
+                  onPress={() => Linking.openURL(places.website as string)}
+                >
+                  {places.website}
+                </Text>
+              </View>
+            ) : (
+              <></>
+            )}
+            {places?.openDate ? (
+              <>
+                <Text style={PlaceDetailStyleSheet.dateText}>
+                  Open Date & Time
+                </Text>
+                <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+                  {places.openDate.weekday_text.map(
+                    (openDate: string, index: number) => {
+                      return (
+                        <View
+                          key={`weekdaycontainer-${index}`}
+                          style={{ width: "50%" }}
+                        >
+                          <Text
+                            key={`weekdaytext-${index}`}
+                            style={PlaceDetailStyleSheet.allText}
+                          >
+                            {openDate}
+                          </Text>
+                        </View>
+                      );
+                    },
+                  )}
+                </View>
+              </>
+            ) : (
+              <></>
+            )}
+          </ScrollView>
         </View>
       </View>
     </View>
