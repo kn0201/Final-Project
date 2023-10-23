@@ -27,7 +27,6 @@ const PlaceDetailStyleSheet = StyleSheet.create({
   },
   nameContainer: {
     display: flex,
-    justifyContent: "space-between",
     flexDirection: row,
     alignItems: center,
   },

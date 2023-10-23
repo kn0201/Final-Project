@@ -212,11 +212,7 @@ export default function MapScreen({ route }: { route: any }) {
           }}
         >
           {bookmark?.map((position, index) => (
-            <Marker
-              style={{ backgroundColor: "c4ffdb", borderColor: "#b3ffba" }}
-              key={index}
-              coordinate={position}
-            />
+            <Marker key={index} coordinate={position} />
           ))}
           {places.map((place) => (
             <Marker
