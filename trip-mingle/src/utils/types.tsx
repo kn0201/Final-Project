@@ -214,3 +214,6 @@ export type bookmarkInfoItem = {
   number_of_reply: number;
   result: boolean;
 };
+export type SnapInfo = {
+  trip_location: LocationPost[] | null;
+};
