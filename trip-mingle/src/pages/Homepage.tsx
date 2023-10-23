@@ -56,10 +56,10 @@ export default function HomePage() {
               }}
             >
               <Image
-                source={{ uri: `${apiOrigin}/trip_mingle_logo.png` }}
+                source={{ uri: `${apiOrigin}/trip_mingle_logo_2.png` }}
                 style={{
-                  width: 100,
-                  height: 100,
+                  width: 150,
+                  height: 150,
                 }}
               />
             </View>

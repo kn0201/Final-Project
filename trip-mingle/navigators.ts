@@ -47,6 +47,14 @@ export interface AppParamList {
     id: string;
     name: string;
   };
+  ExplorePage: {
+    screen: string;
+    params: {
+      id: number;
+      title: string;
+      status: string;
+    };
+  };
 }
 
 export function useAppNavigation() {

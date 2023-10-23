@@ -88,8 +88,6 @@ export class LocationService {
         'user_location.system_location_id',
       );
 
-    console.log(bookmarkList);
-
     return bookmarkList;
   }
 

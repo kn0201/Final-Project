@@ -5,6 +5,7 @@ import {
   nullable,
   number,
   object,
+  optional,
   string,
 } from "cast.ts";
 
@@ -205,3 +206,21 @@ export const applyTourParser = object({});
 export const applicationStatusParser = object({
   status: boolean(),
 });
+
+export const bookmarkInfoParser = array(
+  object({
+    id: nullable(number()),
+    title: nullable(string()),
+    trip_country: nullable(string()),
+    trip_period: nullable(nullable(string())),
+    status: nullable(string()),
+    created_at: nullable(string()),
+    username: nullable(string()),
+    avatar_path: nullable(string()),
+    rating: nullable(number()),
+    number_of_rating: nullable(number()),
+    number_of_like: nullable(number()),
+    number_of_reply: nullable(number()),
+    result: nullable(boolean()),
+  })
+);
