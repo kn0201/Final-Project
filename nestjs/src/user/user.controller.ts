@@ -74,8 +74,9 @@ export class UserController {
 
   @Get('userIcon')
   async getUserIcon(@Headers() headers: {}) {
-    let jwt = getJWTPayload(headers);
+    console.log('get Icon');
 
+    let jwt = getJWTPayload(headers);
     return this.userService.getUserIcon({
       user_id: jwt.user_id,
     });
