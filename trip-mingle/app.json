@@ -7,7 +7,7 @@
     "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./src/assets/fav.png",
+      "image": "./src/assets/trip_mingle_logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
       

@@ -28,3 +28,7 @@ export type BookmarkEvent = {
 export type ApplyTourEvent = {
   type: "ApplyTour";
 };
+
+export type SaveLocationEvent = {
+  type: "SaveLocation";
+};

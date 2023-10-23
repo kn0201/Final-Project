@@ -38,6 +38,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { center, row } from "../StyleSheet/StyleSheetHelper";
 import MarkerDetail from "../components/markerDetail";
 import { array, float, object, optional, string } from "cast.ts";
+import { useToken } from "../hooks/useToken";
 
 const { width, height } = Dimensions.get("window");
 const aspect_ratio = width / height;
@@ -56,6 +57,13 @@ type Place = {
   rating?: number;
 };
 
+type Location = {
+  name: string;
+  place_id: string;
+  latitude: number;
+  longitude: number;
+};
+
 const GOOGLE_API_KEY = "AIzaSyDkl6HfJvmSSKDGWH0L0Y183PbBuY9fjdo";
 const placeType = "tourist_attraction";
 
@@ -65,6 +73,7 @@ const defaultCenter = {
 };
 
 export default function MapScreen({ route }: { route: any }) {
+  const { token, payload, setToken } = useToken();
   const navigation = useAppNavigation();
   const params = useAppRoute<"MapScreen">();
   useEffect(() => {
@@ -76,6 +85,7 @@ export default function MapScreen({ route }: { route: any }) {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [center, setCenter] = useState(params?.center || defaultCenter);
   const [mapData, setMapData] = useState();
+  const [locationList, setLocationList] = useState<Location[]>([]);
   type LatLng = typeof center;
 
   useEffect(() => {
@@ -163,13 +173,30 @@ export default function MapScreen({ route }: { route: any }) {
     // fetchPlacesFormDB();
   };
 
+  const getSavedLocation = async () => {
+    let result = await api.get(
+      "/location/bookmark",
+      array(
+        object({
+          name: string(),
+          place_id: string(),
+          latitude: float(),
+          longitude: float(),
+        })
+      ),
+      token
+    );
+    setLocationList(result);
+  };
+
   // Fetch places from google map
   const [places, setPlaces] = useState<Place[]>([]);
 
   useEffect(() => {
     fetchPlacesFromGoogleMaps(center)
-      .then((placesData) => {
+      .then(async (placesData) => {
         setPlaces(placesData);
+        await api.post("/location/Marker", placesData, object({}));
       })
       .catch((error) => {
         console.error(
@@ -380,7 +407,6 @@ const fetchPlacesFromGoogleMaps = async (center: LatLng): Promise<Place[]> => {
   //     }
   //   );
 
-  //   // let json = await api.post("/location/Marker", places, object({}));
   //   return places;
 
   return [];
@@ -401,24 +427,6 @@ const MyCustomCalloutView = () => {
       <Text>You</Text>
     </View>
   );
-};
-
-const setStarRating = (rating: number) => {
-  rating = Math.round(rating * 2) / 2;
-  let output = [];
-  for (var i = rating; i >= 1; i--) output.push(1);
-  if (i >= 0.5 && i < 1) output.push(0.5);
-  for (let i = 5 - rating; i >= 1; i--) output.push(0);
-  return output.map((star, index) => (
-    <MaterialCommunityIcons
-      key={index}
-      name={
-        star === 1 ? "star" : star === 0.5 ? "star-half-full" : "star-outline"
-      }
-      color={"#DEB934"}
-      size={16}
-    />
-  ));
 };
 
 // Stylesheet

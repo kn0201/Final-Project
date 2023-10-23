@@ -202,12 +202,9 @@ export class UserService {
     }
   }
 
-  async getUserIcon(req) {
+  async getUserIcon(input: { user_id: number }) {
     try {
-      const payload = this.jwtService.decode(
-        req.headers.authorization.split(' ')[1],
-      );
-      let user_id = payload.user_id;
+      let user_id = input.user_id;
       if (user_id === undefined) {
         return { path: 'yukimin.png' };
       } else {

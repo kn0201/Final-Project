@@ -26,6 +26,8 @@ import { api } from "../apis/api";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Foundation from "react-native-vector-icons/Foundation";
 import { useToken } from "../hooks/useToken";
+import useEvent from "react-use-event";
+import { SaveLocationEvent } from "../utils/events";
 import Entypo from "react-native-vector-icons/Entypo";
 
 const { width, height } = Dimensions.get("window");
@@ -51,8 +53,13 @@ export default function PlaceDetail({ navigation }) {
   const { token, payload, setToken } = useToken();
   const params = useAppRoute<"PlaceDetail">();
   const [imagePlace, setImage] = useState("");
+  const dispatchSaveLocationEvent = useEvent<SaveLocationEvent>("SaveLocation");
+
   useEffect(() => {
-    checkBookmark(params.id);
+    if (token) {
+      checkBookmark(params.id);
+    }
+
     findPlace(params.id)
       .then((placesData) => {
         setPlaces(placesData);
@@ -87,12 +94,18 @@ export default function PlaceDetail({ navigation }) {
 
     let json = await api.post(
       "/location/bookmark",
-      { place_id: places?.place_id },
+      {
+        place_id: places?.place_id,
+        name: places?.name,
+        address: places?.address,
+        geometry: places?.geometry,
+      },
       object({ result: boolean() }),
       token,
     );
     if (json.result == true) {
       setIsBookmark(true);
+      dispatchSaveLocationEvent("SaveLocation");
     }
   };
 
@@ -107,6 +120,7 @@ export default function PlaceDetail({ navigation }) {
     );
     if (json.result == false) {
       setIsBookmark(false);
+      dispatchSaveLocationEvent("SaveLocation");
     }
   };
 
@@ -235,8 +249,8 @@ export default function PlaceDetail({ navigation }) {
                 }}
               >
                 {/* <Text style={PlaceDetailStyleSheet.bookmarkText}>
-            {isBookmark ? "Bookmarked" : "Bookmark"}
-          </Text> */}
+          {isBookmark ? "Bookmarked" : "Bookmark"}
+        </Text> */}
                 <MaterialCommunityIcons
                   name={isBookmark ? "bookmark" : "bookmark-outline"}
                   size={22}
