@@ -46,7 +46,7 @@ const longitudeDelta = latitudeDelta * aspect_ratio;
 
 type InputAutocompleteProps = {
   placeholder?: string;
-  onPlaceSelected: (details: GooglePlaceDetail | null) => void;
+  // onPlaceSelected: (details: GooglePlaceDetail | null) => void;
 };
 type Place = {
   coordinate: LatLng;
@@ -60,8 +60,8 @@ const GOOGLE_API_KEY = "AIzaSyDkl6HfJvmSSKDGWH0L0Y183PbBuY9fjdo";
 const placeType = "tourist_attraction";
 
 const defaultCenter = {
-  latitude: 22.2773199,
-  longitude: 114.173206,
+  latitude: 22.2782589,
+  longitude: 114.1672801,
 };
 
 export default function MapScreen({ route }: { route: any }) {
@@ -94,6 +94,7 @@ export default function MapScreen({ route }: { route: any }) {
         return;
       }
       let location = await Location.getCurrentPositionAsync({});
+      setCenter(location.coords);
       moveTo(location.coords);
       // setLocation(location.coords);
     })();
@@ -107,10 +108,7 @@ export default function MapScreen({ route }: { route: any }) {
   const mapRef = useRef<MapView>(null);
   const [bookmark, setBookmark] = useState<LatLng[]>([]);
 
-  function InputAutocomplete({
-    placeholder,
-    onPlaceSelected,
-  }: InputAutocompleteProps) {
+  function InputAutocomplete({ placeholder }: InputAutocompleteProps) {
     return (
       <>
         <View style={{ height: "100%" }}>
@@ -119,9 +117,16 @@ export default function MapScreen({ route }: { route: any }) {
             placeholder={placeholder || ""}
             fetchDetails
             onPress={(data, details = null) => {
-              console.log(JSON.stringify(data));
-              console.log(JSON.stringify(details));
-              onPlaceSelected(details);
+              if (details) {
+                setCenter({
+                  latitude: details?.geometry.location.lat,
+                  longitude: details?.geometry.location.lng,
+                });
+                moveTo({
+                  latitude: details?.geometry.location.lat,
+                  longitude: details?.geometry.location.lng,
+                });
+              }
             }}
             query={{
               key: GOOGLE_API_KEY,
@@ -139,14 +144,14 @@ export default function MapScreen({ route }: { route: any }) {
     animatedMoveTo(map, position);
   };
 
-  const onPlaceSelected = (details: GooglePlaceDetail | null) => {
-    const position = {
-      latitude: details?.geometry?.location.lat || 0,
-      longitude: details?.geometry?.location.lng || 0,
-    };
-    setBookmark([...bookmark, position]);
-    moveTo(position);
-  };
+  // const onPlaceSelected = (details: GooglePlaceDetail | null) => {
+  //   const position = {
+  //     latitude: details?.geometry?.location.lat || 0,
+  //     longitude: details?.geometry?.location.lng || 0,
+  //   };
+  //   setBookmark([...bookmark, position]);
+  //   moveTo(position);
+  // };
 
   //marker on Change
   const onRegionChange = (region: Region) => {
@@ -171,7 +176,7 @@ export default function MapScreen({ route }: { route: any }) {
           "MapScreen, Error fetching places, center:",
           center,
           "error:",
-          error
+          error,
         );
       });
   }, [center]);
@@ -185,14 +190,12 @@ export default function MapScreen({ route }: { route: any }) {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <View style={styles.search}>
           <InputAutocomplete
             placeholder="Search"
-            onPlaceSelected={(details) => {
-              onPlaceSelected(details);
-            }}
+            // onPlaceSelected={(details) => {}}
           />
         </View>
         <MapView
@@ -209,7 +212,11 @@ export default function MapScreen({ route }: { route: any }) {
           }}
         >
           {bookmark?.map((position, index) => (
-            <Marker key={index} coordinate={position} />
+            <Marker
+              style={{ backgroundColor: "c4ffdb", borderColor: "#b3ffba" }}
+              key={index}
+              coordinate={position}
+            />
           ))}
           {places.map((place) => (
             <Marker
@@ -244,7 +251,7 @@ export default function MapScreen({ route }: { route: any }) {
               />
             );
           })} */}
-          <Marker draggable coordinate={markerCoordinate}>
+          <Marker coordinate={markerCoordinate}>
             <MyCustomMarkerView />
             <Callout>
               <MyCustomCalloutView />
@@ -320,7 +327,7 @@ const fetchPlacesFromGoogleMaps = async (center: LatLng): Promise<Place[]> => {
         place_id: string(),
         vicinity: string(),
         rating: optional(float()),
-      })
+      }),
     ),
   });
 
@@ -338,7 +345,7 @@ const fetchPlacesFromGoogleMaps = async (center: LatLng): Promise<Place[]> => {
       placeName: place.name,
       address: place.vicinity,
       rating: place.rating,
-    })
+    }),
   );
 
   //   const places = data.results.map(
