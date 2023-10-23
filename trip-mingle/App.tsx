@@ -14,7 +14,7 @@ import {
 } from "react-native";
 import TestingApp from "./src/components/IonNeverNotification/testingApp";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { TokenProvider } from "./src/hooks/useToken";
+import { TokenProvider, useToken } from "./src/hooks/useToken";
 import { Modal, ModalRoot } from "./src/components/Modal";
 import { navigationRef } from "./src/tabs/RootNavigation";
 import { LogBox } from "react-native";
@@ -43,6 +43,10 @@ function Root() {
 }
 
 export default function App() {
+  const { token, payload, setToken } = useToken();
+  useEffect(() => {
+    Root();
+  }, [token]);
   return (
     <Fragment>
       {Platform.OS === "ios" ? (

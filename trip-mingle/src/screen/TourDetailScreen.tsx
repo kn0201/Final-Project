@@ -234,10 +234,8 @@ const TourDetailScreen = ({
   // Get login user avatar
   const getUserIcon = async () => {
     if (token) {
-      let avatar = useGet("/user/userIcon", getIconResult).state?.path;
-      setAvatar(avatar);
-    } else {
-      let avatar = "yukimin.png";
+      const avatar = await api.get("/user/userIcon", getIconResult, token);
+      setAvatar(avatar.path);
     }
   };
 

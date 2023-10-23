@@ -205,17 +205,14 @@ export class UserService {
   async getUserIcon(input: { user_id: number }) {
     try {
       let user_id = input.user_id;
-      if (user_id === undefined) {
-        return { path: 'yukimin.png' };
-      } else {
-        let user = await this.knex('users')
-          .leftJoin('image', { 'users.avatar_id': 'image.id' })
-          .select('image.path as avatar_path')
-          .where('users.id', user_id)
-          .andWhere('users.is_delete', false)
-          .first();
-        return { path: user.avatar_path ? user.avatar_path : 'yukimin.png' };
-      }
+
+      let user = await this.knex('users')
+        .leftJoin('image', { 'users.avatar_id': 'image.id' })
+        .select('image.path as avatar_path')
+        .where('users.id', user_id)
+        .andWhere('users.is_delete', false)
+        .first();
+      return { path: user.avatar_path };
     } catch (err) {
       console.log(err);
     }
