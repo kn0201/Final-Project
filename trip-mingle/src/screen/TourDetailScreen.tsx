@@ -53,7 +53,6 @@ import {
   LikeEvent,
 } from "../utils/events";
 import { useGet } from "../hooks/useGet";
-import TextButton from "../components/TextButton";
 
 const TourDetailScreen = ({
   route,
@@ -121,7 +120,16 @@ const TourDetailScreen = ({
       setIsLike(!isLike);
       dispatchLikeEvent("Like");
     } catch (err) {
-      console.log(err);
+      IonNeverDialog.show({
+        type: "warning",
+        title: "Error",
+        message: `${err}`,
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          IonNeverDialog.dismiss();
+        },
+      });
+      console.log({ err });
     }
   };
   useEvent<LikeEvent>("Like", (event) => {
@@ -134,7 +142,16 @@ const TourDetailScreen = ({
       let result = await api.get(`/like/${id}`, likeParser);
       setLikeNumber(result.number_of_like);
     } catch (err) {
-      console.log(err);
+      IonNeverDialog.show({
+        type: "warning",
+        title: "Error",
+        message: `${err}`,
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          IonNeverDialog.dismiss();
+        },
+      });
+      console.log({ err });
     }
   };
   const getUserLikeStatus = async () => {
@@ -142,7 +159,16 @@ const TourDetailScreen = ({
       let result = await api.get(`/like/status/${id}`, likeStatusParser, token);
       setIsLike(result.isLike);
     } catch (err) {
-      console.log(err);
+      IonNeverDialog.show({
+        type: "warning",
+        title: "Error",
+        message: `${err}`,
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          IonNeverDialog.dismiss();
+        },
+      });
+      console.log({ err });
     }
   };
   useEffect(() => {
@@ -164,7 +190,16 @@ const TourDetailScreen = ({
       setIsBookmark(!isBookmark);
       dispatchBookmarkEvent("Bookmark");
     } catch (err) {
-      console.log(err);
+      IonNeverDialog.show({
+        type: "warning",
+        title: "Error",
+        message: `${err}`,
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          IonNeverDialog.dismiss();
+        },
+      });
+      console.log({ err });
     }
   };
   useEvent<BookmarkEvent>("Bookmark", (event) => {
@@ -181,7 +216,16 @@ const TourDetailScreen = ({
       );
       setIsBookmark(result.isBookmark);
     } catch (err) {
-      console.log(err);
+      IonNeverDialog.show({
+        type: "warning",
+        title: "Error",
+        message: `${err}`,
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          IonNeverDialog.dismiss();
+        },
+      });
+      console.log({ err });
     }
   };
   useEffect(() => {
@@ -196,7 +240,16 @@ const TourDetailScreen = ({
       setPost(postDetailData);
       setLikeNumber(postDetailData.number_of_like);
     } catch (err) {
-      console.log(err);
+      IonNeverDialog.show({
+        type: "warning",
+        title: "Error",
+        message: `${err}`,
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          IonNeverDialog.dismiss();
+        },
+      });
+      console.log({ err });
     }
   };
   useEffect(() => {
@@ -216,7 +269,16 @@ const TourDetailScreen = ({
       let commentInfoData = await api.get(`/comment/${id}`, commentInfoParser);
       setComments(commentInfoData);
     } catch (err) {
-      console.log(err);
+      IonNeverDialog.show({
+        type: "warning",
+        title: "Error",
+        message: `${err}`,
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          IonNeverDialog.dismiss();
+        },
+      });
+      console.log({ err });
     }
   };
   useEffect(() => {
@@ -359,7 +421,16 @@ const TourDetailScreen = ({
       );
       setApplicationStatus(applicationStatus.status);
     } catch (err) {
-      console.log(err);
+      IonNeverDialog.show({
+        type: "warning",
+        title: "Error",
+        message: `${err}`,
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          IonNeverDialog.dismiss();
+        },
+      });
+      console.log({ err });
     }
   };
   useEffect(() => {
@@ -378,7 +449,16 @@ const TourDetailScreen = ({
       );
       setApplications(applicationList);
     } catch (err) {
-      console.log(err);
+      IonNeverDialog.show({
+        type: "warning",
+        title: "Error",
+        message: `${err}`,
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          IonNeverDialog.dismiss();
+        },
+      });
+      console.log({ err });
     }
   };
   useEffect(() => {
@@ -393,13 +473,14 @@ const TourDetailScreen = ({
     return (
       <View style={{ maxHeight: 50 }}>
         <View style={TourDetailScreenStyleSheet.applyContainer}>
-          <ScrollView style={{ flex: 0 }}>
+          <ScrollView style={{ flex: 0 }} showsVerticalScrollIndicator={false}>
             <View style={TourDetailScreenStyleSheet.applyRowContainer}>
               {Array.from({ length: headcount }, (_, index) => {
                 if (applications && index < applications.length) {
                   const application = applications[index];
                   return (
                     <TouchableWithoutFeedback
+                      key={`touchable-${application.id}`}
                       onPress={() => {
                         handleAvatarClick(
                           application.user_id,
