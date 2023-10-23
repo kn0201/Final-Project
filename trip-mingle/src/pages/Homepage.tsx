@@ -212,17 +212,3 @@ export default function HomePage() {
     </>
   );
 }
-
-// function Demo() {
-//   const { token, payload, setToken } = useToken();
-
-//   return (
-//     <View>
-//       <Text>Token: {JSON.stringify(token)}</Text>
-//       <Text>Payload: {JSON.stringify(payload, null, 2)}</Text>
-//       <Button onPress={() => setToken("")}>
-//         <Text>logout</Text>
-//       </Button>
-//     </View>
-//   );
-// }
