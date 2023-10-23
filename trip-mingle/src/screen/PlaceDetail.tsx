@@ -243,27 +243,22 @@ export default function PlaceDetail({ navigation }) {
             <></>
           )}
         </View>
-        {token ? (
-          <View style={PlaceDetailStyleSheet.buttonContainer}>
-            <Text style={PlaceDetailStyleSheet.bookmarkText}>
-              {isBookmark ? "Bookmarked" : "Bookmark"}
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                isBookmark ? deleteBookmark() : bookmark();
-              }}
-            >
-              <MaterialCommunityIcons
-                name={isBookmark ? "bookmark" : "bookmark-outline"}
-                size={22}
-                style={{ color: iosBlue }}
-              />
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <></>
-        )}
-
+        <View style={PlaceDetailStyleSheet.buttonContainer}>
+          <Text style={PlaceDetailStyleSheet.bookmarkText}>
+            {isBookmark ? "Bookmarked" : "Bookmark"}
+          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              isBookmark ? deleteBookmark() : bookmark();
+            }}
+          >
+            <MaterialCommunityIcons
+              name={isBookmark ? "bookmark" : "bookmark-outline"}
+              size={22}
+              style={{ color: iosBlue }}
+            />
+          </TouchableOpacity>
+        </View>
         <View style={PlaceDetailStyleSheet.contentContainer}>
           <View style={PlaceDetailStyleSheet.nameContainer}>
             <Text style={PlaceDetailStyleSheet.allText}>
