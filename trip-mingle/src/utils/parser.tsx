@@ -205,3 +205,19 @@ export const applyTourParser = object({});
 export const applicationStatusParser = object({
   status: boolean(),
 });
+
+export const appliedUserParser = nullable(
+  array(
+    object({
+      id: number(),
+      user_id: number(),
+      username: string(),
+      avatar_path: string(),
+      rating: number(),
+      number_of_rating: number(),
+      content: nullable(array(string())),
+      status: boolean(),
+      created_at: string(),
+    }),
+  ),
+);
