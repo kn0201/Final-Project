@@ -74,7 +74,7 @@ export default function PlaceDetail({ navigation }) {
     let json = await api.get(
       `/location/${id}/checkBookmark`,
       object({ result: boolean() }),
-      token
+      token,
     );
     console.log(json.result);
 
@@ -92,7 +92,7 @@ export default function PlaceDetail({ navigation }) {
       "/location/bookmark",
       { place_id: places?.place_id },
       object({ result: boolean() }),
-      token
+      token,
     );
     if (json.result == true) {
       setIsBookmark(true);
@@ -106,7 +106,7 @@ export default function PlaceDetail({ navigation }) {
       "/location/bookmark",
       { place_id: places?.place_id },
       object({ result: boolean() }),
-      token
+      token,
     );
     if (json.result == false) {
       setIsBookmark(false);
@@ -166,7 +166,7 @@ export default function PlaceDetail({ navigation }) {
       opening_hours: optional(
         object({
           weekday_text: array(string()),
-        })
+        }),
       ),
       international_phone_number: optional(string()),
       website: optional(string()),
@@ -229,22 +229,21 @@ export default function PlaceDetail({ navigation }) {
             <></>
           )}
         </View>
-        <View style={PlaceDetailStyleSheet.buttonContainer}>
+        <TouchableOpacity
+          style={PlaceDetailStyleSheet.buttonContainer}
+          onPress={() => {
+            isBookmark ? deleteBookmark() : bookmark();
+          }}
+        >
           <Text style={PlaceDetailStyleSheet.bookmarkText}>
             {isBookmark ? "Bookmarked" : "Bookmark"}
           </Text>
-          <TouchableOpacity
-            onPress={() => {
-              isBookmark ? deleteBookmark() : bookmark();
-            }}
-          >
-            <MaterialCommunityIcons
-              name={isBookmark ? "bookmark" : "bookmark-outline"}
-              size={22}
-              style={{ color: iosBlue }}
-            />
-          </TouchableOpacity>
-        </View>
+          <MaterialCommunityIcons
+            name={isBookmark ? "bookmark" : "bookmark-outline"}
+            size={22}
+            style={{ color: iosBlue }}
+          />
+        </TouchableOpacity>
         <View style={PlaceDetailStyleSheet.contentContainer}>
           <View style={PlaceDetailStyleSheet.nameContainer}>
             <Text style={PlaceDetailStyleSheet.allText}>
