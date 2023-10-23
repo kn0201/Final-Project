@@ -22,6 +22,8 @@ export class LocationService {
 
   async addMarker(input: Marker[]) {
     for (let marker of input) {
+      // console.log(marker);
+
       let system_location_record = await this.knex
         .select('id', 'place_id')
         .from('system_location')
@@ -38,6 +40,7 @@ export class LocationService {
           latitude: marker.coordinate.latitude,
           longitude: marker.coordinate.longitude,
         });
+        console.log('add Marker : ' + marker.placeName);
       }
     }
     return {};
@@ -69,7 +72,35 @@ export class LocationService {
     }
   }
 
-  async bookmark(input: { user_id: number; place_id: string }) {
+  async getBookmark(input: { user_id: number }) {
+    let bookmarkList = await this.knex('user_location')
+      .select(
+        'system_location.name as name',
+        'user_location.place_id',
+        'system_location.latitude as latitude',
+        'system_location.longitude as longitude',
+      )
+      .where('user_id', input.user_id)
+      .andWhere('is_delete', false)
+      .leftJoin(
+        'system_location',
+        'system_location.id',
+        'user_location.system_location_id',
+      );
+
+    console.log(bookmarkList);
+
+    return bookmarkList;
+  }
+
+  async bookmark(input: {
+    user_id: number;
+    place_id: string;
+    name: string;
+    latitude: number;
+    longitude: number;
+    address: string;
+  }) {
     let foundBookmark = await this.knex('user_location')
       .select('id')
       .where('place_id', input.place_id)
@@ -77,12 +108,38 @@ export class LocationService {
       .andWhere('is_delete', true)
       .first();
 
+    let system_location_id = await this.knex
+      .select('id')
+      .from('system_location')
+      .where('place_id', input.place_id)
+      .first();
+
     if (foundBookmark == undefined) {
-      await this.knex('user_location').insert({
-        user_id: input.user_id,
-        place_id: input.place_id,
-        is_delete: false,
-      });
+      if (system_location_id != undefined) {
+        let id = await this.knex('system_location')
+          .insert({
+            name: input.name,
+            place_id: input.place_id,
+            address: input.address,
+            latitude: input.latitude,
+            longitude: input.longitude,
+          })
+          .returning('id');
+
+        await this.knex('user_location').insert({
+          system_location_id: id[0].id,
+          user_id: input.user_id,
+          place_id: input.place_id,
+          is_delete: false,
+        });
+      } else {
+        await this.knex('user_location').insert({
+          system_location_id: system_location_id.id,
+          user_id: input.user_id,
+          place_id: input.place_id,
+          is_delete: false,
+        });
+      }
     } else {
       await this.knex('user_location').where('id', foundBookmark.id).update({
         is_delete: false,

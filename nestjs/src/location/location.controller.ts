@@ -46,6 +46,14 @@ export class LocationController {
     });
   }
 
+  @Get('bookmark')
+  async getBookmark(@Headers() headers: {}) {
+    let jwt = getJWTPayload(headers);
+    return this.locationService.getBookmark({
+      user_id: jwt.user_id,
+    });
+  }
+
   @UseGuards(AuthGuard)
   @Post('bookmark')
   async bookmark(@Body() body: Body, @Headers() headers: {}) {
@@ -56,6 +64,10 @@ export class LocationController {
     return this.locationService.bookmark({
       user_id: jwt.user_id,
       place_id: input.place_id,
+      name: input.name,
+      latitude: input.geometry.latitude,
+      longitude: input.geometry.longitude,
+      address: input.address,
     });
   }
   @UseGuards(AuthGuard)

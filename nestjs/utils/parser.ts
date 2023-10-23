@@ -1,6 +1,7 @@
 import {
   array,
   boolean,
+  float,
   nullable,
   number,
   object,
@@ -106,4 +107,10 @@ export const locationImageParser = object({
 
 export const addBookmarkParser = object({
   place_id: string(),
+  name: string(),
+  geometry: object({
+    latitude: float(),
+    longitude: float(),
+  }),
+  address: string(),
 });

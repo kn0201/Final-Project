@@ -14,7 +14,8 @@ import {
 //- MapPage (Stack)
 //  - MapScreen (default)
 //  - PlaceDetail
-
+//- User Page
+//  - Saved Location
 export interface AppParamList {
   AddSchedule: {
     planId: number;
@@ -30,7 +31,8 @@ export interface AppParamList {
                 longitude: number;
               };
             }
-          | undefined;
+          | undefined
+          | { name: string; place_id: string };
       }
     | undefined;
   MapScreen:

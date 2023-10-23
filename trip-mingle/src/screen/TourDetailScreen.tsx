@@ -66,7 +66,7 @@ const TourDetailScreen = ({
   let login_user_id = payload?.user_id;
   const { IonNeverDialog } = useIonNeverNotification();
   const [keyboardShow, setKeyboardShow] = useState(false);
-
+  const [avatar, setAvatar] = useState<any>("yukimin.png");
   // Params
   const { id, title, status } = route.params || {
     id: 0,
@@ -147,7 +147,9 @@ const TourDetailScreen = ({
   };
   useEffect(() => {
     getLikeNumber();
-    getUserLikeStatus();
+    if (token) {
+      getUserLikeStatus();
+    }
   }, []);
 
   // Bookmarks
@@ -159,7 +161,7 @@ const TourDetailScreen = ({
         `/bookmark/${id}`,
         { id },
         bookmarkParser,
-        token,
+        token
       );
       setIsBookmark(!isBookmark);
       dispatchBookmarkEvent("Bookmark");
@@ -177,7 +179,7 @@ const TourDetailScreen = ({
       let result = await api.get(
         `/bookmark/${id}`,
         bookmarkStatusParser,
-        token,
+        token
       );
       setIsBookmark(result.isBookmark);
     } catch (err) {
@@ -185,7 +187,9 @@ const TourDetailScreen = ({
     }
   };
   useEffect(() => {
-    getUserBookmarkStatus();
+    if (token) {
+      getUserBookmarkStatus();
+    }
   }, []);
 
   // Get post detail
@@ -203,6 +207,7 @@ const TourDetailScreen = ({
     getPostDetail();
     setPost(post);
     setLikeNumber(likeNumber);
+    getUserIcon();
   }, []);
   const locationNames = post?.trip_location?.map((location) => location.name);
   const locationNamesString = Array.isArray(locationNames)
@@ -227,7 +232,14 @@ const TourDetailScreen = ({
   });
 
   // Get login user avatar
-  let avatar = useGet("/user/userIcon", getIconResult).state?.path;
+  const getUserIcon = async () => {
+    if (token) {
+      let avatar = useGet("/user/userIcon", getIconResult).state?.path;
+      setAvatar(avatar);
+    } else {
+      let avatar = "yukimin.png";
+    }
+  };
 
   // Add comment
   const [content, setContent] = useState<string>("");
@@ -250,7 +262,7 @@ const TourDetailScreen = ({
         `/comment/${id}/add`,
         commentInfo,
         addCommentParser,
-        token,
+        token
       );
       dispatchAddCommentEvent("AddComment");
       inputRef?.current?.clear();
@@ -306,7 +318,7 @@ const TourDetailScreen = ({
         `/application/${id}`,
         { id },
         applyTourParser,
-        token,
+        token
       );
       dispatchApplyTourEvent("ApplyTour");
       if (applicationStatus === false) {
@@ -355,7 +367,7 @@ const TourDetailScreen = ({
       let applicationStatus = await api.get(
         `/application/status/${id}`,
         applicationStatusParser,
-        token,
+        token
       );
       setApplicationStatus(applicationStatus.status);
     } catch (err) {
@@ -363,7 +375,9 @@ const TourDetailScreen = ({
     }
   };
   useEffect(() => {
-    getApplicationStatus();
+    if (token) {
+      getApplicationStatus();
+    }
   }, []);
 
   // Get applications list
@@ -374,7 +388,7 @@ const TourDetailScreen = ({
     try {
       let applicationList = await api.get(
         `/application/${id}`,
-        applicationInfoParser,
+        applicationInfoParser
       );
       setApplications(applicationList);
     } catch (err) {
@@ -392,65 +406,73 @@ const TourDetailScreen = ({
   const ApplicationAvatar = ({ headcount }: { headcount: number }) => {
     return (
       <View style={{ maxHeight: 50 }}>
-        <View style={TourDetailScreenStyleSheet.applyContainer}>
-          <ScrollView style={{ flex: 0 }}>
-            <View style={TourDetailScreenStyleSheet.applyRowContainer}>
-              {Array.from({ length: headcount }, (_, index) => {
-                if (applications && index < applications.length) {
-                  const application = applications[index];
-                  return (
-                    <TouchableWithoutFeedback
-                      onPress={() => {
-                        handleAvatarClick(
-                          application.user_id,
-                          application.username,
-                          id,
-                        );
-                      }}
-                    >
-                      <Image
-                        key={`application-${application.id}`}
-                        style={TourDetailScreenStyleSheet.avatar}
-                        source={{
-                          uri: `${apiOrigin}/${
-                            application.avatar_path || "yukimin.png"
-                          }`,
+        {token ? (
+          <View style={TourDetailScreenStyleSheet.applyContainer}>
+            <ScrollView style={{ flex: 0 }}>
+              <View style={TourDetailScreenStyleSheet.applyRowContainer}>
+                {Array.from({ length: headcount }, (_, index) => {
+                  if (applications && index < applications.length) {
+                    const application = applications[index];
+                    return (
+                      <TouchableWithoutFeedback
+                        onPress={() => {
+                          handleAvatarClick(
+                            application.user_id,
+                            application.username,
+                            id
+                          );
                         }}
+                      >
+                        <Image
+                          key={`application-${application.id}`}
+                          style={TourDetailScreenStyleSheet.avatar}
+                          source={{
+                            uri: `${apiOrigin}/${
+                              application.avatar_path || "yukimin.png"
+                            }`,
+                          }}
+                        />
+                      </TouchableWithoutFeedback>
+                    );
+                  } else {
+                    return (
+                      <Image
+                        key={`default-${index}`}
+                        style={TourDetailScreenStyleSheet.avatar}
+                        source={{ uri: `${apiOrigin}/yukimin.png` }}
                       />
-                    </TouchableWithoutFeedback>
-                  );
-                } else {
-                  return (
-                    <Image
-                      key={`default-${index}`}
-                      style={TourDetailScreenStyleSheet.avatar}
-                      source={{ uri: `${apiOrigin}/yukimin.png` }}
-                    />
-                  );
-                }
-              })}
-            </View>
-          </ScrollView>
-          {login_user_id !== post?.user_id ? (
-            <TouchableOpacity
-              style={TourDetailScreenStyleSheet.button}
-              onPress={apply}
-            >
-              <Text style={TourDetailScreenStyleSheet.text}>
-                {applicationStatus === false ? "Apply" : "Applied"}
-              </Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              style={TourDetailScreenStyleSheet.button}
-              onPress={() => {
-                manage(id);
-              }}
-            >
-              <Text style={TourDetailScreenStyleSheet.text}>Manage</Text>
-            </TouchableOpacity>
-          )}
-        </View>
+                    );
+                  }
+                })}
+              </View>
+            </ScrollView>
+            {token ? (
+              login_user_id !== post?.user_id ? (
+                <TouchableOpacity
+                  style={TourDetailScreenStyleSheet.button}
+                  onPress={apply}
+                >
+                  <Text style={TourDetailScreenStyleSheet.text}>
+                    {applicationStatus === false ? "Apply" : "Applied"}
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={TourDetailScreenStyleSheet.button}
+                  onPress={() => {
+                    manage(id);
+                  }}
+                >
+                  <Text style={TourDetailScreenStyleSheet.text}>Manage</Text>
+                </TouchableOpacity>
+              )
+            ) : (
+              <></>
+            )}
+          </View>
+        ) : (
+          <></>
+        )}
       </View>
     );
   };
@@ -503,7 +525,7 @@ const TourDetailScreen = ({
         </Card>
       </>
     ),
-    [],
+    []
   );
 
   // Display
@@ -562,25 +584,32 @@ const TourDetailScreen = ({
                     {setStarRating(post?.rating ? post.rating : 0)}
                     <Text> ({post?.number_of_rating})</Text>
                   </View>
-                  <View style={TourDetailScreenStyleSheet.row}>
-                    <TouchableOpacity
-                      onPress={like}
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5,
-                      }}
-                    >
-                      <AntDesign name={isLike ? "like1" : "like2"} size={20} />
-                      <Text>{likeNumber}</Text>
-                      <TouchableOpacity onPress={bookmark}>
-                        <Ionicons
-                          name={isBookmark ? "bookmark" : "bookmark-outline"}
+                  {token ? (
+                    <View style={TourDetailScreenStyleSheet.row}>
+                      <TouchableOpacity
+                        onPress={like}
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          gap: 5,
+                        }}
+                      >
+                        <AntDesign
+                          name={isLike ? "like1" : "like2"}
                           size={20}
                         />
+                        <Text>{likeNumber}</Text>
+                        <TouchableOpacity onPress={bookmark}>
+                          <Ionicons
+                            name={isBookmark ? "bookmark" : "bookmark-outline"}
+                            size={20}
+                          />
+                        </TouchableOpacity>
                       </TouchableOpacity>
-                    </TouchableOpacity>
-                  </View>
+                    </View>
+                  ) : (
+                    <></>
+                  )}
                 </View>
                 <View style={TourDetailScreenStyleSheet.rowContainer}>
                   <Text style={TourDetailScreenStyleSheet.titleKey}>
@@ -716,6 +745,7 @@ const TourDetailScreen = ({
               />
               <ItemSeparatorView />
             </View>
+
             <View style={TourDetailScreenStyleSheet.replyContainer}>
               <Text style={TourDetailScreenStyleSheet.titleKey}>REPLY</Text>
             </View>
@@ -728,6 +758,7 @@ const TourDetailScreen = ({
               ItemSeparatorComponent={ItemSeparatorView}
             />
             <ItemSeparatorView />
+
             <View style={CommentScreenStyleSheet.bottomContainer}>
               <Avatar
                 size={30}
@@ -753,7 +784,20 @@ const TourDetailScreen = ({
                   ref={inputRef}
                 ></TextInput>
               </View>
-              <TouchableOpacity style={{ paddingRight: 10 }} onPress={submit}>
+              <TouchableOpacity
+                style={{ paddingRight: 10 }}
+                onPress={() => {
+                  token
+                    ? submit
+                    : IonNeverDialog.show({
+                        type: "info",
+                        title: "You are Guest",
+                        message: "Please Login / Sign Up",
+                        firstButtonVisible: true,
+                        firstButtonFunction: () => {},
+                      });
+                }}
+              >
                 <Ionicons name="send" size={20} />
               </TouchableOpacity>
             </View>

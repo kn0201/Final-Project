@@ -73,7 +73,11 @@ export class UserController {
   }
 
   @Get('userIcon')
-  async getUserIcon(@Req() req: Request) {
-    return this.userService.getUserIcon(req);
+  async getUserIcon(@Headers() headers: {}) {
+    let jwt = getJWTPayload(headers);
+
+    return this.userService.getUserIcon({
+      user_id: jwt.user_id,
+    });
   }
 }

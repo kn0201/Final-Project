@@ -30,6 +30,8 @@ import { api } from "../apis/api";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import BlogDetailScreenStyleSheet from "../StyleSheet/BlogDetailScreenCss";
 import { useToken } from "../hooks/useToken";
+import useEvent from "react-use-event";
+import { SaveLocationEvent } from "../utils/events";
 
 const { width, height } = Dimensions.get("window");
 const aspect_ratio = width / height;
@@ -54,8 +56,13 @@ export default function PlaceDetail({ navigation }) {
   const { token, payload, setToken } = useToken();
   const params = useAppRoute<"PlaceDetail">();
   const [imagePlace, setImage] = useState("");
+  const dispatchSaveLocationEvent = useEvent<SaveLocationEvent>("SaveLocation");
+
   useEffect(() => {
-    checkBookmark(params.id);
+    if (token) {
+      checkBookmark(params.id);
+    }
+
     findPlace(params.id)
       .then((placesData) => {
         setPlaces(placesData);
@@ -90,12 +97,18 @@ export default function PlaceDetail({ navigation }) {
 
     let json = await api.post(
       "/location/bookmark",
-      { place_id: places?.place_id },
+      {
+        place_id: places?.place_id,
+        name: places?.name,
+        address: places?.address,
+        geometry: places?.geometry,
+      },
       object({ result: boolean() }),
       token
     );
     if (json.result == true) {
       setIsBookmark(true);
+      dispatchSaveLocationEvent("SaveLocation");
     }
   };
 
@@ -110,6 +123,7 @@ export default function PlaceDetail({ navigation }) {
     );
     if (json.result == false) {
       setIsBookmark(false);
+      dispatchSaveLocationEvent("SaveLocation");
     }
   };
 
@@ -229,22 +243,27 @@ export default function PlaceDetail({ navigation }) {
             <></>
           )}
         </View>
-        <View style={PlaceDetailStyleSheet.buttonContainer}>
-          <Text style={PlaceDetailStyleSheet.bookmarkText}>
-            {isBookmark ? "Bookmarked" : "Bookmark"}
-          </Text>
-          <TouchableOpacity
-            onPress={() => {
-              isBookmark ? deleteBookmark() : bookmark();
-            }}
-          >
-            <MaterialCommunityIcons
-              name={isBookmark ? "bookmark" : "bookmark-outline"}
-              size={22}
-              style={{ color: iosBlue }}
-            />
-          </TouchableOpacity>
-        </View>
+        {token ? (
+          <View style={PlaceDetailStyleSheet.buttonContainer}>
+            <Text style={PlaceDetailStyleSheet.bookmarkText}>
+              {isBookmark ? "Bookmarked" : "Bookmark"}
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                isBookmark ? deleteBookmark() : bookmark();
+              }}
+            >
+              <MaterialCommunityIcons
+                name={isBookmark ? "bookmark" : "bookmark-outline"}
+                size={22}
+                style={{ color: iosBlue }}
+              />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <></>
+        )}
+
         <View style={PlaceDetailStyleSheet.contentContainer}>
           <View style={PlaceDetailStyleSheet.nameContainer}>
             <Text style={PlaceDetailStyleSheet.allText}>
