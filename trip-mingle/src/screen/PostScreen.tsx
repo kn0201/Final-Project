@@ -20,7 +20,13 @@ import TourDetailScreenStyleSheet from "../StyleSheet/TourDetailScreenCss";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import React from "react";
 import useEvent from "react-use-event";
-import { AddCommentEvent, AddPostEvent, LikeEvent } from "../utils/events";
+import {
+  AcceptEvent,
+  AddCommentEvent,
+  AddPostEvent,
+  LikeEvent,
+  UpdateProfileEvent,
+} from "../utils/events";
 
 // Star rating
 export const setStarRating = (rating: number) => {
@@ -86,6 +92,12 @@ export default function TourScreen({ navigation }) {
     getPostInfo();
   });
   useEvent<AddCommentEvent>("AddComment", (event) => {
+    getPostInfo();
+  });
+  useEvent<AcceptEvent>("Accept", (event) => {
+    getPostInfo();
+  });
+  useEvent<UpdateProfileEvent>("UpdateProfile", (event) => {
     getPostInfo();
   });
 

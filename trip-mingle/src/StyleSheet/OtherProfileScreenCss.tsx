@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { center, flex, row, white } from "./StyleSheetHelper";
+import { theme } from "../theme/variables";
 
 const OtherProfileScreenStyleSheet = StyleSheet.create({
   container: {
@@ -43,6 +44,21 @@ const OtherProfileScreenStyleSheet = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: center,
     marginHorizontal: 4,
+  },
+  button: {
+    flex: 1,
+    height: 50,
+    marginRight: 2,
+    justifyContent: "center",
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: theme.primaryColor,
+    backgroundColor: theme.primaryColor,
+  },
+  text: {
+    fontSize: 18,
+    color: theme.primaryTextColor,
+    textAlign: "center",
   },
 });
 

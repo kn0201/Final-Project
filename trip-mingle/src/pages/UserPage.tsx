@@ -21,13 +21,17 @@ import { AntDesign } from "@expo/vector-icons";
 
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import ChangeUsername from "../components/changeUsername";
+import useEvent from "react-use-event";
+import { LoginEvent, UpdateProfileEvent } from "../utils/events";
 import { apiOrigin } from "../utils/apiOrigin";
 
 //@ts-ignore
 export default function UserPage({ navigation }) {
   const { token, payload, setToken } = useToken();
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
-
+  const dispatchLoginEvent = useEvent<LoginEvent>("Login");
+  const dispatchUpdateProfileEvent =
+    useEvent<UpdateProfileEvent>("UpdateProfile");
   const [isUpload, setIsUpload] = useState(false);
   const [image, setImage] = useState<string>();
 
@@ -69,6 +73,7 @@ export default function UserPage({ navigation }) {
       let json = await res.json();
       if (json.result === true) {
         setIsUpload(true);
+        dispatchUpdateProfileEvent("UpdateProfile");
       }
     }
   };
@@ -76,6 +81,7 @@ export default function UserPage({ navigation }) {
   const logout = async () => {
     setToken("");
     await AsyncStorage.removeItem("username");
+    dispatchLoginEvent("Login");
     navigation.navigate("Home");
   };
 

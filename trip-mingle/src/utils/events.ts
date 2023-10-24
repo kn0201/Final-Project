@@ -32,3 +32,15 @@ export type ApplyTourEvent = {
 export type SaveLocationEvent = {
   type: "SaveLocation";
 };
+
+export type AcceptEvent = {
+  type: "Accept";
+};
+
+export type LoginEvent = {
+  type: "Login";
+};
+
+export type UpdateProfileEvent = {
+  type: "UpdateProfile";
+};

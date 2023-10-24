@@ -266,6 +266,11 @@ export class UserService {
         .from('rating')
         .where('user1_id', id)
         .first();
+      let application_status = await this.knex('application')
+        .select('status')
+        .where('post_id', post_id)
+        .andWhere('user_id', id)
+        .first();
       return {
         avatar_path: user.avatar_path ? user.avatar_path : 'yukimin.png',
         rating: +user.rating,
@@ -277,6 +282,7 @@ export class UserService {
         hobby: hobby,
         countries_travelled: countries_travelled,
         number_of_rating: +number_of_rating.count,
+        application_status: application_status.status,
       };
     } catch (err) {
       console.log(err);
