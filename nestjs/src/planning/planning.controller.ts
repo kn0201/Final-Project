@@ -121,9 +121,9 @@ export class PlanningController {
 
     let input = object({
       body: object({
-        selected_date: string(),
-        start_time: string(),
-        end_time: string(),
+        selectedDate: string(),
+        startTime: string(),
+        endTime: string(),
         location: string(),
       }),
       params: object({
@@ -133,9 +133,9 @@ export class PlanningController {
 
     return this.planningService.addNewEvent(jwt.user_id, {
       planning_id: input.params.plan_id,
-      selected_date: input.body.selected_date,
-      start_time: input.body.start_time,
-      end_time: input.body.end_time,
+      selected_date: input.body.selectedDate,
+      start_time: input.body.startTime,
+      end_time: input.body.endTime,
       location: input.body.location,
     });
   }

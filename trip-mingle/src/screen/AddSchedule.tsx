@@ -146,67 +146,11 @@ const AddSchedule = () => {
   useEffect(() => {
     getMarks();
     getEvent();
-
-    // setScheduleItems([
-    //   {
-    //     id: 1,
-    //     selectedDate: "2023-10-16",
-    //     startTime: "13:00",
-    //     endTime: "15:00",
-    //     location: "Place 1",
-    //     remark: "",
-    //   },
-    //   {
-    //     id: 2,
-    //     selectedDate: "2023-10-16",
-    //     startTime: "15:30",
-    //     endTime: "15:45",
-    //     location: "Place 2",
-    //     remark: "",
-    //   },
-    //   {
-    //     id: 3,
-    //     selectedDate: "2023-10-17",
-    //     startTime: "15:30",
-    //     endTime: "15:45",
-    //     location: "Place 3",
-    //     remark: "",
-    //   },
-    //   {
-    //     id: 4,
-    //     selectedDate: "2023-10-17",
-    //     startTime: "13:00",
-    //     endTime: "15:00",
-    //     location: "Place 1",
-    //     remark: "",
-    //   },
-    //   {
-    //     id: 5,
-    //     selectedDate: "2023-10-18",
-    //     startTime: "15:30",
-    //     endTime: "15:45",
-    //     location: "Place 2",
-    //     remark: "",
-    //   },
-    // ]);
   }, []);
 
   useEffect(() => {
     console.log({ scheduleItems });
-    // scheduleItems.forEach((item) => {
-    //   let date = item.selectedDate;
-    //   let items = data[date];
-    //   if (items) {
-    //     items.push(item);
-    //   } else {
-    //     data[date] = [item];
-    //   }
-    // });
-    // console.log({ data });
   }, [scheduleItems]);
-  // const function addNewMarkDate() {
-
-  // }
 
   const markedDates: MarkedDates = {
     [startDate || new Date(Date.now()).toLocaleDateString()]: {
@@ -268,7 +212,10 @@ const AddSchedule = () => {
         <Text>Starting Date</Text>
         <TextInput
           style={PlanningStyleSheet.inputContainer}
-          value={startDate}
+          value={
+            startDate?.split("T")[0] ||
+            new Date(Date.now()).toLocaleDateString()
+          }
           onChangeText={setStartDate}
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input your start travel date"
@@ -276,7 +223,9 @@ const AddSchedule = () => {
         <Text>Ending Date</Text>
         <TextInput
           style={PlanningStyleSheet.inputContainer}
-          value={endDate}
+          value={
+            endDate?.split("T")[0] || new Date(Date.now()).toLocaleDateString()
+          }
           onChangeText={setEndDate}
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input your end travel date"
@@ -329,10 +278,14 @@ const AddSchedule = () => {
                     }}
                   >
                     <Text style={{ textShadowColor: "#ff0000" }}>
-                      {scheduleItem.selectedDate}
+                      {scheduleItem.selectedDate.split("T")[0]}
                     </Text>
                     <Text>
-                      {scheduleItem.startTime} - {scheduleItem.endTime}
+                      {scheduleItem.startTime.split("T")[1]?.slice(0, 5) ||
+                        scheduleItem.startTime}{" "}
+                      -{" "}
+                      {scheduleItem.endTime.split("T")[1]?.slice(0, 5) ||
+                        scheduleItem.endTime}
                     </Text>
                   </View>
                   <Space height={50} />

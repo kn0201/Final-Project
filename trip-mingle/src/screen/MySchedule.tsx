@@ -13,23 +13,12 @@ import {
 import { Card, Header } from "@rneui/themed";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import {
-  RegisInfo,
-  ScheduleCardInfo,
-  ScheduleCardInputInfo,
-} from "../utils/types";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
-
 import AddScheduleForm from "../components/AddScheduleForm";
-import { useNavigation } from "@react-navigation/native";
 import { useAppNavigation } from "../../navigators";
 import { useGet } from "../hooks/useGet";
 import { ParseResult, array, number, object, string } from "cast.ts";
-import { apiOrigin } from "../utils/apiOrigin";
 import { api, api2 } from "../apis/api";
-import UserPageStyleSheet from "../StyleSheet/UserPageCss";
-import useBoolean from "../hooks/useBoolean";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const Stack = createStackNavigator();
 

@@ -67,16 +67,19 @@ export default function AgendaListItem(props: {
       return;
     }
     try {
+      console.log("HERE");
       let data = {
-        selected_date: new Date(selectedDate + " 00:00").toISOString(),
-        start_time: new Date(
+        selectedDate: new Date(selectedDate + " 00:00").toISOString(),
+        startTime: new Date(
           selectedDate + " " + scheduleInfo.startTime
         ).toISOString(),
-        end_time: new Date(
+        endTime: new Date(
           selectedDate + " " + scheduleInfo.endTime
         ).toISOString(),
         location: scheduleInfo.location,
       };
+      console.log({ data });
+
       let res = await api.post(
         `/planning/${planId}/event`,
         data,
