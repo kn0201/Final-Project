@@ -35,4 +35,10 @@ export class BlogController {
   getTourPostDetail(@Param('id') id: string) {
     return this.blogService.getTourPostDetail(+id);
   }
+
+  @UseGuards(AuthGuard)
+  @Patch(':id')
+  deletePost(@Param('id') id: string, @Body() body: Body, @Req() req: Request) {
+    return this.blogService.deletePost(+id, req);
+  }
 }

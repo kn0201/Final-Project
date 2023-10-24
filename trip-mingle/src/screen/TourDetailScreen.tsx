@@ -11,6 +11,7 @@ import {
   ListRenderItemInfo,
   FlatList,
   ScrollView,
+  Modal,
 } from "react-native";
 import { api } from "../apis/api";
 import {
@@ -21,6 +22,7 @@ import {
   bookmarkParser,
   bookmarkStatusParser,
   commentInfoParser,
+  deletePostParser,
   getIconResult,
   likeParser,
   likeStatusParser,
@@ -51,10 +53,12 @@ import {
   AddCommentEvent,
   ApplyTourEvent,
   BookmarkEvent,
+  DeleteEvent,
   LikeEvent,
   LoginEvent,
   UpdateProfileEvent,
 } from "../utils/events";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const TourDetailScreen = ({
   route,
@@ -163,7 +167,7 @@ const TourDetailScreen = ({
         `/bookmark/${id}`,
         { id },
         bookmarkParser,
-        token
+        token,
       );
       setIsBookmark(!isBookmark);
       dispatchBookmarkEvent("Bookmark");
@@ -181,7 +185,7 @@ const TourDetailScreen = ({
       let result = await api.get(
         `/bookmark/${id}`,
         bookmarkStatusParser,
-        token
+        token,
       );
       setIsBookmark(result.isBookmark);
     } catch (err) {
@@ -214,6 +218,49 @@ const TourDetailScreen = ({
   const locationNamesString = Array.isArray(locationNames)
     ? locationNames.join(", ")
     : "";
+
+  // Delete post
+  const dispatchDeleteEvent = useEvent<DeleteEvent>("Delete");
+  const [isPopoverVisible, setPopoverVisible] = useState(false);
+  const deletePost = async () => {
+    try {
+      let result = await api.patch(
+        `/blog/${id}`,
+        { id },
+        deletePostParser,
+        token,
+      );
+      if (result.result === true) {
+        dispatchDeleteEvent("Delete");
+        navigation.pop();
+      } else {
+        throw new Error(`Unauthorized to delete tour #${id}`);
+      }
+    } catch (err) {
+      console.log({ err });
+    }
+  };
+  const handleDelete = () => {
+    IonNeverDialog.show({
+      type: "warning",
+      title: `Are you sure you want to delete tour #${id}?`,
+      message: ``,
+      firstButtonVisible: true,
+      firstButtonText: "Cancel",
+      firstButtonFunction: () => {
+        IonNeverDialog.dismiss();
+      },
+      secondButtonVisible: true,
+      secondButtonText: "Delete",
+      secondButtonFunction: () => {
+        deletePost();
+      },
+    });
+    setPopoverVisible(false);
+  };
+  useEvent<DeleteEvent>("Delete", (event) => {
+    getPostDetail();
+  });
 
   // Get comments list
   const [comments, setComments] = useState<ReplyInfoItem[] | null>([]);
@@ -261,7 +308,7 @@ const TourDetailScreen = ({
         `/comment/${id}/add`,
         commentInfo,
         addCommentParser,
-        token
+        token,
       );
       dispatchAddCommentEvent("AddComment");
       inputRef?.current?.clear();
@@ -300,7 +347,7 @@ const TourDetailScreen = ({
     id: number,
     username: string,
     post_id: string,
-    post_user_id?: string
+    post_user_id?: string,
   ) => {
     navigation.navigate("Other Profile", {
       id,
@@ -315,6 +362,11 @@ const TourDetailScreen = ({
     navigation.navigate("Manage Tour", { id, post_user_id });
   };
 
+  // View member
+  const view = (id: number, post_user_id?: string) => {
+    navigation.navigate("Tour Member", { id, post_user_id });
+  };
+
   // Apply to join/ cancel
   const [applicationStatus, setApplicationStatus] = useState(false);
   const dispatchApplyTourEvent = useEvent<ApplyTourEvent>("ApplyTour");
@@ -327,7 +379,7 @@ const TourDetailScreen = ({
         `/application/${id}`,
         { id },
         applyTourParser,
-        token
+        token,
       );
       dispatchApplyTourEvent("ApplyTour");
       if (applicationStatus === false) {
@@ -377,7 +429,7 @@ const TourDetailScreen = ({
       let applicationStatus = await api.get(
         `/application/status/${id}`,
         applicationStatusParser,
-        token
+        token,
       );
       setApplicationStatus(applicationStatus.status);
     } catch (err) {
@@ -398,7 +450,7 @@ const TourDetailScreen = ({
     try {
       let applicationList = await api.get(
         `/application/${id}`,
-        applicationInfoParser
+        applicationInfoParser,
       );
       setApplications(applicationList);
     } catch (err) {
@@ -443,7 +495,7 @@ const TourDetailScreen = ({
                           application.user_id,
                           application.username,
                           id,
-                          post?.user_id.toString()
+                          post?.user_id.toString(),
                         );
                       }}
                     >
@@ -472,14 +524,27 @@ const TourDetailScreen = ({
           </ScrollView>
           {token ? (
             login_user_id !== post?.user_id ? (
-              <TouchableOpacity
-                style={TourDetailScreenStyleSheet.button}
-                onPress={apply}
-              >
-                <Text style={TourDetailScreenStyleSheet.text}>
-                  {applicationStatus === false ? "Apply" : "Applied"}
-                </Text>
-              </TouchableOpacity>
+              post?.status === "open" ? (
+                <TouchableOpacity
+                  style={TourDetailScreenStyleSheet.button}
+                  onPress={apply}
+                >
+                  <Text style={TourDetailScreenStyleSheet.text}>
+                    {applicationStatus === false ? "Apply" : "Applied"}
+                  </Text>
+                </TouchableOpacity>
+              ) : applicationStatus === true && post?.status === "complete" ? (
+                <TouchableOpacity
+                  style={TourDetailScreenStyleSheet.button}
+                  onPress={() => {
+                    view(id, post?.user_id.toString());
+                  }}
+                >
+                  <Text style={TourDetailScreenStyleSheet.text}>View</Text>
+                </TouchableOpacity>
+              ) : (
+                <></>
+              )
             ) : (
               <TouchableOpacity
                 style={TourDetailScreenStyleSheet.button}
@@ -517,7 +582,7 @@ const TourDetailScreen = ({
                   item.user_id,
                   item.username,
                   id,
-                  post?.user_id.toString()
+                  post?.user_id.toString(),
                 )
               }
             >
@@ -553,7 +618,7 @@ const TourDetailScreen = ({
         </Card>
       </>
     ),
-    []
+    [],
   );
 
   // Display
@@ -563,6 +628,7 @@ const TourDetailScreen = ({
         style={{ flex: 1 }}
         onPress={() => {
           Keyboard.dismiss();
+          setPopoverVisible(false);
         }}
       >
         <>
@@ -592,7 +658,7 @@ const TourDetailScreen = ({
                             post.user_id,
                             post.username,
                             id,
-                            post?.user_id.toString()
+                            post?.user_id.toString(),
                           );
                         } else {
                           return;
@@ -618,28 +684,65 @@ const TourDetailScreen = ({
                     <Text> ({post?.number_of_rating})</Text>
                   </View>
                   {token ? (
-                    <View style={TourDetailScreenStyleSheet.row}>
-                      <TouchableOpacity
-                        onPress={like}
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          gap: 5,
-                        }}
+                    <>
+                      <View style={TourDetailScreenStyleSheet.row}>
+                        <TouchableOpacity
+                          onPress={like}
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: 5,
+                          }}
+                        >
+                          <AntDesign
+                            name={isLike ? "like1" : "like2"}
+                            size={20}
+                          />
+                          <Text>{likeNumber}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={{ marginTop: 2 }}
+                          onPress={bookmark}
+                        >
+                          <Ionicons
+                            name={isBookmark ? "bookmark" : "bookmark-outline"}
+                            size={20}
+                          />
+                        </TouchableOpacity>
+
+                        {login_user_id !== post?.user_id ? (
+                          <></>
+                        ) : (
+                          <TouchableWithoutFeedback
+                            style={{ marginTop: 2 }}
+                            onPress={() => {
+                              setPopoverVisible(!isPopoverVisible);
+                            }}
+                          >
+                            <MaterialCommunityIcons
+                              name="dots-vertical"
+                              size={26}
+                            />
+                          </TouchableWithoutFeedback>
+                        )}
+                      </View>
+                      <Modal
+                        transparent={true}
+                        animationType="fade"
+                        visible={isPopoverVisible}
                       >
-                        <AntDesign
-                          name={isLike ? "like1" : "like2"}
-                          size={20}
-                        />
-                      </TouchableOpacity>
-                      <Text>{likeNumber}</Text>
-                      <TouchableOpacity onPress={bookmark}>
-                        <Ionicons
-                          name={isBookmark ? "bookmark" : "bookmark-outline"}
-                          size={20}
-                        />
-                      </TouchableOpacity>
-                    </View>
+                        <TouchableOpacity
+                          style={TourDetailScreenStyleSheet.modalContainer}
+                          onPress={() => setPopoverVisible(false)}
+                        >
+                          <View style={TourDetailScreenStyleSheet.modalContent}>
+                            <TouchableOpacity onPress={handleDelete}>
+                              <Text style={{ color: "red" }}>Delete</Text>
+                            </TouchableOpacity>
+                          </View>
+                        </TouchableOpacity>
+                      </Modal>
+                    </>
                   ) : (
                     <></>
                   )}

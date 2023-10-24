@@ -47,3 +47,6 @@ export type UpdateProfileEvent = {
 export type AddSnapEvent = {
   type: "AddSnap";
 };
+export type DeleteEvent = {
+  type: "Delete";
+};

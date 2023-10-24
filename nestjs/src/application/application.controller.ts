@@ -40,6 +40,20 @@ export class ApplicationController {
   }
 
   @UseGuards(AuthGuard)
+  @Get('tour/:post_id/:post_user_id')
+  getConfirmedUsersList(
+    @Param('post_id') post_id: string,
+    @Param('post_user_id') post_user_id: string,
+    @Req() req: Request,
+  ) {
+    return this.applicationService.getConfirmedUsersList(
+      +post_id,
+      +post_user_id,
+      req,
+    );
+  }
+
+  @UseGuards(AuthGuard)
   @Patch(':post_id/:id')
   acceptAppliedUsers(
     @Param('post_id') post_id: string,

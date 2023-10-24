@@ -84,7 +84,7 @@ export class BlogService {
       }
       return { id: tour_post_result[0].id };
     } catch (err) {
-      throw new Error(err);
+      console.log(err);
     }
   }
 
@@ -196,7 +196,7 @@ export class BlogService {
       }
       return postInfo;
     } catch (err) {
-      throw err;
+      console.log(err);
     }
   }
 
@@ -298,7 +298,31 @@ export class BlogService {
         number_of_reply: +number_of_reply.count,
       };
     } catch (err) {
-      throw err;
+      console.log(err);
+    }
+  }
+
+  async deletePost(id, req) {
+    try {
+      const payload = this.jwtService.decode(
+        req.headers.authorization.split(' ')[1],
+      );
+      let user_id = payload.user_id;
+      let postUser = await this.knex('post')
+        .select('id', 'status')
+        .where('user_id', user_id)
+        .andWhere('id', id)
+        .first();
+      if (postUser) {
+        let result = await this.knex('post')
+          .where('id', id)
+          .update({ is_delete: true, status: 'close' });
+        return { result: true };
+      } else {
+        throw new Error(`Unauthorized to delete tour ${id}`);
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
 }

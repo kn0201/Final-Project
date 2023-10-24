@@ -124,6 +124,68 @@ export class ApplicationService {
     }
   }
 
+  async getConfirmedUsersList(id, user_id, req) {
+    try {
+      const payload = this.jwtService.decode(
+        req.headers.authorization.split(' ')[1],
+      );
+      let login_user_id = payload.user_id;
+      let confirmedUsersInfo = [];
+      let postUser = await this.knex('users')
+        .leftJoin('image', { 'users.avatar_id': 'image.id' })
+        .select(
+          'users.id as user_id',
+          'users.username as username',
+          'image.path as avatar_path',
+          'users.rating as rating',
+        )
+        .where('user_id', user_id)
+        .first();
+      let number_of_rating_postUser = await this.knex
+        .count('id')
+        .from('rating')
+        .where('user1_id', postUser.user_id)
+        .first();
+      confirmedUsersInfo.push({
+        user_id: postUser.user_id,
+        username: postUser.username,
+        avatar_path: postUser.avatar_path,
+        rating: postUser.rating,
+        number_of_rating: +number_of_rating_postUser.count,
+      });
+      let confirmedUsers = await this.knex('users')
+        .leftJoin('image', { 'users.avatar_id': 'image.id' })
+        .leftJoin('application', { 'users.id': 'application.user_id' })
+        .select(
+          'users.id as user_id',
+          'users.username as username',
+          'image.path as avatar_path',
+          'users.rating as rating',
+        )
+        .where('application.post_id', id)
+        .andWhere('application.status', true)
+        .orderBy('application.created_at', 'asc');
+      for (let confirmedUser of confirmedUsers) {
+        let number_of_rating_confirmedUser = await this.knex
+          .count('id')
+          .from('rating')
+          .where('user1_id', confirmedUser.user_id)
+          .first();
+        confirmedUsersInfo.push({
+          user_id: confirmedUser.user_id,
+          username: confirmedUser.username,
+          avatar_path: confirmedUser.avatar_path,
+          rating: confirmedUser.rating,
+          number_of_rating: +number_of_rating_confirmedUser.count,
+        });
+      }
+      console.log(confirmedUsersInfo);
+      return confirmedUsersInfo;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   async acceptAppliedUsers(post_id, id, body, req) {
     try {
       const payload = this.jwtService.decode(

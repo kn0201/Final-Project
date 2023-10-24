@@ -203,7 +203,7 @@ export default function OtherProfileScreen({
               <Text style={OtherProfileScreenStyleSheet.text}>
                 {profileInfo.application_status === false
                   ? `Accept the application for tour #${post_id}`
-                  : `Cancel the application for tour #${post_id}`}
+                  : `Cancel the acceptance for tour #${post_id}`}
               </Text>
             </TouchableOpacity>
           </View>
