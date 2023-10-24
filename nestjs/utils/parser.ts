@@ -114,3 +114,13 @@ export const addBookmarkParser = object({
   }),
   address: string(),
 });
+
+export const addSnapParser = object({
+  type: string(),
+  place_id: string(),
+  name: string(),
+  address: string(),
+  latitude: number(),
+  longitude: number(),
+  content: string(),
+});
