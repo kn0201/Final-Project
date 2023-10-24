@@ -37,7 +37,7 @@ export default function UserPageTopTab() {
       <Tab.Screen
         name="Bookmark"
         component={BookmarkScreen}
-        options={{ tabBarLabel: "Liked" }}
+        options={{ tabBarLabel: "Bookmark" }}
       />
     </Tab.Navigator>
   );

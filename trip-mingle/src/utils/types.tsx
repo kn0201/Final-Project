@@ -218,6 +218,13 @@ export type bookmarkInfoItem = {
   number_of_reply: number;
   result: boolean;
 };
+export type SpotInfo = {
+  place_id: string;
+  name: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+};
 
 export type SnapInfo = {
   trip_location: LocationPost[] | null;

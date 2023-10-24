@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   ListRenderItemInfo,
+  RefreshControl,
 } from "react-native";
 import { useCallback, useEffect, useState } from "react";
 import Fontisto from "react-native-vector-icons/Fontisto";
@@ -121,11 +122,11 @@ export default function TourScreen({ navigation }) {
               item.trip_country.toUpperCase().includes(textData)) ||
             (item.trip_location &&
               item.trip_location.some((location) =>
-                location.name.toUpperCase().includes(textData),
+                location.name.toUpperCase().includes(textData)
               )) ||
             (item.trip_location &&
               item.trip_location.some((location) =>
-                location.address.toUpperCase().includes(textData),
+                location.address.toUpperCase().includes(textData)
               )) ||
             (item.preferred_hobby &&
               item.preferred_hobby.toUpperCase().includes(textData))
@@ -214,8 +215,18 @@ export default function TourScreen({ navigation }) {
         </View>
       </TouchableOpacity>
     ),
-    [],
+    []
   );
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getPostInfo();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
+  }, []);
 
   // Display
   return (
@@ -233,6 +244,9 @@ export default function TourScreen({ navigation }) {
           keyExtractor={(item, index) => index.toString()}
           renderItem={ItemView}
           ItemSeparatorComponent={ItemSeparatorView}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
         />
       </View>
       {/* <MaterialIcons
