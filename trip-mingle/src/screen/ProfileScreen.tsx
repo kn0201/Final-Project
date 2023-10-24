@@ -29,6 +29,7 @@ import MultipleHobbyCheckbox from "../components/multipleHobbyCheckbox";
 import useBoolean from "../hooks/useBoolean";
 import useEvent from "react-use-event";
 import { UpdateProfileEvent } from "../utils/events";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function ProfileScreen(props: {
   //@ts-ignore
@@ -142,9 +143,20 @@ export default function ProfileScreen(props: {
 
   return (
     <>
-      <ScrollView style={{ backgroundColor: "white", height: "100%" }}>
+      <LinearGradient
+        // Background Linear Gradient
+        colors={["#FFFFFF", "rgba(195,214,246,0.8)"]}
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: 0,
+          height: "100%",
+        }}
+      />
+      <ScrollView style={{ height: "100%" }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={{ backgroundColor: "white", height: "100%" }}>
+          <View style={{ height: "100%" }}>
             <View style={ProfileScreenStyleSheet.editContainer}>
               <TouchableOpacity
                 onPress={() => {

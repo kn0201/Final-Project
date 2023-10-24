@@ -66,7 +66,7 @@ const ProfileScreenStyleSheet = StyleSheet.create({
     justifyContent: "flex-end",
     marginTop: 8,
     marginEnd: "2.5%",
-    backgroundColor: white,
+    // backgroundColor: white,
   },
   editButton: {
     display: flex,

@@ -20,6 +20,7 @@ import SavedLocationScreenStyleSheet from "../StyleSheet/SavedLocationScreenCss"
 import { useAppNavigation } from "../../navigators";
 import useEvent from "react-use-event";
 import { MapPositionEvent, SaveLocationEvent } from "../utils/events";
+import { LinearGradient } from "expo-linear-gradient";
 
 const { width, height } = Dimensions.get("window");
 const aspect_ratio = width / height;
@@ -101,6 +102,17 @@ export default function SavedLocationScreen() {
 
   return (
     <View style={SavedLocationScreenStyleSheet.center}>
+      <LinearGradient
+        // Background Linear Gradient
+        colors={["#FFFFFF", "rgba(195,214,246,0.8)"]}
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: 0,
+          height: "100%",
+        }}
+      />
       <FlatList
         data={locationList}
         renderItem={({ item }) => (

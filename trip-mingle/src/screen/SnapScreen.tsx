@@ -3,29 +3,28 @@ import {
   View,
   Text,
   TouchableOpacity,
-  ScrollView,
   RefreshControl,
   Image,
   FlatList,
 } from "react-native";
-import { AddPostEvent, AddSnapEvent, LikeEvent } from "../utils/events";
+import { AddSnapEvent, LikeEvent } from "../utils/events";
 import { useCallback, useEffect, useState } from "react";
 import { Avatar, Header } from "@rneui/themed";
 import { useToken } from "../hooks/useToken";
 import { Icon } from "@rneui/themed";
 import { apiOrigin } from "../utils/apiOrigin";
-import { center, flex, iosBlue, row } from "../StyleSheet/StyleSheetHelper";
-import UserPageStyleSheet from "../StyleSheet/UserPageCss";
+import { center, iosBlue, row } from "../StyleSheet/StyleSheetHelper";
+import { LinearGradient } from "expo-linear-gradient";
 import { useAppNavigation } from "../../navigators";
 import { SnapScreenStyleSheet } from "../StyleSheet/SnapScreenCss";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import Ionicons from "react-native-vector-icons/Ionicons";
+
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
-import { id, object } from "cast.ts";
+
 import useEvent from "react-use-event";
-import TourDetailScreenStyleSheet from "../StyleSheet/TourDetailScreenCss";
+
 import { api } from "../apis/api";
-import { likeParser, likeStatusParser, snapListParser } from "../utils/parser";
+import { likeParser, snapListParser } from "../utils/parser";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Snap } from "../utils/types";
 
@@ -166,8 +165,19 @@ export default function SnapScreen() {
 
   return (
     <>
+      <LinearGradient
+        // Background Linear Gradient
+        colors={["#FFFFFF", "rgba(195,214,246,0.8)"]}
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: 0,
+          height: "100%",
+        }}
+      />
       <Header
-        backgroundColor="#fff"
+        backgroundColor="transparent"
         centerComponent={{
           text: "SNAP",
           style: { color: "#000000", fontSize: 17, fontWeight: "600" },

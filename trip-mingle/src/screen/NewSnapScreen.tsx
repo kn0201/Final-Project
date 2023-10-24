@@ -29,6 +29,7 @@ import { SnapScreenStyleSheet } from "../StyleSheet/SnapScreenCss";
 import { SpotInfo } from "../utils/types";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { boolean, object } from "cast.ts";
+import { LinearGradient } from "expo-linear-gradient";
 
 type ImageFile = {
   uri: string;

@@ -28,6 +28,7 @@ import {
 } from "../utils/events";
 import { useAppNavigation } from "../../navigators";
 import { useToken } from "../hooks/useToken";
+import { LinearGradient } from "expo-linear-gradient";
 
 // Star rating
 export const setStarRating = (rating: number) => {
@@ -188,6 +189,17 @@ export default function BookmarkScreen() {
   return (
     <>
       <View style={BuddiesPageStyleSheet.container}>
+        <LinearGradient
+          // Background Linear Gradient
+          colors={["#FFFFFF", "rgba(195,214,246,0.8)"]}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: 0,
+            height: "100%",
+          }}
+        />
         <FlatList
           data={posts}
           keyExtractor={(item, index) => index.toString()}

@@ -5,7 +5,6 @@ import { center, flex, row, white } from "./StyleSheetHelper";
 export const HomePageStyleSheet = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
   },
   title: {
     display: "flex",

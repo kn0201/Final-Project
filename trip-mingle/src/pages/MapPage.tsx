@@ -21,7 +21,7 @@ export default function MapPage() {
         options={{
           presentation: "modal",
           cardStyle: {
-            backgroundColor: "transparent",
+            // backgroundColor: "transparent",
             flex: 1,
           },
         }}
