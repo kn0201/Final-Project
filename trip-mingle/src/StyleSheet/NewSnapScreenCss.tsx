@@ -1,6 +1,6 @@
 //Buffer Line
 import { StyleSheet } from "react-native";
-import { flex, center, row, iosBlue, full } from "./StyleSheetHelper";
+import { flex, center, row, iosBlue, full, white } from "./StyleSheetHelper";
 
 export const NewSnapScreenStyleSheet = StyleSheet.create({
   center: {
@@ -10,7 +10,7 @@ export const NewSnapScreenStyleSheet = StyleSheet.create({
 
   uploadContainerSquare: {
     elevation: 2,
-    height: 300,
+    minHeight: 450,
     width: "90%",
     backgroundColor: "#efefef",
     position: "relative",
@@ -25,7 +25,7 @@ export const NewSnapScreenStyleSheet = StyleSheet.create({
     bottom: 0,
     backgroundColor: "lightgrey",
     width: "100%",
-    height: "15%",
+    height: "10%",
     color: "red",
     justifyContent: center,
     alignItems: center,
@@ -39,12 +39,34 @@ export const NewSnapScreenStyleSheet = StyleSheet.create({
     justifyContent: "center",
   },
   contentContainer: {
-    height: 200,
+    height: 100,
     width: "90%",
     margin: 8,
     borderWidth: 1,
     borderRadius: 10,
     padding: 10,
     textDecorationLine: "none",
+  },
+  search: {
+    height: 40,
+    width: "100%",
+    borderWidth: 1,
+    borderRadius: 10,
+  },
+  list: {
+    zIndex: 999,
+    height: "100%",
+    width: "100%",
+    borderRadius: 8,
+    backgroundColor: white,
+  },
+  spotContainer: {
+    flexDirection: row,
+    alignSelf: center,
+    width: "90%",
+  },
+  autocompleteContainer: {
+    height: 40,
+    width: "100%",
   },
 });

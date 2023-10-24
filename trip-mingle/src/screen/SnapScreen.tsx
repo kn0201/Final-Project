@@ -84,29 +84,29 @@ export default function SnapScreen() {
       console.log({ err });
     }
   };
-  //   const getUserLikeStatus = async () => {
-  //     try {
-  //       let result = await api.get(`/like/status/${id}`, likeStatusParser, token);
-  //       setIsLike(result.isLike);
-  //     } catch (err) {
-  //       IonNeverDialog.show({
-  //         type: "warning",
-  //         title: "Error",
-  //         message: `${err}`,
-  //         firstButtonVisible: true,
-  //         firstButtonFunction: () => {
-  //           IonNeverDialog.dismiss();
-  //         },
-  //       });
-  //       console.log({ err });
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     getLikeNumber();
-  //     if (token) {
-  //       getUserLikeStatus();
-  //     }
-  //   }, []);
+  // const getUserLikeStatus = async () => {
+  //   try {
+  //     let result = await api.get(`/like/status/${id}`, likeStatusParser, token);
+  //     setIsLike(result.isLike);
+  //   } catch (err) {
+  //     IonNeverDialog.show({
+  //       type: "warning",
+  //       title: "Error",
+  //       message: `${err}`,
+  //       firstButtonVisible: true,
+  //       firstButtonFunction: () => {
+  //         IonNeverDialog.dismiss();
+  //       },
+  //     });
+  //     console.log({ err });
+  //   }
+  // };
+  // useEffect(() => {
+  //   getLikeNumber();
+  //   if (token) {
+  //     getUserLikeStatus();
+  //   }
+  // }, []);
 
   return (
     <>
