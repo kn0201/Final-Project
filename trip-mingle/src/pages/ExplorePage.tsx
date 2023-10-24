@@ -29,7 +29,6 @@ export default function ExplorePage() {
             },
           }}
         />
-
         <Stack.Screen
           name="Blog Detail"
           component={BlogDetailScreen}
@@ -37,8 +36,26 @@ export default function ExplorePage() {
             title: "testing",
           }}
         />
-        <Stack.Screen name="Comment" component={CommentScreen} />
-        <Stack.Screen name="Tour Detail" component={TourDetailScreen} />
+        <Stack.Screen
+          name="Comment"
+          component={CommentScreen}
+          options={{
+            presentation: "modal",
+            cardStyle: {
+              backgroundColor: "white",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Tour Detail"
+          component={TourDetailScreen}
+          options={{
+            presentation: "modal",
+            cardStyle: {
+              backgroundColor: "white",
+            },
+          }}
+        />
         <Stack.Screen
           name="Other Profile"
           component={OtherProfileScreen}

@@ -74,10 +74,16 @@ export class UserController {
 
   @Get('userIcon')
   async getUserIcon(@Headers() headers: {}) {
-    console.log('get Icon');
-
     let jwt = getJWTPayload(headers);
     return this.userService.getUserIcon({
+      user_id: jwt.user_id,
+    });
+  }
+
+  @Get('bookmark')
+  async getUserBookmark(@Headers() headers: {}) {
+    let jwt = getJWTPayload(headers);
+    return this.userService.getUserBookmark({
       user_id: jwt.user_id,
     });
   }

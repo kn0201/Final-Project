@@ -20,6 +20,7 @@ import { LikeModule } from './like/like.module';
 import { BookmarkModule } from './bookmark/bookmark.module';
 import { RatingModule } from './rating/rating.module';
 import { ApplicationModule } from './application/application.module';
+import { SnapModule } from './snap/snap.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
@@ -56,6 +57,7 @@ import { ApplicationModule } from './application/application.module';
     BookmarkModule,
     RatingModule,
     ApplicationModule,
+    SnapModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService],

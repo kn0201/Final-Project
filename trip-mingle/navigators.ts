@@ -47,6 +47,17 @@ export interface AppParamList {
     id: string;
     name: string;
   };
+  ExplorePage: {
+    screen: string;
+    params: {
+      id: number;
+      title: string;
+      status: string;
+    };
+  };
+  NewSnap: undefined;
+  Comment: undefined;
+  SnapPage: undefined;
 }
 
 export function useAppNavigation() {

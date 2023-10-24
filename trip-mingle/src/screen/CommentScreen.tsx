@@ -58,7 +58,7 @@ export default function CommentScreen() {
         </ScrollView>
         <KeyboardAvoidingView
           behavior={Platform.OS == "ios" ? "padding" : "height"}
-          style={{ flex: keyboardShow ? 0.45 : 0 }}
+          style={{ flex: keyboardShow ? 0.55 : 0 }}
         >
           <View style={CommentScreenStyleSheet.bottomContainer}>
             <Avatar
