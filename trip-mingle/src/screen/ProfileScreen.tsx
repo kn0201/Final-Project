@@ -27,6 +27,8 @@ import { useToken } from "../hooks/useToken";
 import MultipleCountryCheckbox from "../components/multipleCountryCheckbox";
 import MultipleHobbyCheckbox from "../components/multipleHobbyCheckbox";
 import useBoolean from "../hooks/useBoolean";
+import useEvent from "react-use-event";
+import { UpdateProfileEvent } from "../utils/events";
 
 export default function ProfileScreen(props: {
   //@ts-ignore
@@ -34,7 +36,8 @@ export default function ProfileScreen(props: {
 }) {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const { token, payload, setToken } = useToken();
-
+  const dispatchUpdateProfileEvent =
+    useEvent<UpdateProfileEvent>("UpdateProfile");
   const profileInfo = useRef<ProfileInfo>({
     intro: "",
     language: "",
@@ -120,9 +123,10 @@ export default function ProfileScreen(props: {
         "/user/profile",
         profileInfo,
         sendProfileResultParser,
-        token
+        token,
       );
       if (json.result == true) {
+        dispatchUpdateProfileEvent("UpdateProfile");
         IonNeverDialog.show({
           type: "success",
           title: "Updated Profile",

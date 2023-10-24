@@ -416,6 +416,7 @@ const TourDetailScreen = ({
     getApplicationStatus();
     getUserBookmarkStatus();
     getUserLikeStatus();
+    navigation.pop();
   });
   useEvent<UpdateProfileEvent>("UpdateProfile", (event) => {
     getApplicationList();
