@@ -52,6 +52,8 @@ import {
   ApplyTourEvent,
   BookmarkEvent,
   LikeEvent,
+  LoginEvent,
+  UpdateProfileEvent,
 } from "../utils/events";
 
 const TourDetailScreen = ({
@@ -409,6 +411,17 @@ const TourDetailScreen = ({
   useEvent<AcceptEvent>("Accept", (event) => {
     getApplicationList();
     getPostDetail();
+  });
+  useEvent<LoginEvent>("Login", (event) => {
+    getApplicationStatus();
+    getUserBookmarkStatus();
+    getUserLikeStatus();
+  });
+  useEvent<UpdateProfileEvent>("UpdateProfile", (event) => {
+    getApplicationList();
+    getPostDetail();
+    getUserIcon();
+    getCommentInfo();
   });
 
   // Display applications list

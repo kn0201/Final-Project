@@ -36,3 +36,11 @@ export type SaveLocationEvent = {
 export type AcceptEvent = {
   type: "Accept";
 };
+
+export type LoginEvent = {
+  type: "Login";
+};
+
+export type UpdateProfileEvent = {
+  type: "UpdateProfile";
+};

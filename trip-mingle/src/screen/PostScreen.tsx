@@ -25,6 +25,7 @@ import {
   AddCommentEvent,
   AddPostEvent,
   LikeEvent,
+  UpdateProfileEvent,
 } from "../utils/events";
 
 // Star rating
@@ -94,6 +95,9 @@ export default function TourScreen({ navigation }) {
     getPostInfo();
   });
   useEvent<AcceptEvent>("Accept", (event) => {
+    getPostInfo();
+  });
+  useEvent<UpdateProfileEvent>("UpdateProfile", (event) => {
     getPostInfo();
   });
 

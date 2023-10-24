@@ -9,7 +9,7 @@ import { Avatar } from "@rneui/themed";
 import { apiOrigin } from "../utils/apiOrigin";
 import { setStarRating } from "./PostScreen";
 import { useToken } from "../hooks/useToken";
-import { AcceptEvent } from "../utils/events";
+import { AcceptEvent, LoginEvent, UpdateProfileEvent } from "../utils/events";
 import useEvent from "react-use-event";
 
 export default function OtherProfileScreen({
@@ -81,6 +81,12 @@ export default function OtherProfileScreen({
   useEffect(() => {
     getProfile();
   }, []);
+  useEvent<UpdateProfileEvent>("UpdateProfile", (event) => {
+    getProfile();
+  });
+  useEvent<LoginEvent>("Login", (event) => {
+    navigation.pop(2);
+  });
   const introString = profileInfo?.intro != null ? profileInfo?.intro : "";
   const languagesString = Array.isArray(profileInfo?.language)
     ? profileInfo?.language.join(", ")
@@ -129,7 +135,7 @@ export default function OtherProfileScreen({
           <View style={OtherProfileScreenStyleSheet.center}>
             <View style={OtherProfileScreenStyleSheet.inputContainer}>
               <Text style={OtherProfileScreenStyleSheet.inputText}>
-                {profileInfo?.gender === true ? "Male" : "Female"}
+                {profileInfo?.gender === true ? "Female" : "Male"}
               </Text>
             </View>
           </View>

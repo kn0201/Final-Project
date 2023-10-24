@@ -16,7 +16,7 @@ import { api } from "../apis/api";
 import { acceptStatusParser, appliedUserParser } from "../utils/parser";
 import { useToken } from "../hooks/useToken";
 import useEvent from "react-use-event";
-import { AcceptEvent } from "../utils/events";
+import { AcceptEvent, LoginEvent, UpdateProfileEvent } from "../utils/events";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 
 export default function OtherProfileScreen({
@@ -27,6 +27,7 @@ export default function OtherProfileScreen({
   navigation: any;
 }) {
   const { token, payload, setToken } = useToken();
+  let login_user_id = payload?.user_id;
   const { IonNeverDialog } = useIonNeverNotification();
 
   // Params
@@ -38,7 +39,7 @@ export default function OtherProfileScreen({
   // Header
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: "Manage Tour",
+      headerTitle: `Manage Tour`,
     });
   }, []);
 
@@ -108,8 +109,14 @@ export default function OtherProfileScreen({
   useEffect(() => {
     getApplicationList();
   }, []);
+  useEvent<UpdateProfileEvent>("UpdateProfile", (event) => {
+    getApplicationList();
+  });
+  useEvent<LoginEvent>("Login", (event) => {
+    getApplicationList();
+    navigation.pop(2);
+  });
 
-  const flatListRef = useRef(null);
   const ItemView = useCallback(
     ({ item, index }: ListRenderItemInfo<AppliedUserItem>) => (
       <>
@@ -165,7 +172,6 @@ export default function OtherProfileScreen({
   return (
     <View style={{ flexGrow: 0 }}>
       <FlatList
-        ref={flatListRef}
         data={applications}
         keyExtractor={(item, index) => index.toString()}
         renderItem={ItemView}
