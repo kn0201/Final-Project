@@ -147,7 +147,9 @@ export default function SnapScreen() {
           )}
           <View style={SnapScreenStyleSheet.timeContainer}>
             <Text>
-              {(created_at = new Date(created_at).toLocaleDateString())}
+              {(created_at = new Date(created_at)
+                .toLocaleString()
+                .slice(0, -3)).replace(",", "")}
             </Text>
           </View>
         </View>
