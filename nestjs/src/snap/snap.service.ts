@@ -12,6 +12,35 @@ export class SnapService {
   ) {}
 
   async getSnapList() {
+    let result = await this.knex
+      .select(
+        'post.id',
+        'post.user_id',
+        'users.username as username',
+        'post.content',
+        'post.created_at',
+        'system_location.name as location_name',
+        'image.path as image_path',
+        'image.path as avatar_path',
+      )
+      .from('post')
+      .where('post.type', 'snap')
+      .leftJoin('users', 'post.user_id', 'users.id')
+      .leftJoin(
+        'system_location',
+        'post.system_location_id',
+        'system_location.id',
+      )
+      .innerJoin('image', function () {
+        this.on('image.post_id', '=', 'post.id').orOn(
+          'users.avatar_id',
+          '=',
+          'image.id',
+        );
+      });
+    //   .leftJoin('image', 'users.avatar_id', 'image.id');
+    console.log(result);
+
     return;
   }
 

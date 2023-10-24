@@ -7,7 +7,7 @@ import {
   RefreshControl,
   Image,
 } from "react-native";
-import { AddPostEvent, LikeEvent } from "../utils/events";
+import { AddPostEvent, AddSnapEvent, LikeEvent } from "../utils/events";
 import { useCallback, useEffect, useState } from "react";
 import { Avatar, Header } from "@rneui/themed";
 import { useToken } from "../hooks/useToken";
@@ -20,7 +20,7 @@ import { SnapScreenStyleSheet } from "../StyleSheet/SnapScreenCss";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
-import { id } from "cast.ts";
+import { id, object } from "cast.ts";
 import useEvent from "react-use-event";
 import TourDetailScreenStyleSheet from "../StyleSheet/TourDetailScreenCss";
 import { api } from "../apis/api";
@@ -39,6 +39,17 @@ export default function SnapScreen() {
     }, 2000);
   }, []);
 
+  const getSnapList = async () => {
+    let json = await api.get("/snap", object({}));
+    console.log(json);
+  };
+  useEffect(() => {
+    getSnapList();
+  }, []);
+
+  useEvent<AddSnapEvent>("AddSnap", (event) => {
+    getSnapList();
+  });
   // Likes
   const [isLike, setIsLike] = useState(false);
   const [likeNumber, setLikeNumber] = useState(0);
@@ -107,6 +118,14 @@ export default function SnapScreen() {
   //     getUserLikeStatus();
   //   }
   // }, []);
+
+  type ItemProps = { title: string };
+
+  const Item = ({ title }: ItemProps) => (
+    <View style={styles.item}>
+      <Text style={styles.title}>{title}</Text>
+    </View>
+  );
 
   return (
     <>

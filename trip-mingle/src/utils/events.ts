@@ -44,3 +44,6 @@ export type LoginEvent = {
 export type UpdateProfileEvent = {
   type: "UpdateProfile";
 };
+export type AddSnapEvent = {
+  type: "AddSnap";
+};
