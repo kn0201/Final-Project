@@ -113,7 +113,7 @@ export class LocationService {
       .first();
 
     if (foundBookmark == undefined) {
-      if (system_location_id != undefined) {
+      if (system_location_id == undefined) {
         let id = await this.knex('system_location')
           .insert({
             name: input.name,
