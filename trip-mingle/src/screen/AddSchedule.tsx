@@ -9,10 +9,16 @@ import { DAY } from "@beenotung/tslib/time";
 import { format_2_digit } from "@beenotung/tslib/format";
 import AgendaListItem from "../components/AgendaLIstItem";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
-import { ScheduleDate, ScheduleItem, ScheduleItemInfo } from "../utils/types";
+import {
+  ScheduleData,
+  ScheduleDate,
+  ScheduleItem,
+  ScheduleItemInfo,
+  ScheduleMark,
+} from "../utils/types";
 import PlanningStyleSheet from "../StyleSheet/PlanningStyleSheet";
 import { api, api2 } from "../apis/api";
-import { boolean, object } from "cast.ts";
+import { array, boolean, id, object, optional, string } from "cast.ts";
 import { useToken } from "../hooks/useToken";
 import TextButton from "../components/TextButton";
 import { AppParamList, useAppNavigation, useAppRoute } from "../../navigators";
@@ -31,13 +37,15 @@ const AddSchedule = () => {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const [selectedDate, setSelectedDate] = useState<any>();
   const [open, setOpen] = useState(false);
-  const [scheduleItems, setScheduleItems] = useState<ScheduleItem[]>([]);
+  const [scheduleItems, setScheduleItems] = useState<ScheduleData>({});
+  const [scheduleMark, setScheduleMark] = useState<ScheduleMark>();
   const { token, payload, setToken } = useToken();
   const navigation = useAppNavigation();
   const routeState = navigation.getState();
   const params = useAppRoute<"AddSchedule">();
   const { planId } = params;
-
+  const [startDate, setStartDate] = useState<string>();
+  const [endDate, setEndDate] = useState<string>();
   async function addMarkDate() {
     if (!startDate) {
       IonNeverToast.show({
@@ -80,163 +88,170 @@ const AddSchedule = () => {
       });
     }
   }
+
+  async function getMarks() {
+    let result = await api.get(
+      `/planning/${planId}/mark`,
+      object({
+        marks: optional(
+          object({
+            id: id(),
+            startDate: string(),
+            endDate: string(),
+          })
+        ),
+      }),
+      token
+    );
+    // setScheduleMark(result.marks as ScheduleMark);
+    setStartDate(result?.marks?.startDate);
+    setEndDate(result?.marks?.endDate);
+  }
+
+  async function getEvent() {
+    let result = await api.get(
+      `/planning/${planId}/event`,
+      array(
+        object({
+          id: id(),
+          selectedDate: string(),
+          startTime: string(),
+          endTime: string(),
+          location: string(),
+          remark: string(),
+        })
+      ),
+      token
+    );
+    console.log("event result:", result);
+
+    let dataObject: ScheduleData = {};
+    result.map((event) => {
+      const current = dataObject[event.selectedDate as string];
+      if (current) {
+        dataObject[event.selectedDate.split("T")[0] as string] = [
+          ...current,
+          event,
+        ];
+      } else {
+        dataObject[event.selectedDate.split("T")[0] as string] = [event];
+      }
+    });
+
+    setScheduleItems(dataObject);
+  }
+  // const data: Record<string, ScheduleItem[]> = {};
+
+  // useEffect(() => console.log({ data }), [data]);
   useEffect(() => {
-    setScheduleItems([
-      {
-        id: 1,
-        selectedDate: "2023-10-16",
-        startTime: "13:00",
-        endTime: "15:00",
-        location: "Place 1",
-      },
-      {
-        id: 2,
-        selectedDate: "2023-10-16",
-        startTime: "15:30",
-        endTime: "15:45",
-        location: "Place 2",
-      },
-      {
-        id: 3,
-        selectedDate: "2023-10-17",
-        startTime: "15:30",
-        endTime: "15:45",
-        location: "Place 3",
-      },
-      {
-        id: 4,
-        selectedDate: "2023-10-17",
-        startTime: "13:00",
-        endTime: "15:00",
-        location: "Place 1",
-      },
-      {
-        id: 5,
-        selectedDate: "2023-10-18",
-        startTime: "15:30",
-        endTime: "15:45",
-        location: "Place 2",
-      },
-      {
-        id: 6,
-        selectedDate: "2023-10-18",
-        startTime: "16:00",
-        endTime: "16:30",
-        location: "Place 3",
-      },
-      {
-        id: 7,
-        selectedDate: "2023-10-19",
-        startTime: "16:45",
-        endTime: "16:55",
-        location: "Place 4",
-      },
-      {
-        id: 1,
-        selectedDate: "2023-10-19",
-        startTime: "13:00",
-        endTime: "15:00",
-        location: "Place 1",
-      },
-      {
-        id: 2,
-        selectedDate: "2023-10-20",
-        startTime: "15:30",
-        endTime: "15:45",
-        location: "Place 2",
-      },
-      {
-        id: 3,
-        selectedDate: "2023-10-20",
-        startTime: "15:30",
-        endTime: "15:45",
-        location: "Place 3",
-      },
-      {
-        id: 4,
-        selectedDate: "2023-10-20",
-        startTime: "13:00",
-        endTime: "15:00",
-        location: "Place 1",
-      },
-      {
-        id: 5,
-        selectedDate: "2023-10-21",
-        startTime: "15:30",
-        endTime: "15:45",
-        location: "Place 2",
-      },
-      {
-        id: 6,
-        selectedDate: "2023-10-21",
-        startTime: "16:00",
-        endTime: "16:30",
-        location: "Place 3",
-      },
-      {
-        id: 7,
-        selectedDate: "2023-10-21",
-        startTime: "16:45",
-        endTime: "16:55",
-        location: "Place 4",
-      },
-      {
-        id: 7,
-        selectedDate: "2023-10-21",
-        startTime: "16:45",
-        endTime: "16:55",
-        location: "Place 4",
-      },
-      {
-        id: 7,
-        selectedDate: "2023-10-21",
-        startTime: "16:45",
-        endTime: "16:55",
-        location: "Place 4",
-      },
-    ]);
+    getMarks();
+    getEvent();
+
+    // setScheduleItems([
+    //   {
+    //     id: 1,
+    //     selectedDate: "2023-10-16",
+    //     startTime: "13:00",
+    //     endTime: "15:00",
+    //     location: "Place 1",
+    //     remark: "",
+    //   },
+    //   {
+    //     id: 2,
+    //     selectedDate: "2023-10-16",
+    //     startTime: "15:30",
+    //     endTime: "15:45",
+    //     location: "Place 2",
+    //     remark: "",
+    //   },
+    //   {
+    //     id: 3,
+    //     selectedDate: "2023-10-17",
+    //     startTime: "15:30",
+    //     endTime: "15:45",
+    //     location: "Place 3",
+    //     remark: "",
+    //   },
+    //   {
+    //     id: 4,
+    //     selectedDate: "2023-10-17",
+    //     startTime: "13:00",
+    //     endTime: "15:00",
+    //     location: "Place 1",
+    //     remark: "",
+    //   },
+    //   {
+    //     id: 5,
+    //     selectedDate: "2023-10-18",
+    //     startTime: "15:30",
+    //     endTime: "15:45",
+    //     location: "Place 2",
+    //     remark: "",
+    //   },
+    // ]);
   }, []);
 
-  const data: Record<string, ScheduleItem[]> = {};
-  scheduleItems.forEach((item) => {
-    let date = item.selectedDate;
-    let items = data[date];
-    if (items) {
-      items.push(item);
-    } else {
-      data[date] = [item];
-    }
-  });
-
-  const [startDate, setStartDate] = useState<string>("2023-10-16");
-  const [endDate, setEndDate] = useState<string>("2023-10-27");
-
+  useEffect(() => {
+    console.log({ scheduleItems });
+    // scheduleItems.forEach((item) => {
+    //   let date = item.selectedDate;
+    //   let items = data[date];
+    //   if (items) {
+    //     items.push(item);
+    //   } else {
+    //     data[date] = [item];
+    //   }
+    // });
+    // console.log({ data });
+  }, [scheduleItems]);
   // const function addNewMarkDate() {
 
   // }
 
   const markedDates: MarkedDates = {
-    [startDate]: { startingDay: true, color: "lightgreen" },
-    [endDate]: { endingDay: true, color: "lightgreen" },
+    [startDate || new Date(Date.now()).toLocaleDateString()]: {
+      startingDay: true,
+      color: "lightgreen",
+    },
+    [endDate || new Date(Date.now()).toLocaleDateString()]: {
+      endingDay: true,
+      color: "lightgreen",
+    },
     [selectedDate]: {
       selected: true,
       disableTouchEvent: true,
       selectedColor: "blue",
     },
   };
-
-  for (let date = startDate; date <= endDate; date = nextDate(date)) {
-    markedDates[date] = {
-      startingDay: date == startDate,
-      endingDay: date == endDate,
-      color: "lightgreen",
-    };
+  if (endDate && startDate) {
+    for (
+      let date = startDate.split("T")[0];
+      date <= endDate;
+      date = nextDate(date)
+    ) {
+      console.log(date);
+      markedDates[date] = {
+        startingDay: date == startDate,
+        endingDay: date == endDate,
+        color: "lightgreen",
+      };
+    }
   }
-
   const updateScheduleList = (scheduleInfo: ScheduleItemInfo) => {
-    setScheduleItems((currentList) => {
-      const newID = (currentList.pop()?.id || -1) + 1;
-      return [...currentList, { ...scheduleInfo, id: newID }];
+    setScheduleItems((currentObject) => {
+      const current = currentObject[scheduleInfo.selectedDate as string];
+      if (current) {
+        const newID = ([...current].pop()?.id || 0) + 1;
+        currentObject[scheduleInfo.selectedDate.split("T")[0] as string] = [
+          ...current,
+          { ...scheduleInfo, id: newID },
+        ];
+      } else {
+        currentObject[scheduleInfo.selectedDate.split("T")[0] as string] = [
+          { ...scheduleInfo, id: 0 },
+        ];
+      }
+      return currentObject;
     });
     IonNeverDialog.dismiss();
   };
@@ -272,7 +287,7 @@ const AddSchedule = () => {
       <View style={{ flex: 1 }}>
         <Agenda
           markingType="period"
-          items={data}
+          items={scheduleItems}
           markedDates={markedDates}
           onDayPress={(day) => {
             console.log("press day:", day);
@@ -293,6 +308,8 @@ const AddSchedule = () => {
             </View>
           )}
           renderItem={(reservation: AgendaEntry, isFirst: boolean) => {
+            console.log({ reservation });
+
             let scheduleItem: ScheduleItem = reservation as any;
             return (
               <View>

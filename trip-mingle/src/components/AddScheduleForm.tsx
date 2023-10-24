@@ -306,6 +306,14 @@ function AddScheduleForm(props: {
       />
       <CountryCheckbox />
       <TextButton text="Add New Plan" onPress={addPlan}></TextButton>
+      <View style={PlanningStyleSheet.cancelButtonDiv}>
+        <TouchableOpacity
+          style={PlanningStyleSheet.cancelButton}
+          onPress={closeModal}
+        >
+          <Text style={PlanningStyleSheet.cancelButtonText}>Cancel</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }

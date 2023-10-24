@@ -1,5 +1,13 @@
 import { StyleSheet } from "react-native";
-import { center, flex, full, iosBlue, row, white } from "./StyleSheetHelper";
+import {
+  center,
+  flex,
+  flexEnd,
+  full,
+  iosBlue,
+  row,
+  white,
+} from "./StyleSheetHelper";
 
 const PlanningStyleSheet = StyleSheet.create({
   center: {
@@ -120,6 +128,24 @@ const PlanningStyleSheet = StyleSheet.create({
     color: "#ffffff",
     textAlign: center,
   },
+  cancelButtonDiv: {
+    width: full,
+    display: flex,
+    flexDirection: row,
+    justifyContent: flexEnd,
+    padding: 10,
+  },
+  cancelButton: {
+    width: "45%",
+    height: 60,
+    backgroundColor: "#DC3545",
+    display: flex,
+    justifyContent: center,
+    alignItems: center,
+    borderRadius: 10,
+    margin: 12,
+  },
+  cancelButtonText: { fontSize: 16, color: "#FFFFFF", textAlign: "center" },
 });
 
 export default PlanningStyleSheet;

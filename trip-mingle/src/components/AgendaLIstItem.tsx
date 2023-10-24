@@ -47,6 +47,7 @@ export default function AgendaListItem(props: {
     startTime: "",
     endTime: "",
     location: "",
+    remark: "",
   });
 
   const clearInputRef = useRef({ clearInput() {} }).current;
@@ -83,6 +84,8 @@ export default function AgendaListItem(props: {
         token
       );
       if (res.result) {
+        updateScheduleList(scheduleInfo);
+
         IonNeverDialog.show({
           type: "success",
           title: "Add a new event",
@@ -164,7 +167,6 @@ export default function AgendaListItem(props: {
             }
             // addNewEvent(scheduleItem);
             Keyboard.dismiss();
-            updateScheduleList(scheduleInfo);
           }}
         >
           <TextButton text="Add New Event" onPress={addNewEvent}></TextButton>

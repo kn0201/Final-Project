@@ -158,12 +158,16 @@ export type LanguageList = {
 };
 
 export type ScheduleItem = { id: number } & ScheduleItemInfo;
+export type ScheduleMark = { id: number } & ScheduleDate;
+
+export type ScheduleData = { [key: string]: ScheduleItem[] };
 
 export type ScheduleItemInfo = {
   selectedDate: string;
   startTime: string;
   endTime: string;
   location: string;
+  remark: string;
 };
 
 export type ScheduleDate = {
