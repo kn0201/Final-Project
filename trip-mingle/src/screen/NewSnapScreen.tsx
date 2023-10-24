@@ -232,7 +232,7 @@ export default function NewSnapScreen() {
           firstButtonVisible: true,
         });
 
-        navigation.navigate("SnapPage");
+        navigation.navigate("Snap");
       }
     } catch (error) {
       let message = String(error);
