@@ -68,8 +68,8 @@ const GOOGLE_API_KEY = "AIzaSyDkl6HfJvmSSKDGWH0L0Y183PbBuY9fjdo";
 const placeType = "tourist_attraction";
 
 const defaultCenter = {
-  latitude: 22.2782589,
-  longitude: 114.1672801,
+  latitude: 22.2782639,
+  longitude: 114.1672747,
 };
 
 export default function MapScreen({ route }: { route: any }) {
@@ -203,7 +203,7 @@ export default function MapScreen({ route }: { route: any }) {
           "MapScreen, Error fetching places, center:",
           center,
           "error:",
-          error,
+          error
         );
       });
   }, [center]);
@@ -350,7 +350,7 @@ const fetchPlacesFromGoogleMaps = async (center: LatLng): Promise<Place[]> => {
         place_id: string(),
         vicinity: string(),
         rating: optional(float()),
-      }),
+      })
     ),
   });
 
@@ -368,7 +368,7 @@ const fetchPlacesFromGoogleMaps = async (center: LatLng): Promise<Place[]> => {
       placeName: place.name,
       address: place.vicinity,
       rating: place.rating,
-    }),
+    })
   );
 
   //   const places = data.results.map(

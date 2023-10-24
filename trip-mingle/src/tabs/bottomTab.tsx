@@ -10,6 +10,7 @@ import ExplorePage from "../pages/ExplorePage";
 import SchedulePage from "../pages/SchedulePage";
 import { useToken } from "../hooks/useToken";
 import MapPage from "../pages/MapPage";
+import SnapPage from "../pages/SnapPage";
 
 const Tab = createBottomTabNavigator();
 
@@ -25,6 +26,16 @@ function MyTab() {
           tabBarLabel: "Home",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="SnapPage"
+        component={SnapPage}
+        options={{
+          tabBarLabel: "Snap",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="camera" color={color} size={size} />
           ),
         }}
       />

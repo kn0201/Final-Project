@@ -198,3 +198,34 @@ export type ApplicationInfoItem = {
   status: boolean;
   created_at: string;
 };
+
+export type bookmarkInfoItem = {
+  id: number;
+  title: string;
+  trip_country: string;
+  trip_period: string;
+  status: string;
+  created_at: string;
+  username: string;
+  avatar_path: string;
+  rating: number;
+  number_of_rating: number;
+  number_of_like: number;
+  number_of_reply: number;
+  result: boolean;
+};
+export type SnapInfo = {
+  trip_location: LocationPost[] | null;
+};
+
+export type AppliedUserItem = {
+  id: number;
+  user_id: number;
+  username: string;
+  avatar_path: string;
+  rating: number;
+  number_of_rating: number;
+  content: string[] | null;
+  status: boolean;
+  created_at: string;
+};

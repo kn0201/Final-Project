@@ -3,7 +3,8 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import SavedLocationScreen from "../screen/SavedLocationScreen";
 import MemoryScreen from "../screen/MemoryScreen";
 import ProfileScreen from "../screen/ProfileScreen";
-import LikedScreen from "../screen/LikedScreen";
+
+import BookmarkScreen from "../screen/BookmarkScreen";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -34,8 +35,8 @@ export default function UserPageTopTab() {
         options={{ tabBarLabel: "Memory" }}
       />
       <Tab.Screen
-        name="Liked"
-        component={LikedScreen}
+        name="Bookmark"
+        component={BookmarkScreen}
         options={{ tabBarLabel: "Liked" }}
       />
     </Tab.Navigator>

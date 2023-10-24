@@ -187,7 +187,7 @@ const TourDetailScreen = ({
         `/bookmark/${id}`,
         { id },
         bookmarkParser,
-        token,
+        token
       );
       setIsBookmark(!isBookmark);
       dispatchBookmarkEvent("Bookmark");
@@ -214,7 +214,7 @@ const TourDetailScreen = ({
       let result = await api.get(
         `/bookmark/${id}`,
         bookmarkStatusParser,
-        token,
+        token
       );
       setIsBookmark(result.isBookmark);
     } catch (err) {
@@ -261,7 +261,7 @@ const TourDetailScreen = ({
     setPost(post);
     setLikeNumber(likeNumber);
     getUserIcon();
-  }, []);
+  }, [token]);
   const locationNames = post?.trip_location?.map((location) => location.name);
   const locationNamesString = Array.isArray(locationNames)
     ? locationNames.join(", ")
@@ -322,7 +322,7 @@ const TourDetailScreen = ({
         `/comment/${id}/add`,
         commentInfo,
         addCommentParser,
-        token,
+        token
       );
       dispatchAddCommentEvent("AddComment");
       inputRef?.current?.clear();
@@ -378,7 +378,7 @@ const TourDetailScreen = ({
         `/application/${id}`,
         { id },
         applyTourParser,
-        token,
+        token
       );
       dispatchApplyTourEvent("ApplyTour");
       if (applicationStatus === false) {
@@ -427,7 +427,7 @@ const TourDetailScreen = ({
       let applicationStatus = await api.get(
         `/application/status/${id}`,
         applicationStatusParser,
-        token,
+        token
       );
       setApplicationStatus(applicationStatus.status);
     } catch (err) {
@@ -457,7 +457,7 @@ const TourDetailScreen = ({
     try {
       let applicationList = await api.get(
         `/application/${id}`,
-        applicationInfoParser,
+        applicationInfoParser
       );
       setApplications(applicationList);
     } catch (err) {
@@ -497,7 +497,7 @@ const TourDetailScreen = ({
                           handleAvatarClick(
                             application.user_id,
                             application.username,
-                            id,
+                            id
                           );
                         }}
                       >
@@ -603,7 +603,7 @@ const TourDetailScreen = ({
         </Card>
       </>
     ),
-    [],
+    []
   );
 
   // Display
@@ -621,7 +621,7 @@ const TourDetailScreen = ({
             style={{
               flex: keyboardShow
                 ? // ? comments?.length != undefined && comments?.length > 0
-                  0.839
+                  0.8
                 : // : 0.634
                   1,
             }}
@@ -677,12 +677,12 @@ const TourDetailScreen = ({
                           size={20}
                         />
                         <Text>{likeNumber}</Text>
-                        <TouchableOpacity onPress={bookmark}>
-                          <Ionicons
-                            name={isBookmark ? "bookmark" : "bookmark-outline"}
-                            size={20}
-                          />
-                        </TouchableOpacity>
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={bookmark}>
+                        <Ionicons
+                          name={isBookmark ? "bookmark" : "bookmark-outline"}
+                          size={20}
+                        />
                       </TouchableOpacity>
                     </View>
                   ) : (
@@ -866,7 +866,7 @@ const TourDetailScreen = ({
                 style={{ paddingRight: 10 }}
                 onPress={() => {
                   token
-                    ? submit
+                    ? submit()
                     : IonNeverDialog.show({
                         type: "info",
                         title: "You are Guest",

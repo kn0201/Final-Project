@@ -78,7 +78,7 @@ export default function PlaceDetail({ navigation }) {
     let json = await api.get(
       `/location/${id}/checkBookmark`,
       object({ result: boolean() }),
-      token,
+      token
     );
     console.log(json.result);
 
@@ -101,7 +101,7 @@ export default function PlaceDetail({ navigation }) {
         geometry: places?.geometry,
       },
       object({ result: boolean() }),
-      token,
+      token
     );
     if (json.result == true) {
       setIsBookmark(true);
@@ -116,7 +116,7 @@ export default function PlaceDetail({ navigation }) {
       "/location/bookmark",
       { place_id: places?.place_id },
       object({ result: boolean() }),
-      token,
+      token
     );
     if (json.result == false) {
       setIsBookmark(false);
@@ -177,7 +177,7 @@ export default function PlaceDetail({ navigation }) {
       opening_hours: optional(
         object({
           weekday_text: array(string()),
-        }),
+        })
       ),
       international_phone_number: optional(string()),
       website: optional(string()),
@@ -280,8 +280,7 @@ export default function PlaceDetail({ navigation }) {
             {places?.website && typeof places.website === "string" ? (
               <View style={{ flexDirection: "row" }}>
                 <Text style={{ fontSize: 16, marginBottom: 4 }}>
-                  {" "}
-                  <MaterialCommunityIcons name="web" size={16} />{" "}
+                  <MaterialCommunityIcons name="web" size={16} />
                 </Text>
                 <Text> </Text>
                 <Text
@@ -315,7 +314,7 @@ export default function PlaceDetail({ navigation }) {
                           </Text>
                         </View>
                       );
-                    },
+                    }
                   )}
                 </View>
               </>
