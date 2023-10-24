@@ -97,21 +97,19 @@ export default function ProfileScreen(props: {
   useEffect(() => {
     getProfile();
   }, []);
+
+  useEvent<UpdateProfileEvent>("UpdateProfile", (event) => {
+    getProfile();
+  });
   const [introText, setIntroText] = useState("add");
   const [selectedLanguage, setSelectedLanguage] = useState<string[]>([]);
-
   const [selectedCountry, setSelectedCountry] = useState<string[]>([]);
-
   const [selectedHobby, setSelectedHobby] = useState<string[]>([]);
-
   const [editableText, setEditableText] = useState(false);
-
   const updateInputText = (field: string, value: string) => {
     profileInfo[field as keyof ProfileInfo] = value;
   };
-
   const [editSubmit, setEditSubmit] = useState(true);
-
   const editable = useBoolean();
 
   const editProfile = "Edit Profile";
@@ -123,7 +121,7 @@ export default function ProfileScreen(props: {
         "/user/profile",
         profileInfo,
         sendProfileResultParser,
-        token,
+        token
       );
       if (json.result == true) {
         dispatchUpdateProfileEvent("UpdateProfile");
@@ -145,9 +143,9 @@ export default function ProfileScreen(props: {
 
   return (
     <>
-      <ScrollView>
+      <ScrollView style={{ backgroundColor: "white", height: "100%" }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View>
+          <View style={{ backgroundColor: "white", height: "100%" }}>
             <View style={ProfileScreenStyleSheet.editContainer}>
               <TouchableOpacity
                 onPress={() => {
@@ -195,9 +193,9 @@ export default function ProfileScreen(props: {
                 </TextInput>
               </View>
             </View>
+            <Text style={ProfileScreenStyleSheet.IntroText}>Languages</Text>
             <View style={ProfileScreenStyleSheet.center}>
               <View style={ProfileScreenStyleSheet.inputContainer}>
-                <Text>Language :</Text>
                 <Text
                   style={{
                     flex: 1,
@@ -236,9 +234,9 @@ export default function ProfileScreen(props: {
               </View>
             </View>
 
+            <Text style={ProfileScreenStyleSheet.IntroText}>Hobbies</Text>
             <View style={ProfileScreenStyleSheet.center}>
               <View style={ProfileScreenStyleSheet.inputContainer}>
-                <Text>Hobby :</Text>
                 <Text
                   style={{
                     flex: 1,
@@ -276,9 +274,11 @@ export default function ProfileScreen(props: {
                 </TouchableOpacity>
               </View>
             </View>
+            <Text style={ProfileScreenStyleSheet.IntroText}>
+              Travel History
+            </Text>
             <View style={ProfileScreenStyleSheet.center}>
               <View style={ProfileScreenStyleSheet.inputContainer}>
-                <Text>Countries Traveled :</Text>
                 <Text
                   style={{
                     flex: 1,

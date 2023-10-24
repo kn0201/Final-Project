@@ -4,9 +4,17 @@ import AddPostScreen from "../screen/AddPostScreen";
 import BuddiesPage from "../tabs/ExplorePageTopTab";
 import CommentScreen from "../screen/CommentScreen";
 import TourDetailScreen from "../screen/TourDetailScreen";
+<<<<<<< HEAD
 import OtherProfileScreen from "../screen/OtherProfileScreen";
 import ManageTourScreen from "../screen/ManageTourScreen";
 import BlogDetailScreen from "../screen/BlogDetailScreen";
+=======
+
+import OtherProfileScreen from "../screen/OtherProfileScreen";
+import ManageTourScreen from "../screen/ManageTourScreen";
+import BlogDetailScreen from "../screen/BlogDetailScreen";
+import ViewTourScreen from "../screen/ViewTourScreen";
+>>>>>>> refs/remotes/origin/main
 
 const Stack = createStackNavigator();
 
@@ -69,6 +77,16 @@ export default function ExplorePage() {
         <Stack.Screen
           name="Manage Tour"
           component={ManageTourScreen}
+          options={{
+            presentation: "modal",
+            cardStyle: {
+              backgroundColor: "white",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Tour Member"
+          component={ViewTourScreen}
           options={{
             presentation: "modal",
             cardStyle: {

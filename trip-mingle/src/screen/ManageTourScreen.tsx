@@ -11,7 +11,7 @@ import {
 import { ItemSeparatorView, setStarRating } from "./PostScreen";
 import ManageTourScreenStyleSheet from "../StyleSheet/ManageTourScreenCss";
 import { apiOrigin } from "../utils/apiOrigin";
-import { AppliedUserItem } from "../utils/types";
+import { AppliedUserItem, ConfirmedUserItem } from "../utils/types";
 import { api } from "../apis/api";
 import { acceptStatusParser, appliedUserParser } from "../utils/parser";
 import { useToken } from "../hooks/useToken";
@@ -39,7 +39,7 @@ export default function OtherProfileScreen({
   // Header
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: `Manage Tour`,
+      headerTitle: "Manage Tour",
     });
   }, []);
 

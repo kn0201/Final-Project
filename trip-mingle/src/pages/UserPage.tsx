@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  ImageBackground,
 } from "react-native";
 
 import UserPageTopTab from "../tabs/UserPageTopTab";
@@ -115,46 +116,55 @@ export default function UserPage({ navigation }) {
             </View>
           }
         ></Header>
-
-        <View style={UserPageStyleSheet.container}>
-          <Avatar
-            size={150}
-            rounded
-            containerStyle={UserPageStyleSheet.AvatarContainer}
-            source={{
-              uri: isUpload ? image : `${apiOrigin}/${result}`,
-            }}
-          />
-          <View style={UserPageStyleSheet.uploadBtnContainer}>
-            <TouchableOpacity
-              onPress={addImage}
-              style={UserPageStyleSheet.uploadBtn}
-            >
-              <AntDesign name="camera" size={20} color="black" />
-            </TouchableOpacity>
-          </View>
-          <View style={UserPageStyleSheet.usernameContainer}>
-            <Text style={UserPageStyleSheet.username}>{payload?.username}</Text>
-            <TouchableOpacity
-              style={UserPageStyleSheet.changeContainer}
-              onPress={() => {
-                IonNeverDialog.show({
-                  dialogHeight: 320,
-                  component: () => {
-                    return (
-                      <ChangeUsername
-                        username={username}
-                        navigation={navigation}
-                      />
-                    );
-                  },
-                });
+        <ImageBackground
+          source={{ uri: `${apiOrigin}/background.png` }}
+          resizeMode="contain"
+          style={UserPageStyleSheet.image}
+        >
+          <View style={UserPageStyleSheet.container}>
+            <Avatar
+              size={150}
+              rounded
+              containerStyle={UserPageStyleSheet.AvatarContainer}
+              source={{
+                uri: isUpload ? image : `${apiOrigin}/${result}`,
               }}
-            >
-              <Text style={{ fontSize: 10 }}>Change Username</Text>
-            </TouchableOpacity>
+            />
+            <View style={UserPageStyleSheet.uploadBtnContainer}>
+              <TouchableOpacity
+                onPress={addImage}
+                style={UserPageStyleSheet.uploadBtn}
+              >
+                <AntDesign name="camera" size={20} color="black" />
+              </TouchableOpacity>
+            </View>
+            <View style={UserPageStyleSheet.usernameContainer}>
+              <Text style={UserPageStyleSheet.username}>
+                {payload?.username}
+              </Text>
+              <TouchableOpacity
+                style={UserPageStyleSheet.changeContainer}
+                onPress={() => {
+                  IonNeverDialog.show({
+                    dialogHeight: 320,
+                    component: () => {
+                      return (
+                        <ChangeUsername
+                          username={username}
+                          navigation={navigation}
+                        />
+                      );
+                    },
+                  });
+                }}
+              >
+                <Text style={{ fontSize: 10, color: white }}>
+                  Change Username
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        </ImageBackground>
         <UserPageTopTab></UserPageTopTab>
       </KeyboardAvoidingView>
     </>

@@ -240,3 +240,11 @@ export type AppliedUserItem = {
   status: boolean;
   created_at: string;
 };
+
+export type ConfirmedUserItem = {
+  user_id: number;
+  username: string;
+  avatar_path: string;
+  rating: number;
+  number_of_rating: number;
+};
