@@ -51,6 +51,26 @@ export class ApplicationService {
     }
   }
 
+  async getUserAcceptStatus(post_id, req) {
+    try {
+      const payload = this.jwtService.decode(
+        req.headers.authorization.split(' ')[1],
+      );
+      let user_id = payload.user_id;
+      let application = await this.knex('application')
+        .select('status')
+        .where('post_id', post_id)
+        .andWhere('user_id', user_id)
+        .first();
+      if (application === undefined) {
+        return { status: null };
+      }
+      return { status: application.status };
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   async getAppliedUsers(id, req) {
     try {
       const payload = this.jwtService.decode(
@@ -98,6 +118,99 @@ export class ApplicationService {
         }
         console.log(appliedUsersInfo);
         return appliedUsersInfo;
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async acceptAppliedUsers(post_id, id, body, req) {
+    try {
+      const payload = this.jwtService.decode(
+        req.headers.authorization.split(' ')[1],
+      );
+      let user_id = payload.user_id;
+      const postUser = await this.knex
+        .select('user_id', 'status', 'headcount')
+        .from('post')
+        .where('id', post_id)
+        .first();
+      if (postUser.user_id !== user_id) {
+        throw new Error(
+          `Unauthorized access to accept applications for tour #${post_id}`,
+        );
+      }
+      const applicationStatus = await this.knex
+        .select('status')
+        .from('application')
+        .where('post_id', post_id)
+        .andWhere('user_id', id)
+        .first();
+      const number_of_accept_before = await this.knex
+        .count('id')
+        .from('application')
+        .where('post_id', post_id)
+        .andWhere('status', true)
+        .first();
+      if (applicationStatus.status === undefined) {
+        throw new Error(
+          `Do not have application record for user ${body.username}`,
+        );
+      }
+      if (
+        applicationStatus.status === false &&
+        postUser.status === 'open' &&
+        number_of_accept_before.count === postUser.headcount
+      ) {
+        throw new Error(
+          `The targeted member number for the tour #${post_id} has been reached`,
+        );
+      }
+      if (
+        applicationStatus.status === false &&
+        postUser.status === 'open' &&
+        number_of_accept_before.count < postUser.headcount
+      ) {
+        let updatedStatus = await this.knex('application')
+          .where('post_id', post_id)
+          .andWhere('user_id', id)
+          .update({ status: true });
+        const number_of_accept_after = await this.knex
+          .count('id')
+          .from('application')
+          .where('post_id', post_id)
+          .andWhere('status', true)
+          .first();
+        if (number_of_accept_after.count == postUser.headcount) {
+          let updatedPostStatus = await this.knex('post')
+            .where('id', post_id)
+            .update({ status: 'complete' });
+        }
+        return { status: true };
+      }
+      if (
+        applicationStatus.status === true &&
+        postUser.status !== 'close' &&
+        number_of_accept_before.count <= postUser.headcount
+      ) {
+        let updatedStatus = await this.knex('application')
+          .where('post_id', post_id)
+          .andWhere('user_id', id)
+          .update({ status: false });
+        const number_of_accept_after = await this.knex
+          .count('id')
+          .from('application')
+          .where('post_id', post_id)
+          .andWhere('status', true)
+          .first();
+        if (number_of_accept_after.count == +postUser.headcount - 1) {
+          let updatedPostStatus = await this.knex('post')
+            .where('id', post_id)
+            .update({ status: 'open' });
+        }
+        return { status: false };
+      } else {
+        throw new Error(`Please contact the administrator`);
       }
     } catch (err) {
       console.log(err);

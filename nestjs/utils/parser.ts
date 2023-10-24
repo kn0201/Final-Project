@@ -114,3 +114,7 @@ export const addBookmarkParser = object({
   }),
   address: string(),
 });
+
+export const acceptParser = object({
+  username: string(),
+});

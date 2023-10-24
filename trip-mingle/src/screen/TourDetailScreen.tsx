@@ -47,6 +47,7 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import { Card } from "react-native-paper";
 import useEvent from "react-use-event";
 import {
+  AcceptEvent,
   AddCommentEvent,
   ApplyTourEvent,
   BookmarkEvent,
@@ -73,6 +74,7 @@ const TourDetailScreen = ({
   };
 
   // Header
+  const [postStatus, setPostStatus] = useState(status);
   const maxTitleLength = 16;
   const limitedTitle =
     title.length > maxTitleLength
@@ -89,9 +91,9 @@ const TourDetailScreen = ({
             marginLeft: 15,
           }}
         >
-          {status === "open" ? (
+          {postStatus === "open" ? (
             <Fontisto name="radio-btn-active" color="#0CD320" size={16} />
-          ) : status === "complete" ? (
+          ) : postStatus === "complete" ? (
             <MaterialIcons
               name="remove-circle-outline"
               color="grey"
@@ -106,7 +108,7 @@ const TourDetailScreen = ({
         </View>
       ),
     });
-  }, [status]);
+  }, [postStatus]);
 
   // Likes
   const [isLike, setIsLike] = useState(false);
@@ -197,6 +199,7 @@ const TourDetailScreen = ({
       let postDetailData = await api.get(`/blog/${id}`, postDetailParser);
       setPost(postDetailData);
       setLikeNumber(postDetailData.number_of_like);
+      setPostStatus(postDetailData.status);
     } catch (err) {
       console.log({ err });
     }
@@ -291,13 +294,23 @@ const TourDetailScreen = ({
   };
 
   // Select avatar
-  const handleAvatarClick = (id: number, username: string, post_id: string) => {
-    navigation.navigate("Other Profile", { id, username, post_id });
+  const handleAvatarClick = (
+    id: number,
+    username: string,
+    post_id: string,
+    post_user_id?: string,
+  ) => {
+    navigation.navigate("Other Profile", {
+      id,
+      username,
+      post_id,
+      post_user_id,
+    });
   };
 
   // Manage application
-  const manage = (id: number) => {
-    navigation.navigate("Manage Tour", { id });
+  const manage = (id: number, post_user_id?: string) => {
+    navigation.navigate("Manage Tour", { id, post_user_id });
   };
 
   // Apply to join/ cancel
@@ -393,6 +406,10 @@ const TourDetailScreen = ({
   useEffect(() => {
     getApplicationList();
   }, []);
+  useEvent<AcceptEvent>("Accept", (event) => {
+    getApplicationList();
+    getPostDetail();
+  });
 
   // Display applications list
   const ApplicationAvatar = ({ headcount }: { headcount: number }) => {
@@ -406,11 +423,13 @@ const TourDetailScreen = ({
                   const application = applications[index];
                   return (
                     <TouchableWithoutFeedback
+                      key={`container-${application.id}`}
                       onPress={() => {
                         handleAvatarClick(
                           application.user_id,
                           application.username,
                           id,
+                          post?.user_id.toString(),
                         );
                       }}
                     >
@@ -451,7 +470,7 @@ const TourDetailScreen = ({
               <TouchableOpacity
                 style={TourDetailScreenStyleSheet.button}
                 onPress={() => {
-                  manage(id);
+                  manage(id, post?.user_id.toString());
                 }}
               >
                 <Text style={TourDetailScreenStyleSheet.text}>Manage</Text>
@@ -479,7 +498,14 @@ const TourDetailScreen = ({
           >
             <TouchableWithoutFeedback
               key={item.user_id}
-              onPress={() => handleAvatarClick(item.user_id, item.username, id)}
+              onPress={() =>
+                handleAvatarClick(
+                  item.user_id,
+                  item.username,
+                  id,
+                  post?.user_id.toString(),
+                )
+              }
             >
               <Image
                 style={TourDetailScreenStyleSheet.avatar}
@@ -548,7 +574,12 @@ const TourDetailScreen = ({
                     <TouchableWithoutFeedback
                       onPress={() => {
                         if (post && post.user_id) {
-                          handleAvatarClick(post.user_id, post.username, id);
+                          handleAvatarClick(
+                            post.user_id,
+                            post.username,
+                            id,
+                            post?.user_id.toString(),
+                          );
                         } else {
                           return;
                         }

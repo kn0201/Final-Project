@@ -241,5 +241,5 @@ export const appliedUserParser = nullable(
 );
 
 export const acceptStatusParser = object({
-  status: boolean(),
+  status: nullable(boolean()),
 });
