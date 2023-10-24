@@ -95,19 +95,20 @@ export class PlanningService {
     }
   }
 
-  async getMarks(user_id: number) {
+  async getMarks(plan_id: number) {
     type Row = {
       id: number;
       start_date: string;
       end_date: string;
     };
+    console.log({ plan_id });
     let marks: Row = await this.knex
       .from('plan_detail')
       .leftJoin('plan', { 'plan.id': 'plan_detail.plan_id' })
       .select('plan_id as id', 'start_date as startDate', 'end_date as endDate')
-      .where({ 'plan.user_id': user_id })
+      .where({ 'plan.id': plan_id })
       .first();
-    console.log(marks);
+    console.log({ marks });
     return { marks };
   }
 
@@ -142,7 +143,7 @@ export class PlanningService {
     }
   }
 
-  async getEvent(user_id: number) {
+  async getEvent(plan_id: number) {
     type Row = {
       id: number;
       selected_date: string;
@@ -162,7 +163,7 @@ export class PlanningService {
         'location as location',
         'remark as remark',
       )
-      .where('plan.user_id', user_id);
+      .where('plan.id', plan_id);
     console.log('backend event:', events);
 
     return events;

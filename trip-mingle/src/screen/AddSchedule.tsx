@@ -173,7 +173,6 @@ const AddSchedule = () => {
       date <= endDate;
       date = nextDate(date)
     ) {
-      console.log(date);
       markedDates[date] = {
         startingDay: date == startDate,
         endingDay: date == endDate,
@@ -257,8 +256,6 @@ const AddSchedule = () => {
             </View>
           )}
           renderItem={(reservation: AgendaEntry, isFirst: boolean) => {
-            console.log({ reservation });
-
             let scheduleItem: ScheduleItem = reservation as any;
             return (
               <View>

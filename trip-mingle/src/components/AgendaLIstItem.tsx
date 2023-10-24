@@ -21,6 +21,7 @@ import { boolean, object } from "cast.ts";
 import { useToken } from "../hooks/useToken";
 import { useAppRoute } from "../../navigators";
 import TextButton from "./TextButton";
+import { Modal } from "./Modal";
 
 function Space(props: { height: number }) {
   return (
@@ -172,8 +173,12 @@ export default function AgendaListItem(props: {
             Keyboard.dismiss();
           }}
         >
-          <TextButton text="Add New Event" onPress={addNewEvent}></TextButton>
-          {/* <Text style={PlanningStyleSheet.loginText}>Add New Event</Text> */}
+          <TextButton
+            text="Add New Event"
+            onPress={() => {
+              addNewEvent(), Keyboard.dismiss();
+            }}
+          ></TextButton>
         </TouchableOpacity>
       </TouchableOpacity>
     </View>
