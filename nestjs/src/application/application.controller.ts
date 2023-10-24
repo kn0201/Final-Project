@@ -27,6 +27,12 @@ export class ApplicationController {
   }
 
   @UseGuards(AuthGuard)
+  @Get('users/:id')
+  getAppliedUsers(@Param('id') id: string, @Req() req: Request) {
+    return this.applicationService.getAppliedUsers(+id, req);
+  }
+
+  @UseGuards(AuthGuard)
   @Post(':id')
   applyTour(@Param('id') id: string, @Body() body: Body, @Req() req: Request) {
     let input = applyTourParser.parse(body);

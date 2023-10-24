@@ -1,13 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectKnex, Knex } from 'nestjs-knex';
-import { JwtService } from 'src/jwt/jwt.service';
 
 @Injectable()
 export class LikeService {
-  constructor(
-    @InjectKnex() private readonly knex: Knex,
-    private jwtService: JwtService,
-  ) {}
+  constructor(@InjectKnex() private readonly knex: Knex) {}
 
   async getLikeNumber(id) {
     try {
@@ -17,19 +13,15 @@ export class LikeService {
         .where('post_id', id)
         .first();
       return {
-        number_of_like: number_of_like.count ? number_of_like.count : 0,
+        number_of_like: number_of_like.count || 0,
       };
     } catch (err) {
       console.log(err);
     }
   }
 
-  async getUserLikeStatus(id, req) {
+  async getUserLikeStatus(id, user_id) {
     try {
-      const payload = this.jwtService.decode(
-        req.headers.authorization.split(' ')[1],
-      );
-      let user_id = payload.user_id;
       const existingLike = await this.knex
         .select('id')
         .from('like')
@@ -46,12 +38,8 @@ export class LikeService {
     }
   }
 
-  async like(id, body, req) {
+  async like(id, body, user_id) {
     try {
-      const payload = this.jwtService.decode(
-        req.headers.authorization.split(' ')[1],
-      );
-      let user_id = payload.user_id;
       const existingLike = await this.knex
         .select('id')
         .from('like')
@@ -70,7 +58,7 @@ export class LikeService {
           .where('post_id', body.id)
           .first();
         return {
-          number_of_like: number_of_like.count ? number_of_like.count : 0,
+          number_of_like: number_of_like.count || 0,
         };
       } else {
         await this.knex('like').insert({

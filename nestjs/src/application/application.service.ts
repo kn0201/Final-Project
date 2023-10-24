@@ -23,10 +23,11 @@ export class ApplicationService {
           'application.created_at as created_at',
         )
         .where('application.post_id', id)
-        .andWhere('application.status', true);
+        .andWhere('application.status', true)
+        .orderBy('application.created_at', 'asc');
       return applications;
     } catch (err) {
-      throw err;
+      console.log(err);
     }
   }
 
@@ -45,6 +46,59 @@ export class ApplicationService {
         return { status: false };
       }
       return { status: true };
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async getAppliedUsers(id, req) {
+    try {
+      const payload = this.jwtService.decode(
+        req.headers.authorization.split(' ')[1],
+      );
+      let user_id = payload.user_id;
+      let appliedUsersInfo = [];
+      let postUser = await this.knex('post')
+        .select('user_id')
+        .where('id', id)
+        .andWhere('user_id', user_id);
+      if (!postUser) {
+        throw new Error('User not authorized');
+      } else {
+        let appliedUsers = await this.knex('users')
+          .leftJoin('image', { 'users.avatar_id': 'image.id' })
+          .leftJoin('application', { 'users.id': 'application.user_id' })
+          .select(
+            'application.id as id',
+            'users.id as user_id',
+            'users.username as username',
+            'image.path as avatar_path',
+            'users.rating as rating',
+            'application.status as status',
+            'application.created_at as created_at',
+          )
+          .where('application.post_id', id)
+          .orderBy('application.created_at', 'asc');
+        for (let appliedUser of appliedUsers) {
+          let number_of_rating = await this.knex
+            .count('id')
+            .from('rating')
+            .where('user1_id', appliedUser.user_id)
+            .first();
+          appliedUsersInfo.push({
+            id: appliedUser.id,
+            user_id: appliedUser.user_id,
+            username: appliedUser.username,
+            avatar_path: appliedUser.avatar_path,
+            rating: appliedUser.rating,
+            number_of_rating: +number_of_rating.count,
+            status: appliedUser.status,
+            created_at: appliedUser.created_at,
+          });
+        }
+        console.log(appliedUsersInfo);
+        return appliedUsersInfo;
+      }
     } catch (err) {
       console.log(err);
     }

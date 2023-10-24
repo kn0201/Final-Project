@@ -187,7 +187,7 @@ export type ProfileInfoItem = {
   hobby: string[] | null;
   countries_travelled: string[] | null;
   number_of_rating: number;
-  // application_status: boolean | null;
+  application_status: boolean | null;
 };
 
 export type ApplicationInfoItem = {
@@ -214,6 +214,7 @@ export type bookmarkInfoItem = {
   number_of_reply: number;
   result: boolean;
 };
+
 export type SnapInfo = {
   trip_location: LocationPost[] | null;
 };
@@ -225,7 +226,6 @@ export type AppliedUserItem = {
   avatar_path: string;
   rating: number;
   number_of_rating: number;
-  content: string[] | null;
   status: boolean;
   created_at: string;
 };
