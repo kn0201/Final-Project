@@ -55,6 +55,7 @@ import {
   LoginEvent,
   UpdateProfileEvent,
 } from "../utils/events";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const TourDetailScreen = ({
   route,
@@ -631,14 +632,26 @@ const TourDetailScreen = ({
                           name={isLike ? "like1" : "like2"}
                           size={20}
                         />
+                        <Text>{likeNumber}</Text>
                       </TouchableOpacity>
-                      <Text>{likeNumber}</Text>
-                      <TouchableOpacity onPress={bookmark}>
+                      <TouchableOpacity
+                        style={{ marginTop: 2 }}
+                        onPress={bookmark}
+                      >
                         <Ionicons
                           name={isBookmark ? "bookmark" : "bookmark-outline"}
                           size={20}
                         />
                       </TouchableOpacity>
+                      <TouchableWithoutFeedback
+                        style={{ marginTop: 2 }}
+                        onPress={() => alert("This is a button!")}
+                      >
+                        <MaterialCommunityIcons
+                          name="dots-vertical"
+                          size={26}
+                        />
+                      </TouchableWithoutFeedback>
                     </View>
                   ) : (
                     <></>
