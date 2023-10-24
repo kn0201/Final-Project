@@ -678,12 +678,12 @@ const TourDetailScreen = ({
                           size={20}
                         />
                         <Text>{likeNumber}</Text>
-                        <TouchableOpacity onPress={bookmark}>
-                          <Ionicons
-                            name={isBookmark ? "bookmark" : "bookmark-outline"}
-                            size={20}
-                          />
-                        </TouchableOpacity>
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={bookmark}>
+                        <Ionicons
+                          name={isBookmark ? "bookmark" : "bookmark-outline"}
+                          size={20}
+                        />
                       </TouchableOpacity>
                     </View>
                   ) : (
@@ -867,7 +867,7 @@ const TourDetailScreen = ({
                 style={{ paddingRight: 10 }}
                 onPress={() => {
                   token
-                    ? submit
+                    ? submit()
                     : IonNeverDialog.show({
                         type: "info",
                         title: "You are Guest",
