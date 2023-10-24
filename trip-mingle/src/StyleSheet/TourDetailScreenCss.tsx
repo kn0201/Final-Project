@@ -115,6 +115,16 @@ const TourDetailScreenStyleSheet = StyleSheet.create({
     color: theme.primaryTextColor,
     textAlign: "center",
   },
+  modalContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 10,
+    borderRadius: 10,
+    position: "absolute",
+    top: 150,
+    right: 20,
+    zIndex: 1,
+  },
 });
 
 export default TourDetailScreenStyleSheet;

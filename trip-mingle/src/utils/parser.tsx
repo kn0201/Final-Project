@@ -243,3 +243,15 @@ export const appliedUserParser = nullable(
 export const acceptStatusParser = object({
   status: nullable(boolean()),
 });
+
+export const deletePostParser = object({ result: boolean() });
+
+export const confirmedUserParser = array(
+  object({
+    user_id: number(),
+    username: string(),
+    avatar_path: string(),
+    rating: number(),
+    number_of_rating: number(),
+  }),
+);
