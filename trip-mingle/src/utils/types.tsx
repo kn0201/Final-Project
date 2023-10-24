@@ -248,3 +248,17 @@ export type ConfirmedUserItem = {
   rating: number;
   number_of_rating: number;
 };
+
+export type Snap = {
+  post_id: number;
+  user_id: number;
+  username: string;
+  content: string | null;
+  created_at: string;
+  location_name: string | null;
+  image_path: string | null;
+  avatar_id: number;
+  avatar_path: string;
+  likeCount: number;
+  isLike: boolean;
+};

@@ -80,7 +80,6 @@ export default function PlaceDetail({ navigation }) {
       object({ result: boolean() }),
       token
     );
-    console.log(json.result);
 
     if (json.result == true) {
       setIsBookmark(true);
@@ -90,8 +89,6 @@ export default function PlaceDetail({ navigation }) {
   };
 
   const bookmark = async () => {
-    console.log("add");
-
     let json = await api.post(
       "/location/bookmark",
       {
@@ -110,8 +107,6 @@ export default function PlaceDetail({ navigation }) {
   };
 
   const deleteBookmark = async () => {
-    console.log("delete");
-
     let json = await api.patch(
       "/location/bookmark",
       { place_id: places?.place_id },

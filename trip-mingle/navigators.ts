@@ -64,7 +64,8 @@ export interface AppParamList {
     };
   };
   NewSnap: undefined;
-  Comment: undefined;
+  Comment: { post_id: number };
+  "Other Profile": { id: number; username: string; post_id: string };
   Snap: undefined;
 }
 

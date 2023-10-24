@@ -58,6 +58,7 @@ export const SnapScreenStyleSheet = StyleSheet.create({
     paddingTop: 8,
     alignItems: "flex-end",
     gap: 4,
+    marginBottom: 4,
   },
   timeContainer: {
     alignSelf: "flex-start",

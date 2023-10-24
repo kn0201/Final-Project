@@ -97,8 +97,6 @@ export let api2 = {
 
 export class ApiService {
   async get<T>(path: string, parser: Parser<T>, token?: string) {
-    console.log("api.get:", apiOrigin + path);
-
     let res = await fetch(apiOrigin + path, {
       headers: {
         Accept: "application/json",
@@ -106,7 +104,7 @@ export class ApiService {
       },
     });
     let json = await res.json();
-    console.log(json);
+
     if (json.error) {
       //   this.alertService.showError(json.error)
 
@@ -125,7 +123,7 @@ export class ApiService {
       body: JSON.stringify(body),
     });
     let json = await res.json();
-    console.log({ json });
+
     if (json.error) {
       //   this.alertService.showError(json.error)
       throw new Error(json.error);

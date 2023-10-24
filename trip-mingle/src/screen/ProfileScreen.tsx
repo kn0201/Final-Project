@@ -138,7 +138,6 @@ export default function ProfileScreen(props: {
       const errorObject: any = { ...(error as object) };
       console.log(errorObject);
     }
-    console.log(profileInfo);
   };
 
   return (

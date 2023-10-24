@@ -23,12 +23,10 @@ export default function OtherProfileScreen({
   let login_user_id = payload?.user_id;
 
   // Params
-  const { id, username, post_id, post_user_id } = route.params || {
-    id: 0,
-    username: "User Profile",
-    post_id: 0,
-    post_user_id: 0,
-  };
+  const id = route.params.id || 0;
+  const username = route.params.username || "User Profile";
+  const post_id = route.params.post_id || 0;
+  const post_user_id = route.params.post_user_id || 0;
 
   // Header
   useEffect(() => {
@@ -55,7 +53,7 @@ export default function OtherProfileScreen({
         `/application/${post_id}/${id}`,
         { username },
         acceptStatusParser,
-        token,
+        token
       );
       if (isAccept !== null) {
         setIsAccept(!isAccept);
@@ -74,7 +72,7 @@ export default function OtherProfileScreen({
   const getProfile = async () => {
     let profile = await api.get(
       `/user/${post_id}/${id}`,
-      getOtherProfileParser,
+      getOtherProfileParser
     );
     setProfileInfo(profile);
   };

@@ -59,7 +59,6 @@ export default function NewSnapScreen() {
   const code = null;
   const type = "snap";
   const addImage = async () => {
-    console.log("addImage");
     let imagePickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -88,7 +87,7 @@ export default function NewSnapScreen() {
       type,
       name: filename,
     };
-    console.log("image file:", file);
+
     setImageFile({
       uri: file.uri,
       file: file as unknown as File,
@@ -202,7 +201,6 @@ export default function NewSnapScreen() {
       return;
     }
 
-    console.log("add plan");
     try {
       let formData = new FormData();
       if (imageFile) {
@@ -215,7 +213,6 @@ export default function NewSnapScreen() {
       formData.append("latitude", spotInfo.latitude.toString());
       formData.append("longitude", spotInfo.longitude.toString());
       formData.append("content", content);
-      console.log(formData);
 
       let json = await api2.upload(
         "/snap",
@@ -288,7 +285,6 @@ export default function NewSnapScreen() {
                 }}
                 onChangeText={(content) => {
                   setContent(content);
-                  console.log(content);
                 }}
                 placeholder="Post Content"
                 style={{ width: full, height: full }}
