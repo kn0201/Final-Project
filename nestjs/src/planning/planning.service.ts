@@ -97,18 +97,17 @@ export class PlanningService {
 
   async getMarks(user_id: number) {
     type Row = {
-      plan_id: number;
+      id: number;
       start_date: string;
       end_date: string;
     };
-    let marks: Row[] = await this.knex
+    let marks: Row = await this.knex
       .from('plan_detail')
-      .select(
-        'plan.id as plan_id',
-        'start.time as start_time',
-        'end.time as end_time',
-      )
-      .where({ 'plan.user_id': user_id });
+      .leftJoin('plan', { 'plan.id': 'plan_detail.plan_id' })
+      .select('plan_id as id', 'start_date as startDate', 'end_date as endDate')
+      .where({ 'plan.user_id': user_id })
+      .first();
+    console.log(marks);
     return { marks };
   }
 
@@ -141,5 +140,31 @@ export class PlanningService {
       });
       return { result: true };
     }
+  }
+
+  async getEvent(user_id: number) {
+    type Row = {
+      id: number;
+      selected_date: string;
+      start_date: string;
+      end_date: string;
+      location: string;
+      remark: string;
+    };
+    let events: Row[] = await this.knex
+      .from('daily_event')
+      .leftJoin('plan', { 'plan.id': 'daily_event.plan_id' })
+      .select(
+        'plan_id as id',
+        'selected_date as selectedDate',
+        'start_time as startTime',
+        'end_time as endTime',
+        'location as location',
+        'remark as remark',
+      )
+      .where('plan.user_id', user_id);
+    console.log('backend event:', events);
+
+    return events;
   }
 }

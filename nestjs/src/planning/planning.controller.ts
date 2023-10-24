@@ -97,7 +97,18 @@ export class PlanningController {
     @Param('plan_id') plan_id: string,
     @Param('mark') mark: string,
   ) {
+    console.log('mark backend!!!!!!!!!!');
     return this.planningService.getMarks(+plan_id);
+  }
+
+  @Get(':plan_id/event')
+  async getEvent(
+    @Param('plan_id') plan_id: string,
+    // @Param('event') event: string,
+  ) {
+    console.log('event backend!!!!!!!!!!');
+    //   this.planningService.getEvent(+plan_id),
+    return this.planningService.getEvent(+plan_id);
   }
 
   @Post(':plan_id/event')
