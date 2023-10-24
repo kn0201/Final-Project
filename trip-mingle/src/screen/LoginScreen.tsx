@@ -4,7 +4,6 @@ import {
   Text,
   Keyboard,
   TouchableWithoutFeedback,
-  Pressable,
   TextInput,
   TouchableOpacity,
 } from "react-native";
@@ -13,18 +12,19 @@ import { Avatar } from "@rneui/themed";
 import LoginScreenStyleSheet from "../StyleSheet/LoginScreenCss";
 import { LoginInfo } from "../utils/types";
 import { api } from "../apis/api";
-
 import { flex } from "../StyleSheet/StyleSheetHelper";
 import { loginResultParser } from "../utils/parser";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import decode from "jwt-decode";
 import { JWTPayload, useToken } from "../hooks/useToken";
-//@ts-ignore
+import useEvent from "react-use-event";
+import { LoginEvent } from "../utils/events";
 
+//@ts-ignore
 export default function LoginScreen({ navigation }) {
   const { token, payload, setToken } = useToken();
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
-
+  const dispatchLoginEvent = useEvent<LoginEvent>("Login");
   const [showPassword, setPassword] = useState(true);
   const password = () => {
     setPassword(!showPassword);
@@ -55,6 +55,7 @@ export default function LoginScreen({ navigation }) {
 
       Object.entries(clearInputs).map(([_key, clear]) => clear());
       if (json.token) {
+        dispatchLoginEvent("Login");
         navigation.navigate("Users");
         loginAlert(username);
       }

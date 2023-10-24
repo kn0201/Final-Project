@@ -30,6 +30,8 @@ import { JWTPayload, useToken } from "../hooks/useToken";
 import decode from "jwt-decode";
 import { apiOrigin } from "../utils/apiOrigin";
 import { useGet } from "../hooks/useGet";
+import useEvent from "react-use-event";
+import { LoginEvent } from "../utils/events";
 
 // @ts-ignore
 export default function RegisterScreen({ navigation }) {
@@ -123,7 +125,7 @@ export default function RegisterScreen({ navigation }) {
       let checker = await api.loginSignUp(
         "/login/check_username",
         { username: text },
-        checkResultParser
+        checkResultParser,
       );
       if (checker.result === true) {
         setCheckUsernameResult(true);
@@ -141,7 +143,7 @@ export default function RegisterScreen({ navigation }) {
       let checker = await api.loginSignUp(
         "/login/check_email",
         { email: text },
-        checkResultParser
+        checkResultParser,
       );
       if (checker.result === true) {
         setCheckEmailResult(true);

@@ -124,3 +124,7 @@ export const addSnapParser = object({
   longitude: number(),
   content: string(),
 });
+
+export const acceptParser = object({
+  username: string(),
+});

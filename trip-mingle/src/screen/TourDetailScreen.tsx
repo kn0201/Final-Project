@@ -47,12 +47,14 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import { Card } from "react-native-paper";
 import useEvent from "react-use-event";
 import {
+  AcceptEvent,
   AddCommentEvent,
   ApplyTourEvent,
   BookmarkEvent,
   LikeEvent,
+  LoginEvent,
+  UpdateProfileEvent,
 } from "../utils/events";
-import { useGet } from "../hooks/useGet";
 
 const TourDetailScreen = ({
   route,
@@ -74,6 +76,7 @@ const TourDetailScreen = ({
   };
 
   // Header
+  const [postStatus, setPostStatus] = useState(status);
   const maxTitleLength = 16;
   const limitedTitle =
     title.length > maxTitleLength
@@ -90,9 +93,9 @@ const TourDetailScreen = ({
             marginLeft: 15,
           }}
         >
-          {status === "open" ? (
+          {postStatus === "open" ? (
             <Fontisto name="radio-btn-active" color="#0CD320" size={16} />
-          ) : status === "complete" ? (
+          ) : postStatus === "complete" ? (
             <MaterialIcons
               name="remove-circle-outline"
               color="grey"
@@ -107,7 +110,7 @@ const TourDetailScreen = ({
         </View>
       ),
     });
-  }, [status]);
+  }, [postStatus]);
 
   // Likes
   const [isLike, setIsLike] = useState(false);
@@ -120,15 +123,6 @@ const TourDetailScreen = ({
       setIsLike(!isLike);
       dispatchLikeEvent("Like");
     } catch (err) {
-      IonNeverDialog.show({
-        type: "warning",
-        title: "Error",
-        message: `${err}`,
-        firstButtonVisible: true,
-        firstButtonFunction: () => {
-          IonNeverDialog.dismiss();
-        },
-      });
       console.log({ err });
     }
   };
@@ -142,15 +136,6 @@ const TourDetailScreen = ({
       let result = await api.get(`/like/${id}`, likeParser);
       setLikeNumber(result.number_of_like);
     } catch (err) {
-      IonNeverDialog.show({
-        type: "warning",
-        title: "Error",
-        message: `${err}`,
-        firstButtonVisible: true,
-        firstButtonFunction: () => {
-          IonNeverDialog.dismiss();
-        },
-      });
       console.log({ err });
     }
   };
@@ -159,15 +144,6 @@ const TourDetailScreen = ({
       let result = await api.get(`/like/status/${id}`, likeStatusParser, token);
       setIsLike(result.isLike);
     } catch (err) {
-      IonNeverDialog.show({
-        type: "warning",
-        title: "Error",
-        message: `${err}`,
-        firstButtonVisible: true,
-        firstButtonFunction: () => {
-          IonNeverDialog.dismiss();
-        },
-      });
       console.log({ err });
     }
   };
@@ -192,15 +168,6 @@ const TourDetailScreen = ({
       setIsBookmark(!isBookmark);
       dispatchBookmarkEvent("Bookmark");
     } catch (err) {
-      IonNeverDialog.show({
-        type: "warning",
-        title: "Error",
-        message: `${err}`,
-        firstButtonVisible: true,
-        firstButtonFunction: () => {
-          IonNeverDialog.dismiss();
-        },
-      });
       console.log({ err });
     }
   };
@@ -218,15 +185,6 @@ const TourDetailScreen = ({
       );
       setIsBookmark(result.isBookmark);
     } catch (err) {
-      IonNeverDialog.show({
-        type: "warning",
-        title: "Error",
-        message: `${err}`,
-        firstButtonVisible: true,
-        firstButtonFunction: () => {
-          IonNeverDialog.dismiss();
-        },
-      });
       console.log({ err });
     }
   };
@@ -243,25 +201,14 @@ const TourDetailScreen = ({
       let postDetailData = await api.get(`/blog/${id}`, postDetailParser);
       setPost(postDetailData);
       setLikeNumber(postDetailData.number_of_like);
+      setPostStatus(postDetailData.status);
     } catch (err) {
-      IonNeverDialog.show({
-        type: "warning",
-        title: "Error",
-        message: `${err}`,
-        firstButtonVisible: true,
-        firstButtonFunction: () => {
-          IonNeverDialog.dismiss();
-        },
-      });
       console.log({ err });
     }
   };
   useEffect(() => {
     getPostDetail();
-    setPost(post);
-    setLikeNumber(likeNumber);
-    getUserIcon();
-  }, [token]);
+  }, []);
 
   const locationNames = post?.trip_location?.map((location) => location.name);
   const locationNamesString = Array.isArray(locationNames)
@@ -275,15 +222,6 @@ const TourDetailScreen = ({
       let commentInfoData = await api.get(`/comment/${id}`, commentInfoParser);
       setComments(commentInfoData);
     } catch (err) {
-      IonNeverDialog.show({
-        type: "warning",
-        title: "Error",
-        message: `${err}`,
-        firstButtonVisible: true,
-        firstButtonFunction: () => {
-          IonNeverDialog.dismiss();
-        },
-      });
       console.log({ err });
     }
   };
@@ -358,13 +296,23 @@ const TourDetailScreen = ({
   };
 
   // Select avatar
-  const handleAvatarClick = (id: number, username: string, post_id: string) => {
-    navigation.navigate("Other Profile", { id, username, post_id });
+  const handleAvatarClick = (
+    id: number,
+    username: string,
+    post_id: string,
+    post_user_id?: string
+  ) => {
+    navigation.navigate("Other Profile", {
+      id,
+      username,
+      post_id,
+      post_user_id,
+    });
   };
 
   // Manage application
-  const manage = (id: number) => {
-    navigation.navigate("Manage Tour", { id });
+  const manage = (id: number, post_user_id?: string) => {
+    navigation.navigate("Manage Tour", { id, post_user_id });
   };
 
   // Apply to join/ cancel
@@ -420,6 +368,7 @@ const TourDetailScreen = ({
   };
   useEvent<AddCommentEvent>("AddComment", (event) => {
     getApplicationStatus();
+    getApplicationList();
   });
 
   // Get applications status
@@ -432,15 +381,6 @@ const TourDetailScreen = ({
       );
       setApplicationStatus(applicationStatus.status);
     } catch (err) {
-      IonNeverDialog.show({
-        type: "warning",
-        title: "Error",
-        message: `${err}`,
-        firstButtonVisible: true,
-        firstButtonFunction: () => {
-          IonNeverDialog.dismiss();
-        },
-      });
       console.log({ err });
     }
   };
@@ -462,96 +402,98 @@ const TourDetailScreen = ({
       );
       setApplications(applicationList);
     } catch (err) {
-      IonNeverDialog.show({
-        type: "warning",
-        title: "Error",
-        message: `${err}`,
-        firstButtonVisible: true,
-        firstButtonFunction: () => {
-          IonNeverDialog.dismiss();
-        },
-      });
       console.log({ err });
     }
   };
   useEffect(() => {
     getApplicationList();
   }, []);
-  // useEvent<AddCommentEvent>("AddComment", (event) => {
-  //   getCommentInfo();
-  // });
+  useEvent<AcceptEvent>("Accept", (event) => {
+    getApplicationList();
+    getPostDetail();
+  });
+  useEvent<LoginEvent>("Login", (event) => {
+    getApplicationStatus();
+    getUserBookmarkStatus();
+    getUserLikeStatus();
+    navigation.pop();
+  });
+  useEvent<UpdateProfileEvent>("UpdateProfile", (event) => {
+    getApplicationList();
+    getPostDetail();
+    getUserIcon();
+    getCommentInfo();
+  });
 
   // Display applications list
   const ApplicationAvatar = ({ headcount }: { headcount: number }) => {
     return (
       <View style={{ maxHeight: 50 }}>
-        {token ? (
-          <View style={TourDetailScreenStyleSheet.applyContainer}>
-            <ScrollView style={{ flex: 0 }}>
-              <View style={TourDetailScreenStyleSheet.applyRowContainer}>
-                {Array.from({ length: headcount }, (_, index) => {
-                  if (applications && index < applications.length) {
-                    const application = applications[index];
-                    return (
-                      <TouchableWithoutFeedback
-                        onPress={() => {
-                          handleAvatarClick(
-                            application.user_id,
-                            application.username,
-                            id
-                          );
-                        }}
-                      >
-                        <Image
-                          key={`application-${application.id}`}
-                          style={TourDetailScreenStyleSheet.avatar}
-                          source={{
-                            uri: `${apiOrigin}/${
-                              application.avatar_path || "yukimin.png"
-                            }`,
-                          }}
-                        />
-                      </TouchableWithoutFeedback>
-                    );
-                  } else {
-                    return (
+        <View style={TourDetailScreenStyleSheet.applyContainer}>
+          <ScrollView style={{ flex: 0 }}>
+            <View style={TourDetailScreenStyleSheet.applyRowContainer}>
+              {Array.from({ length: headcount }, (_, index) => {
+                if (applications && index < applications.length) {
+                  const application = applications[index];
+                  return (
+                    <TouchableWithoutFeedback
+                      key={`container-${application.id}`}
+                      onPress={() => {
+                        handleAvatarClick(
+                          application.user_id,
+                          application.username,
+                          id,
+                          post?.user_id.toString()
+                        );
+                      }}
+                    >
                       <Image
-                        key={`default-${index}`}
+                        key={`application-${application.id}`}
                         style={TourDetailScreenStyleSheet.avatar}
-                        source={{ uri: `${apiOrigin}/yukimin.png` }}
+                        source={{
+                          uri: `${apiOrigin}/${
+                            application.avatar_path || "yukimin.png"
+                          }`,
+                        }}
                       />
-                    );
-                  }
-                })}
-              </View>
-            </ScrollView>
-            {token ? (
-              login_user_id !== post?.user_id ? (
-                <TouchableOpacity
-                  style={TourDetailScreenStyleSheet.button}
-                  onPress={apply}
-                >
-                  <Text style={TourDetailScreenStyleSheet.text}>
-                    {applicationStatus === false ? "Apply" : "Applied"}
-                  </Text>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  style={TourDetailScreenStyleSheet.button}
-                  onPress={() => {
-                    manage(id);
-                  }}
-                >
-                  <Text style={TourDetailScreenStyleSheet.text}>Manage</Text>
-                </TouchableOpacity>
-              )
+                    </TouchableWithoutFeedback>
+                  );
+                } else {
+                  return (
+                    <Image
+                      key={`default-${index}`}
+                      style={TourDetailScreenStyleSheet.avatar}
+                      source={{ uri: `${apiOrigin}/yukimin.png` }}
+                    />
+                  );
+                }
+              })}
+            </View>
+          </ScrollView>
+          {token ? (
+            login_user_id !== post?.user_id ? (
+              <TouchableOpacity
+                style={TourDetailScreenStyleSheet.button}
+                onPress={apply}
+              >
+                <Text style={TourDetailScreenStyleSheet.text}>
+                  {applicationStatus === false ? "Apply" : "Applied"}
+                </Text>
+              </TouchableOpacity>
             ) : (
-              <></>
-            )}
-          </View>
-        ) : (
-          <></>
-        )}
+              <TouchableOpacity
+                style={TourDetailScreenStyleSheet.button}
+                onPress={() => {
+                  manage(id, post?.user_id.toString());
+                }}
+              >
+                <Text style={TourDetailScreenStyleSheet.text}>Manage</Text>
+              </TouchableOpacity>
+            )
+          ) : (
+            <></>
+          )}
+        </View>
       </View>
     );
   };
@@ -570,7 +512,14 @@ const TourDetailScreen = ({
           >
             <TouchableWithoutFeedback
               key={item.user_id}
-              onPress={() => handleAvatarClick(item.user_id, item.username, id)}
+              onPress={() =>
+                handleAvatarClick(
+                  item.user_id,
+                  item.username,
+                  id,
+                  post?.user_id.toString()
+                )
+              }
             >
               <Image
                 style={TourDetailScreenStyleSheet.avatar}
@@ -639,7 +588,12 @@ const TourDetailScreen = ({
                     <TouchableWithoutFeedback
                       onPress={() => {
                         if (post && post.user_id) {
-                          handleAvatarClick(post.user_id, post.username, id);
+                          handleAvatarClick(
+                            post.user_id,
+                            post.username,
+                            id,
+                            post?.user_id.toString()
+                          );
                         } else {
                           return;
                         }
@@ -677,8 +631,8 @@ const TourDetailScreen = ({
                           name={isLike ? "like1" : "like2"}
                           size={20}
                         />
-                        <Text>{likeNumber}</Text>
                       </TouchableOpacity>
+                      <Text>{likeNumber}</Text>
                       <TouchableOpacity onPress={bookmark}>
                         <Ionicons
                           name={isBookmark ? "bookmark" : "bookmark-outline"}

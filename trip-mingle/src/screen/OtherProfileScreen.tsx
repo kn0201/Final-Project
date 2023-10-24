@@ -1,13 +1,16 @@
 //Buffer Line
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
 import { ProfileInfoItem } from "../utils/types";
 import { api } from "../apis/api";
-import { getOtherProfileParser } from "../utils/parser";
+import { acceptStatusParser, getOtherProfileParser } from "../utils/parser";
 import OtherProfileScreenStyleSheet from "../StyleSheet/OtherProfileScreenCss";
 import { Avatar } from "@rneui/themed";
 import { apiOrigin } from "../utils/apiOrigin";
 import { setStarRating } from "./PostScreen";
+import { useToken } from "../hooks/useToken";
+import { AcceptEvent, LoginEvent, UpdateProfileEvent } from "../utils/events";
+import useEvent from "react-use-event";
 
 export default function OtherProfileScreen({
   route,
@@ -16,11 +19,15 @@ export default function OtherProfileScreen({
   route: any;
   navigation: any;
 }) {
+  const { token, payload, setToken } = useToken();
+  let login_user_id = payload?.user_id;
+
   // Params
-  const { id, username, post_id } = route.params || {
+  const { id, username, post_id, post_user_id } = route.params || {
     id: 0,
     username: "User Profile",
     post_id: 0,
+    post_user_id: 0,
   };
 
   // Header
@@ -39,6 +46,29 @@ export default function OtherProfileScreen({
     });
   }, []);
 
+  // Accept application
+  const [isAccept, setIsAccept] = useState<boolean | null>();
+  const dispatchAcceptEvent = useEvent<AcceptEvent>("Accept");
+  const accept = async () => {
+    try {
+      let updatedStatus = await api.patch(
+        `/application/${post_id}/${id}`,
+        { username },
+        acceptStatusParser,
+        token,
+      );
+      if (isAccept !== null) {
+        setIsAccept(!isAccept);
+      }
+      dispatchAcceptEvent("Accept");
+    } catch (err) {
+      console.log({ err });
+    }
+  };
+  useEvent<AcceptEvent>("Accept", (event) => {
+    getProfile();
+  });
+
   // Get other user profile
   const [profileInfo, setProfileInfo] = useState<ProfileInfoItem>();
   const getProfile = async () => {
@@ -51,6 +81,12 @@ export default function OtherProfileScreen({
   useEffect(() => {
     getProfile();
   }, []);
+  useEvent<UpdateProfileEvent>("UpdateProfile", (event) => {
+    getProfile();
+  });
+  useEvent<LoginEvent>("Login", (event) => {
+    navigation.pop(2);
+  });
   const introString = profileInfo?.intro != null ? profileInfo?.intro : "";
   const languagesString = Array.isArray(profileInfo?.language)
     ? profileInfo?.language.join(", ")
@@ -99,7 +135,7 @@ export default function OtherProfileScreen({
           <View style={OtherProfileScreenStyleSheet.center}>
             <View style={OtherProfileScreenStyleSheet.inputContainer}>
               <Text style={OtherProfileScreenStyleSheet.inputText}>
-                {profileInfo?.gender === true ? "Male" : "Female"}
+                {profileInfo?.gender === true ? "Female" : "Male"}
               </Text>
             </View>
           </View>
@@ -150,6 +186,28 @@ export default function OtherProfileScreen({
             </View>
           </View>
         </View>
+        {login_user_id == post_user_id &&
+        profileInfo?.application_status != null ? (
+          <View
+            style={{
+              paddingBottom: 13,
+              paddingLeft: 10,
+              paddingRight: 10,
+              paddingTop: 5,
+            }}
+          >
+            <TouchableOpacity
+              style={OtherProfileScreenStyleSheet.button}
+              onPress={accept}
+            >
+              <Text style={OtherProfileScreenStyleSheet.text}>
+                {profileInfo.application_status === false
+                  ? `Accept the application for tour #${post_id}`
+                  : `Cancel the application for tour #${post_id}`}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
       </ScrollView>
     </>
   );

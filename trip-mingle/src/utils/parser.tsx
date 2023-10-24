@@ -185,7 +185,7 @@ export const getOtherProfileParser = object({
   hobby: nullable(array(string())),
   countries_travelled: nullable(array(string())),
   number_of_rating: number(),
-  // application_status: nullable(boolean()),
+  application_status: nullable(boolean()),
 });
 
 export const applicationInfoParser = nullable(
@@ -234,9 +234,12 @@ export const appliedUserParser = nullable(
       avatar_path: string(),
       rating: number(),
       number_of_rating: number(),
-      content: nullable(array(string())),
       status: boolean(),
       created_at: string(),
     }),
   ),
 );
+
+export const acceptStatusParser = object({
+  status: nullable(boolean()),
+});
