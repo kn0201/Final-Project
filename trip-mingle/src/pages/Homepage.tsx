@@ -119,6 +119,7 @@ export default function HomePage() {
                 <ImageBackground
                   source={{ uri: `${apiOrigin}/tokyo.jpg` }}
                   resizeMode="cover"
+                  imageStyle={{ borderRadius: 10 }}
                   style={HomePageStyleSheet.imageBackground}
                 >
                   <TouchableOpacity
@@ -133,6 +134,7 @@ export default function HomePage() {
                 <ImageBackground
                   source={{ uri: `${apiOrigin}/osaka.jpg` }}
                   resizeMode="cover"
+                  imageStyle={{ borderRadius: 10 }}
                   style={HomePageStyleSheet.imageBackground}
                 >
                   <TouchableOpacity
@@ -147,6 +149,7 @@ export default function HomePage() {
                 <ImageBackground
                   source={{ uri: `${apiOrigin}/kyoto.jpg` }}
                   resizeMode="cover"
+                  imageStyle={{ borderRadius: 10 }}
                   style={HomePageStyleSheet.imageBackground}
                 >
                   <TouchableOpacity
@@ -161,6 +164,7 @@ export default function HomePage() {
                 <ImageBackground
                   source={{ uri: `${apiOrigin}/taipei.jpg` }}
                   resizeMode="cover"
+                  imageStyle={{ borderRadius: 10 }}
                   style={HomePageStyleSheet.imageBackground}
                 >
                   <TouchableOpacity
@@ -175,6 +179,7 @@ export default function HomePage() {
                 <ImageBackground
                   source={{ uri: `${apiOrigin}/seoul.jpg` }}
                   resizeMode="cover"
+                  imageStyle={{ borderRadius: 10 }}
                   style={HomePageStyleSheet.imageBackground}
                 >
                   <TouchableOpacity
@@ -189,6 +194,7 @@ export default function HomePage() {
                 <ImageBackground
                   source={{ uri: `${apiOrigin}/bangkok.jpg` }}
                   resizeMode="cover"
+                  imageStyle={{ borderRadius: 10 }}
                   style={HomePageStyleSheet.imageBackground}
                 >
                   <TouchableOpacity
