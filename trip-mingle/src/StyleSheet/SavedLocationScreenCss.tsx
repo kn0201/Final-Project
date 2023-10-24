@@ -8,10 +8,12 @@ const SavedLocationScreenStyleSheet = StyleSheet.create({
     // justifyContent: center,
     alignItems: center,
     width: "100%",
-    marginVertical: 8,
+
     height: full,
+    backgroundColor: white,
   },
   outerContainer: {
+    marginVertical: 8,
     display: flex,
     height: 80,
     width: 400,

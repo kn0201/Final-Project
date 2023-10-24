@@ -40,6 +40,7 @@ const ProfileScreenStyleSheet = StyleSheet.create({
     height: 80,
     borderWidth: 1,
     borderRadius: 10,
+    marginBottom: 8,
   },
   IntroText: {
     fontSize: 18,
@@ -53,7 +54,7 @@ const ProfileScreenStyleSheet = StyleSheet.create({
     justifyContent: "space-between",
     height: 60,
     width: "95%",
-    marginVertical: 8,
+    marginBottom: 8,
     borderWidth: 1,
     borderRadius: 10,
     padding: 8,
@@ -65,6 +66,7 @@ const ProfileScreenStyleSheet = StyleSheet.create({
     justifyContent: "flex-end",
     marginTop: 8,
     marginEnd: "2.5%",
+    backgroundColor: white,
   },
   editButton: {
     display: flex,

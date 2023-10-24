@@ -4,7 +4,8 @@ import { center, flex, row, white } from "./StyleSheetHelper";
 
 const UserPageStyleSheet = StyleSheet.create({
   container: {
-    backgroundColor: "#D3D3D3",
+    // backgroundColor: "#FFFFFF",
+
     alignItems: "center",
     // justifyContent: "center",
   },
@@ -15,12 +16,15 @@ const UserPageStyleSheet = StyleSheet.create({
   },
   AvatarContainer: {
     position: "relative",
-    marginTop: 24,
+    marginTop: 16,
     marginBottom: 8,
     backgroundColor: "#ffffff",
   },
   username: {
     fontSize: 32,
+    color: white,
+
+    opacity: 1,
   },
   rightComponent: {
     display: flex,
@@ -36,7 +40,7 @@ const UserPageStyleSheet = StyleSheet.create({
   },
   uploadBtnContainer: {
     position: "absolute",
-    top: 150,
+    top: 142,
     left: 235,
     // backgroundColor: "lightgrey",
   },
@@ -55,11 +59,21 @@ const UserPageStyleSheet = StyleSheet.create({
     justifyContent: center,
     marginTop: 8,
     marginBottom: 8,
+    paddingBottom: 8,
     gap: 5,
+    backgroundColor: "black",
+    opacity: 0.8,
+    width: "100%",
   },
   changeContainer: {
     borderWidth: 1,
     padding: 4,
+    borderColor: white,
+  },
+  image: {
+    width: 428,
+    height: 264,
+    justifyContent: "center",
   },
 });
 

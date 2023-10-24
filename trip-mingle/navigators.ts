@@ -57,7 +57,7 @@ export interface AppParamList {
   };
   NewSnap: undefined;
   Comment: undefined;
-  SnapPage: undefined;
+  Snap: undefined;
 }
 
 export function useAppNavigation() {

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "trip-mingle",
-    "slug": "trip-mingle-test",
+    "slug": "trip-mingle",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
@@ -10,7 +10,9 @@
       "image": "./src/assets/trip_mingle_logo_2.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
+      
     },
+    "owner": "final-project",
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -27,6 +29,12 @@
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4bd23987-4d1d-4c41-b01f-a3e38c22cf28"
+      }
     }
-  }
+    }
+
 }
