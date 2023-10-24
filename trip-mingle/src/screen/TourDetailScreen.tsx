@@ -262,6 +262,7 @@ const TourDetailScreen = ({
     setLikeNumber(likeNumber);
     getUserIcon();
   }, [token]);
+
   const locationNames = post?.trip_location?.map((location) => location.name);
   const locationNamesString = Array.isArray(locationNames)
     ? locationNames.join(", ")
