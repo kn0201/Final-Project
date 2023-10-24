@@ -4,9 +4,9 @@ import AddPostScreen from "../screen/AddPostScreen";
 import BuddiesPage from "../tabs/ExplorePageTopTab";
 import CommentScreen from "../screen/CommentScreen";
 import TourDetailScreen from "../screen/TourDetailScreen";
-import BlogDetailScreen from "../screen/BlogDetailScreen";
 import OtherProfileScreen from "../screen/OtherProfileScreen";
 import ManageTourScreen from "../screen/ManageTourScreen";
+import BlogDetailScreen from "../screen/BlogDetailScreen";
 
 const Stack = createStackNavigator();
 

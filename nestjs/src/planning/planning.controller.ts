@@ -92,6 +92,14 @@ export class PlanningController {
     // throw new UnauthorizedException('Wrong Username/Password');
   }
 
+  @Get(':plan_id/mark')
+  async getMarks(
+    @Param('plan_id') plan_id: string,
+    @Param('mark') mark: string,
+  ) {
+    return this.planningService.getMarks(+plan_id);
+  }
+
   @Post(':plan_id/event')
   async addNewEvent(
     @Body() body: Body,

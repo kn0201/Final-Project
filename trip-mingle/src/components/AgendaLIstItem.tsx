@@ -32,13 +32,16 @@ function Space(props: { height: number }) {
   );
 }
 export default function AgendaListItem(props: {
-  selectedDate: string;
-  updateScheduleList: (scheduleInfo: ScheduleItemInfo) => void;
+  // selectedDate: string;
+  // updateScheduleList: (scheduleInfo: ScheduleItemInfo) => void;
 }) {
-  const { selectedDate, updateScheduleList } = props;
+  const { selectedDate, updateScheduleList, planId } =
+    useAppRoute<"Add Agenda">();
+  // const { selectedDate, updateScheduleList } = props;
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const { token, payload, setToken } = useToken();
-  const planId = useAppRoute<"AddSchedule">().planId;
+
+  // const planId = useAppRoute<"AddSchedule">().planId;
   const [scheduleInfo, setScheduleInfo] = useState<ScheduleItemInfo>({
     selectedDate: selectedDate,
     startTime: "",
@@ -64,9 +67,13 @@ export default function AgendaListItem(props: {
     }
     try {
       let data = {
-        selected_date: selectedDate,
-        start_time: scheduleInfo.startTime,
-        end_time: scheduleInfo.endTime,
+        selected_date: new Date(selectedDate + " 00:00").toISOString(),
+        start_time: new Date(
+          selectedDate + " " + scheduleInfo.startTime
+        ).toISOString(),
+        end_time: new Date(
+          selectedDate + " " + scheduleInfo.endTime
+        ).toISOString(),
         location: scheduleInfo.location,
       };
       let res = await api.post(
@@ -113,10 +120,13 @@ export default function AgendaListItem(props: {
         <Text style={PlanningStyleSheet.inputTitle}>End Time</Text>
         <TextInput
           style={PlanningStyleSheet.inputContainer}
-          onChangeText={(text) => updateScheduleInfo("endTime", text)}
+          value={scheduleInfo.endTime}
+          onChangeText={(text) =>
+            updateScheduleInfo("endTime", checkTime(text))
+          }
           keyboardType="numeric"
           onEndEditing={() => Keyboard.dismiss()}
-          placeholder="Input End time"
+          placeholder="Input End time (e.g. 15:55)"
           placeholderTextColor="gray"
         ></TextInput>
         <Text style={PlanningStyleSheet.inputTitle}>Location</Text>

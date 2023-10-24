@@ -5,6 +5,7 @@ import {
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
+import { ScheduleItemInfo } from "./src/utils/types";
 
 // BottomTabNavigator
 // - HomePage
@@ -19,6 +20,13 @@ import {
 export interface AppParamList {
   AddSchedule: {
     planId: number;
+    selectedDate: string;
+    updateScheduleList: (scheduleInfo: ScheduleItemInfo) => void;
+  };
+  "Add Agenda": {
+    planId: number;
+    selectedDate: string;
+    updateScheduleList: (scheduleInfo: ScheduleItemInfo) => void;
   };
   DemoPage: undefined;
   MapPage:

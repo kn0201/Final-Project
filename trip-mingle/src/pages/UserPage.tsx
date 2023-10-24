@@ -16,12 +16,12 @@ import { useState } from "react";
 import { useToken } from "../hooks/useToken";
 import * as ImagePicker from "expo-image-picker";
 import { getIconResult } from "../utils/parser";
-import { apiOrigin } from "../utils/apiOrigin";
 import { useGet } from "../hooks/useGet";
 import { AntDesign } from "@expo/vector-icons";
 
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import ChangeUsername from "../components/changeUsername";
+import { apiOrigin } from "../utils/apiOrigin";
 
 //@ts-ignore
 export default function UserPage({ navigation }) {

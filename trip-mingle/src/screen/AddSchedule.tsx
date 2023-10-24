@@ -33,12 +33,10 @@ const AddSchedule = () => {
   const [open, setOpen] = useState(false);
   const [scheduleItems, setScheduleItems] = useState<ScheduleItem[]>([]);
   const { token, payload, setToken } = useToken();
-
   const navigation = useAppNavigation();
   const routeState = navigation.getState();
-  // console.log("route state:", routeState);
-
-  const planId = useAppRoute<"AddSchedule">().planId;
+  const params = useAppRoute<"AddSchedule">();
+  const { planId } = params;
 
   async function addMarkDate() {
     if (!startDate) {
@@ -328,46 +326,6 @@ const AddSchedule = () => {
           }}
         />
       </View>
-      {/* <View style={{ flex: 1 }}>
-          <Agenda
-            markingType={"period"}
-            markedDates={{
-              "2023-10-11": { startingDay: true, color: "lightgreen" },
-              "2023-10-12": { selected: true, color: "lightgreen" },
-              "2023-10-13": { selected: true, color: "lightgreen" },
-              "2023-10-14": {
-                selected: true,
-                endingDay: true,
-                color: "lightgreen",
-                textColor: "gray",
-              },
-            }}
-            items={items}
-            onDayPress={(day) => {
-              setSelected(day.dateString);
-            }}
-            // markedDates={{
-              [selected]: {
-                selected: true,
-                disableTouchEvent: true,
-                selectedColor: "#30C0FE",
-              },
-            // }}
-            renderList={(listItem: ReservationListProps) => {
-              return (
-                <AgendaListItem data={listItem.items} selectedDate={selected} />
-              );
-            }}
-            // renderKnob={() => {
-            //   return (
-            //     <Entypo name="chevron-thin-down" size={24} color="black" />
-            //   );
-            // }}
-            showClosingKnob={true}
-            pastScrollRange={1}
-            futureScrollRange={12}
-          />
-        </View> */}
       <SpeedDial
         isOpen={open}
         icon={{ name: "edit", color: "#fff" }}
@@ -379,16 +337,10 @@ const AddSchedule = () => {
           icon={{ name: "add", color: "#fff" }}
           title="Add"
           onPress={() => {
-            IonNeverDialog.show({
-              dialogHeight: 600,
-              component: () => {
-                return (
-                  <AgendaListItem
-                    selectedDate={selectedDate as string}
-                    updateScheduleList={updateScheduleList}
-                  />
-                );
-              },
+            navigation.navigate("Add Agenda", {
+              selectedDate,
+              updateScheduleList,
+              planId,
             });
           }}
         />
