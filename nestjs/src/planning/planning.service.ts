@@ -58,6 +58,38 @@ export class PlanningService {
     return { plan_id, image_path: input.image_file };
   }
 
+  async addNewTourPlan(input: {
+    user_id: number;
+    title: string;
+    user_list: string;
+    image_file: string | undefined;
+  }) {
+    let image_id: number | null = null;
+    if (input.image_file) {
+      let [{ id }] = await this.knex('image')
+        .insert({
+          user_id: input.user_id,
+          path: input.image_file,
+          is_delete: false,
+        })
+        .returning('id');
+      image_id = id;
+    }
+    let addPlan = await this.knex('plan')
+      .insert({
+        title: input.title,
+        user_id: input.user_id,
+        // country,
+        privacy: false,
+        image_id,
+      })
+      .returning('id');
+
+    let plan_id = addPlan[0].id;
+
+    return { plan_id, image_path: input.image_file };
+  }
+
   async getImage(user_id: number) {
     let result = await this.knex
       .select('path')

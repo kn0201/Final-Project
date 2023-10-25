@@ -87,7 +87,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
     id: number,
     username: string,
     post_id: string,
-    post_user_id?: string,
+    post_user_id?: string
   ) => {
     navigation.navigate("Other Profile", {
       id,
@@ -120,7 +120,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
         `/application/confirm/${id}/${user_id}`,
         { username },
         confirmStatusParser,
-        token,
+        token
       );
       setIsConfirm(!isConfirm);
       dispatchConfirmEvent("Confirm");
@@ -143,7 +143,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
         `/application/reject/${id}/${user_id}`,
         { username },
         confirmStatusParser,
-        token,
+        token
       );
       setIsConfirm(null);
       dispatchRejectEvent("Reject");
@@ -153,19 +153,26 @@ export default function ViewTourScreen({ route }: { route: any }) {
   };
   useEvent<RejectEvent>("Reject", (event) => {
     getConfirmedUsersList();
-    navigation.pop();
+    navigation.navigate("ExplorePage", { screen: "Tour Detail" });
   });
 
   // Get approved list
   const [confirmedUsers, setConfirmedUsers] = useState<ConfirmedUserItem[]>([]);
+  const confirmedUsersList: any[] = [];
   const getConfirmedUsersList = async () => {
     try {
-      let confirmedUsersList = await api.get(
+      let result = await api.get(
         `/application/tour/${id}/${post_user_id}`,
         confirmedUserParser,
-        token,
+        token
       );
-      setConfirmedUsers(confirmedUsersList);
+      if (result) {
+        for (let user of result) {
+          confirmedUsersList.push(user.user_id);
+        }
+      }
+      setConfirmedUsers(result);
+      console.log(confirmedUsersList);
     } catch (err) {
       console.log(err);
     }
@@ -180,7 +187,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
     try {
       let allConfirmStatus = await api.get(
         `/application/all/${id}`,
-        allConfirmStatusParser,
+        allConfirmStatusParser
       );
       setAllConfirm(allConfirmStatus?.result);
     } catch (err) {
@@ -197,7 +204,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
   useEvent<LoginEvent>("Login", (event) => {
     getConfirmedUsersList();
     getAllConfirmStatus();
-    navigation.pop(2);
+    navigation.navigate("ExplorePage", { screen: "BuddiesPage" });
   });
 
   const ItemView = useCallback(
@@ -277,7 +284,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
         </View>
       </>
     ),
-    [],
+    []
   );
 
   return (
@@ -339,6 +346,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
         <AddScheduleForm
           closeModal={closeModal}
           addNewScheduleCard={addNewScheduleCard}
+          confirmedUsersList={confirmedUsersList}
         />
       </Animated.View>
     </>
