@@ -55,6 +55,32 @@ export class ApplicationService {
     }
   }
 
+  async getAllConfirmStatus(post_id) {
+    try {
+      const postInfo = await this.knex
+        .select('headcount')
+        .from('post')
+        .where('id', post_id)
+        .first();
+      const number_of_confirm = await this.knex
+        .count('id')
+        .from('application')
+        .where('post_id', post_id)
+        .andWhere('confirm', true)
+        .first();
+      console.log(number_of_confirm.count);
+
+      if (number_of_confirm.count === 0) {
+        return { result: false };
+      }
+      if (number_of_confirm.count === postInfo.headcount) {
+        return { result: true };
+      } else return { result: false };
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   async getAppliedUsers(id, req) {
     try {
       const payload = this.jwtService.decode(
@@ -270,6 +296,81 @@ export class ApplicationService {
         return { status: false };
       } else {
         throw new Error(`Please contact the administrator`);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async confirmApplication(post_id, id, body, req) {
+    try {
+      const payload = this.jwtService.decode(
+        req.headers.authorization.split(' ')[1],
+      );
+      let user_id = payload.user_id;
+      const postInfo = await this.knex
+        .select('status')
+        .from('post')
+        .where('id', post_id)
+        .first();
+      const approvedStatus = await this.knex
+        .select('confirm')
+        .from('application')
+        .where('post_id', post_id)
+        .andWhere('user_id', id)
+        .first();
+      if (id !== user_id) {
+        throw new Error(
+          `Unauthorized access to confirm applications for tour #${post_id}`,
+        );
+      }
+      if (approvedStatus.confirm === false && postInfo.status !== 'close') {
+        let updatedStatus = await this.knex('application')
+          .where('post_id', post_id)
+          .andWhere('user_id', id)
+          .update({ confirm: true });
+        return { status: true };
+      } else {
+        throw new Error(`Please contact the tour organizer`);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async rejectApplication(post_id, id, body, req) {
+    try {
+      const payload = this.jwtService.decode(
+        req.headers.authorization.split(' ')[1],
+      );
+      let user_id = payload.user_id;
+      const postInfo = await this.knex
+        .select('status', 'headcount')
+        .from('post')
+        .where('id', post_id)
+        .first();
+      const approvedStatus = await this.knex
+        .select('confirm')
+        .from('application')
+        .where('post_id', post_id)
+        .andWhere('user_id', id)
+        .first();
+      if (id !== user_id) {
+        throw new Error(
+          `Unauthorized access to reject applications for tour #${post_id}`,
+        );
+      }
+      if (approvedStatus.confirm === false && postInfo.status !== 'close') {
+        let updatedStatus = await this.knex('application')
+          .where('post_id', post_id)
+          .andWhere('user_id', id)
+          .del();
+        let updatedPostStatus = await this.knex('post')
+          .where('id', post_id)
+          .update({ status: 'open' });
+        return { status: false };
+      } else {
+        throw new Error(`Please contact the tour organizer`);
       }
     } catch (err) {
       console.log(err);

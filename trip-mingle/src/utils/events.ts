@@ -54,3 +54,7 @@ export type DeleteEvent = {
 export type ConfirmEvent = {
   type: "Confirm";
 };
+
+export type RejectEvent = {
+  type: "Reject";
+};

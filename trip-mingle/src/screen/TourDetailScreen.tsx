@@ -16,6 +16,7 @@ import {
 import { api } from "../apis/api";
 import {
   addCommentParser,
+  allConfirmStatusParser,
   applicationInfoParser,
   applicationStatusParser,
   applyTourParser,
@@ -54,9 +55,11 @@ import {
   AddCommentEvent,
   ApplyTourEvent,
   BookmarkEvent,
+  ConfirmEvent,
   DeleteEvent,
   LikeEvent,
   LoginEvent,
+  RejectEvent,
   UpdateProfileEvent,
 } from "../utils/events";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -463,14 +466,40 @@ const TourDetailScreen = ({
   useEffect(() => {
     getApplicationList();
   }, []);
+
+  // Get confirm status
+  const [allConfirm, setAllConfirm] = useState<boolean>(false);
+  const getAllConfirmStatus = async () => {
+    try {
+      let allConfirmStatus = await api.get(
+        `/application/all/${id}`,
+        allConfirmStatusParser,
+      );
+      setAllConfirm(allConfirmStatus?.result);
+    } catch (err) {
+      console.log({ err });
+    }
+  };
+  useEffect(() => {
+    getAllConfirmStatus();
+  }, []);
+
   useEvent<AcceptEvent>("Accept", (event) => {
     getApplicationList();
     getPostDetail();
+  });
+  useEvent<RejectEvent>("Reject", (event) => {
+    getApplicationList();
+    getPostDetail();
+  });
+  useEvent<ConfirmEvent>("Confirm", (event) => {
+    getAllConfirmStatus();
   });
   useEvent<LoginEvent>("Login", (event) => {
     getApplicationStatus();
     getUserBookmarkStatus();
     getUserLikeStatus();
+    getAllConfirmStatus();
     navigation.pop();
   });
   useEvent<UpdateProfileEvent>("UpdateProfile", (event) => {
@@ -549,6 +578,15 @@ const TourDetailScreen = ({
               ) : (
                 <></>
               )
+            ) : allConfirm === true ? (
+              <TouchableOpacity
+                style={TourDetailScreenStyleSheet.button}
+                onPress={() => {
+                  view(id, post?.user_id.toString());
+                }}
+              >
+                <Text style={TourDetailScreenStyleSheet.text}>View</Text>
+              </TouchableOpacity>
             ) : (
               <TouchableOpacity
                 style={TourDetailScreenStyleSheet.button}

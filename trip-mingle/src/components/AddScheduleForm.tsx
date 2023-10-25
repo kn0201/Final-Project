@@ -32,7 +32,7 @@ type ImageFile = {
   file: File;
 };
 
-function AddScheduleForm(props: {
+export function AddScheduleForm(props: {
   closeModal: () => void;
 
   addNewScheduleCard: (newScheduleInfo: {
@@ -52,7 +52,7 @@ function AddScheduleForm(props: {
   const [country, setCountry] = useState("");
   const [code, setCode] = useState("");
   const [selectedCountry, setSelectedCountry] = useState(
-    "Destination Country *"
+    "Destination Country *",
   );
 
   const [state, setState] = useState({
@@ -102,8 +102,12 @@ function AddScheduleForm(props: {
     });
   };
 
-  async function addPlan() {
-    if (!state.title) {
+  async function addPlan(
+    title: string,
+    country: string,
+    imageFile?: ImageFile | null,
+  ) {
+    if (!title) {
       IonNeverToast.show({
         type: "warning",
         title: "Please Input Title",
@@ -117,8 +121,8 @@ function AddScheduleForm(props: {
       if (imageFile) {
         formData.append("image", imageFile.file);
       }
-      formData.append("title", state.title);
-      formData.append("country", state.country);
+      formData.append("title", title);
+      formData.append("country", country);
       let json = await api2.upload(
         "/planning/plan",
         formData,
@@ -126,7 +130,7 @@ function AddScheduleForm(props: {
           plan_id: id(),
           image_path: string(),
         }),
-        token
+        token,
       );
       console.log("add plan result:", json);
       IonNeverDialog.show({
@@ -136,7 +140,7 @@ function AddScheduleForm(props: {
       });
       addNewScheduleCard({
         plan_id: json.plan_id,
-        plan_title: state.title,
+        plan_title: title,
         image_path: json.image_path,
         startDate: "",
         endDate: "",
@@ -186,8 +190,8 @@ function AddScheduleForm(props: {
                   countryList.filter((country) =>
                     country.name
                       .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase())
-                  )
+                      .includes(search.toLocaleLowerCase()),
+                  ),
                 );
               }, [search, countryList]);
               const updateSearch = (search: string) => {
@@ -309,7 +313,12 @@ function AddScheduleForm(props: {
         onChangeText={(text) => setState({ ...state, title: text })}
       />
       <CountryCheckbox />
-      <TextButton text="Add New Plan" onPress={addPlan}></TextButton>
+      <TextButton
+        text="Add New Plan"
+        onPress={() => {
+          addPlan(state.title, state.country, imageFile);
+        }}
+      ></TextButton>
       <View style={PlanningStyleSheet.cancelButtonDiv}>
         <TouchableOpacity
           style={PlanningStyleSheet.cancelButton}
