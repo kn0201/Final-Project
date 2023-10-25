@@ -39,6 +39,7 @@ export default function ExplorePage() {
             title: "testing",
           }}
         />
+
         <Stack.Screen
           name="Comment"
           component={CommentScreen}

@@ -142,6 +142,50 @@ const AddPostPageStyleSheet = StyleSheet.create({
 
     textDecorationLine: "none",
   },
+  container: {
+    flex: 1,
+    height: "100%",
+    width: "90%",
+    // backgroundColor: "#ccaf9b",
+    // padding: 20,
+    alignItems: "center",
+  },
+
+  richTextContainer: {
+    display: "flex",
+    flexDirection: "column-reverse",
+    width: "100%",
+    marginBottom: 10,
+  },
+
+  richTextEditorStyle: {
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    borderWidth: 1,
+    // borderColor: "#ccaf9b",
+    // shadowColor: "#000",
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 2,
+    // },
+    // shadowOpacity: 0.23,
+    // shadowRadius: 2.62,
+    elevation: 4,
+    fontSize: 20,
+  },
+
+  richTextToolbarStyle: {
+    // backgroundColor: "#c6c3b3",
+    // borderColor: "#c6c3b3",
+    borderWidth: 1,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+
+  errorTextStyle: {
+    color: "#FF0000",
+    marginBottom: 10,
+  },
 });
 
 export default AddPostPageStyleSheet;

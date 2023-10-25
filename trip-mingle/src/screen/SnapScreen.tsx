@@ -85,84 +85,6 @@ export default function SnapScreen() {
     getSnapList();
   });
 
-  const Item = ({
-    post_id,
-    username,
-    content,
-    created_at,
-    location_name,
-    image_path,
-    avatar_path,
-    likeCount,
-    isLike,
-  }: Snap) => (
-    <View style={SnapScreenStyleSheet.center}>
-      <View style={SnapScreenStyleSheet.outerContainer}>
-        <View style={SnapScreenStyleSheet.userContainer}>
-          <Avatar
-            size={30}
-            rounded
-            source={{
-              uri: `${apiOrigin}/${avatar_path}`,
-            }}
-          />
-          <Text>{username}</Text>
-        </View>
-        <View style={SnapScreenStyleSheet.imageContainer}>
-          <Image
-            source={{ uri: `${apiOrigin}/${image_path}` }}
-            style={{
-              width: "100%",
-              height: 350,
-              borderRadius: 10,
-            }}
-          />
-        </View>
-
-        <View style={{ flexDirection: row, justifyContent: "space-between" }}>
-          {token ? (
-            <View style={SnapScreenStyleSheet.buttonContainer}>
-              <TouchableOpacity
-                onPress={() => {
-                  like(post_id);
-                }}
-                style={SnapScreenStyleSheet.likeContainer}
-              >
-                <AntDesign name={isLike ? "like1" : "like2"} size={20} />
-                <Text>{likeCount}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ flexDirection: row, alignItems: center, gap: 5 }}
-                onPress={() => {
-                  navigation.navigate("Comment", { post_id });
-                }}
-              >
-                <MaterialCommunityIcons name="comment-plus" size={22} />
-                <Text>Comment</Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <></>
-          )}
-          <View style={SnapScreenStyleSheet.timeContainer}>
-            <Text>
-              {(created_at = new Date(created_at)
-                .toLocaleString()
-                .slice(0, -3)).replace(",", "")}
-            </Text>
-          </View>
-        </View>
-        <View style={SnapScreenStyleSheet.spotContainer}>
-          <Icon name="location-pin" type="materialIcons" size={16}></Icon>
-          <Text style={SnapScreenStyleSheet.spotText}>{location_name}</Text>
-        </View>
-        <View style={SnapScreenStyleSheet.contentContainer}>
-          <Text style={SnapScreenStyleSheet.contentText}>{content}</Text>
-        </View>
-      </View>
-    </View>
-  );
-
   return (
     <>
       <LinearGradient
@@ -209,21 +131,111 @@ export default function SnapScreen() {
 
       <FlatList
         data={snapList}
-        renderItem={({ item }) => (
-          <Item
-            post_id={item.post_id}
-            user_id={item.user_id}
-            username={item.username}
-            content={item.content}
-            created_at={item.created_at}
-            location_name={item.location_name}
-            image_path={item.image_path}
-            avatar_id={item.avatar_id}
-            avatar_path={item.avatar_path}
-            likeCount={item.likeCount}
-            isLike={item.isLike}
-          />
-        )}
+        renderItem={({ item }) => {
+          const {
+            post_id,
+            username,
+            content,
+            created_at,
+            location_name,
+            image_path,
+            avatar_path,
+            likeCount,
+            isLike,
+          } = item;
+          return (
+            <View style={SnapScreenStyleSheet.center}>
+              <View style={SnapScreenStyleSheet.outerContainer}>
+                <View style={SnapScreenStyleSheet.userContainer}>
+                  <Avatar
+                    size={30}
+                    rounded
+                    source={{
+                      uri: `${apiOrigin}/${avatar_path}`,
+                    }}
+                  />
+                  <Text>{username}</Text>
+                </View>
+                <View style={SnapScreenStyleSheet.imageContainer}>
+                  <Image
+                    source={{ uri: `${apiOrigin}/${image_path}` }}
+                    style={{
+                      width: "100%",
+                      height: 350,
+                      borderRadius: 10,
+                    }}
+                  />
+                </View>
+
+                <View
+                  style={{
+                    flexDirection: row,
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {token ? (
+                    <View style={SnapScreenStyleSheet.buttonContainer}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          like(post_id);
+                        }}
+                        style={SnapScreenStyleSheet.likeContainer}
+                      >
+                        <AntDesign
+                          name={isLike ? "like1" : "like2"}
+                          size={20}
+                        />
+                        <Text>{likeCount}</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={{
+                          flexDirection: row,
+                          alignItems: center,
+                          gap: 5,
+                        }}
+                        onPress={() => {
+                          navigation.navigate("Comment", { post_id });
+                        }}
+                      >
+                        <MaterialCommunityIcons name="comment-plus" size={22} />
+                        <Text>Comment</Text>
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
+                    <></>
+                  )}
+                  <View style={SnapScreenStyleSheet.timeContainer}>
+                    <Text>
+                      {new Date(created_at).toLocaleString("zh-CN", {
+                        minute: "2-digit",
+                        hour: "2-digit",
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour12: false,
+                      })}
+                    </Text>
+                  </View>
+                </View>
+                <View style={SnapScreenStyleSheet.spotContainer}>
+                  <Icon
+                    name="location-pin"
+                    type="materialIcons"
+                    size={16}
+                  ></Icon>
+                  <Text style={SnapScreenStyleSheet.spotText}>
+                    {location_name}
+                  </Text>
+                </View>
+                <View style={SnapScreenStyleSheet.contentContainer}>
+                  <Text style={SnapScreenStyleSheet.contentText}>
+                    {content}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          );
+        }}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
