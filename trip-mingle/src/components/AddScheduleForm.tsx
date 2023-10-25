@@ -14,15 +14,12 @@ import { useIonNeverNotification } from "./IonNeverNotification/NotificationProv
 import { AntDesign } from "@expo/vector-icons";
 import { CheckBox, SearchBar } from "@rneui/base";
 import * as ImagePicker from "expo-image-picker";
-import { ScheduleCardInputInfo } from "../utils/types";
 import { countriesList } from "../source/countries";
 import { center } from "../StyleSheet/StyleSheetHelper";
 import PlanningStyleSheet from "../StyleSheet/PlanningStyleSheet";
 import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { apiOrigin } from "../utils/apiOrigin";
 import { useToken } from "../hooks/useToken";
-import { json } from "express";
 import { api, api2 } from "../apis/api";
 import { id, object, string } from "cast.ts";
 import TextButton from "./TextButton";
@@ -39,8 +36,8 @@ export function AddScheduleForm(props: {
     plan_id: number;
     plan_title: string;
     image_path: string;
-    startDate: string;
-    endDate: string;
+    startDate: string | undefined;
+    endDate: string | undefined;
   }) => void;
 }) {
   const { closeModal, addNewScheduleCard } = props;
@@ -52,7 +49,7 @@ export function AddScheduleForm(props: {
   const [country, setCountry] = useState("");
   const [code, setCode] = useState("");
   const [selectedCountry, setSelectedCountry] = useState(
-    "Destination Country *",
+    "Destination Country *"
   );
 
   const [state, setState] = useState({
@@ -66,7 +63,6 @@ export function AddScheduleForm(props: {
   }
 
   const addImage = async () => {
-    console.log("addImage");
     let imagePickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -105,7 +101,7 @@ export function AddScheduleForm(props: {
   async function addPlan(
     title: string,
     country: string,
-    imageFile?: ImageFile | null,
+    imageFile?: ImageFile | null
   ) {
     if (!title) {
       IonNeverToast.show({
@@ -118,6 +114,9 @@ export function AddScheduleForm(props: {
     console.log("add plan");
     try {
       let formData = new FormData();
+      if (!imageFile) {
+        formData.append("image", "null");
+      }
       if (imageFile) {
         formData.append("image", imageFile.file);
       }
@@ -130,7 +129,7 @@ export function AddScheduleForm(props: {
           plan_id: id(),
           image_path: string(),
         }),
-        token,
+        token
       );
       console.log("add plan result:", json);
       IonNeverDialog.show({
@@ -141,7 +140,7 @@ export function AddScheduleForm(props: {
       addNewScheduleCard({
         plan_id: json.plan_id,
         plan_title: title,
-        image_path: json.image_path,
+        image_path: json.image_path || "",
         startDate: "",
         endDate: "",
       });
@@ -190,8 +189,8 @@ export function AddScheduleForm(props: {
                   countryList.filter((country) =>
                     country.name
                       .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase()),
-                  ),
+                      .includes(search.toLocaleLowerCase())
+                  )
                 );
               }, [search, countryList]);
               const updateSearch = (search: string) => {

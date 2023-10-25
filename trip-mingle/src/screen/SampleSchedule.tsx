@@ -28,7 +28,7 @@ function Space(props: { height: number }) {
   );
 }
 
-export default function SampleSchedule() {
+const SampleSchedule = () => {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const [selectedDate, setSelectedDate] = useState<any>();
   const [open, setOpen] = useState(false);
@@ -37,57 +37,12 @@ export default function SampleSchedule() {
 
   const navigation = useAppNavigation();
   const routeState = navigation.getState();
-  // console.log("route state:", routeState);
 
-  const planId = useAppRoute<"AddSchedule">().planId;
-
-  async function addMarkDate() {
-    if (!startDate) {
-      IonNeverToast.show({
-        type: "warning",
-        title: "Please input start date",
-      });
-      if (!endDate)
-        IonNeverToast.show({
-          type: "warning",
-          title: "Please input end date",
-        });
-      return;
-    }
-    try {
-      let data = {
-        start_date: startDate,
-        end_date: endDate,
-      };
-
-      let res = await api.post(
-        `/planning/${planId}/mark`,
-        data,
-        object({ result: boolean() }),
-        token
-      );
-      if (res.result) {
-        IonNeverDialog.show({
-          type: "success",
-          title: "Add a new mark",
-          firstButtonVisible: true,
-        });
-      }
-    } catch (error) {
-      let message = String(error);
-      IonNeverDialog.show({
-        type: "warning",
-        title: "Failed to add a mark",
-        message,
-        firstButtonVisible: true,
-      });
-    }
-  }
   useEffect(() => {
     setScheduleItems([
       {
         id: 1,
-        selectedDate: "2023-10-16",
+        selectedDate: "2023-10-27",
         startTime: "13:00",
         endTime: "15:00",
         location: "Place 1",
@@ -95,7 +50,7 @@ export default function SampleSchedule() {
       },
       {
         id: 2,
-        selectedDate: "2023-10-16",
+        selectedDate: "2023-10-27",
         startTime: "15:30",
         endTime: "15:45",
         location: "Place 2",
@@ -103,7 +58,7 @@ export default function SampleSchedule() {
       },
       {
         id: 3,
-        selectedDate: "2023-10-17",
+        selectedDate: "2023-10-27",
         startTime: "15:30",
         endTime: "15:45",
         location: "Place 3",
@@ -111,7 +66,7 @@ export default function SampleSchedule() {
       },
       {
         id: 4,
-        selectedDate: "2023-10-17",
+        selectedDate: "2023-10-27",
         startTime: "13:00",
         endTime: "15:00",
         location: "Place 1",
@@ -119,7 +74,7 @@ export default function SampleSchedule() {
       },
       {
         id: 5,
-        selectedDate: "2023-10-18",
+        selectedDate: "2023-10-28",
         startTime: "15:30",
         endTime: "15:45",
         location: "Place 2",
@@ -127,7 +82,7 @@ export default function SampleSchedule() {
       },
       {
         id: 6,
-        selectedDate: "2023-10-18",
+        selectedDate: "2023-10-28",
         startTime: "16:00",
         endTime: "16:30",
         location: "Place 3",
@@ -135,7 +90,7 @@ export default function SampleSchedule() {
       },
       {
         id: 7,
-        selectedDate: "2023-10-19",
+        selectedDate: "2023-10-29",
         startTime: "16:45",
         endTime: "16:55",
         location: "Place 4",
@@ -143,7 +98,7 @@ export default function SampleSchedule() {
       },
       {
         id: 1,
-        selectedDate: "2023-10-19",
+        selectedDate: "2023-10-29",
         startTime: "13:00",
         endTime: "15:00",
         location: "Place 1",
@@ -151,7 +106,7 @@ export default function SampleSchedule() {
       },
       {
         id: 2,
-        selectedDate: "2023-10-20",
+        selectedDate: "2023-10-30",
         startTime: "15:30",
         endTime: "15:45",
         location: "Place 2",
@@ -159,7 +114,7 @@ export default function SampleSchedule() {
       },
       {
         id: 3,
-        selectedDate: "2023-10-20",
+        selectedDate: "2023-10-30",
         startTime: "15:30",
         endTime: "15:45",
         location: "Place 3",
@@ -167,7 +122,7 @@ export default function SampleSchedule() {
       },
       {
         id: 4,
-        selectedDate: "2023-10-20",
+        selectedDate: "2023-10-30",
         startTime: "13:00",
         endTime: "15:00",
         location: "Place 1",
@@ -175,7 +130,7 @@ export default function SampleSchedule() {
       },
       {
         id: 5,
-        selectedDate: "2023-10-21",
+        selectedDate: "2023-10-31",
         startTime: "15:30",
         endTime: "15:45",
         location: "Place 2",
@@ -183,7 +138,7 @@ export default function SampleSchedule() {
       },
       {
         id: 6,
-        selectedDate: "2023-10-21",
+        selectedDate: "2023-10-31",
         startTime: "16:00",
         endTime: "16:30",
         location: "Place 3",
@@ -191,7 +146,7 @@ export default function SampleSchedule() {
       },
       {
         id: 7,
-        selectedDate: "2023-10-21",
+        selectedDate: "2023-10-31",
         startTime: "16:45",
         endTime: "16:55",
         location: "Place 4",
@@ -199,7 +154,7 @@ export default function SampleSchedule() {
       },
       {
         id: 7,
-        selectedDate: "2023-10-21",
+        selectedDate: "2023-10-31",
         startTime: "16:45",
         endTime: "16:55",
         location: "Place 4",
@@ -207,7 +162,7 @@ export default function SampleSchedule() {
       },
       {
         id: 7,
-        selectedDate: "2023-10-21",
+        selectedDate: "2023-10-31",
         startTime: "16:45",
         endTime: "16:55",
         location: "Place 4",
@@ -227,8 +182,8 @@ export default function SampleSchedule() {
     }
   });
 
-  const [startDate, setStartDate] = useState<string>("2023-10-16");
-  const [endDate, setEndDate] = useState<string>("2023-10-27");
+  const [startDate, setStartDate] = useState<string>("2023-10-27");
+  const [endDate, setEndDate] = useState<string>("2023-10-31");
 
   // const function addNewMarkDate() {
 
@@ -240,7 +195,7 @@ export default function SampleSchedule() {
     [selectedDate]: {
       selected: true,
       disableTouchEvent: true,
-      selectedColor: "blue",
+      color: "red",
     },
   };
 
@@ -262,13 +217,8 @@ export default function SampleSchedule() {
 
   return (
     <>
-      {/* <View style={styles.view}>
-        <Text>11</Text>
-      </View> */}
-      {/* <Space height={40} /> */}
       <View>
         <Space height={10}></Space>
-        <Text>plan id: {planId}</Text>
         <Text>Starting Date</Text>
         <TextInput
           style={PlanningStyleSheet.inputContainer}
@@ -285,7 +235,6 @@ export default function SampleSchedule() {
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input your end travel date"
         ></TextInput>
-        <TextButton text="Add New Mark" onPress={addMarkDate}></TextButton>
       </View>
       <Space height={10}></Space>
       <View style={{ flex: 1 }}>
@@ -345,46 +294,9 @@ export default function SampleSchedule() {
           }}
         />
       </View>
-      <SpeedDial
-        isOpen={open}
-        icon={{ name: "edit", color: "#fff" }}
-        openIcon={{ name: "close", color: "#fff" }}
-        onOpen={() => setOpen(!open)}
-        onClose={() => setOpen(!open)}
-      >
-        <SpeedDial.Action
-          icon={{ name: "add", color: "#fff" }}
-          title="Add"
-          onPress={() => {
-            navigation.navigate("Add Agenda", {
-              selectedDate,
-              updateScheduleList,
-              planId,
-            });
-            // IonNeverDialog.show({
-            //   dialogHeight: 600,
-            //   component: () => {
-            //     return (
-            //       <AddAgendaStackScreen
-            //         selectedDate={selectedDate as string}
-            //         updateScheduleList={updateScheduleList}
-            //       />
-            //     );
-            //   },
-            // });
-          }}
-        />
-        <SpeedDial.Action
-          icon={{ name: "delete", color: "#fff" }}
-          title="Delete"
-          onPress={() => {
-            console.log("delete");
-          }}
-        />
-      </SpeedDial>
     </>
   );
-}
+};
 
 function nextDate(dateStr: string): string {
   let date = new Date(dateStr);
@@ -394,3 +306,5 @@ function nextDate(dateStr: string): string {
   let d = format_2_digit(date.getDate());
   return `${y}-${m}-${d}`;
 }
+
+export default SampleSchedule;

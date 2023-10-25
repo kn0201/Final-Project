@@ -18,10 +18,11 @@ import {
 } from "../utils/types";
 import PlanningStyleSheet from "../StyleSheet/PlanningStyleSheet";
 import { api, api2 } from "../apis/api";
-import { array, boolean, id, object, optional, string } from "cast.ts";
+import { array, boolean, color, id, object, optional, string } from "cast.ts";
 import { useToken } from "../hooks/useToken";
 import TextButton from "../components/TextButton";
 import { AppParamList, useAppNavigation, useAppRoute } from "../../navigators";
+import { textColor } from "../StyleSheet/StyleSheetHelper";
 
 function Space(props: { height: number }) {
   return (
@@ -103,7 +104,6 @@ const AddSchedule = () => {
       }),
       token
     );
-    // setScheduleMark(result.marks as ScheduleMark);
     setStartDate(result?.marks?.startDate);
     setEndDate(result?.marks?.endDate);
   }
@@ -140,9 +140,7 @@ const AddSchedule = () => {
 
     setScheduleItems(dataObject);
   }
-  // const data: Record<string, ScheduleItem[]> = {};
 
-  // useEffect(() => console.log({ data }), [data]);
   useEffect(() => {
     getMarks();
     getEvent();
@@ -164,7 +162,9 @@ const AddSchedule = () => {
     [selectedDate]: {
       selected: true,
       disableTouchEvent: true,
-      selectedColor: "blue",
+      textColor: "black",
+      color: "#1e90ff",
+      dotColor: "blue",
     },
   };
   if (endDate && startDate) {
@@ -201,10 +201,6 @@ const AddSchedule = () => {
 
   return (
     <>
-      {/* <View style={styles.view}>
-        <Text>11</Text>
-      </View> */}
-      {/* <Space height={40} /> */}
       <View>
         <Space height={10}></Space>
         <Text>plan id: {planId}</Text>

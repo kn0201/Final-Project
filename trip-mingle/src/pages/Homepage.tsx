@@ -76,15 +76,12 @@ export default function HomePage() {
                 }}
               />
             </View>
-
             <View>
               <Text style={HomePageStyleSheet.slogan}>
                 Find a partner, Make every trip different
               </Text>
             </View>
-
             {/* <Demo /> */}
-
             <View style={HomePageStyleSheet.routeContainer}>
               <TouchableOpacity
                 style={HomePageStyleSheet.routerBox}
@@ -209,20 +206,18 @@ export default function HomePage() {
                 </ImageBackground>
               </View>
             </View>
-
             <View>
               <Text style={HomePageStyleSheet.planText}>My Plan</Text>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("SampleSchedule")}
+              >
                 <Card>
                   <Card.Title>Kyoto</Card.Title>
                   <Card.Divider />
                   <Card.Image
                     style={{ padding: 0, height: 200 }}
                     source={{
-                      uri: `${apiOrigin}/kyoto_trip.jpg`,
-                    }}
-                    onPress={() => {
-                      SampleSchedule();
+                      uri: "https://www.budgetdirect.com.au/blog/wp-content/uploads/2018/03/Japan-Travel-Guide.jpg",
                     }}
                   />
                 </Card>
