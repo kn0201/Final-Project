@@ -11,12 +11,13 @@ import {
 import { ItemSeparatorView, setStarRating } from "./PostScreen";
 import ManageTourScreenStyleSheet from "../StyleSheet/ManageTourScreenCss";
 import { apiOrigin } from "../utils/apiOrigin";
-import { ConfirmedUserItem } from "../utils/types";
+import { ConfirmedUserItem, PostDetailItem } from "../utils/types";
 import { api } from "../apis/api";
 import {
   allConfirmStatusParser,
   confirmStatusParser,
   confirmedUserParser,
+  postDetailParser,
 } from "../utils/parser";
 import { useToken } from "../hooks/useToken";
 import useEvent from "react-use-event";
@@ -65,6 +66,28 @@ export default function OtherProfileScreen({
       username,
       post_id,
       post_user_id,
+    });
+  };
+
+  // Get post details
+  const [post, setPost] = useState<PostDetailItem | null>();
+  const getPostDetail = async () => {
+    try {
+      let postDetailData = await api.get(`/blog/${id}`, postDetailParser);
+      setPost(postDetailData);
+    } catch (err) {
+      console.log({ err });
+    }
+  };
+  useEffect(() => {
+    getPostDetail();
+  }, []);
+
+  // Start Tour Plan
+  const handleStartPlanClick = () => {
+    navigation.navigate("Tour Plan", {
+      user_id: post?.user_id,
+      post_is: post?.id,
     });
   };
 
@@ -257,7 +280,7 @@ export default function OtherProfileScreen({
         >
           <TouchableOpacity
             style={ManageTourScreenStyleSheet.planButton}
-            // onPress={accept}
+            onPress={handleStartPlanClick}
           >
             <Text style={ManageTourScreenStyleSheet.planButtonText}>
               Start Tour Planning
