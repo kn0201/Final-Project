@@ -68,6 +68,20 @@ const ManageTourScreenStyleSheet = StyleSheet.create({
     color: "black",
     textAlign: "center",
   },
+  planButton: {
+    height: 50,
+    marginRight: 2,
+    justifyContent: "center",
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: theme.primaryColor,
+    backgroundColor: theme.primaryColor,
+  },
+  planButtonText: {
+    fontSize: 18,
+    color: theme.primaryTextColor,
+    textAlign: "center",
+  },
 });
 
 export default ManageTourScreenStyleSheet;

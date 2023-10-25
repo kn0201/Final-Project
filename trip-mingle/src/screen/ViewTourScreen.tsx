@@ -13,7 +13,11 @@ import ManageTourScreenStyleSheet from "../StyleSheet/ManageTourScreenCss";
 import { apiOrigin } from "../utils/apiOrigin";
 import { ConfirmedUserItem } from "../utils/types";
 import { api } from "../apis/api";
-import { confirmStatusParser, confirmedUserParser } from "../utils/parser";
+import {
+  allConfirmStatusParser,
+  confirmStatusParser,
+  confirmedUserParser,
+} from "../utils/parser";
 import { useToken } from "../hooks/useToken";
 import useEvent from "react-use-event";
 import {
@@ -126,11 +130,30 @@ export default function OtherProfileScreen({
   useEffect(() => {
     getConfirmedUsersList();
   }, []);
+
+  // Get confirm status
+  const [allConfirm, setAllConfirm] = useState<boolean>(false);
+  const getAllConfirmStatus = async () => {
+    try {
+      let allConfirmStatus = await api.get(
+        `/application/all/${id}`,
+        allConfirmStatusParser,
+      );
+      setAllConfirm(allConfirmStatus?.result);
+    } catch (err) {
+      console.log({ err });
+    }
+  };
+  useEffect(() => {
+    getAllConfirmStatus();
+  }, []);
+
   useEvent<UpdateProfileEvent>("UpdateProfile", (event) => {
     getConfirmedUsersList();
   });
   useEvent<LoginEvent>("Login", (event) => {
     getConfirmedUsersList();
+    getAllConfirmStatus();
     navigation.pop(2);
   });
 
@@ -170,7 +193,9 @@ export default function OtherProfileScreen({
               </View>
             </View>
           </View>
-          {login_user_id === item.user_id ? (
+          {item.user_id == post_user_id ? (
+            <></>
+          ) : login_user_id === item.user_id ? (
             <View style={{ flexDirection: "row" }}>
               {item.confirm_status === false ? (
                 <TouchableOpacity
@@ -222,6 +247,28 @@ export default function OtherProfileScreen({
         renderItem={ItemView}
         ItemSeparatorComponent={ItemSeparatorView}
       />
+
+      {login_user_id == post_user_id && allConfirm === true ? (
+        <View
+          style={{
+            paddingBottom: 13,
+            paddingLeft: 10,
+            paddingRight: 10,
+            paddingTop: 5,
+          }}
+        >
+          <TouchableOpacity
+            style={ManageTourScreenStyleSheet.planButton}
+            // onPress={accept}
+          >
+            <Text style={ManageTourScreenStyleSheet.planButtonText}>
+              Start Tour Planning
+            </Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <></>
+      )}
     </View>
   );
 }
