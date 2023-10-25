@@ -82,7 +82,7 @@ export default function OtherProfileScreen({
   // Header
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: "Tour Member",
+      headerTitle: "My Tour",
     });
   }, []);
 
@@ -91,7 +91,7 @@ export default function OtherProfileScreen({
     id: number,
     username: string,
     post_id: string,
-    post_user_id?: string
+    post_user_id?: string,
   ) => {
     navigation.navigate("Other Profile", {
       id,
@@ -103,6 +103,12 @@ export default function OtherProfileScreen({
 
   // Get post details
   const [post, setPost] = useState<PostDetailItem | null>();
+  const [startDay, setStartDay] = useState<string>(
+    new Date().toISOString().substring(0, 10),
+  );
+  const [endDay, setEndDay] = useState<string>(
+    new Date().toISOString().substring(0, 10),
+  );
   const getPostDetail = async () => {
     try {
       let postDetailData = await api.get(`/blog/${id}`, postDetailParser);
@@ -114,14 +120,11 @@ export default function OtherProfileScreen({
   useEffect(() => {
     getPostDetail();
   }, []);
-
-  // Start Tour Plan
-  const handleStartPlanClick = () => {
-    navigation.navigate("Tour Plan", {
-      user_id: post?.user_id,
-      post_is: post?.id,
-    });
-  };
+  if (post?.trip_period) {
+    const dateParts = post.trip_period.split(" to ");
+    setStartDay(dateParts[0]);
+    setEndDay(dateParts[1]);
+  }
 
   // Confirm
   const [isConfirm, setIsConfirm] = useState<boolean | null>(false);
@@ -132,7 +135,7 @@ export default function OtherProfileScreen({
         `/application/confirm/${id}/${user_id}`,
         { username },
         confirmStatusParser,
-        token
+        token,
       );
       setIsConfirm(!isConfirm);
       dispatchConfirmEvent("Confirm");
@@ -155,7 +158,7 @@ export default function OtherProfileScreen({
         `/application/reject/${id}/${user_id}`,
         { username },
         confirmStatusParser,
-        token
+        token,
       );
       setIsConfirm(null);
       dispatchRejectEvent("Reject");
@@ -175,7 +178,7 @@ export default function OtherProfileScreen({
       let confirmedUsersList = await api.get(
         `/application/tour/${id}/${post_user_id}`,
         confirmedUserParser,
-        token
+        token,
       );
       setConfirmedUsers(confirmedUsersList);
     } catch (err) {
@@ -192,7 +195,7 @@ export default function OtherProfileScreen({
     try {
       let allConfirmStatus = await api.get(
         `/application/all/${id}`,
-        allConfirmStatusParser
+        allConfirmStatusParser,
       );
       setAllConfirm(allConfirmStatus?.result);
     } catch (err) {
@@ -289,12 +292,12 @@ export default function OtherProfileScreen({
         </View>
       </>
     ),
-    []
+    [],
   );
 
   return (
     <>
-      <View style={{ flexGrow: 0 }}>
+      <View style={{ flexGrow: 1 }}>
         <FlatList
           data={confirmedUsers}
           keyExtractor={(item, index) => index.toString()}
@@ -350,7 +353,15 @@ export default function OtherProfileScreen({
       >
         <AddScheduleForm
           closeModal={closeModal}
-          addNewScheduleCard={addNewScheduleCard}
+          addNewScheduleCard={() => {
+            addNewScheduleCard({
+              plan_id: 0,
+              plan_title: post!.title,
+              image_path: "yukimin.png",
+              startDate: startDay,
+              endDate: endDay,
+            });
+          }}
         />
       </Animated.View>
     </>
