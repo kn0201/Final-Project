@@ -103,12 +103,6 @@ export default function OtherProfileScreen({
 
   // Get post details
   const [post, setPost] = useState<PostDetailItem | null>();
-  const [startDay, setStartDay] = useState<string>(
-    new Date().toISOString().substring(0, 10),
-  );
-  const [endDay, setEndDay] = useState<string>(
-    new Date().toISOString().substring(0, 10),
-  );
   const getPostDetail = async () => {
     try {
       let postDetailData = await api.get(`/blog/${id}`, postDetailParser);
@@ -120,11 +114,6 @@ export default function OtherProfileScreen({
   useEffect(() => {
     getPostDetail();
   }, []);
-  if (post?.trip_period) {
-    const dateParts = post.trip_period.split(" to ");
-    setStartDay(dateParts[0]);
-    setEndDay(dateParts[1]);
-  }
 
   // Confirm
   const [isConfirm, setIsConfirm] = useState<boolean | null>(false);
@@ -353,15 +342,7 @@ export default function OtherProfileScreen({
       >
         <AddScheduleForm
           closeModal={closeModal}
-          addNewScheduleCard={() => {
-            addNewScheduleCard({
-              plan_id: 0,
-              plan_title: post!.title,
-              image_path: "yukimin.png",
-              startDate: startDay,
-              endDate: endDay,
-            });
-          }}
+          addNewScheduleCard={addNewScheduleCard}
         />
       </Animated.View>
     </>
