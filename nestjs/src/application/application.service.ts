@@ -204,7 +204,7 @@ export class ApplicationService {
         .first();
       if (applicationStatus.status === undefined) {
         throw new Error(
-          `Do not have application record for user ${body.username}`,
+          `Do not have application record for the user ${body.username}`,
         );
       }
       if (
@@ -265,7 +265,7 @@ export class ApplicationService {
           let updatedConfirmStatus = await this.knex('application')
             .where('post_id', post_id)
             .andWhere('user_id', id)
-            .update({ status: null });
+            .update({ confirm: null });
         }
         return { status: false };
       } else {
