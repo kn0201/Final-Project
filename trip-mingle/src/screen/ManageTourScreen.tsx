@@ -151,9 +151,7 @@ export default function OtherProfileScreen({
               />
             </TouchableWithoutFeedback>
             <View style={{ justifyContent: "center" }}>
-              <Text style={{ fontWeight: "800" }}>
-                #{index + 1} Application
-              </Text>
+              <Text style={{ fontWeight: "800" }}>#{index + 1} Member</Text>
               <View style={{ flexDirection: "row" }}>
                 <Text
                   style={{
