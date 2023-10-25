@@ -75,6 +75,7 @@ export interface AppParamList {
   };
   Snap: undefined;
   "Blog Detail": { post_id: number };
+  SampleSchedule: undefined;
 }
 
 export function useAppNavigation() {

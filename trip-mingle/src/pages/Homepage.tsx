@@ -21,7 +21,6 @@ import useEvent from "react-use-event";
 import { MapEvent, MapPositionEvent } from "../utils/events";
 import { useAppNavigation } from "../../navigators";
 import { LinearGradient } from "expo-linear-gradient";
-import SampleSchedule from "../screen/SampleSchedule";
 
 export default function HomePage() {
   const navigation = useAppNavigation();
@@ -104,7 +103,7 @@ export default function HomePage() {
               <TouchableOpacity
                 style={HomePageStyleSheet.routerBox}
                 onPress={() => {
-                  navigate("Map");
+                  navigate("MapPage", { screen: "MapScreen" });
                 }}
               >
                 <Ionicons name="map" color={"pink"} size={40} />

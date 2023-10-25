@@ -149,21 +149,21 @@ export function AddScheduleForm(props: {
         token
       );
       console.log("add plan result:", json);
-      // IonNeverDialog.show({
-      //   type: "success",
-      //   title: "Add a new plan",
-      //   firstButtonVisible: true,
-      // });
-      // addNewScheduleCard({
-      //   plan_id: json.plan_id,
-      //   plan_title: title,
-      //   image_path: json.image_path,
-      //   startDate: "",
-      //   endDate: "",
-      // });
-      // closeModal();
+      IonNeverDialog.show({
+        type: "success",
+        title: "Add a new plan",
+        firstButtonVisible: true,
+      });
+      addNewScheduleCard({
+        plan_id: json.plan_id,
+        plan_title: title,
+        image_path: json.image_path || "",
+        startDate: "",
+        endDate: "",
+      });
+      closeModal();
 
-      reset();
+      // reset();
     } catch (error) {
       let message = String(error);
       IonNeverDialog.show({
