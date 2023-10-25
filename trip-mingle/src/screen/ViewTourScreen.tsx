@@ -91,7 +91,7 @@ export default function OtherProfileScreen({
     id: number,
     username: string,
     post_id: string,
-    post_user_id?: string,
+    post_user_id?: string
   ) => {
     navigation.navigate("Other Profile", {
       id,
@@ -132,7 +132,7 @@ export default function OtherProfileScreen({
         `/application/confirm/${id}/${user_id}`,
         { username },
         confirmStatusParser,
-        token,
+        token
       );
       setIsConfirm(!isConfirm);
       dispatchConfirmEvent("Confirm");
@@ -155,7 +155,7 @@ export default function OtherProfileScreen({
         `/application/reject/${id}/${user_id}`,
         { username },
         confirmStatusParser,
-        token,
+        token
       );
       setIsConfirm(null);
       dispatchRejectEvent("Reject");
@@ -175,7 +175,7 @@ export default function OtherProfileScreen({
       let confirmedUsersList = await api.get(
         `/application/tour/${id}/${post_user_id}`,
         confirmedUserParser,
-        token,
+        token
       );
       setConfirmedUsers(confirmedUsersList);
     } catch (err) {
@@ -192,7 +192,7 @@ export default function OtherProfileScreen({
     try {
       let allConfirmStatus = await api.get(
         `/application/all/${id}`,
-        allConfirmStatusParser,
+        allConfirmStatusParser
       );
       setAllConfirm(allConfirmStatus?.result);
     } catch (err) {
@@ -289,68 +289,70 @@ export default function OtherProfileScreen({
         </View>
       </>
     ),
-    [],
+    []
   );
 
   return (
-    <View style={{ flexGrow: 0 }}>
-      <FlatList
-        data={confirmedUsers}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={ItemView}
-        ItemSeparatorComponent={ItemSeparatorView}
-      />
+    <>
+      <View style={{ flexGrow: 0 }}>
+        <FlatList
+          data={confirmedUsers}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={ItemView}
+          ItemSeparatorComponent={ItemSeparatorView}
+        />
 
-      {login_user_id == post_user_id && allConfirm === true ? (
-        <View
-          style={{
-            paddingBottom: 13,
-            paddingLeft: 10,
-            paddingRight: 10,
-            paddingTop: 5,
-          }}
-        >
-          <TouchableOpacity
-            style={ManageTourScreenStyleSheet.planButton}
-            onPress={() => {
-              openModal();
+        {login_user_id == post_user_id && allConfirm === true ? (
+          <View
+            style={{
+              paddingBottom: 13,
+              paddingLeft: 10,
+              paddingRight: 10,
+              paddingTop: 5,
             }}
           >
-            <Text style={ManageTourScreenStyleSheet.planButtonText}>
-              Start Tour Planning
-            </Text>
-          </TouchableOpacity>
-          <Animated.View
-            style={[
+            <TouchableOpacity
+              style={ManageTourScreenStyleSheet.planButton}
+              onPress={() => {
+                openModal();
+              }}
+            >
+              <Text style={ManageTourScreenStyleSheet.planButtonText}>
+                Start Tour Planning
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <></>
+        )}
+      </View>
+      <Animated.View
+        style={[
+          {
+            width,
+            height: height * 0.9,
+            position: "absolute",
+            top: height,
+            zIndex: 1,
+            backgroundColor: "white",
+          },
+          {
+            transform: [
               {
-                width,
-                height: height * 0.9,
-                position: "absolute",
-                top: height,
-                zIndex: 1,
-                backgroundColor: "white",
+                translateY: translateAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, -height],
+                }),
               },
-              {
-                transform: [
-                  {
-                    translateY: translateAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [0, -height],
-                    }),
-                  },
-                ],
-              },
-            ]}
-          >
-            <AddScheduleForm
-              closeModal={closeModal}
-              addNewScheduleCard={addNewScheduleCard}
-            />
-          </Animated.View>
-        </View>
-      ) : (
-        <></>
-      )}
-    </View>
+            ],
+          },
+        ]}
+      >
+        <AddScheduleForm
+          closeModal={closeModal}
+          addNewScheduleCard={addNewScheduleCard}
+        />
+      </Animated.View>
+    </>
   );
 }
