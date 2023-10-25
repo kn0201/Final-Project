@@ -24,6 +24,7 @@ export class PlanningService {
         'plan_detail.end_date as endDate',
       )
       .where({ 'plan.user_id': user_id });
+    console.log({ planList });
     return { planList };
   }
 

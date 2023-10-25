@@ -10,6 +10,7 @@ import {
   Animated,
   SafeAreaView,
   Text,
+  RefreshControl,
 } from "react-native";
 import { Card, Header } from "@rneui/themed";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
@@ -25,13 +26,17 @@ import AddScheduleForm from "../components/AddScheduleForm";
 import { useNavigation } from "@react-navigation/native";
 import { useAppNavigation } from "../../navigators";
 import { useGet } from "../hooks/useGet";
-import { ParseResult, array, number, object, string } from "cast.ts";
+import { ParseResult, array, number, object, optional, string } from "cast.ts";
 import { apiOrigin } from "../utils/apiOrigin";
 import { api, api2 } from "../apis/api";
 import UserPageStyleSheet from "../StyleSheet/UserPageCss";
 import useBoolean from "../hooks/useBoolean";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { flex, row } from "../StyleSheet/StyleSheetHelper";
+import React from "react";
+import SampleSchedule from "./SampleSchedule";
+import { HomePageStyleSheet } from "../StyleSheet/HomePageCss";
+import { navigate } from "../tabs/RootNavigation";
 
 const Stack = createStackNavigator();
 
@@ -63,8 +68,8 @@ let getMyPlanListParser = object({
       plan_id: number(),
       plan_title: string(),
       image_path: string(),
-      startDate: string(),
-      endDate: string(),
+      startDate: optional(string()),
+      endDate: optional(string()),
     })
   ),
 });
@@ -73,10 +78,9 @@ type PlanListItem = ParseResult<typeof getMyPlanListParser>["planList"][number];
 //@ts-ignore
 const Schedule = () => {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
-
   const translateAnim = useRef(new Animated.Value(0)).current;
   const { width, height } = Dimensions.get("screen");
-
+  const navigation = useAppNavigation();
   const renderItem = (info: ListRenderItemInfo<PlanListItem>) => {
     return <ScheduleCard item={info.item} />;
   };
@@ -111,9 +115,33 @@ const Schedule = () => {
       <View
         style={{ height: Dimensions.get("screen").height - 180, zIndex: 0.9 }}
       >
-        {myPlanListResult.render((json) => (
-          <FlatList data={json.planList} renderItem={renderItem} />
-        ))}
+        {myPlanListResult.render((json) => {
+          return (
+            <>
+              {json.planList.length === 0 ? (
+                <View>
+                  <Text style={HomePageStyleSheet.planText}>My Plan</Text>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("SampleSchedule")}
+                  >
+                    <Card>
+                      <Card.Title>Kyoto</Card.Title>
+                      <Card.Divider />
+                      <Card.Image
+                        style={{ padding: 0, height: 200 }}
+                        source={{
+                          uri: "https://www.budgetdirect.com.au/blog/wp-content/uploads/2018/03/Japan-Travel-Guide.jpg",
+                        }}
+                      />
+                    </Card>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <FlatList data={json.planList} renderItem={renderItem} />
+              )}
+            </>
+          );
+        })}
         <Ionicons
           name="add-circle"
           size={60}
@@ -191,8 +219,12 @@ function ScheduleCard(props: { item: PlanListItem }) {
               justifyContent: "space-between",
             }}
           >
-            <Text>{item.startDate.split("T")[0]}</Text>
-            <Entypo name="aircraft-take-off" size={24} color="black" />
+            {item.startDate ? (
+              <>
+                <Text>{item.startDate.split("T")[0]}</Text>
+                <Entypo name="aircraft-take-off" size={24} color="black" />
+              </>
+            ) : null}
           </View>
 
           <View
@@ -204,8 +236,12 @@ function ScheduleCard(props: { item: PlanListItem }) {
               justifyContent: "space-between",
             }}
           >
-            <Entypo name="aircraft-landing" size={24} color="black" />
-            <Text>{item.endDate.split("T")[0]}</Text>
+            {item.endDate ? (
+              <>
+                <Entypo name="aircraft-landing" size={24} color="black" />
+                <Text>{item.endDate.split("T")[0]}</Text>
+              </>
+            ) : null}
           </View>
         </View>
         <Card.Divider />

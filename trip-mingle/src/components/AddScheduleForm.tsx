@@ -14,15 +14,12 @@ import { useIonNeverNotification } from "./IonNeverNotification/NotificationProv
 import { AntDesign } from "@expo/vector-icons";
 import { CheckBox, SearchBar } from "@rneui/base";
 import * as ImagePicker from "expo-image-picker";
-import { ScheduleCardInputInfo } from "../utils/types";
 import { countriesList } from "../source/countries";
 import { center } from "../StyleSheet/StyleSheetHelper";
 import PlanningStyleSheet from "../StyleSheet/PlanningStyleSheet";
 import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { apiOrigin } from "../utils/apiOrigin";
 import { useToken } from "../hooks/useToken";
-import { json } from "express";
 import { api, api2 } from "../apis/api";
 import { id, object, string } from "cast.ts";
 import TextButton from "./TextButton";
@@ -39,8 +36,8 @@ export function AddScheduleForm(props: {
     plan_id: number;
     plan_title: string;
     image_path: string;
-    startDate: string;
-    endDate: string;
+    startDate: string | undefined;
+    endDate: string | undefined;
   }) => void;
 
   confirmedUsersList?: any;
@@ -56,6 +53,7 @@ export function AddScheduleForm(props: {
 
   const [selectedCountry, setSelectedCountry] = useState(
     "Destination Country *"
+    "Destination Country *"
   );
 
   const [state, setState] = useState({
@@ -69,7 +67,6 @@ export function AddScheduleForm(props: {
   }
 
   const addImage = async () => {
-    console.log("addImage");
     let imagePickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -122,6 +119,9 @@ export function AddScheduleForm(props: {
 
     try {
       let formData = new FormData();
+      if (!imageFile) {
+        formData.append("image", "null");
+      }
       if (imageFile) {
         formData.append("image", imageFile.file);
       }
@@ -150,19 +150,19 @@ export function AddScheduleForm(props: {
         token
       );
       console.log("add plan result:", json);
-      // IonNeverDialog.show({
-      //   type: "success",
-      //   title: "Add a new plan",
-      //   firstButtonVisible: true,
-      // });
-      // addNewScheduleCard({
-      //   plan_id: json.plan_id,
-      //   plan_title: title,
-      //   image_path: json.image_path,
-      //   startDate: "",
-      //   endDate: "",
-      // });
-      // closeModal();
+      IonNeverDialog.show({
+        type: "success",
+        title: "Add a new plan",
+        firstButtonVisible: true,
+      });
+      addNewScheduleCard({
+        plan_id: json.plan_id,
+        plan_title: title,
+        image_path: json.image_path || "",
+        startDate: "",
+        endDate: "",
+      });
+      closeModal();
 
       // reset();
     } catch (error) {
