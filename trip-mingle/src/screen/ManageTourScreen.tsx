@@ -16,7 +16,13 @@ import { api } from "../apis/api";
 import { acceptStatusParser, appliedUserParser } from "../utils/parser";
 import { useToken } from "../hooks/useToken";
 import useEvent from "react-use-event";
-import { AcceptEvent, LoginEvent, UpdateProfileEvent } from "../utils/events";
+import {
+  AcceptEvent,
+  ConfirmEvent,
+  LoginEvent,
+  RejectEvent,
+  UpdateProfileEvent,
+} from "../utils/events";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 
 export default function OtherProfileScreen({
@@ -119,6 +125,12 @@ export default function OtherProfileScreen({
     getApplicationList();
     navigation.pop(2);
   });
+  useEvent<RejectEvent>("Reject", (event) => {
+    getApplicationList();
+  });
+  useEvent<ConfirmEvent>("Confirm", (event) => {
+    getApplicationList();
+  });
 
   const ItemView = useCallback(
     ({ item, index }: ListRenderItemInfo<AppliedUserItem>) => (
@@ -156,18 +168,20 @@ export default function OtherProfileScreen({
               </View>
             </View>
           </View>
-          <TouchableOpacity
-            style={ManageTourScreenStyleSheet.button}
-            onPress={() => {
-              accept(item.user_id, item.username);
-            }}
-          >
-            <Text style={ManageTourScreenStyleSheet.text}>
-              {item.status === false && item.confirm_status !== true
-                ? "Accept"
-                : "Cancel"}
-            </Text>
-          </TouchableOpacity>
+          {item.confirm_status === true ? (
+            <></>
+          ) : (
+            <TouchableOpacity
+              style={ManageTourScreenStyleSheet.button}
+              onPress={() => {
+                accept(item.user_id, item.username);
+              }}
+            >
+              <Text style={ManageTourScreenStyleSheet.text}>
+                {item.status === false ? "Accept" : "Cancel"}
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </>
     ),

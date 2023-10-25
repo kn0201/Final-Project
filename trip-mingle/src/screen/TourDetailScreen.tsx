@@ -57,6 +57,7 @@ import {
   DeleteEvent,
   LikeEvent,
   LoginEvent,
+  RejectEvent,
   UpdateProfileEvent,
 } from "../utils/events";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -464,6 +465,10 @@ const TourDetailScreen = ({
     getApplicationList();
   }, []);
   useEvent<AcceptEvent>("Accept", (event) => {
+    getApplicationList();
+    getPostDetail();
+  });
+  useEvent<RejectEvent>("Reject", (event) => {
     getApplicationList();
     getPostDetail();
   });

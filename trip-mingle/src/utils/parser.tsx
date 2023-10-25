@@ -281,5 +281,5 @@ export const snapListParser = array(
 );
 
 export const confirmStatusParser = object({
-  result: boolean(),
+  status: boolean(),
 });

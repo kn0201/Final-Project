@@ -20,6 +20,7 @@ import {
   AcceptEvent,
   ConfirmEvent,
   LoginEvent,
+  RejectEvent,
   UpdateProfileEvent,
 } from "../utils/events";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
@@ -64,7 +65,7 @@ export default function OtherProfileScreen({
   };
 
   // Confirm
-  const [isConfirm, setIsConfirm] = useState<boolean>(false);
+  const [isConfirm, setIsConfirm] = useState<boolean | null>(false);
   const dispatchConfirmEvent = useEvent<ConfirmEvent>("Confirm");
   const confirm = async (user_id: number, username: string) => {
     try {
@@ -85,6 +86,27 @@ export default function OtherProfileScreen({
   });
   useEvent<AcceptEvent>("Accept", (event) => {
     getConfirmedUsersList();
+  });
+
+  // Reject
+  const dispatchRejectEvent = useEvent<RejectEvent>("Reject");
+  const reject = async (user_id: number, username: string) => {
+    try {
+      let updatedStatus = await api.patch(
+        `/application/reject/${id}/${user_id}`,
+        { username },
+        confirmStatusParser,
+        token,
+      );
+      setIsConfirm(null);
+      dispatchRejectEvent("Reject");
+    } catch (err) {
+      console.log({ err });
+    }
+  };
+  useEvent<RejectEvent>("Reject", (event) => {
+    getConfirmedUsersList();
+    navigation.pop();
   });
 
   // Get approved list
@@ -150,26 +172,32 @@ export default function OtherProfileScreen({
           </View>
           {login_user_id === item.user_id ? (
             <View style={{ flexDirection: "row" }}>
-              <TouchableOpacity
-                style={ManageTourScreenStyleSheet.button}
-                onPress={() => {
-                  confirm(item.user_id, item.username);
-                }}
-              >
-                <Text style={ManageTourScreenStyleSheet.text}>
-                  {item.confirm_status === false ? "Confirm" : "Confirmed"}
+              {item.confirm_status === false ? (
+                <TouchableOpacity
+                  style={ManageTourScreenStyleSheet.button}
+                  onPress={() => {
+                    confirm(item.user_id, item.username);
+                  }}
+                >
+                  <Text style={ManageTourScreenStyleSheet.text}>Confirm</Text>
+                </TouchableOpacity>
+              ) : (
+                <Text style={ManageTourScreenStyleSheet.statusText}>
+                  Confirmed
                 </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={ManageTourScreenStyleSheet.rejectButton}
-                onPress={() => {
-                  confirm(item.user_id, item.username);
-                }}
-              >
-                <Text style={ManageTourScreenStyleSheet.text}>
-                  {item.confirm_status === false ? "Reject" : ""}
-                </Text>
-              </TouchableOpacity>
+              )}
+              {item.confirm_status === false ? (
+                <TouchableOpacity
+                  style={ManageTourScreenStyleSheet.rejectButton}
+                  onPress={() => {
+                    reject(item.user_id, item.username);
+                  }}
+                >
+                  <Text style={ManageTourScreenStyleSheet.text}>Reject</Text>
+                </TouchableOpacity>
+              ) : (
+                <></>
+              )}
             </View>
           ) : (
             <Text style={ManageTourScreenStyleSheet.statusText}>

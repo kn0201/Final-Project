@@ -65,6 +65,35 @@ export class ApplicationController {
   }
 
   @UseGuards(AuthGuard)
+  @Patch('confirm/:post_id/:id')
+  confirmApplication(
+    @Param('post_id') post_id: string,
+    @Param('id') id: string,
+    @Body() body: Body,
+    @Req() req: Request,
+  ) {
+    let input = acceptParser.parse(body);
+    return this.applicationService.confirmApplication(
+      +post_id,
+      +id,
+      input,
+      req,
+    );
+  }
+
+  @UseGuards(AuthGuard)
+  @Patch('reject/:post_id/:id')
+  rejectApplication(
+    @Param('post_id') post_id: string,
+    @Param('id') id: string,
+    @Body() body: Body,
+    @Req() req: Request,
+  ) {
+    let input = acceptParser.parse(body);
+    return this.applicationService.rejectApplication(+post_id, +id, input, req);
+  }
+
+  @UseGuards(AuthGuard)
   @Post(':id')
   applyTour(@Param('id') id: string, @Body() body: Body, @Req() req: Request) {
     let input = applyTourParser.parse(body);
