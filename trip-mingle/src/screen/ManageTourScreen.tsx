@@ -163,7 +163,9 @@ export default function OtherProfileScreen({
             }}
           >
             <Text style={ManageTourScreenStyleSheet.text}>
-              {item.status === false ? "Accept" : "Cancel"}
+              {item.status === false && item.confirm_status !== true
+                ? "Accept"
+                : "Cancel"}
             </Text>
           </TouchableOpacity>
         </View>

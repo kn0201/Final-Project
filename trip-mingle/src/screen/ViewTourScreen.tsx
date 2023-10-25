@@ -11,16 +11,17 @@ import {
 import { ItemSeparatorView, setStarRating } from "./PostScreen";
 import ManageTourScreenStyleSheet from "../StyleSheet/ManageTourScreenCss";
 import { apiOrigin } from "../utils/apiOrigin";
-import { AppliedUserItem, ConfirmedUserItem } from "../utils/types";
+import { ConfirmedUserItem } from "../utils/types";
 import { api } from "../apis/api";
-import {
-  acceptStatusParser,
-  appliedUserParser,
-  confirmedUserParser,
-} from "../utils/parser";
+import { confirmStatusParser, confirmedUserParser } from "../utils/parser";
 import { useToken } from "../hooks/useToken";
 import useEvent from "react-use-event";
-import { AcceptEvent, LoginEvent, UpdateProfileEvent } from "../utils/events";
+import {
+  AcceptEvent,
+  ConfirmEvent,
+  LoginEvent,
+  UpdateProfileEvent,
+} from "../utils/events";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 
 export default function OtherProfileScreen({
@@ -63,33 +64,25 @@ export default function OtherProfileScreen({
   };
 
   // Confirm
-  const [isAccept, setIsAccept] = useState<boolean | null>();
-  const dispatchAcceptEvent = useEvent<AcceptEvent>("Accept");
+  const [isConfirm, setIsConfirm] = useState<boolean>(false);
+  const dispatchConfirmEvent = useEvent<ConfirmEvent>("Confirm");
   const confirm = async (user_id: number, username: string) => {
     try {
       let updatedStatus = await api.patch(
-        `/application/${id}/${user_id}`,
+        `/application/confirm/${id}/${user_id}`,
         { username },
-        acceptStatusParser,
+        confirmStatusParser,
         token,
       );
-      if (isAccept !== null) {
-        setIsAccept(!isAccept);
-      }
-      dispatchAcceptEvent("Accept");
+      setIsConfirm(!isConfirm);
+      dispatchConfirmEvent("Confirm");
     } catch (err) {
-      IonNeverDialog.show({
-        type: "warning",
-        title: "Error",
-        message: `The targeted member number for the tour #${id} has been reached`,
-        firstButtonVisible: true,
-        firstButtonFunction: () => {
-          IonNeverDialog.dismiss();
-        },
-      });
       console.log({ err });
     }
   };
+  useEvent<ConfirmEvent>("Confirm", (event) => {
+    getConfirmedUsersList();
+  });
   useEvent<AcceptEvent>("Accept", (event) => {
     getConfirmedUsersList();
   });
@@ -155,16 +148,38 @@ export default function OtherProfileScreen({
               </View>
             </View>
           </View>
-          <TouchableOpacity
-            style={ManageTourScreenStyleSheet.button}
-            onPress={() => {
-              confirm(item.user_id, item.username);
-            }}
-          >
-            <Text style={ManageTourScreenStyleSheet.text}>
-              {/* { "Accept" : "Cancel"} */}
+          {login_user_id === item.user_id ? (
+            <View style={{ flexDirection: "row" }}>
+              <TouchableOpacity
+                style={ManageTourScreenStyleSheet.button}
+                onPress={() => {
+                  confirm(item.user_id, item.username);
+                }}
+              >
+                <Text style={ManageTourScreenStyleSheet.text}>
+                  {item.confirm_status === false ? "Confirm" : "Confirmed"}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={ManageTourScreenStyleSheet.rejectButton}
+                onPress={() => {
+                  confirm(item.user_id, item.username);
+                }}
+              >
+                <Text style={ManageTourScreenStyleSheet.text}>
+                  {item.confirm_status === false ? "Reject" : ""}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <Text style={ManageTourScreenStyleSheet.statusText}>
+              {item.user_id == post_user_id
+                ? ""
+                : item.confirm_status === false
+                ? "Pending"
+                : "Confirmed"}
             </Text>
-          </TouchableOpacity>
+          )}
         </View>
       </>
     ),
@@ -172,7 +187,7 @@ export default function OtherProfileScreen({
   );
 
   return (
-    <View style={{ flexGrow: 0 }}>
+    <View style={{ flexGrow: 1 }}>
       <FlatList
         data={confirmedUsers}
         keyExtractor={(item, index) => index.toString()}

@@ -50,3 +50,7 @@ export type AddSnapEvent = {
 export type DeleteEvent = {
   type: "Delete";
 };
+
+export type ConfirmEvent = {
+  type: "Confirm";
+};

@@ -279,3 +279,7 @@ export const snapListParser = array(
     isLike: boolean(),
   }),
 );
+
+export const confirmStatusParser = object({
+  result: boolean(),
+});
