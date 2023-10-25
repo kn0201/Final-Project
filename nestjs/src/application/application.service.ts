@@ -251,6 +251,10 @@ export class ApplicationService {
           .where('post_id', post_id)
           .andWhere('user_id', id)
           .update({ status: true });
+        let updatedConfirmStatus = await this.knex('application')
+          .where('post_id', post_id)
+          .andWhere('user_id', id)
+          .update({ confirm: false });
         const number_of_accept_after = await this.knex
           .count('id')
           .from('application')
@@ -261,10 +265,6 @@ export class ApplicationService {
           let updatedPostStatus = await this.knex('post')
             .where('id', post_id)
             .update({ status: 'complete' });
-          let updatedConfirmStatus = await this.knex('application')
-            .where('post_id', post_id)
-            .andWhere('user_id', id)
-            .update({ confirm: false });
         }
         return { status: true };
       }
