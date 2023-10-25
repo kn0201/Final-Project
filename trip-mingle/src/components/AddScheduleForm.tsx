@@ -39,16 +39,20 @@ export function AddScheduleForm(props: {
     startDate: string | undefined;
     endDate: string | undefined;
   }) => void;
+
+  confirmedUsersList?: any;
 }) {
   const { closeModal, addNewScheduleCard } = props;
-
+  const [userList, setUserList] = useState(props.confirmedUsersList || null);
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const countriesListData = countriesList;
   const [imageFile, setImageFile] = useState<ImageFile | null>(null);
   const { token, payload, setToken } = useToken();
   const [country, setCountry] = useState("");
   const [code, setCode] = useState("");
+
   const [selectedCountry, setSelectedCountry] = useState(
+    "Destination Country *"
     "Destination Country *"
   );
 
@@ -103,6 +107,7 @@ export function AddScheduleForm(props: {
     country: string,
     imageFile?: ImageFile | null
   ) {
+    let user_id_array = [];
     if (!title) {
       IonNeverToast.show({
         type: "warning",
@@ -111,7 +116,7 @@ export function AddScheduleForm(props: {
       return;
     }
     Keyboard.dismiss;
-    console.log("add plan");
+
     try {
       let formData = new FormData();
       if (!imageFile) {
@@ -122,6 +127,19 @@ export function AddScheduleForm(props: {
       }
       formData.append("title", title);
       formData.append("country", country);
+      if (userList != null) {
+        formData.append("user_list", userList.join(""));
+        let json = await api2.upload(
+          "/planning/tour_plan",
+          formData,
+          object({
+            plan_id: id(),
+            image_path: string(),
+          }),
+          token
+        );
+      }
+
       let json = await api2.upload(
         "/planning/plan",
         formData,
@@ -146,7 +164,7 @@ export function AddScheduleForm(props: {
       });
       closeModal();
 
-      reset();
+      // reset();
     } catch (error) {
       let message = String(error);
       IonNeverDialog.show({

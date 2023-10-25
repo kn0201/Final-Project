@@ -109,6 +109,9 @@ export default function TourScreen({ navigation }) {
   useEvent<RejectEvent>("Reject", (event) => {
     getPostInfo();
   });
+  useEvent<CloseEvent>("Close", (event) => {
+    getPostInfo();
+  });
 
   // Search bar
   const [search, setSearch] = useState("");

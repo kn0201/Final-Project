@@ -57,7 +57,7 @@ export interface AppParamList {
   };
   ExplorePage: {
     screen: string;
-    params: {
+    params?: {
       id: number;
       title: string;
       status: string;
@@ -65,7 +65,12 @@ export interface AppParamList {
   };
   NewSnap: undefined;
   Comment: { post_id: number };
-  "Other Profile": { id: number; username: string; post_id: string };
+  "Other Profile": {
+    id: number;
+    username: string;
+    post_id: string;
+    post_user_id?: string;
+  };
   Snap: undefined;
   "Blog Detail": { post_id: number };
 }

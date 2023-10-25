@@ -131,6 +131,9 @@ export default function OtherProfileScreen({
   useEvent<ConfirmEvent>("Confirm", (event) => {
     getApplicationList();
   });
+  useEvent<CloseEvent>("Close", (event) => {
+    getApplicationList();
+  });
 
   const ItemView = useCallback(
     ({ item, index }: ListRenderItemInfo<AppliedUserItem>) => (

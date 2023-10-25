@@ -200,6 +200,26 @@ export class ApplicationService {
     }
   }
 
+  async getCheckPlanStatus(id, user_id, req) {
+    try {
+      const payload = this.jwtService.decode(
+        req.headers.authorization.split(' ')[1],
+      );
+      let login_user_id = payload.user_id;
+      let result = await this.knex('tour_plan')
+        .select('id')
+        .where('post_id', id)
+        .first();
+      if (result) {
+        return { result: true };
+      } else {
+        return { result: false };
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   async acceptAppliedUsers(post_id, id, body, req) {
     try {
       const payload = this.jwtService.decode(
