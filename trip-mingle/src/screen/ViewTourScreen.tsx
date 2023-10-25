@@ -78,7 +78,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
   // Header
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: "Tour Member",
+      headerTitle: "My Tour",
     });
   }, []);
 
@@ -87,7 +87,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
     id: number,
     username: string,
     post_id: string,
-    post_user_id?: string
+    post_user_id?: string,
   ) => {
     navigation.navigate("Other Profile", {
       id,
@@ -111,14 +111,6 @@ export default function ViewTourScreen({ route }: { route: any }) {
     getPostDetail();
   }, []);
 
-  // Start Tour Plan
-  const handleStartPlanClick = () => {
-    navigation.navigate("Tour Plan", {
-      user_id: post?.user_id,
-      post_is: post?.id,
-    });
-  };
-
   // Confirm
   const [isConfirm, setIsConfirm] = useState<boolean | null>(false);
   const dispatchConfirmEvent = useEvent<ConfirmEvent>("Confirm");
@@ -128,7 +120,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
         `/application/confirm/${id}/${user_id}`,
         { username },
         confirmStatusParser,
-        token
+        token,
       );
       setIsConfirm(!isConfirm);
       dispatchConfirmEvent("Confirm");
@@ -151,7 +143,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
         `/application/reject/${id}/${user_id}`,
         { username },
         confirmStatusParser,
-        token
+        token,
       );
       setIsConfirm(null);
       dispatchRejectEvent("Reject");
@@ -171,7 +163,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
       let confirmedUsersList = await api.get(
         `/application/tour/${id}/${post_user_id}`,
         confirmedUserParser,
-        token
+        token,
       );
       setConfirmedUsers(confirmedUsersList);
     } catch (err) {
@@ -188,7 +180,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
     try {
       let allConfirmStatus = await api.get(
         `/application/all/${id}`,
-        allConfirmStatusParser
+        allConfirmStatusParser,
       );
       setAllConfirm(allConfirmStatus?.result);
     } catch (err) {
@@ -285,12 +277,12 @@ export default function ViewTourScreen({ route }: { route: any }) {
         </View>
       </>
     ),
-    []
+    [],
   );
 
   return (
     <>
-      <View style={{ flexGrow: 0 }}>
+      <View style={{ flexGrow: 1 }}>
         <FlatList
           data={confirmedUsers}
           keyExtractor={(item, index) => index.toString()}

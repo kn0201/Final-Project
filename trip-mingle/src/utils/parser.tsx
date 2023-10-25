@@ -294,6 +294,8 @@ export const getMyPlanListParser = object({
       plan_id: number(),
       plan_title: string(),
       image_path: string(),
+      startDate: string(),
+      endDate: string(),
     }),
   ),
 });
