@@ -203,7 +203,7 @@ export const applicationInfoParser = nullable(
   ),
 );
 
-export const applyTourParser = object({});
+export const applyTourParser = object({ result: boolean() });
 
 export const applicationStatusParser = object({
   status: nullable(boolean()),

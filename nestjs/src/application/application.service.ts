@@ -288,7 +288,7 @@ export class ApplicationService {
         .where('id', id)
         .first();
       const existingApplication = await this.knex
-        .select('id', 'status')
+        .select('id')
         .from('application')
         .where('user_id', user_id)
         .andWhere('post_id', id)
@@ -299,14 +299,14 @@ export class ApplicationService {
             id: existingApplication.id,
           })
           .del();
-        return {};
+        return { result: false };
       } else if (!existingApplication && postStatus.status === 'open') {
         await this.knex('application').insert({
           user_id: user_id,
           post_id: id,
           status: false,
         });
-        return {};
+        return { result: true };
       } else {
         throw new Error('Please contact the tour organizer');
       }

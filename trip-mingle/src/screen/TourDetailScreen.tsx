@@ -384,7 +384,7 @@ const TourDetailScreen = ({
         token,
       );
       dispatchApplyTourEvent("ApplyTour");
-      if (applicationStatus?.status === false) {
+      if (applicationStatus?.status === null) {
         setApplicationStatus({ status: true, confirm_status: null });
         IonNeverDialog.show({
           type: "success",
@@ -395,8 +395,9 @@ const TourDetailScreen = ({
             IonNeverDialog.dismiss();
           },
         });
-      } else {
-        setApplicationStatus({ status: false, confirm_status: null });
+      }
+      if (applicationStatus?.status === false) {
+        setApplicationStatus({ status: null, confirm_status: null });
         IonNeverDialog.show({
           type: "success",
           title: `Success`,
@@ -532,7 +533,7 @@ const TourDetailScreen = ({
                   onPress={apply}
                 >
                   <Text style={TourDetailScreenStyleSheet.text}>
-                    {applicationStatus?.status === false ? "Apply" : "Applied"}
+                    {applicationStatus?.status === null ? "Apply" : "Applied"}
                   </Text>
                 </TouchableOpacity>
               ) : applicationStatus?.status === true &&
