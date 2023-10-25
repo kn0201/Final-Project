@@ -27,6 +27,7 @@ import {
   AddPostEvent,
   DeleteEvent,
   LikeEvent,
+  RejectEvent,
   UpdateProfileEvent,
 } from "../utils/events";
 
@@ -103,6 +104,9 @@ export default function TourScreen({ navigation }) {
     getPostInfo();
   });
   useEvent<DeleteEvent>("Delete", (event) => {
+    getPostInfo();
+  });
+  useEvent<RejectEvent>("Reject", (event) => {
     getPostInfo();
   });
 

@@ -9,16 +9,29 @@ import {
   Dimensions,
   Animated,
   SafeAreaView,
+  Text,
 } from "react-native";
 import { Card, Header } from "@rneui/themed";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import {
+  RegisInfo,
+  ScheduleCardInfo,
+  ScheduleCardInputInfo,
+} from "../utils/types";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
+import { Entypo } from "@expo/vector-icons";
 import AddScheduleForm from "../components/AddScheduleForm";
+import { useNavigation } from "@react-navigation/native";
 import { useAppNavigation } from "../../navigators";
 import { useGet } from "../hooks/useGet";
 import { ParseResult, array, number, object, string } from "cast.ts";
+import { apiOrigin } from "../utils/apiOrigin";
 import { api, api2 } from "../apis/api";
+import UserPageStyleSheet from "../StyleSheet/UserPageCss";
+import useBoolean from "../hooks/useBoolean";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { flex, row } from "../StyleSheet/StyleSheetHelper";
 
 const Stack = createStackNavigator();
 
@@ -50,6 +63,8 @@ let getMyPlanListParser = object({
       plan_id: number(),
       plan_title: string(),
       image_path: string(),
+      startDate: string(),
+      endDate: string(),
     })
   ),
 });
@@ -157,7 +172,42 @@ function ScheduleCard(props: { item: PlanListItem }) {
       }
     >
       <Card>
-        <Card.Title>{item.plan_title}</Card.Title>
+        <Card.Title>
+          <Text>{item.plan_title}</Text>
+        </Card.Title>
+        <View
+          style={{
+            display: flex,
+            justifyContent: "space-between",
+            flexDirection: "row",
+          }}
+        >
+          <View
+            style={{
+              display: flex,
+              flexDirection: row,
+              width: "30%",
+              minWidth: 100,
+              justifyContent: "space-between",
+            }}
+          >
+            <Text>{item.startDate.split("T")[0]}</Text>
+            <Entypo name="aircraft-take-off" size={24} color="black" />
+          </View>
+
+          <View
+            style={{
+              display: flex,
+              flexDirection: row,
+              width: "30%",
+              minWidth: 100,
+              justifyContent: "space-between",
+            }}
+          >
+            <Entypo name="aircraft-landing" size={24} color="black" />
+            <Text>{item.endDate.split("T")[0]}</Text>
+          </View>
+        </View>
         <Card.Divider />
         <Card.Image
           style={{ padding: 0, height: 200 }}

@@ -194,16 +194,20 @@ export default function OtherProfileScreen({
               paddingTop: 5,
             }}
           >
-            <TouchableOpacity
-              style={OtherProfileScreenStyleSheet.button}
-              onPress={accept}
-            >
-              <Text style={OtherProfileScreenStyleSheet.text}>
-                {profileInfo.application_status === false
-                  ? `Accept the application for tour #${post_id}`
-                  : `Cancel the acceptance for tour #${post_id}`}
-              </Text>
-            </TouchableOpacity>
+            {profileInfo.confirm_status === true ? (
+              <></>
+            ) : (
+              <TouchableOpacity
+                style={OtherProfileScreenStyleSheet.button}
+                onPress={accept}
+              >
+                <Text style={OtherProfileScreenStyleSheet.text}>
+                  {profileInfo.application_status === false
+                    ? `Accept the application for tour #${post_id}`
+                    : `Cancel the acceptance for tour #${post_id}`}
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         ) : null}
       </ScrollView>

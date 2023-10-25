@@ -15,10 +15,13 @@ export class PlanningService {
     let planList: Row[] = await this.knex
       .from('plan')
       .innerJoin('image', 'image.id', 'plan.image_id')
+      .innerJoin('plan_detail', { 'plan.id': 'plan_detail.plan_id' })
       .select(
         'plan.id as plan_id',
         'plan.title as plan_title',
         'image.path as image_path',
+        'plan_detail.start_date as startDate',
+        'plan_detail.end_date as endDate',
       )
       .where({ 'plan.user_id': user_id });
     return { planList };

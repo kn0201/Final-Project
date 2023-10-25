@@ -281,5 +281,22 @@ export const snapListParser = array(
 );
 
 export const confirmStatusParser = object({
+  status: boolean(),
+});
+
+export const allConfirmStatusParser = object({
   result: boolean(),
 });
+
+export const getMyPlanListParser = object({
+  planList: array(
+    object({
+      plan_id: number(),
+      plan_title: string(),
+      image_path: string(),
+    }),
+  ),
+});
+export type PlanListItem = ParseResult<
+  typeof getMyPlanListParser
+>["planList"][number];

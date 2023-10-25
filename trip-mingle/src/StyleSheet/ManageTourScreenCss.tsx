@@ -50,7 +50,7 @@ const ManageTourScreenStyleSheet = StyleSheet.create({
   rejectButton: {
     width: 55,
     height: 33,
-    marginRight: 13,
+    marginRight: 8,
     justifyContent: "center",
     borderWidth: 1,
     borderRadius: 10,
@@ -66,6 +66,20 @@ const ManageTourScreenStyleSheet = StyleSheet.create({
     fontSize: 14,
     marginRight: 13,
     color: "black",
+    textAlign: "center",
+  },
+  planButton: {
+    height: 50,
+    marginRight: 2,
+    justifyContent: "center",
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: theme.primaryColor,
+    backgroundColor: theme.primaryColor,
+  },
+  planButtonText: {
+    fontSize: 18,
+    color: theme.primaryTextColor,
     textAlign: "center",
   },
 });
