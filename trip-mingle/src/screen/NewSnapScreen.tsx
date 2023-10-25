@@ -30,6 +30,8 @@ import { SpotInfo } from "../utils/types";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { boolean, object } from "cast.ts";
 import { LinearGradient } from "expo-linear-gradient";
+import useEvent from "react-use-event";
+import { AddSnapEvent } from "../utils/events";
 
 type ImageFile = {
   uri: string;
@@ -49,6 +51,7 @@ export default function NewSnapScreen() {
   const { token } = useToken();
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const navigation = useAppNavigation();
+  const dispatchAppSnapEvent = useEvent<AddSnapEvent>("AddSnap");
   const [image, setImage] = useState(null);
   const [content, setContent] = useState<string>("");
   const [imageFile, setImageFile] = useState<ImageFile | null>(null);
@@ -229,7 +232,7 @@ export default function NewSnapScreen() {
           title: "Add New Snap",
           firstButtonVisible: true,
         });
-
+        dispatchAppSnapEvent("AddSnap");
         navigation.navigate("Snap");
       }
     } catch (error) {

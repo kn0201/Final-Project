@@ -35,18 +35,14 @@ import {
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import { useGet } from "../hooks/useGet";
 import AddScheduleForm from "../components/AddScheduleForm";
+import { useAppNavigation } from "../../navigators";
 
-export default function OtherProfileScreen({
-  route,
-  navigation,
-}: {
-  route: any;
-  navigation: any;
-}) {
+export default function ViewTourScreen({ route }: { route: any }) {
   const { token, payload, setToken } = useToken();
   let login_user_id = payload?.user_id;
   const { IonNeverDialog } = useIonNeverNotification();
   const translateAnim = useRef(new Animated.Value(0)).current;
+  const navigation = useAppNavigation();
   const { width, height } = Dimensions.get("screen");
   const openModal = () => {
     console.log("opened modal");

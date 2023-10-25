@@ -31,7 +31,8 @@ export class SnapService {
         'post.system_location_id',
         'system_location.id',
       )
-      .leftJoin('image', 'image.post_id', 'post.id');
+      .leftJoin('image', 'image.post_id', 'post.id')
+      .orderBy('created_at', 'desc');
 
     for (let result of results) {
       let avatar_path = await this.knex
