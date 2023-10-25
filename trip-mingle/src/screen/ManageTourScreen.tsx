@@ -189,7 +189,7 @@ export default function OtherProfileScreen({
   );
 
   return (
-    <View style={{ flexGrow: 0 }}>
+    <View style={{ flexGrow: 1 }}>
       <FlatList
         data={applications}
         keyExtractor={(item, index) => index.toString()}

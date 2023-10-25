@@ -55,6 +55,32 @@ export class ApplicationService {
     }
   }
 
+  async getAllConfirmStatus(post_id) {
+    try {
+      const postInfo = await this.knex
+        .select('headcount')
+        .from('post')
+        .where('id', post_id)
+        .first();
+      const number_of_confirm = await this.knex
+        .count('id')
+        .from('application')
+        .where('post_id', post_id)
+        .andWhere('confirm', true)
+        .first();
+      console.log(number_of_confirm.count);
+
+      if (number_of_confirm.count === 0) {
+        return { result: false };
+      }
+      if (number_of_confirm.count === postInfo.headcount) {
+        return { result: true };
+      } else return { result: false };
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   async getAppliedUsers(id, req) {
     try {
       const payload = this.jwtService.decode(

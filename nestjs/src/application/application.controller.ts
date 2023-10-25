@@ -27,6 +27,11 @@ export class ApplicationController {
     return this.applicationService.getUserAcceptStatus(+post_id, req);
   }
 
+  @Get('all/:post_id')
+  getAllConfirmStatus(@Param('post_id') post_id: string) {
+    return this.applicationService.getAllConfirmStatus(+post_id);
+  }
+
   @UseGuards(AuthGuard)
   @Get('users/:post_id')
   getAppliedUsers(@Param('post_id') post_id: string, @Req() req: Request) {
