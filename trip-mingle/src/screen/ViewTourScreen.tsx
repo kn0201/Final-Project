@@ -7,6 +7,8 @@ import {
   TouchableWithoutFeedback,
   Image,
   TouchableOpacity,
+  Animated,
+  Dimensions,
 } from "react-native";
 import { ItemSeparatorView, setStarRating } from "./PostScreen";
 import ManageTourScreenStyleSheet from "../StyleSheet/ManageTourScreenCss";
@@ -14,9 +16,11 @@ import { apiOrigin } from "../utils/apiOrigin";
 import { ConfirmedUserItem, PostDetailItem } from "../utils/types";
 import { api } from "../apis/api";
 import {
+  PlanListItem,
   allConfirmStatusParser,
   confirmStatusParser,
   confirmedUserParser,
+  getMyPlanListParser,
   postDetailParser,
 } from "../utils/parser";
 import { useToken } from "../hooks/useToken";
@@ -29,6 +33,8 @@ import {
   UpdateProfileEvent,
 } from "../utils/events";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
+import { useGet } from "../hooks/useGet";
+import AddScheduleForm from "../components/AddScheduleForm";
 
 export default function OtherProfileScreen({
   route,
@@ -40,6 +46,32 @@ export default function OtherProfileScreen({
   const { token, payload, setToken } = useToken();
   let login_user_id = payload?.user_id;
   const { IonNeverDialog } = useIonNeverNotification();
+  const translateAnim = useRef(new Animated.Value(0)).current;
+  const { width, height } = Dimensions.get("screen");
+  const openModal = () => {
+    console.log("opened modal");
+    Animated.timing(translateAnim, {
+      duration: 500,
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const closeModal = () => {
+    Animated.timing(translateAnim, {
+      duration: 500,
+      toValue: 0,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const myPlanListResult = useGet("/planning/my-plans", getMyPlanListParser);
+
+  const addNewScheduleCard = (newScheduleInfo: PlanListItem) => {
+    myPlanListResult.setState((state) => ({
+      planList: [...state!.planList, newScheduleInfo],
+    }));
+  };
 
   // Params
   const { id, post_user_id } = route.params || {
@@ -261,7 +293,7 @@ export default function OtherProfileScreen({
   );
 
   return (
-    <View style={{ flexGrow: 1 }}>
+    <View style={{ flexGrow: 0 }}>
       <FlatList
         data={confirmedUsers}
         keyExtractor={(item, index) => index.toString()}
@@ -280,12 +312,41 @@ export default function OtherProfileScreen({
         >
           <TouchableOpacity
             style={ManageTourScreenStyleSheet.planButton}
-            onPress={handleStartPlanClick}
+            onPress={() => {
+              openModal();
+            }}
           >
             <Text style={ManageTourScreenStyleSheet.planButtonText}>
               Start Tour Planning
             </Text>
           </TouchableOpacity>
+          <Animated.View
+            style={[
+              {
+                width,
+                height: height * 0.9,
+                position: "absolute",
+                top: height,
+                zIndex: 1,
+                backgroundColor: "white",
+              },
+              {
+                transform: [
+                  {
+                    translateY: translateAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0, -height],
+                    }),
+                  },
+                ],
+              },
+            ]}
+          >
+            <AddScheduleForm
+              closeModal={closeModal}
+              addNewScheduleCard={addNewScheduleCard}
+            />
+          </Animated.View>
         </View>
       ) : (
         <></>
