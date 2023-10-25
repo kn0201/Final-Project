@@ -20,6 +20,7 @@ import { apiOrigin } from "../utils/apiOrigin";
 import useEvent from "react-use-event";
 import { MapEvent, MapPositionEvent } from "../utils/events";
 import { useAppNavigation } from "../../navigators";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function HomePage() {
   const navigation = useAppNavigation();
@@ -38,14 +39,25 @@ export default function HomePage() {
   const dispatchMapEvent = useEvent<MapPositionEvent>("MapPosition");
   return (
     <>
+      <LinearGradient
+        // Background Linear Gradient
+        colors={["#FFFFFF", "rgba(195,214,246,0.8)"]}
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: 0,
+          height: "100%",
+        }}
+      />
       <Header
-        backgroundColor="white"
+        backgroundColor="transparent"
         centerComponent={{
           text: "Trip Mingle 伴旅",
           style: HomePageStyleSheet.header,
         }}
       ></Header>
-      <View style={{ backgroundColor: white }}>
+      <View>
         <ScrollView>
           <View style={HomePageStyleSheet.container}>
             <View
@@ -107,6 +119,7 @@ export default function HomePage() {
                 <ImageBackground
                   source={{ uri: `${apiOrigin}/tokyo.jpg` }}
                   resizeMode="cover"
+                  imageStyle={{ borderRadius: 10 }}
                   style={HomePageStyleSheet.imageBackground}
                 >
                   <TouchableOpacity
@@ -121,6 +134,7 @@ export default function HomePage() {
                 <ImageBackground
                   source={{ uri: `${apiOrigin}/osaka.jpg` }}
                   resizeMode="cover"
+                  imageStyle={{ borderRadius: 10 }}
                   style={HomePageStyleSheet.imageBackground}
                 >
                   <TouchableOpacity
@@ -135,6 +149,7 @@ export default function HomePage() {
                 <ImageBackground
                   source={{ uri: `${apiOrigin}/kyoto.jpg` }}
                   resizeMode="cover"
+                  imageStyle={{ borderRadius: 10 }}
                   style={HomePageStyleSheet.imageBackground}
                 >
                   <TouchableOpacity
@@ -149,6 +164,7 @@ export default function HomePage() {
                 <ImageBackground
                   source={{ uri: `${apiOrigin}/taipei.jpg` }}
                   resizeMode="cover"
+                  imageStyle={{ borderRadius: 10 }}
                   style={HomePageStyleSheet.imageBackground}
                 >
                   <TouchableOpacity
@@ -163,6 +179,7 @@ export default function HomePage() {
                 <ImageBackground
                   source={{ uri: `${apiOrigin}/seoul.jpg` }}
                   resizeMode="cover"
+                  imageStyle={{ borderRadius: 10 }}
                   style={HomePageStyleSheet.imageBackground}
                 >
                   <TouchableOpacity
@@ -177,6 +194,7 @@ export default function HomePage() {
                 <ImageBackground
                   source={{ uri: `${apiOrigin}/bangkok.jpg` }}
                   resizeMode="cover"
+                  imageStyle={{ borderRadius: 10 }}
                   style={HomePageStyleSheet.imageBackground}
                 >
                   <TouchableOpacity

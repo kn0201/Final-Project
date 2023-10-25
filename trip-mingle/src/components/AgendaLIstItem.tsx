@@ -21,6 +21,7 @@ import { boolean, object } from "cast.ts";
 import { useToken } from "../hooks/useToken";
 import { useAppRoute } from "../../navigators";
 import TextButton from "./TextButton";
+import { Modal } from "./Modal";
 
 function Space(props: { height: number }) {
   return (
@@ -32,18 +33,22 @@ function Space(props: { height: number }) {
   );
 }
 export default function AgendaListItem(props: {
-  selectedDate: string;
-  updateScheduleList: (scheduleInfo: ScheduleItemInfo) => void;
+  // selectedDate: string;
+  // updateScheduleList: (scheduleInfo: ScheduleItemInfo) => void;
 }) {
-  const { selectedDate, updateScheduleList } = props;
+  const { selectedDate, updateScheduleList, planId } =
+    useAppRoute<"Add Agenda">();
+  // const { selectedDate, updateScheduleList } = props;
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const { token, payload, setToken } = useToken();
-  const planId = useAppRoute<"AddSchedule">().planId;
+
+  // const planId = useAppRoute<"AddSchedule">().planId;
   const [scheduleInfo, setScheduleInfo] = useState<ScheduleItemInfo>({
     selectedDate: selectedDate,
     startTime: "",
     endTime: "",
     location: "",
+    remark: "",
   });
 
   const clearInputRef = useRef({ clearInput() {} }).current;
@@ -63,12 +68,19 @@ export default function AgendaListItem(props: {
       return;
     }
     try {
+      console.log("HERE");
       let data = {
-        selected_date: selectedDate,
-        start_time: scheduleInfo.startTime,
-        end_time: scheduleInfo.endTime,
+        selectedDate: new Date(selectedDate + " 00:00").toISOString(),
+        startTime: new Date(
+          selectedDate + " " + scheduleInfo.startTime
+        ).toISOString(),
+        endTime: new Date(
+          selectedDate + " " + scheduleInfo.endTime
+        ).toISOString(),
         location: scheduleInfo.location,
       };
+      console.log({ data });
+
       let res = await api.post(
         `/planning/${planId}/event`,
         data,
@@ -76,6 +88,8 @@ export default function AgendaListItem(props: {
         token
       );
       if (res.result) {
+        updateScheduleList(scheduleInfo);
+
         IonNeverDialog.show({
           type: "success",
           title: "Add a new event",
@@ -113,10 +127,13 @@ export default function AgendaListItem(props: {
         <Text style={PlanningStyleSheet.inputTitle}>End Time</Text>
         <TextInput
           style={PlanningStyleSheet.inputContainer}
-          onChangeText={(text) => updateScheduleInfo("endTime", text)}
+          value={scheduleInfo.endTime}
+          onChangeText={(text) =>
+            updateScheduleInfo("endTime", checkTime(text))
+          }
           keyboardType="numeric"
           onEndEditing={() => Keyboard.dismiss()}
-          placeholder="Input End time"
+          placeholder="Input End time (e.g. 15:55)"
           placeholderTextColor="gray"
         ></TextInput>
         <Text style={PlanningStyleSheet.inputTitle}>Location</Text>
@@ -154,11 +171,14 @@ export default function AgendaListItem(props: {
             }
             // addNewEvent(scheduleItem);
             Keyboard.dismiss();
-            updateScheduleList(scheduleInfo);
           }}
         >
-          <TextButton text="Add New Event" onPress={addNewEvent}></TextButton>
-          {/* <Text style={PlanningStyleSheet.loginText}>Add New Event</Text> */}
+          <TextButton
+            text="Add New Event"
+            onPress={() => {
+              addNewEvent(), Keyboard.dismiss();
+            }}
+          ></TextButton>
         </TouchableOpacity>
       </TouchableOpacity>
     </View>

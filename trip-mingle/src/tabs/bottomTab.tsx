@@ -11,14 +11,22 @@ import SchedulePage from "../pages/SchedulePage";
 import { useToken } from "../hooks/useToken";
 import MapPage from "../pages/MapPage";
 import SnapPage from "../pages/SnapPage";
+import { iosBlue, white } from "../StyleSheet/StyleSheetHelper";
 
 const Tab = createBottomTabNavigator();
-
+const black = "#777777";
 function MyTab() {
   const { token } = useToken();
 
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: { backgroundColor: "rgba(195,214,246,0.8)" },
+        tabBarActiveTintColor: iosBlue,
+        tabBarInactiveTintColor: black,
+      }}
+    >
       <Tab.Screen
         name="Home"
         component={HomeScreen}

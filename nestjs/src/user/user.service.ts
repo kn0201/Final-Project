@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { object } from 'cast.ts';
 import { Knex } from 'knex';
 import { InjectKnex } from 'nestjs-knex';
 import { JwtService } from 'src/jwt/jwt.service';
@@ -287,6 +288,22 @@ export class UserService {
         .where('post_id', post_id)
         .andWhere('user_id', id)
         .first();
+      if (application_status == undefined) {
+        return {
+          avatar_path: user.avatar_path ? user.avatar_path : 'yukimin.png',
+          rating: +user.rating,
+          intro: user.intro,
+          gender: user.gender,
+          age: user.age,
+          country: user.country,
+          language: language,
+          hobby: hobby,
+          countries_travelled: countries_travelled,
+          number_of_rating: +number_of_rating.count,
+          application_status: false,
+          confirm_status: null,
+        };
+      }
       return {
         avatar_path: user.avatar_path ? user.avatar_path : 'yukimin.png',
         rating: +user.rating,

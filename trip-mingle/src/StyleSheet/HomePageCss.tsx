@@ -5,7 +5,6 @@ import { center, flex, row, white } from "./StyleSheetHelper";
 export const HomePageStyleSheet = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
   },
   title: {
     display: "flex",
@@ -66,6 +65,7 @@ export const HomePageStyleSheet = StyleSheet.create({
     gap: 5,
     backgroundColor: "#444",
     opacity: 0.6,
+    borderRadius: 10,
   },
   image: {
     display: flex,

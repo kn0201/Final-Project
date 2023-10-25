@@ -263,3 +263,19 @@ export const confirmedUserParser = array(
     confirm_status: boolean(),
   }),
 );
+
+export const snapListParser = array(
+  object({
+    post_id: number(),
+    user_id: number(),
+    username: string(),
+    content: nullable(string()),
+    created_at: string(),
+    location_name: nullable(string()),
+    image_path: nullable(string()),
+    avatar_id: number(),
+    avatar_path: string(),
+    likeCount: number(),
+    isLike: boolean(),
+  }),
+);

@@ -111,13 +111,11 @@ export default function RegisterScreen({ navigation }) {
       type,
       name: filename,
     };
-    console.log("fileUri:", file);
 
     if (!imagePickerResult.canceled) {
       setImage(imagePickerResult.assets[0].uri);
       setImageFile(file);
     }
-    // console.log(imageFile);
   };
 
   const checkUsername = async (text: string) => {
@@ -125,7 +123,7 @@ export default function RegisterScreen({ navigation }) {
       let checker = await api.loginSignUp(
         "/login/check_username",
         { username: text },
-        checkResultParser,
+        checkResultParser
       );
       if (checker.result === true) {
         setCheckUsernameResult(true);
@@ -143,7 +141,7 @@ export default function RegisterScreen({ navigation }) {
       let checker = await api.loginSignUp(
         "/login/check_email",
         { email: text },
-        checkResultParser,
+        checkResultParser
       );
       if (checker.result === true) {
         setCheckEmailResult(true);
@@ -190,7 +188,7 @@ export default function RegisterScreen({ navigation }) {
       const errorObject: any = { ...(error as object) };
       console.log(errorObject);
     }
-    console.log(regisInfo);
+
     navigation.navigate("Users");
   };
 

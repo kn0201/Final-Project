@@ -11,17 +11,17 @@ export class SnapService {
     private jwtService: JwtService,
   ) {}
 
-  async getSnapList() {
-    let result = await this.knex
+  async getSnapList(input?: { user_id: number }) {
+    let results = await this.knex
       .select(
-        'post.id',
+        'post.id as post_id',
         'post.user_id',
         'users.username as username',
         'post.content',
         'post.created_at',
         'system_location.name as location_name',
         'image.path as image_path',
-        'image.path as avatar_path',
+        'users.avatar_id as avatar_id',
       )
       .from('post')
       .where('post.type', 'snap')
@@ -31,17 +31,43 @@ export class SnapService {
         'post.system_location_id',
         'system_location.id',
       )
-      .innerJoin('image', function () {
-        this.on('image.post_id', '=', 'post.id').orOn(
-          'users.avatar_id',
-          '=',
-          'image.id',
-        );
-      });
-    //   .leftJoin('image', 'users.avatar_id', 'image.id');
-    console.log(result);
+      .leftJoin('image', 'image.post_id', 'post.id');
 
-    return;
+    for (let result of results) {
+      let avatar_path = await this.knex
+        .select('image.path as avatar_path')
+        .from('image')
+        .where('image.id', result.avatar_id)
+        .first();
+
+      let likeCount = await this.knex
+        .count('id')
+        .from('like')
+        .where('post_id', result.post_id)
+        .first();
+      if (input.user_id) {
+        let isLike = await this.knex
+          .count('id')
+          .from('like')
+          .where('post_id', result.post_id)
+          .andWhere('user_id', input.user_id)
+          .first();
+
+        if (isLike.count == 0) {
+          Object.assign(result, { isLike: false });
+        } else {
+          Object.assign(result, { isLike: true });
+        }
+      } else {
+        Object.assign(result, { isLike: false });
+      }
+
+      Object.assign(result, { likeCount: +likeCount.count });
+      Object.assign(result, avatar_path);
+      // console.log(result);
+    }
+
+    return results;
   }
 
   async postSnap(input: {

@@ -18,8 +18,15 @@ export class SnapController {
   constructor(private snapService: SnapService) {}
 
   @Get()
-  async getSnapList() {
-    return this.snapService.getSnapList();
+  async getSnapList(@Headers() headers: {}) {
+    let jwt = getJWTPayload(headers);
+    if (jwt) {
+      return this.snapService.getSnapList({
+        user_id: jwt.user_id,
+      });
+    } else {
+      return this.snapService.getSnapList();
+    }
   }
 
   @Post()

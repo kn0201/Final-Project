@@ -10,7 +10,7 @@ const SavedLocationScreenStyleSheet = StyleSheet.create({
     width: "100%",
 
     height: full,
-    backgroundColor: white,
+    // backgroundColor: white,
   },
   outerContainer: {
     marginVertical: 8,

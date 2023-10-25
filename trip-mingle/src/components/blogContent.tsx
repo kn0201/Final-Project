@@ -10,7 +10,7 @@ import * as ImagePicker from "expo-image-picker";
 export default function BlogContent() {
   const [image, setImage] = useState(null);
 
-  const [content, setContent] = useState<string[]>([]);
+  const [content, setContent] = useState<string>();
 
   const addImage = async () => {
     let _image = await ImagePicker.launchImageLibraryAsync({
@@ -19,8 +19,7 @@ export default function BlogContent() {
       aspect: [4, 3],
       quality: 1,
     });
-    // @ts-ignore
-    console.log(JSON.stringify(_image.assets[0].uri));
+
     //@ts-ignore
     if (!_image.canceled) {
       //@ts-ignore
@@ -42,8 +41,7 @@ export default function BlogContent() {
         <View>
           <TextInput
             onChangeText={(content) => {
-              setContent([...content, content]);
-              console.log(content);
+              setContent(content);
             }}
             multiline
             placeholder="Post Content *"

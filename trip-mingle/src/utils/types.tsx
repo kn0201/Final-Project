@@ -158,12 +158,16 @@ export type LanguageList = {
 };
 
 export type ScheduleItem = { id: number } & ScheduleItemInfo;
+export type ScheduleMark = { id: number } & ScheduleDate;
+
+export type ScheduleData = { [key: string]: ScheduleItem[] };
 
 export type ScheduleItemInfo = {
   selectedDate: string;
   startTime: string;
   endTime: string;
   location: string;
+  remark: string;
 };
 
 export type ScheduleDate = {
@@ -252,4 +256,18 @@ export type ConfirmedUserItem = {
 export type UserAcceptStatus = {
   status: boolean | null;
   confirm_status: boolean | null;
+};
+
+export type Snap = {
+  post_id: number;
+  user_id: number;
+  username: string;
+  content: string | null;
+  created_at: string;
+  location_name: string | null;
+  image_path: string | null;
+  avatar_id: number;
+  avatar_path: string;
+  likeCount: number;
+  isLike: boolean;
 };

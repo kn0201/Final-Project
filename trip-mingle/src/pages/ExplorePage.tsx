@@ -8,7 +8,7 @@ import TourDetailScreen from "../screen/TourDetailScreen";
 import OtherProfileScreen from "../screen/OtherProfileScreen";
 import ManageTourScreen from "../screen/ManageTourScreen";
 import BlogDetailScreen from "../screen/BlogDetailScreen";
-import ViewTourScreen from "../screen/ViewTourScreen";
+// import ViewTourScreen from "../screen/ViewTourScreen";
 
 const Stack = createStackNavigator();
 
@@ -78,7 +78,7 @@ export default function ExplorePage() {
             },
           }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Tour Member"
           component={ViewTourScreen}
           options={{
@@ -87,7 +87,7 @@ export default function ExplorePage() {
               backgroundColor: "white",
             },
           }}
-        />
+        /> */}
       </Stack.Navigator>
     </>
   );

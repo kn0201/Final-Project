@@ -94,6 +94,24 @@ export class PlanningService {
       return { result: true };
     }
   }
+
+  async getMarks(plan_id: number) {
+    type Row = {
+      id: number;
+      start_date: string;
+      end_date: string;
+    };
+    console.log({ plan_id });
+    let marks: Row = await this.knex
+      .from('plan_detail')
+      .leftJoin('plan', { 'plan.id': 'plan_detail.plan_id' })
+      .select('plan_id as id', 'start_date as startDate', 'end_date as endDate')
+      .where({ 'plan.id': plan_id })
+      .first();
+    console.log({ marks });
+    return { marks };
+  }
+
   async addNewEvent(
     user_id: number,
     input: {
@@ -106,9 +124,9 @@ export class PlanningService {
   ) {
     let row = await this.knex
       .select('id')
-      .from('daily_event')
+      .from('plan')
       .where('id', input.planning_id)
-      .andWhere('detail.id', user_id)
+      .andWhere('user_id', user_id)
       .first();
     if (row == undefined) {
       throw new ForbiddenException('you are not the planing owner');
@@ -119,8 +137,35 @@ export class PlanningService {
         start_time: input.start_time,
         end_time: input.end_time,
         location: input.location,
+        remark: '',
       });
       return { result: true };
     }
+  }
+
+  async getEvent(plan_id: number) {
+    type Row = {
+      id: number;
+      selected_date: string;
+      start_date: string;
+      end_date: string;
+      location: string;
+      remark: string;
+    };
+    let events: Row[] = await this.knex
+      .from('daily_event')
+      .leftJoin('plan', { 'plan.id': 'daily_event.plan_id' })
+      .select(
+        'plan_id as id',
+        'selected_date as selectedDate',
+        'start_time as startTime',
+        'end_time as endTime',
+        'location as location',
+        'remark as remark',
+      )
+      .where('plan.id', plan_id);
+    console.log('backend event:', events);
+
+    return events;
   }
 }
