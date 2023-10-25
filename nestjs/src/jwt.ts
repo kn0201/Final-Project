@@ -9,7 +9,7 @@ export let jwtParser = object({
 
 export type JWTPayload = ParseResult<typeof jwtParser>;
 
-export function getJWTPayload(headers: { authorization?: string }) {
+export function getJWTPayload(headers: { authorization?: string }): JWTPayload {
   let token = headers.authorization?.replace('Bearer ', '');
   if (!token) throw new UnauthorizedException('missing bearer token');
   try {
@@ -17,5 +17,15 @@ export function getJWTPayload(headers: { authorization?: string }) {
     return jwtParser.parse(payload);
   } catch (error) {
     throw new UnauthorizedException('invalid jwt token: ' + error);
+  }
+}
+
+export function maybeGetJWTPayload(headers: {
+  authorization?: string;
+}): JWTPayload | null {
+  try {
+    return getJWTPayload(headers);
+  } catch (error) {
+    return null;
   }
 }

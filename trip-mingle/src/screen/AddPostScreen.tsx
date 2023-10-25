@@ -31,7 +31,7 @@ import {
   countryListParser,
   languageListParser,
 } from "../utils/parser";
-import { api } from "../apis/api";
+import { api, api2 } from "../apis/api";
 import { useToken } from "../hooks/useToken";
 import { useGet } from "../hooks/useGet";
 import { theme } from "../theme/variables";
@@ -42,11 +42,12 @@ import {
   RichToolbar,
   actions,
 } from "react-native-pell-rich-editor";
+import { boolean, object } from "cast.ts";
 
 //@ts-ignore
 export function AddPostScreen1({ navigation }) {
   const { token, payload, setToken } = useToken();
-  const { IonNeverDialog } = useIonNeverNotification();
+  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const [title, setTitle] = useState("");
   const [budget, setBudget] = useState("");
   const [content, setContent] = useState("");
@@ -734,6 +735,10 @@ export function AddPostScreen1({ navigation }) {
     }
   };
 
+  const pressAddImage = async () => {
+    console.log("add image");
+  };
+
   const addImage = async () => {
     let imagePickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -763,11 +768,35 @@ export function AddPostScreen1({ navigation }) {
       type,
       name: filename,
     };
+    try {
+      let formData = new FormData();
 
-    setImageFile({
-      uri: file.uri,
-      file: file as unknown as File,
-    });
+      formData.append("image", file as any);
+
+      let json = await api2.upload(
+        "/snap",
+        formData,
+        object({
+          result: boolean(),
+        }),
+        token
+      );
+      if (json.result == true) {
+        IonNeverDialog.show({
+          type: "success",
+          title: "Add New Snap",
+          firstButtonVisible: true,
+        });
+      }
+    } catch (error) {
+      let message = String(error);
+      IonNeverDialog.show({
+        type: "warning",
+        title: "Failed Snap",
+        message,
+        firstButtonVisible: true,
+      });
+    }
   };
 
   const BlogEditorScreen = () => {
@@ -796,6 +825,9 @@ export function AddPostScreen1({ navigation }) {
               actions.setUnderline,
             ]}
             style={AddPostPageStyleSheet.richTextToolbarStyle}
+            onPressAddImage={() => {
+              addImage();
+            }}
           />
         </View>
         {showDescError && (
@@ -823,18 +855,6 @@ export function AddPostScreen1({ navigation }) {
           <ScrollView>
             <View style={{ height: "auto", alignItems: "center" }}>
               <View style={AddPostPageStyleSheet.typeContainer}>
-                <CheckBox
-                  center
-                  title="BLOG"
-                  checkedIcon="dot-circle-o"
-                  uncheckedIcon="circle-o"
-                  checked={checkType === "blog"}
-                  onPress={() => {
-                    setCheckType("blog");
-                  }}
-                  size={20}
-                  containerStyle={{ backgroundColor: "transparent" }}
-                />
                 <CheckBox
                   center
                   title="TOUR"
@@ -867,7 +887,7 @@ export function AddPostScreen1({ navigation }) {
               )}
               {checkType !== "enquire" ? <PeriodSelector /> : <></>}
               {checkType === "tour" ? BudgetInput() : <></>}
-              {checkType === "blog" ? BlogEditorScreen() : ContentInput()}
+              {ContentInput()}
               {checkType === "tour" ? <HeadcountCheckbox /> : <></>}
               {checkType === "tour" ? <GenderCheckbox /> : <></>}
               {checkType === "tour" ? <AgeCheckbox /> : <></>}

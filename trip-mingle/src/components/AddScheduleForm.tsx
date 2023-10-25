@@ -22,7 +22,7 @@ import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { apiOrigin } from "../utils/apiOrigin";
 import { useToken } from "../hooks/useToken";
-import { json } from "express";
+
 import { api, api2 } from "../apis/api";
 import { id, object, string } from "cast.ts";
 import TextButton from "./TextButton";
@@ -138,33 +138,42 @@ export function AddScheduleForm(props: {
           }),
           token
         );
+        addNewScheduleCard({
+          plan_id: json.plan_id,
+          plan_title: title,
+          image_path: json.image_path,
+          startDate: "",
+          endDate: "",
+        });
+      } else {
+        let json = await api2.upload(
+          "/planning/plan",
+          formData,
+          object({
+            plan_id: id(),
+            image_path: string(),
+          }),
+          token
+        );
+        addNewScheduleCard({
+          plan_id: json.plan_id,
+          plan_title: title,
+          image_path: json.image_path,
+          startDate: "",
+          endDate: "",
+        });
       }
 
-      let json = await api2.upload(
-        "/planning/plan",
-        formData,
-        object({
-          plan_id: id(),
-          image_path: string(),
-        }),
-        token
-      );
-      console.log("add plan result:", json);
-      // IonNeverDialog.show({
-      //   type: "success",
-      //   title: "Add a new plan",
-      //   firstButtonVisible: true,
-      // });
-      // addNewScheduleCard({
-      //   plan_id: json.plan_id,
-      //   plan_title: title,
-      //   image_path: json.image_path,
-      //   startDate: "",
-      //   endDate: "",
-      // });
-      // closeModal();
+      // console.log("add plan result:", json);
+      IonNeverDialog.show({
+        type: "success",
+        title: "Add a new plan",
+        firstButtonVisible: true,
+      });
 
-      // reset();
+      closeModal();
+
+      reset();
     } catch (error) {
       let message = String(error);
       IonNeverDialog.show({

@@ -11,7 +11,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 import { flex } from "../StyleSheet/StyleSheetHelper";
-import { api } from "../apis/api";
+import { api, api2 } from "../apis/api";
 import { useToken } from "../hooks/useToken";
 import { checkResultParser, updateUsernameResultParser } from "../utils/parser";
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
@@ -29,9 +29,8 @@ export default function ChangeUsername({ username, navigation }) {
 
   const checkUsername = async (text: string) => {
     try {
-      let checker = await api.loginSignUp(
-        "/login/check_username",
-        { username: text },
+      let checker = await api2.get(
+        "/login/check_username?" + new URLSearchParams({ username: text }),
         checkResultParser
       );
       if (checker.result === true) {
@@ -40,8 +39,7 @@ export default function ChangeUsername({ username, navigation }) {
         setCheckUsernameResult(false);
       }
     } catch (error) {
-      const errorObject: any = { ...(error as object) };
-      console.log(errorObject);
+      console.log("failed to check username:", error);
     }
   };
 

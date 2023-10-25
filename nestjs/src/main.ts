@@ -10,6 +10,7 @@ async function bootstrap() {
   let port = env.WEB_PORT;
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors();
+  app.useStaticAssets('uploads');
 
   await app.listen(port);
 

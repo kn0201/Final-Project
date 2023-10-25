@@ -18,11 +18,13 @@ import { ScheduleItemInfo } from "./src/utils/types";
 //- User Page
 //  - Saved Location
 export interface AppParamList {
-  AddSchedule: {
-    planId: number;
-    selectedDate: string;
-    updateScheduleList: (scheduleInfo: ScheduleItemInfo) => void;
-  };
+  AddSchedule:
+    | { planId: number }
+    | {
+        planId: number;
+        selectedDate: string;
+        updateScheduleList: (scheduleInfo: ScheduleItemInfo) => void;
+      };
   "Add Agenda": {
     planId: number;
     selectedDate: string;

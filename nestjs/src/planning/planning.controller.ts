@@ -36,6 +36,31 @@ export class PlanningController {
     return this.planningService.getMyPlanList(jwt.user_id);
   }
 
+  @Post('tour_plan')
+  @UseInterceptors(FileInterceptor('image', { storage: storage }))
+  addNewTourPlan(
+    @Body() body,
+    @UploadedFile() image: Express.Multer.File | undefined,
+    @Headers() headers: {},
+  ) {
+    let jwt = getJWTPayload(headers);
+
+    let input = object({
+      body: object({
+        title: string(),
+        // country: string(),
+        user_list: string(),
+      }),
+    }).parse({ body });
+
+    return this.planningService.addNewTourPlan({
+      user_id: jwt.user_id,
+      title: input.body.title,
+      user_list: input.body.user_list,
+      image_file: image?.filename,
+    });
+  }
+
   @Post('plan')
   @UseInterceptors(FileInterceptor('image', { storage: storage }))
   addNewPlan(

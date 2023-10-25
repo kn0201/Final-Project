@@ -32,6 +32,7 @@ import {
 import {
   ApplicationInfoItem,
   CommentInfo,
+  EnquireDetailItem,
   PostDetailItem,
   ReplyInfoItem,
   UserAcceptStatus,
@@ -64,7 +65,7 @@ import {
 } from "../utils/events";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-const TourDetailScreen = ({
+const EnquireDetailScreen = ({
   route,
   navigation,
 }: {
@@ -77,14 +78,13 @@ const TourDetailScreen = ({
   const [keyboardShow, setKeyboardShow] = useState(false);
   const [avatar, setAvatar] = useState<any>("yukimin.png");
   // Params
-  const { id, title, status } = route.params || {
+  const { id, title } = route.params || {
     id: 0,
-    title: "Tour Detail",
-    status: "",
+    title: "Enquire Detail",
   };
 
   // Header
-  const [postStatus, setPostStatus] = useState(status);
+
   const maxTitleLength = 16;
   const limitedTitle =
     title.length > maxTitleLength
@@ -101,24 +101,13 @@ const TourDetailScreen = ({
             marginLeft: 15,
           }}
         >
-          {postStatus === "open" ? (
-            <Fontisto name="radio-btn-active" color="#0CD320" size={16} />
-          ) : postStatus === "complete" ? (
-            <MaterialIcons
-              name="remove-circle-outline"
-              color="grey"
-              size={20}
-            />
-          ) : (
-            <Fontisto name="close" color="red" size={16} />
-          )}
           <Text style={{ fontWeight: "600", fontSize: 18 }}>
             #{id} {limitedTitle}
           </Text>
         </View>
       ),
     });
-  }, [postStatus]);
+  }, []);
 
   // Likes
   const [isLike, setIsLike] = useState(false);
@@ -203,13 +192,12 @@ const TourDetailScreen = ({
   }, []);
 
   // Get post detail
-  const [post, setPost] = useState<PostDetailItem | null>();
+  const [post, setPost] = useState<EnquireDetailItem | null>();
   const getPostDetail = async () => {
     try {
       let postDetailData = await api.get(`/blog/${id}`, postDetailParser);
       setPost(postDetailData);
       setLikeNumber(postDetailData.number_of_like);
-      setPostStatus(postDetailData.status);
     } catch (err) {
       console.log({ err });
     }
@@ -217,11 +205,6 @@ const TourDetailScreen = ({
   useEffect(() => {
     getPostDetail();
   }, []);
-
-  const locationNames = post?.trip_location?.map((location) => location.name);
-  const locationNamesString = Array.isArray(locationNames)
-    ? locationNames.join(", ")
-    : "";
 
   // Delete post
   const dispatchDeleteEvent = useEvent<DeleteEvent>("Delete");
@@ -361,251 +344,17 @@ const TourDetailScreen = ({
     });
   };
 
-  // Manage application
-  const manage = (id: number, post_user_id?: string) => {
-    navigation.navigate("Manage Tour", { id, post_user_id });
-  };
-
-  // View member
-  const view = (id: number, post_user_id?: string) => {
-    navigation.navigate("Tour Member", { id, post_user_id });
-  };
-
-  // Apply to join/ cancel
-  const [applicationStatus, setApplicationStatus] =
-    useState<UserAcceptStatus>();
-  const dispatchApplyTourEvent = useEvent<ApplyTourEvent>("ApplyTour");
-  const apply = async () => {
-    try {
-      if (token === "") {
-        throw new Error("Please login to join tour");
-      }
-      let result = await api.post(
-        `/application/${id}`,
-        { id },
-        applyTourParser,
-        token
-      );
-      dispatchApplyTourEvent("ApplyTour");
-      if (applicationStatus?.status === null) {
-        setApplicationStatus({ status: true, confirm_status: null });
-        IonNeverDialog.show({
-          type: "success",
-          title: `Success`,
-          message: `Applied to join tour #${id}`,
-          firstButtonVisible: true,
-          firstButtonFunction: () => {
-            IonNeverDialog.dismiss();
-          },
-        });
-      }
-      if (applicationStatus?.status === false) {
-        setApplicationStatus({ status: null, confirm_status: null });
-        IonNeverDialog.show({
-          type: "success",
-          title: `Success`,
-          message: `Cancelled application to\n join tour #${id}`,
-          firstButtonVisible: true,
-          firstButtonFunction: () => {
-            IonNeverDialog.dismiss();
-          },
-        });
-      }
-    } catch (e) {
-      IonNeverDialog.show({
-        type: "warning",
-        title: "Error",
-        message: `${e}`,
-        firstButtonVisible: true,
-        firstButtonFunction: () => {
-          IonNeverDialog.dismiss();
-        },
-      });
-      console.log({ e });
-    }
-  };
-  useEvent<AddCommentEvent>("AddComment", (event) => {
-    getApplicationStatus();
-    getApplicationList();
-  });
-
-  // Get applications status
-  const getApplicationStatus = async () => {
-    try {
-      let applicationStatus = await api.get(
-        `/application/status/${id}`,
-        applicationStatusParser,
-        token
-      );
-      setApplicationStatus(applicationStatus);
-    } catch (err) {
-      console.log({ err });
-    }
-  };
-  useEffect(() => {
-    if (token) {
-      getApplicationStatus();
-    }
-  }, []);
-
-  // Get applications list
-  const [applications, setApplications] = useState<
-    ApplicationInfoItem[] | null
-  >([]);
-  const getApplicationList = async () => {
-    console.log("get Application");
-
-    try {
-      let applicationList = await api.get(
-        `/application/${id}`,
-        applicationInfoParser
-      );
-      setApplications(applicationList);
-    } catch (err) {
-      console.log({ err });
-    }
-  };
-  useEffect(() => {
-    getApplicationList();
-  }, []);
-
-  // Get confirm status
-  const [allConfirm, setAllConfirm] = useState<boolean>(false);
-  const getAllConfirmStatus = async () => {
-    try {
-      let allConfirmStatus = await api.get(
-        `/application/all/${id}`,
-        allConfirmStatusParser
-      );
-      setAllConfirm(allConfirmStatus?.result);
-    } catch (err) {
-      console.log({ err });
-    }
-  };
-  useEffect(() => {
-    getAllConfirmStatus();
-  }, []);
-
-  useEvent<AcceptEvent>("Accept", (event) => {
-    getApplicationList();
-    getPostDetail();
-  });
-  useEvent<RejectEvent>("Reject", (event) => {
-    getApplicationList();
-    getPostDetail();
-  });
-  useEvent<ConfirmEvent>("Confirm", (event) => {
-    getAllConfirmStatus();
-  });
   useEvent<LoginEvent>("Login", (event) => {
-    getApplicationStatus();
     getUserBookmarkStatus();
     getUserLikeStatus();
-    getAllConfirmStatus();
+
     navigation.pop();
   });
   useEvent<UpdateProfileEvent>("UpdateProfile", (event) => {
-    getApplicationList();
     getPostDetail();
     getUserIcon();
     getCommentInfo();
   });
-
-  // Display applications list
-  const ApplicationAvatar = ({ headcount }: { headcount: number }) => {
-    return (
-      <View style={{ maxHeight: 50 }}>
-        <View style={TourDetailScreenStyleSheet.applyContainer}>
-          <ScrollView style={{ flex: 0 }}>
-            <View style={TourDetailScreenStyleSheet.applyRowContainer}>
-              {Array.from({ length: headcount }, (_, index) => {
-                if (applications && index < applications.length) {
-                  const application = applications[index];
-                  return (
-                    <TouchableWithoutFeedback
-                      key={`container-${application.id}`}
-                      onPress={() => {
-                        handleAvatarClick(
-                          application.user_id,
-                          application.username,
-                          id,
-                          post?.user_id.toString()
-                        );
-                      }}
-                    >
-                      <Image
-                        key={`application-${application.id}`}
-                        style={TourDetailScreenStyleSheet.avatar}
-                        source={{
-                          uri: `${apiOrigin}/${
-                            application.avatar_path || "yukimin.png"
-                          }`,
-                        }}
-                      />
-                    </TouchableWithoutFeedback>
-                  );
-                } else {
-                  return (
-                    <Image
-                      key={`default-${index}`}
-                      style={TourDetailScreenStyleSheet.avatar}
-                      source={{ uri: `${apiOrigin}/yukimin.png` }}
-                    />
-                  );
-                }
-              })}
-            </View>
-          </ScrollView>
-          {token ? (
-            login_user_id !== post?.user_id ? (
-              post?.status === "open" ? (
-                <TouchableOpacity
-                  style={TourDetailScreenStyleSheet.button}
-                  onPress={apply}
-                >
-                  <Text style={TourDetailScreenStyleSheet.text}>
-                    {applicationStatus?.status === null ? "Apply" : "Applied"}
-                  </Text>
-                </TouchableOpacity>
-              ) : applicationStatus?.status === true &&
-                applicationStatus?.confirm_status !== null ? (
-                <TouchableOpacity
-                  style={TourDetailScreenStyleSheet.button}
-                  onPress={() => {
-                    view(id, post?.user_id.toString());
-                  }}
-                >
-                  <Text style={TourDetailScreenStyleSheet.text}>View</Text>
-                </TouchableOpacity>
-              ) : (
-                <></>
-              )
-            ) : allConfirm === true ? (
-              <TouchableOpacity
-                style={TourDetailScreenStyleSheet.button}
-                onPress={() => {
-                  view(id, post?.user_id.toString());
-                }}
-              >
-                <Text style={TourDetailScreenStyleSheet.text}>View</Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={TourDetailScreenStyleSheet.button}
-                onPress={() => {
-                  manage(id, post?.user_id.toString());
-                }}
-              >
-                <Text style={TourDetailScreenStyleSheet.text}>Manage</Text>
-              </TouchableOpacity>
-            )
-          ) : (
-            <></>
-          )}
-        </View>
-      </View>
-    );
-  };
 
   // Display comments list
   const flatListRef = useRef(null);
@@ -685,7 +434,7 @@ const TourDetailScreen = ({
             style={{
               flex: keyboardShow
                 ? // ? comments?.length != undefined && comments?.length > 0
-                  0.8
+                  0.635
                 : // : 0.634
                   1,
             }}
@@ -804,115 +553,7 @@ const TourDetailScreen = ({
                     })}
                   </Text>
                 </View>
-                {post?.trip_period ? (
-                  <>
-                    <View style={TourDetailScreenStyleSheet.rowContainer}>
-                      <View style={TourDetailScreenStyleSheet.row}>
-                        <Text style={TourDetailScreenStyleSheet.titleKey}>
-                          Period:
-                        </Text>
-                        <Text>
-                          {post?.trip_period ? post.trip_period : "Pending"}
-                        </Text>
-                      </View>
-                    </View>
-                  </>
-                ) : null}
-                <View style={TourDetailScreenStyleSheet.rowContainer}>
-                  <Text style={TourDetailScreenStyleSheet.titleKey}>
-                    Destination:
-                  </Text>
-                  <Text>{post?.trip_country}</Text>
-                </View>
-                {post?.trip_location?.length !== undefined &&
-                post?.trip_location?.length > 0 ? (
-                  <>
-                    <View style={TourDetailScreenStyleSheet.rowContainer}>
-                      <View style={TourDetailScreenStyleSheet.row}>
-                        <Text style={TourDetailScreenStyleSheet.titleKey}>
-                          Spot:
-                        </Text>
-                        <Text>{locationNamesString}</Text>
-                      </View>
-                    </View>
-                  </>
-                ) : null}
-                {post?.trip_budget ? (
-                  <>
-                    <View style={TourDetailScreenStyleSheet.rowContainer}>
-                      <View style={TourDetailScreenStyleSheet.row}>
-                        <Text style={TourDetailScreenStyleSheet.titleKey}>
-                          Budget:
-                        </Text>
-                        <Text>
-                          {post?.trip_budget ? post.trip_budget : "Pending"}
-                        </Text>
-                      </View>
-                    </View>
-                  </>
-                ) : null}
-                <View style={TourDetailScreenStyleSheet.rowContainer}>
-                  <View style={TourDetailScreenStyleSheet.row}>
-                    <Text style={TourDetailScreenStyleSheet.titleKey}>
-                      Headcount:
-                    </Text>
-                    <Text>{post?.trip_headcount}</Text>
-                  </View>
-                </View>
-                {post?.preferred_gender ? (
-                  <>
-                    <View style={TourDetailScreenStyleSheet.rowContainer}>
-                      <View style={TourDetailScreenStyleSheet.row}>
-                        <Text style={TourDetailScreenStyleSheet.titleKey}>
-                          Preferred Gender:
-                        </Text>
-                        <Text>{post?.preferred_gender}</Text>
-                      </View>
-                    </View>
-                  </>
-                ) : null}
-                {post?.preferred_age ? (
-                  <>
-                    <View style={TourDetailScreenStyleSheet.rowContainer}>
-                      <View style={TourDetailScreenStyleSheet.row}>
-                        <Text style={TourDetailScreenStyleSheet.titleKey}>
-                          Preferred Age:
-                        </Text>
-                        <Text>{post?.preferred_age}</Text>
-                      </View>
-                    </View>
-                  </>
-                ) : null}
-                {post?.preferred_language ? (
-                  <>
-                    <View style={TourDetailScreenStyleSheet.rowContainer}>
-                      <View style={TourDetailScreenStyleSheet.row}>
-                        <Text style={TourDetailScreenStyleSheet.titleKey}>
-                          Preferred Language:
-                        </Text>
-                        <Text>
-                          {post?.preferred_language
-                            ? post.preferred_language
-                            : "Any"}
-                        </Text>
-                      </View>
-                    </View>
-                  </>
-                ) : null}
-                {post?.preferred_hobby ? (
-                  <>
-                    <View style={TourDetailScreenStyleSheet.rowContainer}>
-                      <View style={TourDetailScreenStyleSheet.row}>
-                        <Text style={TourDetailScreenStyleSheet.titleKey}>
-                          Preferred Hobby:
-                        </Text>
-                        <Text>
-                          {post?.preferred_hobby ? post.preferred_hobby : "Any"}
-                        </Text>
-                      </View>
-                    </View>
-                  </>
-                ) : null}
+
                 <View style={TourDetailScreenStyleSheet.contentTitleContainer}>
                   <View style={TourDetailScreenStyleSheet.row}>
                     <Text style={TourDetailScreenStyleSheet.titleKey}>
@@ -928,9 +569,7 @@ const TourDetailScreen = ({
               </ScrollView>
 
               <ItemSeparatorView />
-              <ApplicationAvatar
-                headcount={post?.trip_headcount ? post.trip_headcount : 0}
-              />
+
               <ItemSeparatorView />
             </View>
 
@@ -995,4 +634,4 @@ const TourDetailScreen = ({
   );
 };
 
-export default TourDetailScreen;
+export default EnquireDetailScreen;

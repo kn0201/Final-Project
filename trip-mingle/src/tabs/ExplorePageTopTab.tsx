@@ -58,7 +58,7 @@ function ExplorePageTopTab({ navigation }) {
           tabBarStyle: { backgroundColor: "#c4ffdb" },
         }}
       >
-        <Tab.Screen
+        {/* <Tab.Screen
           name="Blog"
           component={BlogScreen}
           options={{
@@ -67,7 +67,7 @@ function ExplorePageTopTab({ navigation }) {
             //   <MaterialCommunityIcons name="post" color={color} size={26} />
             // ),
           }}
-        />
+        /> */}
         <Tab.Screen
           name="Tour"
           component={TourScreen}

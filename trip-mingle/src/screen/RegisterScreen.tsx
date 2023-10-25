@@ -18,7 +18,7 @@ import RegisterScreenStyleSheet from "../StyleSheet/RegisterScreenCss";
 import { RegisInfo } from "../utils/types";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { api } from "../apis/api";
+import { api, api2 } from "../apis/api";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import SelectCountry from "../components/selectCountry";
 import {
@@ -120,9 +120,8 @@ export default function RegisterScreen({ navigation }) {
 
   const checkUsername = async (text: string) => {
     try {
-      let checker = await api.loginSignUp(
-        "/login/check_username",
-        { username: text },
+      let checker = await api2.get(
+        "/login/check_username?" + new URLSearchParams({ username: text }),
         checkResultParser
       );
       if (checker.result === true) {
@@ -131,16 +130,14 @@ export default function RegisterScreen({ navigation }) {
         setCheckUsernameResult(false);
       }
     } catch (error) {
-      const errorObject: any = { ...(error as object) };
-      console.log(errorObject);
+      console.log("failed to check username:", error);
     }
   };
 
   const checkEmail = async (text: string) => {
     try {
-      let checker = await api.loginSignUp(
-        "/login/check_email",
-        { email: text },
+      let checker = await api2.get(
+        "/login/check_email?" + new URLSearchParams({ email: text }),
         checkResultParser
       );
       if (checker.result === true) {

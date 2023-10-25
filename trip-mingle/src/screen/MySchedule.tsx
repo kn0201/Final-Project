@@ -25,7 +25,7 @@ import AddScheduleForm from "../components/AddScheduleForm";
 import { useNavigation } from "@react-navigation/native";
 import { useAppNavigation } from "../../navigators";
 import { useGet } from "../hooks/useGet";
-import { ParseResult, array, number, object, string } from "cast.ts";
+import { ParseResult, array, number, object, optional, string } from "cast.ts";
 import { apiOrigin } from "../utils/apiOrigin";
 import { api, api2 } from "../apis/api";
 import UserPageStyleSheet from "../StyleSheet/UserPageCss";
@@ -63,8 +63,8 @@ let getMyPlanListParser = object({
       plan_id: number(),
       plan_title: string(),
       image_path: string(),
-      startDate: string(),
-      endDate: string(),
+      startDate: optional(string()),
+      endDate: optional(string()),
     })
   ),
 });
@@ -191,7 +191,7 @@ function ScheduleCard(props: { item: PlanListItem }) {
               justifyContent: "space-between",
             }}
           >
-            <Text>{item.startDate.split("T")[0]}</Text>
+            <Text>{item.startDate ? item.startDate.split("T")[0] : <></>}</Text>
             <Entypo name="aircraft-take-off" size={24} color="black" />
           </View>
 
@@ -205,7 +205,7 @@ function ScheduleCard(props: { item: PlanListItem }) {
             }}
           >
             <Entypo name="aircraft-landing" size={24} color="black" />
-            <Text>{item.endDate.split("T")[0]}</Text>
+            <Text>{item.endDate ? item.endDate.split("T")[0] : <></>}</Text>
           </View>
         </View>
         <Card.Divider />

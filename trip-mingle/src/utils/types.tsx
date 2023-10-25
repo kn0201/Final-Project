@@ -100,6 +100,19 @@ export type PostInfoItem = {
   number_of_reply: number;
 };
 
+export type EnquireInfoItem = {
+  id: number;
+  title: string;
+  content: string;
+  created_at: string;
+  username: string;
+  avatar_path: string;
+  rating: number;
+  number_of_rating: number;
+  number_of_like: number;
+  number_of_reply: number;
+};
+
 export type PostDetailItem = {
   id: number;
   title: string;
@@ -116,6 +129,20 @@ export type PostDetailItem = {
   view: number;
   created_at: string;
   trip_location: LocationGet[] | null;
+  user_id: number;
+  username: string;
+  avatar_path: string;
+  rating: number;
+  number_of_rating: number;
+  number_of_like: number;
+  number_of_reply: number;
+};
+
+export type EnquireDetailItem = {
+  id: number;
+  title: string;
+  content: string;
+  created_at: string;
   user_id: number;
   username: string;
   avatar_path: string;

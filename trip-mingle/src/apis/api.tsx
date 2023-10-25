@@ -13,7 +13,11 @@ async function handleFetch<T>(
     Authorization: "Bearer " + token,
     ...init.headers,
   };
+  // console.log("fetch", init.method || "GET", path);
   let res = await fetch(apiOrigin + path, init);
+  // console.log("res:", res.status, res.statusText);
+  // let text = await res.text()
+  // console.log("text:", text);
   let json = await res.json();
   if (json.statusCode && json.message) {
     throw new Error(json.message);
@@ -33,7 +37,11 @@ export let api2 = {
   async post<T>(path: string, body: object, parser: Parser<T>, token?: string) {
     return handleFetch(
       path,
-      { headers: { "Content-Type": "application/json" } },
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      },
       parser,
       token
     );
@@ -57,16 +65,16 @@ export let api2 = {
   },
 
   async patch<T>(path: string, body: object, parser: Parser<T>, token: string) {
-    let res = await fetch(apiOrigin + path, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
+    return handleFetch(
+      path,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
       },
-      body: JSON.stringify(body),
-    });
-    let json = await res.json();
-    return parser.parse(json);
+      parser,
+      token
+    );
   },
 
   async delete<T>(
@@ -75,16 +83,14 @@ export let api2 = {
     parser: Parser<T>,
     token: string
   ) {
-    let res = await fetch(apiOrigin + path, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
+    return handleFetch(
+      path,
+      {
+        method: "DELETE",
       },
-      body: JSON.stringify(body),
-    });
-    let json = await res.json();
-    return parser.parse(json);
+      parser,
+      token
+    );
   },
 
   toImageURI(image_path: string) {
