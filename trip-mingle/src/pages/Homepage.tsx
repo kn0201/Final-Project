@@ -21,6 +21,7 @@ import useEvent from "react-use-event";
 import { MapEvent, MapPositionEvent } from "../utils/events";
 import { useAppNavigation } from "../../navigators";
 import { LinearGradient } from "expo-linear-gradient";
+import SampleSchedule from "../screen/SampleSchedule";
 
 export default function HomePage() {
   const navigation = useAppNavigation();
@@ -219,6 +220,9 @@ export default function HomePage() {
                     style={{ padding: 0, height: 200 }}
                     source={{
                       uri: `${apiOrigin}/kyoto_trip.jpg`,
+                    }}
+                    onPress={() => {
+                      SampleSchedule();
                     }}
                   />
                 </Card>

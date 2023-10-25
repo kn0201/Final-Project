@@ -1,6 +1,7 @@
 import { Knex } from 'knex';
 
 export async function up(knex: Knex): Promise<void> {
+  await knex('daily_event').delete();
   await knex.schema.alterTable('daily_event', (table) => {
     table.timestamp('start_time').notNullable();
     table.timestamp('end_time').notNullable();

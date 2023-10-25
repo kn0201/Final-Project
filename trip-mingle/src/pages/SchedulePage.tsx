@@ -3,6 +3,8 @@ import AddSchedule from "../screen/AddSchedule";
 import MySchedule from "../screen/MySchedule";
 import AddNewPlan from "../components/AddNewPlanSchedule";
 import AgendaListItem from "../components/AgendaLIstItem";
+import SampleSchedule from "../screen/SampleSchedule";
+// import SamplePlan from "../screen/SamplePlan";
 
 const Stack = createStackNavigator();
 
@@ -27,6 +29,7 @@ const SchedulePage = () => {
         <Stack.Screen name="AddSchedule" component={AddSchedule} />
         <Stack.Screen name="AddNewPlan" component={AddNewPlan} />
         <Stack.Screen name="Add Agenda" component={AgendaListItem} />
+        <Stack.Screen name="Sample Schedule" component={SampleSchedule} />
       </Stack.Navigator>
     </>
   );
