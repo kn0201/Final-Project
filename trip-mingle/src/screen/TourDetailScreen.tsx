@@ -168,7 +168,7 @@ const TourDetailScreen = ({
         `/bookmark/${id}`,
         { id },
         bookmarkParser,
-        token,
+        token
       );
       setIsBookmark(!isBookmark);
       dispatchBookmarkEvent("Bookmark");
@@ -186,7 +186,7 @@ const TourDetailScreen = ({
       let result = await api.get(
         `/bookmark/${id}`,
         bookmarkStatusParser,
-        token,
+        token
       );
       setIsBookmark(result.isBookmark);
     } catch (err) {
@@ -229,7 +229,7 @@ const TourDetailScreen = ({
         `/blog/${id}`,
         { id },
         deletePostParser,
-        token,
+        token
       );
       if (result.result === true) {
         dispatchDeleteEvent("Delete");
@@ -300,17 +300,17 @@ const TourDetailScreen = ({
       if (token === "") {
         throw new Error("Please login to add comment");
       }
-      if (content !== "") {
-        updateInputText("content", content);
+      if (commentInfo.content !== "") {
+        let result = await api.post(
+          `/comment/${id}/add`,
+          commentInfo,
+          addCommentParser,
+          token
+        );
       } else {
         throw new Error("Missing content");
       }
-      let result = await api.post(
-        `/comment/${id}/add`,
-        commentInfo,
-        addCommentParser,
-        token,
-      );
+
       dispatchAddCommentEvent("AddComment");
       inputRef?.current?.clear();
       //@ts-ignore
@@ -348,7 +348,7 @@ const TourDetailScreen = ({
     id: number,
     username: string,
     post_id: string,
-    post_user_id?: string,
+    post_user_id?: string
   ) => {
     navigation.navigate("Other Profile", {
       id,
@@ -381,7 +381,7 @@ const TourDetailScreen = ({
         `/application/${id}`,
         { id },
         applyTourParser,
-        token,
+        token
       );
       dispatchApplyTourEvent("ApplyTour");
       if (applicationStatus?.status === null) {
@@ -432,7 +432,7 @@ const TourDetailScreen = ({
       let applicationStatus = await api.get(
         `/application/status/${id}`,
         applicationStatusParser,
-        token,
+        token
       );
       setApplicationStatus(applicationStatus);
     } catch (err) {
@@ -450,10 +450,12 @@ const TourDetailScreen = ({
     ApplicationInfoItem[] | null
   >([]);
   const getApplicationList = async () => {
+    console.log("get Application");
+
     try {
       let applicationList = await api.get(
         `/application/${id}`,
-        applicationInfoParser,
+        applicationInfoParser
       );
       setApplications(applicationList);
     } catch (err) {
@@ -498,7 +500,7 @@ const TourDetailScreen = ({
                           application.user_id,
                           application.username,
                           id,
-                          post?.user_id.toString(),
+                          post?.user_id.toString()
                         );
                       }}
                     >
@@ -586,7 +588,7 @@ const TourDetailScreen = ({
                   item.user_id,
                   item.username,
                   id,
-                  post?.user_id.toString(),
+                  post?.user_id.toString()
                 )
               }
             >
@@ -622,7 +624,7 @@ const TourDetailScreen = ({
         </Card>
       </>
     ),
-    [],
+    []
   );
 
   // Display
@@ -662,7 +664,7 @@ const TourDetailScreen = ({
                             post.user_id,
                             post.username,
                             id,
-                            post?.user_id.toString(),
+                            post?.user_id.toString()
                           );
                         } else {
                           return;
@@ -918,9 +920,8 @@ const TourDetailScreen = ({
                   }}
                   style={CommentScreenStyleSheet.textInput}
                   onChangeText={(content) => {
-                    setContent(content);
+                    updateInputText("content", content);
                   }}
-                  value={content}
                   ref={inputRef}
                 ></TextInput>
               </View>

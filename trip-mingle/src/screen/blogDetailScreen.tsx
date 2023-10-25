@@ -1,17 +1,25 @@
 //Buffer Line
 
-import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 import BlogDetailScreenStyleSheet from "../StyleSheet/BlogDetailScreenCss";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
+import HTMLView from "react-native-htmlview";
 import { useState } from "react";
 import { center, iosBlue, row } from "../StyleSheet/StyleSheetHelper";
 import { apiOrigin } from "../utils/apiOrigin";
+import { useAppNavigation } from "../../navigators";
 
-//@ts-ignore
-export default function BlogDetailScreen({ navigation }) {
+export default function BlogDetailScreen() {
   let path = "d76562b8-adef-470b-9934-5181d38b68c9.jpeg";
+  const navigation = useAppNavigation();
   const [isLike, setIsLike] = useState(false);
   const [isBookmark, setIsBookmark] = useState(false);
   const like = () => {
@@ -20,7 +28,8 @@ export default function BlogDetailScreen({ navigation }) {
   const bookmark = () => {
     setIsBookmark(!isBookmark);
   };
-
+  const [blogContent, setBlogContent] = useState<string>("");
+  const htmlContent = `<p><a href="http://jsdf.co">&hearts; nice job!</a></p>`;
   return (
     <>
       <ScrollView>
@@ -37,41 +46,9 @@ export default function BlogDetailScreen({ navigation }) {
           <Text>Destination: USA</Text>
           <Text>Travel Date : 2023/08/15 - 2023/08/22</Text>
         </View>
-        <View style={BlogDetailScreenStyleSheet.introContainer}>
-          <Text style={{ color: "grey" }}>123 321 1234567</Text>
-        </View>
+
         <View style={BlogDetailScreenStyleSheet.contentContainer}>
-          <Text style={{ marginBottom: 16 }}>
-            Content1..............................................................................................................END
-          </Text>
-          <Image
-            source={{ uri: `${apiOrigin}/${path}` }}
-            width={400}
-            height={400}
-            style={{ marginBottom: 16 }}
-          />
-        </View>
-        <View style={BlogDetailScreenStyleSheet.contentContainer}>
-          <Text style={{ marginBottom: 16 }}>
-            Content2..............................................................................................................END
-          </Text>
-          <Image
-            source={{ uri: `${apiOrigin}/${path}` }}
-            width={400}
-            height={400}
-            style={{ marginBottom: 16 }}
-          />
-        </View>
-        <View style={BlogDetailScreenStyleSheet.contentContainer}>
-          <Text style={{ marginBottom: 16 }}>
-            Content3..............................................................................................................END
-          </Text>
-          <Image
-            source={{ uri: `${apiOrigin}/${path}` }}
-            width={400}
-            height={400}
-            style={{ marginBottom: 16 }}
-          />
+          <HTMLView value={htmlContent} stylesheet={styles} />
         </View>
       </ScrollView>
       <View style={BlogDetailScreenStyleSheet.bottomContainer}>
@@ -98,7 +75,7 @@ export default function BlogDetailScreen({ navigation }) {
         <TouchableOpacity
           style={{ flexDirection: row, alignItems: center, gap: 5 }}
           onPress={() => {
-            navigation.navigate("Comment");
+            navigation.navigate("Comment", { post_id: 1 });
           }}
         >
           <MaterialCommunityIcons name="comment-plus" size={22} />
@@ -108,3 +85,9 @@ export default function BlogDetailScreen({ navigation }) {
     </>
   );
 }
+const styles = StyleSheet.create({
+  a: {
+    fontWeight: "300",
+    color: "#FF3366", // make links coloured pink
+  },
+});

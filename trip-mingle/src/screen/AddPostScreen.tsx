@@ -12,9 +12,10 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
+  Pressable,
 } from "react-native";
-import { PostInfo } from "../utils/types";
-
+import { ImageFile, PostInfo } from "../utils/types";
+import * as ImagePicker from "expo-image-picker";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
@@ -33,15 +34,14 @@ import {
 import { api } from "../apis/api";
 import { useToken } from "../hooks/useToken";
 import { useGet } from "../hooks/useGet";
-import { Modal } from "../components/Modal";
-import TextButton from "../components/TextButton";
-import useBoolean from "../hooks/useBoolean";
-import { useSelection } from "../hooks/useSelection";
 import { theme } from "../theme/variables";
 import useEvent from "react-use-event";
 import { AddPostEvent } from "../utils/events";
-import blogContent from "../components/blogContent";
-import BlogContent from "../components/blogContent";
+import {
+  RichEditor,
+  RichToolbar,
+  actions,
+} from "react-native-pell-rich-editor";
 
 //@ts-ignore
 export function AddPostScreen1({ navigation }) {
@@ -50,10 +50,11 @@ export function AddPostScreen1({ navigation }) {
   const [title, setTitle] = useState("");
   const [budget, setBudget] = useState("");
   const [content, setContent] = useState("");
+  const [blogContent, setBlogContent] = useState("");
   const [selectedGender, setSelectedGender] = useState("Preferred Gender");
   const [gender, setGender] = useState("");
   const [selectedHeadcount, setSelectedHeadcount] = useState<string>(
-    "Preferred Headcount *",
+    "Preferred Headcount *"
   );
   const [headcount, setHeadcount] = useState<string>("");
   const [headcountListData, setHeadcountListData] = useState<string[]>([
@@ -67,7 +68,7 @@ export function AddPostScreen1({ navigation }) {
     "8",
   ]);
   const [selectedCountry, setSelectedCountry] = useState(
-    "Destination Country *",
+    "Destination Country *"
   );
   const [country, setCountry] = useState("");
   const [code, setCode] = useState("");
@@ -75,7 +76,7 @@ export function AddPostScreen1({ navigation }) {
   const [period, setPeriod] = useState<string[]>([]);
   const [languages, setLanguages] = useState<string[]>([]);
   const [selectedLanguagesText, setSelectedLanguagesText] = useState(
-    "Preferred Languages(s)",
+    "Preferred Languages(s)"
   );
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
@@ -143,6 +144,10 @@ export function AddPostScreen1({ navigation }) {
       }
       if (content !== "") {
         updateInputText("content", content);
+      } else if (blogContent !== "") {
+        const replaceHTML = blogContent.replace(/<(.|\n)*?>/g, "").trim();
+        const replaceWhiteSpace = replaceHTML.replace(/&nbsp;/g, "").trim();
+        updateInputText("content", replaceWhiteSpace);
       } else {
         throw new Error("Missing content");
       }
@@ -186,7 +191,7 @@ export function AddPostScreen1({ navigation }) {
         "/blog/tour",
         postInfo,
         addTourPostParser,
-        token,
+        token
       );
       dispatchAddPostEvent({ post_type: checkType });
       IonNeverDialog.show({
@@ -216,7 +221,7 @@ export function AddPostScreen1({ navigation }) {
 
   const updateInputText = (
     field: string,
-    value: string | boolean | string[],
+    value: string | boolean | string[]
   ) => {
     //@ts-ignore
     postInfo[field as keyof PostInfo] = value;
@@ -272,7 +277,6 @@ export function AddPostScreen1({ navigation }) {
         onChangeText={(content) => {
           setContent(content);
         }}
-        value={content}
         multiline
         placeholder="Post Content *"
       />
@@ -434,8 +438,8 @@ export function AddPostScreen1({ navigation }) {
                   countriesListData.filter((country) =>
                     country.name
                       .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase()),
-                  ),
+                      .includes(search.toLocaleLowerCase())
+                  )
                 );
               }, [search, countriesListData]);
               const updateSearch = (search: string) => {
@@ -581,8 +585,8 @@ export function AddPostScreen1({ navigation }) {
                   languagesListData.filter((language) =>
                     language.name
                       .toLocaleLowerCase()
-                      .includes(searchLanguages.toLocaleLowerCase()),
-                  ),
+                      .includes(searchLanguages.toLocaleLowerCase())
+                  )
                 );
               }, [searchLanguages, languagesListData]);
 
@@ -594,8 +598,8 @@ export function AddPostScreen1({ navigation }) {
                 if (localLanguages.includes(name)) {
                   setLocalLanguages(
                     localLanguages.filter(
-                      (language: string) => language !== name,
-                    ),
+                      (language: string) => language !== name
+                    )
                   );
                 } else {
                   setLocalLanguages([...localLanguages, name]);
@@ -712,12 +716,104 @@ export function AddPostScreen1({ navigation }) {
     );
   };
 
+  // Blog Editor
+  const richText = useRef<RichEditor>(null);
+  const [imageFile, setImageFile] = useState<ImageFile | null>(null);
+  const [descHTML, setDescHTML] = useState("");
+  const [showDescError, setShowDescError] = useState(false);
+
+  const richTextHandle = (descriptionText: string) => {
+    if (descriptionText) {
+      setShowDescError(false);
+      setBlogContent(descriptionText);
+      console.log(blogContent);
+      // updateInputText("content", descriptionText);
+    } else {
+      setShowDescError(true);
+      setDescHTML("");
+    }
+  };
+
+  const addImage = async () => {
+    let imagePickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    if (imagePickerResult.canceled) return;
+    let imageAsset = imagePickerResult.assets?.[0];
+    if (!imageAsset) return;
+    let type = imageAsset.uri.endsWith(".png")
+      ? "image/png"
+      : imageAsset.uri.endsWith(".jpg") || imageAsset.uri.endsWith(".jpeg")
+      ? "image/jpeg"
+      : null;
+    if (!type) {
+      IonNeverDialog.show({
+        type: "warning",
+        title: "unknown image type: " + imageAsset.uri,
+        firstButtonVisible: true,
+      });
+      return;
+    }
+    let filename = imageAsset.uri.split("/").pop();
+    let file = {
+      uri: imageAsset.uri,
+      type,
+      name: filename,
+    };
+
+    setImageFile({
+      uri: file.uri,
+      file: file as unknown as File,
+    });
+  };
+
+  const BlogEditorScreen = () => {
+    return (
+      <View style={AddPostPageStyleSheet.container}>
+        <View style={AddPostPageStyleSheet.richTextContainer}>
+          <RichEditor
+            ref={richText}
+            onChange={richTextHandle}
+            placeholder="Write your cool content here :)"
+            style={AddPostPageStyleSheet.richTextEditorStyle}
+            initialHeight={250}
+          />
+          <RichToolbar
+            editor={richText}
+            selectedIconTint="#873c1e"
+            iconTint="#312921"
+            actions={[
+              actions.insertImage,
+              actions.setBold,
+              actions.setItalic,
+              actions.insertBulletsList,
+              actions.insertOrderedList,
+              actions.insertLink,
+              actions.setStrikethrough,
+              actions.setUnderline,
+            ]}
+            style={AddPostPageStyleSheet.richTextToolbarStyle}
+          />
+        </View>
+        {showDescError && (
+          <Text style={AddPostPageStyleSheet.errorTextStyle}>
+            Your content shouldn't be empty 🤔
+          </Text>
+        )}
+      </View>
+    );
+  };
+
   // Display
   return (
     <>
       <TouchableWithoutFeedback
         onPress={() => {
           Keyboard.dismiss();
+          richText.current?.dismissKeyboard();
         }}
       >
         <KeyboardAvoidingView
@@ -764,14 +860,14 @@ export function AddPostScreen1({ navigation }) {
               </View>
               {TitleInput()}
               {checkType === "enquire" ? <></> : <CountryCheckbox />}
-              {checkType === "enquire" ? (
-                <></>
-              ) : (
+              {checkType === "tour" ? (
                 <LocationInput code={code} updateInputText={updateInputText} />
+              ) : (
+                <></>
               )}
               {checkType !== "enquire" ? <PeriodSelector /> : <></>}
               {checkType === "tour" ? BudgetInput() : <></>}
-              {ContentInput()}
+              {checkType === "blog" ? BlogEditorScreen() : ContentInput()}
               {checkType === "tour" ? <HeadcountCheckbox /> : <></>}
               {checkType === "tour" ? <GenderCheckbox /> : <></>}
               {checkType === "tour" ? <AgeCheckbox /> : <></>}
@@ -780,7 +876,9 @@ export function AddPostScreen1({ navigation }) {
               <View style={AddPostPageStyleSheet.center}>
                 <TouchableOpacity
                   style={AddPostPageStyleSheet.addPost}
-                  onPress={addPost}
+                  onPress={() => {
+                    addPost();
+                  }}
                 >
                   <Text style={AddPostPageStyleSheet.addPostText}>
                     Create New Post

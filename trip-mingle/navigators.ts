@@ -67,6 +67,7 @@ export interface AppParamList {
   Comment: { post_id: number };
   "Other Profile": { id: number; username: string; post_id: string };
   Snap: undefined;
+  "Blog Detail": { post_id: number };
 }
 
 export function useAppNavigation() {

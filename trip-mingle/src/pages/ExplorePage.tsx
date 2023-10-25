@@ -8,6 +8,7 @@ import OtherProfileScreen from "../screen/OtherProfileScreen";
 import ManageTourScreen from "../screen/ManageTourScreen";
 import BlogDetailScreen from "../screen/BlogDetailScreen";
 import ViewTourScreen from "../screen/ViewTourScreen";
+import BlogEditorScreen from "../screen/BlogEditorScreen";
 
 const Stack = createStackNavigator();
 
@@ -37,6 +38,7 @@ export default function ExplorePage() {
             title: "testing",
           }}
         />
+
         <Stack.Screen
           name="Comment"
           component={CommentScreen}

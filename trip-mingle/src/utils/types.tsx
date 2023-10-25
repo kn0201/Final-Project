@@ -271,3 +271,7 @@ export type Snap = {
   likeCount: number;
   isLike: boolean;
 };
+export type ImageFile = {
+  uri: string;
+  file: File;
+};

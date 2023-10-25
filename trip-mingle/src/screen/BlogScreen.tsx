@@ -4,9 +4,11 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { center, flex } from "../StyleSheet/StyleSheetHelper";
 import useEvent from "react-use-event";
 import { AddPostEvent } from "../utils/events";
+import { useAppNavigation } from "../../navigators";
 
-export default function BlogScreen({ navigation }: { navigation: any }) {
+export default function BlogScreen() {
   useEvent<AddPostEvent>("AddPost", (event) => {});
+  const navigation = useAppNavigation();
   return (
     <>
       <View style={BuddiesPageStyleSheet.container}>
@@ -16,7 +18,7 @@ export default function BlogScreen({ navigation }: { navigation: any }) {
         >
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Blog Detail");
+              navigation.navigate("Blog Detail", { post_id: 1 });
             }}
           >
             <Text>Blog!</Text>
