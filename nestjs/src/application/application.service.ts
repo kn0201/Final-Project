@@ -20,32 +20,13 @@ export class ApplicationService {
           'users.username as username',
           'image.path as avatar_path',
           'application.status as status',
+          'application.confirm as confirm_status',
           'application.created_at as created_at',
         )
         .where('application.post_id', id)
         .andWhere('application.status', true)
         .orderBy('application.created_at', 'asc');
       return applications;
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  async getApplicationStatus(id, req) {
-    try {
-      const payload = this.jwtService.decode(
-        req.headers.authorization.split(' ')[1],
-      );
-      let user_id = payload.user_id;
-      let application = await this.knex('application')
-        .select('id')
-        .where('post_id', id)
-        .andWhere('user_id', user_id)
-        .first();
-      if (application === undefined) {
-        return { status: false };
-      }
-      return { status: true };
     } catch (err) {
       console.log(err);
     }
@@ -58,14 +39,17 @@ export class ApplicationService {
       );
       let user_id = payload.user_id;
       let application = await this.knex('application')
-        .select('status')
+        .select('status', 'confirm')
         .where('post_id', post_id)
         .andWhere('user_id', user_id)
         .first();
       if (application === undefined) {
-        return { status: null };
+        return { status: null, confirm_status: null };
       }
-      return { status: application.status };
+      return {
+        status: application.status,
+        confirm_status: application.confirm,
+      };
     } catch (err) {
       console.log(err);
     }
@@ -95,6 +79,7 @@ export class ApplicationService {
             'image.path as avatar_path',
             'users.rating as rating',
             'application.status as status',
+            'application.confirm as confirm_status',
             'application.created_at as created_at',
           )
           .where('application.post_id', id)
@@ -113,10 +98,10 @@ export class ApplicationService {
             rating: appliedUser.rating,
             number_of_rating: +number_of_rating.count,
             status: appliedUser.status,
+            confirm_status: appliedUser.confirm_status,
             created_at: appliedUser.created_at,
           });
         }
-        console.log(appliedUsersInfo);
         return appliedUsersInfo;
       }
     } catch (err) {
@@ -152,6 +137,7 @@ export class ApplicationService {
         avatar_path: postUser.avatar_path,
         rating: postUser.rating,
         number_of_rating: +number_of_rating_postUser.count,
+        confirm_status: true,
       });
       let confirmedUsers = await this.knex('users')
         .leftJoin('image', { 'users.avatar_id': 'image.id' })
@@ -161,6 +147,7 @@ export class ApplicationService {
           'users.username as username',
           'image.path as avatar_path',
           'users.rating as rating',
+          'application.confirm as confirm_status',
         )
         .where('application.post_id', id)
         .andWhere('application.status', true)
@@ -172,11 +159,12 @@ export class ApplicationService {
           .where('user1_id', confirmedUser.user_id)
           .first();
         confirmedUsersInfo.push({
-          user_id: confirmedUser.user_id,
+          user_id: +confirmedUser.user_id,
           username: confirmedUser.username,
           avatar_path: confirmedUser.avatar_path,
-          rating: confirmedUser.rating,
+          rating: +confirmedUser.rating,
           number_of_rating: +number_of_rating_confirmedUser.count,
+          confirm_status: confirmedUser.confirm_status,
         });
       }
       console.log(confirmedUsersInfo);
@@ -203,7 +191,7 @@ export class ApplicationService {
         );
       }
       const applicationStatus = await this.knex
-        .select('status')
+        .select('status', 'confirm')
         .from('application')
         .where('post_id', post_id)
         .andWhere('user_id', id)
@@ -247,11 +235,16 @@ export class ApplicationService {
           let updatedPostStatus = await this.knex('post')
             .where('id', post_id)
             .update({ status: 'complete' });
+          let updatedConfirmStatus = await this.knex('application')
+            .where('post_id', post_id)
+            .andWhere('user_id', id)
+            .update({ confirm: false });
         }
         return { status: true };
       }
       if (
         applicationStatus.status === true &&
+        applicationStatus.confirm !== true &&
         postUser.status !== 'close' &&
         number_of_accept_before.count <= postUser.headcount
       ) {
@@ -269,6 +262,10 @@ export class ApplicationService {
           let updatedPostStatus = await this.knex('post')
             .where('id', post_id)
             .update({ status: 'open' });
+          let updatedConfirmStatus = await this.knex('application')
+            .where('post_id', post_id)
+            .andWhere('user_id', id)
+            .update({ status: null });
         }
         return { status: false };
       } else {

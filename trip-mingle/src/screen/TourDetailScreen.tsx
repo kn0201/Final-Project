@@ -33,6 +33,7 @@ import {
   CommentInfo,
   PostDetailItem,
   ReplyInfoItem,
+  UserAcceptStatus,
 } from "../utils/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { apiOrigin } from "../utils/apiOrigin";
@@ -368,7 +369,8 @@ const TourDetailScreen = ({
   };
 
   // Apply to join/ cancel
-  const [applicationStatus, setApplicationStatus] = useState(false);
+  const [applicationStatus, setApplicationStatus] =
+    useState<UserAcceptStatus>();
   const dispatchApplyTourEvent = useEvent<ApplyTourEvent>("ApplyTour");
   const apply = async () => {
     try {
@@ -382,8 +384,8 @@ const TourDetailScreen = ({
         token,
       );
       dispatchApplyTourEvent("ApplyTour");
-      if (applicationStatus === false) {
-        setApplicationStatus(true);
+      if (applicationStatus?.status === false) {
+        setApplicationStatus({ status: true, confirm_status: null });
         IonNeverDialog.show({
           type: "success",
           title: `Success`,
@@ -394,7 +396,7 @@ const TourDetailScreen = ({
           },
         });
       } else {
-        setApplicationStatus(false);
+        setApplicationStatus({ status: false, confirm_status: null });
         IonNeverDialog.show({
           type: "success",
           title: `Success`,
@@ -431,7 +433,7 @@ const TourDetailScreen = ({
         applicationStatusParser,
         token,
       );
-      setApplicationStatus(applicationStatus.status);
+      setApplicationStatus(applicationStatus);
     } catch (err) {
       console.log({ err });
     }
@@ -530,10 +532,11 @@ const TourDetailScreen = ({
                   onPress={apply}
                 >
                   <Text style={TourDetailScreenStyleSheet.text}>
-                    {applicationStatus === false ? "Apply" : "Applied"}
+                    {applicationStatus?.status === false ? "Apply" : "Applied"}
                   </Text>
                 </TouchableOpacity>
-              ) : applicationStatus === true && post?.status === "complete" ? (
+              ) : applicationStatus?.status === true &&
+                applicationStatus?.confirm_status !== null ? (
                 <TouchableOpacity
                   style={TourDetailScreenStyleSheet.button}
                   onPress={() => {

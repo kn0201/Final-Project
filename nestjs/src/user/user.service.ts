@@ -218,7 +218,7 @@ export class UserService {
     }
   }
 
-  async getOtherProfile(post_id, id) {
+  async getOtherProfile(post_id, id, post_user_id) {
     try {
       let user = await this.knex('users')
         .leftJoin('image', { 'users.avatar_id': 'image.id' })
@@ -266,8 +266,24 @@ export class UserService {
         .from('rating')
         .where('user1_id', id)
         .first();
+      if (id === post_user_id) {
+        return {
+          avatar_path: user.avatar_path ? user.avatar_path : 'yukimin.png',
+          rating: +user.rating,
+          intro: user.intro,
+          gender: user.gender,
+          age: user.age,
+          country: user.country,
+          language: language,
+          hobby: hobby,
+          countries_travelled: countries_travelled,
+          number_of_rating: +number_of_rating.count,
+          application_status: true,
+          confirm_status: true,
+        };
+      }
       let application_status = await this.knex('application')
-        .select('status')
+        .select('status', 'confirm')
         .where('post_id', post_id)
         .andWhere('user_id', id)
         .first();
@@ -283,6 +299,7 @@ export class UserService {
         countries_travelled: countries_travelled,
         number_of_rating: +number_of_rating.count,
         application_status: application_status.status,
+        confirm_status: application_status.confirm,
       };
     } catch (err) {
       console.log(err);

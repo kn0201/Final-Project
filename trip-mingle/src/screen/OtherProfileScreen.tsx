@@ -73,7 +73,7 @@ export default function OtherProfileScreen({
   const [profileInfo, setProfileInfo] = useState<ProfileInfoItem>();
   const getProfile = async () => {
     let profile = await api.get(
-      `/user/${post_id}/${id}`,
+      `/user/${post_id}/${id}/${post_user_id}`,
       getOtherProfileParser,
     );
     setProfileInfo(profile);

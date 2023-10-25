@@ -186,6 +186,7 @@ export const getOtherProfileParser = object({
   countries_travelled: nullable(array(string())),
   number_of_rating: number(),
   application_status: nullable(boolean()),
+  confirm_status: nullable(boolean()),
 });
 
 export const applicationInfoParser = nullable(
@@ -196,6 +197,7 @@ export const applicationInfoParser = nullable(
       username: string(),
       avatar_path: string(),
       status: boolean(),
+      confirm_status: nullable(boolean()),
       created_at: string(),
     }),
   ),
@@ -204,7 +206,8 @@ export const applicationInfoParser = nullable(
 export const applyTourParser = object({});
 
 export const applicationStatusParser = object({
-  status: boolean(),
+  status: nullable(boolean()),
+  confirm_status: nullable(boolean()),
 });
 
 export const bookmarkInfoParser = array(
@@ -235,6 +238,7 @@ export const appliedUserParser = nullable(
       rating: number(),
       number_of_rating: number(),
       status: boolean(),
+      confirm_status: nullable(boolean()),
       created_at: string(),
     }),
   ),
@@ -244,7 +248,10 @@ export const acceptStatusParser = object({
   status: nullable(boolean()),
 });
 
-export const deletePostParser = object({ result: boolean() });
+export const deletePostParser = object({
+  result: boolean(),
+  confirm_status: nullable(boolean()),
+});
 
 export const confirmedUserParser = array(
   object({
@@ -253,5 +260,6 @@ export const confirmedUserParser = array(
     avatar_path: string(),
     rating: number(),
     number_of_rating: number(),
+    confirm_status: boolean(),
   }),
 );

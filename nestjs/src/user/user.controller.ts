@@ -27,12 +27,13 @@ export class UserController {
     return this.userService.getHobbyList();
   }
 
-  @Get(':post_id/:id')
+  @Get(':post_id/:id/:post_user_id')
   async getOtherProfile(
     @Param('post_id') post_id: string,
     @Param('id') id: string,
+    @Param('post_user_id') post_user_id: string,
   ) {
-    return this.userService.getOtherProfile(+post_id, +id);
+    return this.userService.getOtherProfile(+post_id, +id, +post_user_id);
   }
 
   @UseGuards(AuthGuard)

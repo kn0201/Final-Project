@@ -188,6 +188,7 @@ export type ProfileInfoItem = {
   countries_travelled: string[] | null;
   number_of_rating: number;
   application_status: boolean | null;
+  confirm_status: boolean | null;
 };
 
 export type ApplicationInfoItem = {
@@ -196,6 +197,7 @@ export type ApplicationInfoItem = {
   username: string;
   avatar_path: string;
   status: boolean;
+  confirm_status: boolean | null;
   created_at: string;
 };
 
@@ -234,6 +236,7 @@ export type AppliedUserItem = {
   rating: number;
   number_of_rating: number;
   status: boolean;
+  confirm_status: boolean | null;
   created_at: string;
 };
 
@@ -243,4 +246,10 @@ export type ConfirmedUserItem = {
   avatar_path: string;
   rating: number;
   number_of_rating: number;
+  confirm_status: boolean;
+};
+
+export type UserAcceptStatus = {
+  status: boolean | null;
+  confirm_status: boolean | null;
 };

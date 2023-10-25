@@ -22,13 +22,7 @@ export class ApplicationController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('status/:id')
-  getApplicationStatus(@Param('id') id: string, @Req() req: Request) {
-    return this.applicationService.getApplicationStatus(+id, req);
-  }
-
-  @UseGuards(AuthGuard)
-  @Get('acceptStatus/:post_id')
+  @Get('status/:post_id')
   getUserAcceptStatus(@Param('post_id') post_id: string, @Req() req: Request) {
     return this.applicationService.getUserAcceptStatus(+post_id, req);
   }

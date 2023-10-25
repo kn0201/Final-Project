@@ -13,7 +13,11 @@ import ManageTourScreenStyleSheet from "../StyleSheet/ManageTourScreenCss";
 import { apiOrigin } from "../utils/apiOrigin";
 import { AppliedUserItem, ConfirmedUserItem } from "../utils/types";
 import { api } from "../apis/api";
-import { acceptStatusParser, appliedUserParser } from "../utils/parser";
+import {
+  acceptStatusParser,
+  appliedUserParser,
+  confirmedUserParser,
+} from "../utils/parser";
 import { useToken } from "../hooks/useToken";
 import useEvent from "react-use-event";
 import { AcceptEvent, LoginEvent, UpdateProfileEvent } from "../utils/events";
@@ -39,7 +43,7 @@ export default function OtherProfileScreen({
   // Header
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: "Manage Tour",
+      headerTitle: "Tour Member",
     });
   }, []);
 
@@ -58,10 +62,10 @@ export default function OtherProfileScreen({
     });
   };
 
-  // Accept
+  // Confirm
   const [isAccept, setIsAccept] = useState<boolean | null>();
   const dispatchAcceptEvent = useEvent<AcceptEvent>("Accept");
-  const accept = async (user_id: number, username: string) => {
+  const confirm = async (user_id: number, username: string) => {
     try {
       let updatedStatus = await api.patch(
         `/application/${id}/${user_id}`,
@@ -69,9 +73,6 @@ export default function OtherProfileScreen({
         acceptStatusParser,
         token,
       );
-      if (updatedStatus.status !== true && updatedStatus.status !== false) {
-        throw new Error();
-      }
       if (isAccept !== null) {
         setIsAccept(!isAccept);
       }
@@ -80,7 +81,7 @@ export default function OtherProfileScreen({
       IonNeverDialog.show({
         type: "warning",
         title: "Error",
-        message: `The targeted member number for the tour #${id} may have been reached`,
+        message: `The targeted member number for the tour #${id} has been reached`,
         firstButtonVisible: true,
         firstButtonFunction: () => {
           IonNeverDialog.dismiss();
@@ -90,38 +91,36 @@ export default function OtherProfileScreen({
     }
   };
   useEvent<AcceptEvent>("Accept", (event) => {
-    getApplicationList();
+    getConfirmedUsersList();
   });
 
-  // Get application list
-  const [applications, setApplications] = useState<AppliedUserItem[] | null>(
-    [],
-  );
-  const getApplicationList = async () => {
+  // Get approved list
+  const [confirmedUsers, setConfirmedUsers] = useState<ConfirmedUserItem[]>([]);
+  const getConfirmedUsersList = async () => {
     try {
-      let applicationList = await api.get(
-        `/application/users/${id}`,
-        appliedUserParser,
+      let confirmedUsersList = await api.get(
+        `/application/tour/${id}/${post_user_id}`,
+        confirmedUserParser,
         token,
       );
-      setApplications(applicationList);
+      setConfirmedUsers(confirmedUsersList);
     } catch (err) {
       console.log(err);
     }
   };
   useEffect(() => {
-    getApplicationList();
+    getConfirmedUsersList();
   }, []);
   useEvent<UpdateProfileEvent>("UpdateProfile", (event) => {
-    getApplicationList();
+    getConfirmedUsersList();
   });
   useEvent<LoginEvent>("Login", (event) => {
-    getApplicationList();
+    getConfirmedUsersList();
     navigation.pop(2);
   });
 
   const ItemView = useCallback(
-    ({ item, index }: ListRenderItemInfo<AppliedUserItem>) => (
+    ({ item, index }: ListRenderItemInfo<ConfirmedUserItem>) => (
       <>
         <View style={ManageTourScreenStyleSheet.postDetailContainer}>
           <View style={{ flexDirection: "row" }}>
@@ -159,11 +158,11 @@ export default function OtherProfileScreen({
           <TouchableOpacity
             style={ManageTourScreenStyleSheet.button}
             onPress={() => {
-              accept(item.user_id, item.username);
+              confirm(item.user_id, item.username);
             }}
           >
             <Text style={ManageTourScreenStyleSheet.text}>
-              {item.status === false ? "Accept" : "Cancel"}
+              {/* { "Accept" : "Cancel"} */}
             </Text>
           </TouchableOpacity>
         </View>
@@ -175,7 +174,7 @@ export default function OtherProfileScreen({
   return (
     <View style={{ flexGrow: 0 }}>
       <FlatList
-        data={applications}
+        data={confirmedUsers}
         keyExtractor={(item, index) => index.toString()}
         renderItem={ItemView}
         ItemSeparatorComponent={ItemSeparatorView}
