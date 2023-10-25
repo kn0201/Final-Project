@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
   Animated,
   Dimensions,
+  Modal,
+  Keyboard,
 } from "react-native";
 import { ItemSeparatorView, setStarRating } from "./PostScreen";
 import ManageTourScreenStyleSheet from "../StyleSheet/ManageTourScreenCss";
@@ -18,6 +20,7 @@ import { api } from "../apis/api";
 import {
   PlanListItem,
   allConfirmStatusParser,
+  closePostParser,
   confirmStatusParser,
   confirmedUserParser,
   getMyPlanListParser,
@@ -31,16 +34,22 @@ import {
   LoginEvent,
   RejectEvent,
   UpdateProfileEvent,
+  CloseEvent,
 } from "../utils/events";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import { useGet } from "../hooks/useGet";
 import AddScheduleForm from "../components/AddScheduleForm";
 import { useAppNavigation } from "../../navigators";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { iosBlue } from "../StyleSheet/StyleSheetHelper";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ViewTourScreen({ route }: { route: any }) {
   const { token, payload, setToken } = useToken();
   let login_user_id = payload?.user_id;
   const { IonNeverDialog } = useIonNeverNotification();
+
+  // Plan define
   const translateAnim = useRef(new Animated.Value(0)).current;
   const navigation = useAppNavigation();
   const { width, height } = Dimensions.get("screen");
@@ -52,7 +61,6 @@ export default function ViewTourScreen({ route }: { route: any }) {
       useNativeDriver: true,
     }).start();
   };
-
   const closeModal = () => {
     Animated.timing(translateAnim, {
       duration: 500,
@@ -60,41 +68,11 @@ export default function ViewTourScreen({ route }: { route: any }) {
       useNativeDriver: true,
     }).start();
   };
-
   const myPlanListResult = useGet("/planning/my-plans", getMyPlanListParser);
-
   const addNewScheduleCard = (newScheduleInfo: PlanListItem) => {
     myPlanListResult.setState((state) => ({
       planList: [...state!.planList, newScheduleInfo],
     }));
-  };
-
-  // Params
-  const { id, post_user_id } = route.params || {
-    id: 0,
-    post_user_id: 0,
-  };
-
-  // Header
-  useEffect(() => {
-    navigation.setOptions({
-      headerTitle: "My Tour",
-    });
-  }, []);
-
-  // Select avatar
-  const handleAvatarClick = (
-    id: number,
-    username: string,
-    post_id: string,
-    post_user_id?: string
-  ) => {
-    navigation.navigate("Other Profile", {
-      id,
-      username,
-      post_id,
-      post_user_id,
-    });
   };
 
   // Get post details
@@ -111,6 +89,78 @@ export default function ViewTourScreen({ route }: { route: any }) {
     getPostDetail();
   }, []);
 
+  // Handle close
+  const [isPopoverVisible, setPopoverVisible] = useState(false);
+  const handleClose = () => {
+    IonNeverDialog.show({
+      type: "warning",
+      title: `Do you confirm to close tour #${id}?`,
+      message: ``,
+      firstButtonVisible: true,
+      firstButtonText: "Cancel",
+      firstButtonFunction: () => {
+        IonNeverDialog.dismiss();
+      },
+      secondButtonVisible: true,
+      secondButtonText: "Close",
+      secondButtonFunction: () => {
+        closePost();
+      },
+    });
+    setPopoverVisible(false);
+  };
+  const dispatchCloseEvent = useEvent<CloseEvent>("Close");
+  const closePost = async () => {
+    try {
+      let result = await api.patch(
+        `/blog/close/${id}`,
+        { id },
+        closePostParser,
+        token,
+      );
+      if (result.result === true) {
+        dispatchCloseEvent("Close");
+      } else {
+        throw new Error(`Unauthorized to close tour #${id}`);
+      }
+    } catch (err) {
+      console.log({ err });
+    }
+  };
+  useEvent<CloseEvent>("Close", (event) => {
+    getPostDetail();
+    checkCloseStatus();
+  });
+
+  // Params
+  const { id, post_user_id } = route.params || {
+    id: 0,
+    post_user_id: 0,
+  };
+
+  // Header
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: "My Tour",
+    }),
+      [];
+  });
+
+  // Select avatar
+  const handleAvatarClick = (
+    id: number,
+    username: string,
+    post_id: string,
+    post_user_id?: string,
+  ) => {
+    navigation.navigate("Other Profile", {
+      id,
+      username,
+      post_id,
+      post_user_id,
+    });
+  };
+
   // Confirm
   const [isConfirm, setIsConfirm] = useState<boolean | null>(false);
   const dispatchConfirmEvent = useEvent<ConfirmEvent>("Confirm");
@@ -120,7 +170,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
         `/application/confirm/${id}/${user_id}`,
         { username },
         confirmStatusParser,
-        token
+        token,
       );
       setIsConfirm(!isConfirm);
       dispatchConfirmEvent("Confirm");
@@ -128,12 +178,35 @@ export default function ViewTourScreen({ route }: { route: any }) {
       console.log({ err });
     }
   };
+
   useEvent<ConfirmEvent>("Confirm", (event) => {
     getConfirmedUsersList();
   });
   useEvent<AcceptEvent>("Accept", (event) => {
     getConfirmedUsersList();
   });
+
+  // Get close status
+  const [closeStatus, setCloseStatus] = useState<boolean>(false);
+  const checkCloseStatus = async () => {
+    try {
+      let result = await api.patch(
+        `/application/closeStatus/${id}`,
+        { id },
+        closePostParser,
+        token,
+      );
+      setCloseStatus(result.result);
+      if (result.result === true) {
+        dispatchCloseEvent("Close");
+      }
+    } catch (err) {
+      console.log({ err });
+    }
+  };
+  useEffect(() => {
+    checkCloseStatus();
+  }, []);
 
   // Reject
   const dispatchRejectEvent = useEvent<RejectEvent>("Reject");
@@ -143,7 +216,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
         `/application/reject/${id}/${user_id}`,
         { username },
         confirmStatusParser,
-        token
+        token,
       );
       setIsConfirm(null);
       dispatchRejectEvent("Reject");
@@ -164,7 +237,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
       let result = await api.get(
         `/application/tour/${id}/${post_user_id}`,
         confirmedUserParser,
-        token
+        token,
       );
       if (result) {
         for (let user of result) {
@@ -187,7 +260,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
     try {
       let allConfirmStatus = await api.get(
         `/application/all/${id}`,
-        allConfirmStatusParser
+        allConfirmStatusParser,
       );
       setAllConfirm(allConfirmStatus?.result);
     } catch (err) {
@@ -196,6 +269,24 @@ export default function ViewTourScreen({ route }: { route: any }) {
   };
   useEffect(() => {
     getAllConfirmStatus();
+  }, []);
+
+  // Get plan status
+  const [startPlan, setStartPlan] = useState<boolean>(false);
+  const checkPlanStatus = async () => {
+    try {
+      let result = await api.get(
+        `/application/plan/${id}/${post_user_id}`,
+        closePostParser,
+        token,
+      );
+      setStartPlan(result.result);
+    } catch (err) {
+      console.log({ err });
+    }
+  };
+  useEffect(() => {
+    checkPlanStatus();
   }, []);
 
   useEvent<UpdateProfileEvent>("UpdateProfile", (event) => {
@@ -241,50 +332,61 @@ export default function ViewTourScreen({ route }: { route: any }) {
               </View>
             </View>
           </View>
-          {item.user_id == post_user_id ? (
-            <></>
-          ) : login_user_id === item.user_id ? (
-            <View style={{ flexDirection: "row" }}>
-              {item.confirm_status === false ? (
-                <TouchableOpacity
-                  style={ManageTourScreenStyleSheet.button}
-                  onPress={() => {
-                    confirm(item.user_id, item.username);
-                  }}
-                >
-                  <Text style={ManageTourScreenStyleSheet.text}>Confirm</Text>
-                </TouchableOpacity>
-              ) : (
-                <Text style={ManageTourScreenStyleSheet.statusText}>
-                  Confirmed
-                </Text>
-              )}
-              {item.confirm_status === false ? (
-                <TouchableOpacity
-                  style={ManageTourScreenStyleSheet.rejectButton}
-                  onPress={() => {
-                    reject(item.user_id, item.username);
-                  }}
-                >
-                  <Text style={ManageTourScreenStyleSheet.text}>Reject</Text>
-                </TouchableOpacity>
-              ) : (
-                <></>
-              )}
-            </View>
+          {closeStatus === false ? (
+            item.user_id == post_user_id ? (
+              <></>
+            ) : login_user_id === item.user_id ? (
+              <View style={{ flexDirection: "row" }}>
+                {item.confirm_status === false ? (
+                  <TouchableOpacity
+                    style={ManageTourScreenStyleSheet.button}
+                    onPress={() => {
+                      confirm(item.user_id, item.username);
+                    }}
+                  >
+                    <Text style={ManageTourScreenStyleSheet.text}>Confirm</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <Text style={ManageTourScreenStyleSheet.statusText}>
+                    Confirmed
+                  </Text>
+                )}
+                {item.confirm_status === false ? (
+                  <TouchableOpacity
+                    style={ManageTourScreenStyleSheet.rejectButton}
+                    onPress={() => {
+                      reject(item.user_id, item.username);
+                    }}
+                  >
+                    <Text style={ManageTourScreenStyleSheet.text}>Reject</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <></>
+                )}
+              </View>
+            ) : (
+              <Text style={ManageTourScreenStyleSheet.statusText}>
+                {item.user_id == post_user_id
+                  ? ""
+                  : item.confirm_status === false
+                  ? "Pending"
+                  : "Confirmed"}
+              </Text>
+            )
           ) : (
-            <Text style={ManageTourScreenStyleSheet.statusText}>
-              {item.user_id == post_user_id
-                ? ""
-                : item.confirm_status === false
-                ? "Pending"
-                : "Confirmed"}
-            </Text>
+            <TouchableOpacity
+              style={ManageTourScreenStyleSheet.button}
+              onPress={() => {
+                confirm(item.user_id, item.username);
+              }}
+            >
+              <Text style={ManageTourScreenStyleSheet.text}>Rating</Text>
+            </TouchableOpacity>
           )}
         </View>
       </>
     ),
-    []
+    [],
   );
 
   return (
@@ -296,8 +398,43 @@ export default function ViewTourScreen({ route }: { route: any }) {
           renderItem={ItemView}
           ItemSeparatorComponent={ItemSeparatorView}
         />
-
         {login_user_id == post_user_id && allConfirm === true ? (
+          <View
+            style={{
+              paddingBottom: 5,
+              paddingLeft: 10,
+              paddingRight: 10,
+              paddingTop: 5,
+            }}
+          >
+            {startPlan === false ? (
+              <TouchableOpacity
+                style={ManageTourScreenStyleSheet.planButton}
+                onPress={() => {
+                  openModal();
+                }}
+              >
+                <Text style={ManageTourScreenStyleSheet.planButtonText}>
+                  Start Tour Planning
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={ManageTourScreenStyleSheet.planButton}
+                onPress={() => {
+                  openModal();
+                }}
+              >
+                <Text style={ManageTourScreenStyleSheet.planButtonText}>
+                  View Tour Planning
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        ) : (
+          <></>
+        )}
+        {login_user_id == post_user_id ? (
           <View
             style={{
               paddingBottom: 13,
@@ -307,19 +444,15 @@ export default function ViewTourScreen({ route }: { route: any }) {
             }}
           >
             <TouchableOpacity
-              style={ManageTourScreenStyleSheet.planButton}
-              onPress={() => {
-                openModal();
-              }}
+              style={ManageTourScreenStyleSheet.planCloseButton}
+              onPress={handleClose}
             >
               <Text style={ManageTourScreenStyleSheet.planButtonText}>
-                Start Tour Planning
+                Close This Tour
               </Text>
             </TouchableOpacity>
           </View>
-        ) : (
-          <></>
-        )}
+        ) : null}
       </View>
       <Animated.View
         style={[

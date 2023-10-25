@@ -41,4 +41,10 @@ export class BlogController {
   deletePost(@Param('id') id: string, @Body() body: Body, @Req() req: Request) {
     return this.blogService.deletePost(+id, req);
   }
+
+  @UseGuards(AuthGuard)
+  @Patch('/close/:id')
+  closePost(@Param('id') id: string, @Body() body: Body, @Req() req: Request) {
+    return this.blogService.closePost(+id, req);
+  }
 }
