@@ -39,6 +39,8 @@ export function AddScheduleForm(props: {
     plan_id: number;
     plan_title: string;
     image_path: string;
+    startDate: string;
+    endDate: string;
   }) => void;
 }) {
   const { closeModal, addNewScheduleCard } = props;
@@ -140,6 +142,8 @@ export function AddScheduleForm(props: {
         plan_id: json.plan_id,
         plan_title: title,
         image_path: json.image_path,
+        startDate: "",
+        endDate: "",
       });
       closeModal();
 
