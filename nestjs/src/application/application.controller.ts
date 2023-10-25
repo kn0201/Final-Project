@@ -38,6 +38,11 @@ export class ApplicationController {
     return this.applicationService.getAppliedUsers(+post_id, req);
   }
 
+  @Get('closeStatus/:post_id')
+  getCloseStatus(@Param('post_id') post_id: string) {
+    return this.applicationService.getCloseStatus(+post_id);
+  }
+
   @UseGuards(AuthGuard)
   @Get('tour/:post_id/:post_user_id')
   getConfirmedUsersList(

@@ -9,8 +9,6 @@ import {
   TouchableOpacity,
   Animated,
   Dimensions,
-  Modal,
-  Keyboard,
 } from "react-native";
 import { ItemSeparatorView, setStarRating } from "./PostScreen";
 import ManageTourScreenStyleSheet from "../StyleSheet/ManageTourScreenCss";
@@ -40,9 +38,6 @@ import { useIonNeverNotification } from "../components/IonNeverNotification/Noti
 import { useGet } from "../hooks/useGet";
 import AddScheduleForm from "../components/AddScheduleForm";
 import { useAppNavigation } from "../../navigators";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { iosBlue } from "../StyleSheet/StyleSheetHelper";
-import { useNavigation } from "@react-navigation/native";
 
 export default function ViewTourScreen({ route }: { route: any }) {
   const { token, payload, setToken } = useToken();
@@ -190,11 +185,9 @@ export default function ViewTourScreen({ route }: { route: any }) {
   const [closeStatus, setCloseStatus] = useState<boolean>(false);
   const checkCloseStatus = async () => {
     try {
-      let result = await api.patch(
+      let result = await api.get(
         `/application/closeStatus/${id}`,
-        { id },
         closePostParser,
-        token,
       );
       setCloseStatus(result.result);
       if (result.result === true) {
@@ -332,12 +325,23 @@ export default function ViewTourScreen({ route }: { route: any }) {
               </View>
             </View>
           </View>
-          {closeStatus === false ? (
-            item.user_id == post_user_id ? (
+          {item.user_id === post_user_id ? (
+            closeStatus === false ? (
               <></>
-            ) : login_user_id === item.user_id ? (
-              <View style={{ flexDirection: "row" }}>
-                {item.confirm_status === false ? (
+            ) : (
+              <TouchableOpacity
+                style={ManageTourScreenStyleSheet.button}
+                onPress={() => {
+                  confirm(item.user_id, item.username);
+                }}
+              >
+                <Text style={ManageTourScreenStyleSheet.text}>Rating</Text>
+              </TouchableOpacity>
+            )
+          ) : login_user_id === item.user_id ? (
+            <View style={{ flexDirection: "row" }}>
+              {item.confirm_status === false ? (
+                <>
                   <TouchableOpacity
                     style={ManageTourScreenStyleSheet.button}
                     onPress={() => {
@@ -346,12 +350,6 @@ export default function ViewTourScreen({ route }: { route: any }) {
                   >
                     <Text style={ManageTourScreenStyleSheet.text}>Confirm</Text>
                   </TouchableOpacity>
-                ) : (
-                  <Text style={ManageTourScreenStyleSheet.statusText}>
-                    Confirmed
-                  </Text>
-                )}
-                {item.confirm_status === false ? (
                   <TouchableOpacity
                     style={ManageTourScreenStyleSheet.rejectButton}
                     onPress={() => {
@@ -360,19 +358,23 @@ export default function ViewTourScreen({ route }: { route: any }) {
                   >
                     <Text style={ManageTourScreenStyleSheet.text}>Reject</Text>
                   </TouchableOpacity>
-                ) : (
-                  <></>
-                )}
-              </View>
-            ) : (
-              <Text style={ManageTourScreenStyleSheet.statusText}>
-                {item.user_id == post_user_id
-                  ? ""
-                  : item.confirm_status === false
-                  ? "Pending"
-                  : "Confirmed"}
-              </Text>
-            )
+                </>
+              ) : closeStatus === false ? (
+                <Text style={ManageTourScreenStyleSheet.statusText}>
+                  Confirmed
+                </Text>
+              ) : (
+                <></>
+              )}
+            </View>
+          ) : closeStatus === false ? (
+            <Text style={ManageTourScreenStyleSheet.statusText}>
+              {item.user_id == post_user_id
+                ? ""
+                : item.confirm_status === false
+                ? "Pending"
+                : "Confirmed"}
+            </Text>
           ) : (
             <TouchableOpacity
               style={ManageTourScreenStyleSheet.button}
@@ -386,7 +388,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
         </View>
       </>
     ),
-    [],
+    [closeStatus],
   );
 
   return (
@@ -401,10 +403,10 @@ export default function ViewTourScreen({ route }: { route: any }) {
         {login_user_id == post_user_id && allConfirm === true ? (
           <View
             style={{
-              paddingBottom: 5,
+              paddingBottom: 13,
               paddingLeft: 10,
               paddingRight: 10,
-              paddingTop: 5,
+              paddingTop: 0,
             }}
           >
             {startPlan === false ? (
@@ -435,23 +437,25 @@ export default function ViewTourScreen({ route }: { route: any }) {
           <></>
         )}
         {login_user_id == post_user_id ? (
-          <View
-            style={{
-              paddingBottom: 13,
-              paddingLeft: 10,
-              paddingRight: 10,
-              paddingTop: 5,
-            }}
-          >
-            <TouchableOpacity
-              style={ManageTourScreenStyleSheet.planCloseButton}
-              onPress={handleClose}
+          closeStatus === false ? (
+            <View
+              style={{
+                paddingBottom: 13,
+                paddingLeft: 10,
+                paddingRight: 10,
+                paddingTop: 5,
+              }}
             >
-              <Text style={ManageTourScreenStyleSheet.planButtonText}>
-                Close This Tour
-              </Text>
-            </TouchableOpacity>
-          </View>
+              <TouchableOpacity
+                style={ManageTourScreenStyleSheet.planCloseButton}
+                onPress={handleClose}
+              >
+                <Text style={ManageTourScreenStyleSheet.planButtonText}>
+                  Close This Tour
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ) : null
         ) : null}
       </View>
       <Animated.View

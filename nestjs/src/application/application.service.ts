@@ -68,8 +68,6 @@ export class ApplicationService {
         .where('post_id', post_id)
         .andWhere('confirm', true)
         .first();
-      console.log(number_of_confirm.count);
-
       if (number_of_confirm.count === 0) {
         return { result: false };
       }
@@ -193,10 +191,27 @@ export class ApplicationService {
           confirm_status: confirmedUser.confirm_status,
         });
       }
-      console.log(confirmedUsersInfo);
       return confirmedUsersInfo;
     } catch (err) {
       console.log(err);
+    }
+  }
+
+  async getCloseStatus(id) {
+    try {
+      const result = await this.knex('post')
+        .select('status')
+        .where('id', id)
+        .andWhere('status', 'close')
+        .first();
+      if (result) {
+        return { result: true };
+      } else {
+        return { result: false };
+      }
+    } catch (err) {
+      console.log(err);
+      throw err;
     }
   }
 
@@ -205,8 +220,8 @@ export class ApplicationService {
       const payload = this.jwtService.decode(
         req.headers.authorization.split(' ')[1],
       );
-      let login_user_id = payload.user_id;
-      let result = await this.knex('tour_plan')
+      const login_user_id = payload.user_id;
+      const result = await this.knex('tour_plan')
         .select('id')
         .where('post_id', id)
         .first();
@@ -217,6 +232,7 @@ export class ApplicationService {
       }
     } catch (err) {
       console.log(err);
+      throw err;
     }
   }
 
