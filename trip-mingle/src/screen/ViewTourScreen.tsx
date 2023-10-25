@@ -38,6 +38,8 @@ import { useIonNeverNotification } from "../components/IonNeverNotification/Noti
 import { useGet } from "../hooks/useGet";
 import AddScheduleForm from "../components/AddScheduleForm";
 import { useAppNavigation } from "../../navigators";
+import { Avatar } from "@rneui/themed";
+import { Rating, AirbnbRating } from "react-native-ratings";
 
 export default function ViewTourScreen({ route }: { route: any }) {
   const { token, payload, setToken } = useToken();
@@ -291,6 +293,17 @@ export default function ViewTourScreen({ route }: { route: any }) {
     navigation.navigate("ExplorePage", { screen: "BuddiesPage" });
   });
 
+  // Rating
+  const [ratings, setRatings] = useState(Array(confirmedUsers.length).fill(0));
+  const handleRatingChange = (newRating: number, index: number) => {
+    const newRatings = [...ratings];
+    newRatings[index] = newRating;
+    setRatings(newRatings);
+  };
+  const handleSubmitRating = () => {
+    console.log("Submitting rating:", ratings);
+  };
+
   const ItemView = useCallback(
     ({ item, index }: ListRenderItemInfo<ConfirmedUserItem>) => (
       <>
@@ -311,18 +324,44 @@ export default function ViewTourScreen({ route }: { route: any }) {
             </TouchableWithoutFeedback>
             <View style={{ justifyContent: "center" }}>
               <Text style={{ fontWeight: "800" }}>#{index + 1} Member</Text>
-              <View style={{ flexDirection: "row" }}>
-                <Text
-                  style={{
-                    marginRight: 5,
-                    fontWeight: "600",
-                  }}
-                >
-                  {item.username}
-                </Text>
-                {setStarRating(item.rating)}
-                <Text> ({item.number_of_rating})</Text>
-              </View>
+              {closeStatus === true && item.user_id !== login_user_id ? (
+                <>
+                  <View>
+                    <Text
+                      style={{
+                        marginRight: 5,
+                        fontWeight: "600",
+                      }}
+                    >
+                      {item.username}
+                    </Text>
+                  </View>
+                  <View>
+                    <AirbnbRating
+                      count={5}
+                      defaultRating={ratings[index]}
+                      size={13}
+                      showRating={false}
+                      onFinishRating={(newRating) =>
+                        handleRatingChange(newRating, index)
+                      }
+                    />
+                  </View>
+                </>
+              ) : (
+                <View style={{ flexDirection: "row" }}>
+                  <Text
+                    style={{
+                      marginRight: 5,
+                      fontWeight: "600",
+                    }}
+                  >
+                    {item.username}
+                  </Text>
+                  {setStarRating(item.rating)}
+                  <Text> ({item.number_of_rating})</Text>
+                </View>
+              )}
             </View>
           </View>
           {item.user_id === post_user_id ? (
@@ -331,9 +370,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
             ) : (
               <TouchableOpacity
                 style={ManageTourScreenStyleSheet.button}
-                onPress={() => {
-                  confirm(item.user_id, item.username);
-                }}
+                onPress={handleSubmitRating}
               >
                 <Text style={ManageTourScreenStyleSheet.text}>Rating</Text>
               </TouchableOpacity>
@@ -379,7 +416,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
             <TouchableOpacity
               style={ManageTourScreenStyleSheet.button}
               onPress={() => {
-                confirm(item.user_id, item.username);
+                handleSubmitRating;
               }}
             >
               <Text style={ManageTourScreenStyleSheet.text}>Rating</Text>
@@ -480,11 +517,11 @@ export default function ViewTourScreen({ route }: { route: any }) {
           },
         ]}
       >
-        <AddScheduleForm
+        {/* <AddScheduleForm
           closeModal={closeModal}
           addNewScheduleCard={addNewScheduleCard}
           confirmedUsersList={confirmedUsersList}
-        />
+        /> */}
       </Animated.View>
     </>
   );
