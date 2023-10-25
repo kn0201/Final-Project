@@ -29,7 +29,7 @@ const SchedulePage = () => {
         <Stack.Screen name="AddSchedule" component={AddSchedule} />
         <Stack.Screen name="AddNewPlan" component={AddNewPlan} />
         <Stack.Screen name="Add Agenda" component={AgendaListItem} />
-        <Stack.Screen name="Sample Schedule" component={SampleSchedule} />
+        <Stack.Screen name="SampleSchedule" component={SampleSchedule} />
       </Stack.Navigator>
     </>
   );

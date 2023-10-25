@@ -77,10 +77,33 @@ const ManageTourScreenStyleSheet = StyleSheet.create({
     borderColor: theme.primaryColor,
     backgroundColor: theme.primaryColor,
   },
+  planCloseButton: {
+    height: 50,
+    marginRight: 2,
+    justifyContent: "center",
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: "red",
+    backgroundColor: "red",
+  },
   planButtonText: {
     fontSize: 18,
     color: theme.primaryTextColor,
     textAlign: "center",
+  },
+  modalContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1,
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 10,
+    borderRadius: 10,
+    position: "absolute",
+    top: 150,
+    right: 20,
+    zIndex: 1,
   },
 });
 

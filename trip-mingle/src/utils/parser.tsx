@@ -317,3 +317,7 @@ export const getMyPlanListParser = object({
 export type PlanListItem = ParseResult<
   typeof getMyPlanListParser
 >["planList"][number];
+
+export const closePostParser = object({
+  result: boolean(),
+});

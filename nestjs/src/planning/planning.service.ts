@@ -37,6 +37,7 @@ export class PlanningService {
         'image.path as image_path',
       )
       .where({ 'plan.user_id': user_id });
+    console.log({ planList });
     return { planList };
   }
 

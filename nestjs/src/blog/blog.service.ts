@@ -380,4 +380,32 @@ export class BlogService {
       console.log(err);
     }
   }
+
+  async closePost(id, req) {
+    try {
+      const payload = this.jwtService.decode(
+        req.headers.authorization.split(' ')[1],
+      );
+      let user_id = payload.user_id;
+      let postUser = await this.knex('post')
+        .select('id', 'status')
+        .where('user_id', user_id)
+        .andWhere('id', id)
+        .first();
+      if (postUser) {
+        let result = await this.knex('post')
+          .where('id', id)
+          .update({ status: 'close' });
+        if (result) {
+          return { result: true };
+        } else {
+          return { result: false };
+        }
+      } else {
+        return { result: false };
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
 }
