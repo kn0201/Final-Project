@@ -44,6 +44,7 @@ export function AddScheduleForm(props: {
 
   confirmedUsersList?: any;
   title?: string;
+  post_id?: number;
 }) {
   const { closeModal, addNewScheduleCard, confirmedUsersList, title } = props;
   const [userList, setUserList] = useState(props.confirmedUsersList || null);
@@ -52,7 +53,7 @@ export function AddScheduleForm(props: {
   const { token, payload, setToken } = useToken();
   const [code, setCode] = useState("");
   const [planTitle, setPlanTitle] = useState<string>(props.title || "");
-
+  const [postId, stPostId] = useState<number>(props.post_id || 0);
   function reset() {
     setPlanTitle("");
     setImageFile(null);
@@ -114,6 +115,7 @@ export function AddScheduleForm(props: {
         formData.append("image", imageFile.file);
       }
       formData.append("title", title);
+      formData.append("post_id", postId.toString());
       console.log(formData);
 
       if (userList != null) {
@@ -153,7 +155,7 @@ export function AddScheduleForm(props: {
       });
       closeModal();
 
-      // reset();
+      reset();
     } catch (error) {
       let message = String(error);
       IonNeverDialog.show({

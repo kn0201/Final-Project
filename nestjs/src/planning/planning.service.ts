@@ -98,6 +98,7 @@ export class PlanningService {
     title: string;
     user_list: string;
     image_file: string | undefined;
+    post_id: number;
   }) {
     let image_id: number | null = null;
     let userList = input.user_list.split('');
@@ -106,6 +107,7 @@ export class PlanningService {
         .insert({
           user_id: input.user_id,
           path: input.image_file,
+          post_id: input.post_id,
           is_delete: false,
         })
         .returning('id');

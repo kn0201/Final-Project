@@ -366,8 +366,13 @@ const TourDetailScreen = ({
   };
 
   // View member
-  const view = (id: number, title: string, post_user_id?: string) => {
-    navigation.navigate("Tour Member", { id, title, post_user_id });
+  const view = (
+    id: number,
+    title: string,
+    post_id: number,
+    post_user_id?: string
+  ) => {
+    navigation.navigate("Tour Member", { id, title, post_id, post_user_id });
   };
 
   // Apply to join/ cancel
@@ -572,7 +577,7 @@ const TourDetailScreen = ({
                 <TouchableOpacity
                   style={TourDetailScreenStyleSheet.button}
                   onPress={() => {
-                    view(id, title, post?.user_id.toString());
+                    view(id, title, id, post?.user_id.toString());
                   }}
                 >
                   <Text style={TourDetailScreenStyleSheet.text}>View</Text>
@@ -584,7 +589,7 @@ const TourDetailScreen = ({
               <TouchableOpacity
                 style={TourDetailScreenStyleSheet.button}
                 onPress={() => {
-                  view(id, title, post?.user_id.toString());
+                  view(id, title, id, post?.user_id.toString());
                 }}
               >
                 <Text style={TourDetailScreenStyleSheet.text}>View</Text>

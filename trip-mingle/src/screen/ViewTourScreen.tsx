@@ -152,10 +152,11 @@ export default function ViewTourScreen({ route }: { route: any }) {
   }, []);
 
   // Params
-  const { id, title, post_user_id } = route.params || {
+  const { id, title, post_user_id, post_id } = route.params || {
     id: 0,
     title: "",
     post_user_id: 0,
+    post_id: 0,
   };
 
   // Header
@@ -564,6 +565,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
           addNewScheduleCard={addNewScheduleCard}
           confirmedUsersList={confirmedUsersList}
           title={title}
+          post_id={post_id}
         />
       </Animated.View>
     </>
