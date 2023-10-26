@@ -17,6 +17,7 @@ import { api } from "../apis/api";
 import { boolean, object } from "cast.ts";
 import PlanningStyleSheet from "../StyleSheet/PlanningStyleSheet";
 import TextButton from "../components/TextButton";
+import Entypo from "react-native-vector-icons/Entypo";
 
 function Space(props: { height: number }) {
   return (
@@ -219,7 +220,10 @@ const SampleSchedule = () => {
     <>
       <View>
         <Space height={10}></Space>
-        <Text>Starting Date</Text>
+        <View style={{ display: "flex", flexDirection: "row", margin: 3 }}>
+          <Text> Starting Date</Text>
+          <Entypo name="aircraft-take-off" size={24} color="black" />
+        </View>
         <TextInput
           style={PlanningStyleSheet.inputContainer}
           value={startDate}
@@ -227,7 +231,10 @@ const SampleSchedule = () => {
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input your start travel date"
         ></TextInput>
-        <Text>Ending Date</Text>
+        <View style={{ display: "flex", flexDirection: "row", margin: 3 }}>
+          <Text>Ending Date</Text>
+          <Entypo name="aircraft-landing" size={24} color="black" />
+        </View>
         <TextInput
           style={PlanningStyleSheet.inputContainer}
           value={endDate}

@@ -23,6 +23,7 @@ import { useToken } from "../hooks/useToken";
 import TextButton from "../components/TextButton";
 import { AppParamList, useAppNavigation, useAppRoute } from "../../navigators";
 import { textColor } from "../StyleSheet/StyleSheetHelper";
+import Entypo from "react-native-vector-icons/Entypo";
 
 function Space(props: { height: number }) {
   return (
@@ -203,8 +204,14 @@ const AddSchedule = () => {
     <>
       <View>
         <Space height={10}></Space>
-        <Text>plan id: {planId}</Text>
-        <Text>Starting Date</Text>
+        {/* <Text>plan id: {planId}</Text> */}
+        <View>
+          <Entypo name="aircraft-take-off" size={24} color="black" />
+          <View style={{ display: "flex", flexDirection: "row", margin: 10 }}>
+            <Text> Starting Date</Text>
+            <Entypo name="aircraft-take-off" size={24} color="black" />
+          </View>
+        </View>
         <TextInput
           style={PlanningStyleSheet.inputContainer}
           value={
@@ -215,7 +222,10 @@ const AddSchedule = () => {
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input your start travel date"
         ></TextInput>
-        <Text>Ending Date</Text>
+        <View style={{ display: "flex", flexDirection: "row" }}>
+          <Text>Ending Date</Text>
+          <Entypo name="aircraft-landing" size={24} color="black" />
+        </View>{" "}
         <TextInput
           style={PlanningStyleSheet.inputContainer}
           value={

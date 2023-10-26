@@ -48,7 +48,7 @@ export class PlanningController {
     let input = object({
       body: object({
         title: string(),
-        // country: string(),
+        country: string(),
         user_list: string(),
       }),
     }).parse({ body });

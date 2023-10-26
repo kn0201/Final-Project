@@ -371,8 +371,8 @@ export function AddScheduleForm(props: {
         value={state.title}
         onChangeText={(text) => setState({ ...state, title: text })}
       />
-      {/* <CountryCheckbox /> */}
-      <Text>Starting Date</Text>
+      <CountryCheckbox />
+      {/* <Text>Starting Date</Text>
       <TextInput
         style={PlanningStyleSheet.inputContainer}
         value={
@@ -393,7 +393,7 @@ export function AddScheduleForm(props: {
         keyboardType="numeric"
         onEndEditing={() => Keyboard.dismiss()}
         placeholder="Input your end travel date"
-      ></TextInput>
+      ></TextInput> */}
       <TextButton
         text="Add New Plan"
         onPress={() => {

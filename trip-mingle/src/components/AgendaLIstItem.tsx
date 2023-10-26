@@ -32,17 +32,12 @@ function Space(props: { height: number }) {
     ></View>
   );
 }
-export default function AgendaListItem(props: {
-  // selectedDate: string;
-  // updateScheduleList: (scheduleInfo: ScheduleItemInfo) => void;
-}) {
+export default function AgendaListItem(props: {}) {
   const { selectedDate, updateScheduleList, planId } =
     useAppRoute<"Add Agenda">();
-  // const { selectedDate, updateScheduleList } = props;
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const { token, payload, setToken } = useToken();
 
-  // const planId = useAppRoute<"AddSchedule">().planId;
   const [scheduleInfo, setScheduleInfo] = useState<ScheduleItemInfo>({
     selectedDate: selectedDate,
     startTime: "",
@@ -137,7 +132,6 @@ export default function AgendaListItem(props: {
           placeholderTextColor="gray"
         ></TextInput>
         <Text style={PlanningStyleSheet.inputTitle}>Location</Text>
-        {/* <Space height={50} /> */}
         <View style={{ height: 250 }}>
           <GooglePlacesAutocomplete
             ref={(elem) => {
@@ -169,7 +163,6 @@ export default function AgendaListItem(props: {
               });
               return;
             }
-            // addNewEvent(scheduleItem);
             Keyboard.dismiss();
           }}
         >
