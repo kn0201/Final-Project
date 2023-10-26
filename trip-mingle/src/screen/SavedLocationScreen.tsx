@@ -21,6 +21,7 @@ import { useAppNavigation } from "../../navigators";
 import useEvent from "react-use-event";
 import { MapPositionEvent, SaveLocationEvent } from "../utils/events";
 import { LinearGradient } from "expo-linear-gradient";
+import { theme } from "../theme/variables";
 
 const { width, height } = Dimensions.get("window");
 const aspect_ratio = width / height;
@@ -104,7 +105,7 @@ export default function SavedLocationScreen() {
     <View style={SavedLocationScreenStyleSheet.center}>
       <LinearGradient
         // Background Linear Gradient
-        colors={["#FFFFFF", "rgba(195,214,246,0.8)"]}
+        colors={["#FFFFFF", theme.background]}
         style={{
           position: "absolute",
           left: 0,

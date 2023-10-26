@@ -11,6 +11,8 @@ import { setStarRating } from "./PostScreen";
 import { useToken } from "../hooks/useToken";
 import { AcceptEvent, LoginEvent, UpdateProfileEvent } from "../utils/events";
 import useEvent from "react-use-event";
+import { LinearGradient } from "expo-linear-gradient";
+import { theme } from "../theme/variables";
 
 export default function OtherProfileScreen({
   route,
@@ -53,7 +55,7 @@ export default function OtherProfileScreen({
         `/application/${post_id}/${id}`,
         { username },
         acceptStatusParser,
-        token,
+        token
       );
       if (isAccept !== null) {
         setIsAccept(!isAccept);
@@ -72,7 +74,7 @@ export default function OtherProfileScreen({
   const getProfile = async () => {
     let profile = await api.get(
       `/user/${post_id}/${id}/${post_user_id}`,
-      getOtherProfileParser,
+      getOtherProfileParser
     );
     setProfileInfo(profile);
   };
@@ -98,6 +100,18 @@ export default function OtherProfileScreen({
 
   return (
     <>
+      <LinearGradient
+        // Background Linear Gradient
+        colors={["#FFFFFF", theme.background]}
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: 0,
+          height: "100%",
+        }}
+      />
+
       <View style={OtherProfileScreenStyleSheet.container}>
         <Avatar
           size={120}

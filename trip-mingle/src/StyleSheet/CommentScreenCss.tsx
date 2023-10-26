@@ -9,7 +9,7 @@ const CommentScreenStyleSheet = StyleSheet.create({
     alignItems: center,
   },
   bottomContainer: {
-    backgroundColor: white,
+    backgroundColor: "#E1FFED",
     height: 45,
     width: full,
     justifyContent: "space-between",

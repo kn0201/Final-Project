@@ -15,7 +15,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { sendProfileParser, updateUsernameParser } from 'utils/parser';
-import { getJWTPayload } from 'src/jwt';
+import { getJWTPayload, maybeGetJWTPayload } from 'src/jwt';
 import { storage } from 'src/uploads';
 
 @Controller('user')
@@ -93,6 +93,14 @@ export class UserController {
     let jwt = getJWTPayload(headers);
     return this.userService.getOwnPost({
       user_id: jwt.user_id,
+    });
+  }
+
+  @Get('new')
+  async getNewPost(@Headers() headers: {}) {
+    let jwt = maybeGetJWTPayload(headers);
+    return this.userService.getNewPost({
+      user_id: jwt?.user_id,
     });
   }
 }

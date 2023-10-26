@@ -23,6 +23,8 @@ import { useToken } from "../hooks/useToken";
 import TextButton from "../components/TextButton";
 import { AppParamList, useAppNavigation, useAppRoute } from "../../navigators";
 import { textColor } from "../StyleSheet/StyleSheetHelper";
+import { LinearGradient } from "expo-linear-gradient";
+import { theme } from "../theme/variables";
 
 function Space(props: { height: number }) {
   return (
@@ -202,6 +204,17 @@ const AddSchedule = () => {
   return (
     <>
       <View>
+        <LinearGradient
+          // Background Linear Gradient
+          colors={["#FFFFFF", theme.background]}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: 0,
+            height: "100%",
+          }}
+        />
         <Space height={10}></Space>
         <Text>plan id: {planId}</Text>
         <Text>Starting Date</Text>

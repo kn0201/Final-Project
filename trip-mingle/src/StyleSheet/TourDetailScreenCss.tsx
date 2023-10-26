@@ -50,7 +50,7 @@ const TourDetailScreenStyleSheet = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "center",
     gap: 6,
-    backgroundColor: "white",
+    backgroundColor: "#E1FFED",
   },
   rowContainerWithEnd: {
     flexDirection: "row",
@@ -92,7 +92,7 @@ const TourDetailScreenStyleSheet = StyleSheet.create({
     paddingTop: 10,
     paddingLeft: 10,
     paddingBottom: 10,
-    backgroundColor: "#c4ffdb",
+    backgroundColor: "#E1FFED",
   },
   applyRowContainer: {
     flexDirection: "row",
