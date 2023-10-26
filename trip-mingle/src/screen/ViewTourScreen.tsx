@@ -298,7 +298,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
   const handleRatingChange = async (rating: number, user_id: number) => {
     try {
       let ratingResult = await api.post(
-        `/bookmark/${id}`,
+        `/rating/${id}`,
         { rating, user_id },
         closePostParser,
         token,
