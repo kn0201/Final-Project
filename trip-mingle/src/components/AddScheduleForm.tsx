@@ -43,27 +43,18 @@ export function AddScheduleForm(props: {
   }) => void;
 
   confirmedUsersList?: any;
+  title?: string;
 }) {
-  const { closeModal, addNewScheduleCard } = props;
+  const { closeModal, addNewScheduleCard, confirmedUsersList, title } = props;
   const [userList, setUserList] = useState(props.confirmedUsersList || null);
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
-  const countriesListData = countriesList;
   const [imageFile, setImageFile] = useState<ImageFile | null>(null);
   const { token, payload, setToken } = useToken();
-  const [country, setCountry] = useState("");
   const [code, setCode] = useState("");
-
-  const [selectedCountry, setSelectedCountry] = useState(
-    "Destination Country *"
-  );
-
-  const [state, setState] = useState({
-    title: "",
-    country: "",
-  });
+  const [planTitle, setPlanTitle] = useState<string>(props.title || "");
 
   function reset() {
-    setState({ title: "", country: "" });
+    setPlanTitle("");
     setImageFile(null);
   }
 
@@ -103,11 +94,7 @@ export function AddScheduleForm(props: {
     });
   };
 
-  async function addPlan(
-    title: string,
-    country: string,
-    imageFile?: ImageFile | null
-  ) {
+  async function addPlan(title: string, imageFile?: ImageFile | null) {
     let user_id_array = [];
     if (!title) {
       IonNeverToast.show({
@@ -127,7 +114,8 @@ export function AddScheduleForm(props: {
         formData.append("image", imageFile.file);
       }
       formData.append("title", title);
-      formData.append("country", country);
+      console.log(formData);
+
       if (userList != null) {
         formData.append("user_list", userList.join(""));
         let json = await api2.upload(
@@ -158,7 +146,7 @@ export function AddScheduleForm(props: {
       });
       addNewScheduleCard({
         plan_id: json.plan_id,
-        plan_title: title,
+        plan_title: planTitle,
         image_path: json.image_path || "",
         startDate: "",
         endDate: "",
@@ -185,121 +173,6 @@ export function AddScheduleForm(props: {
     }
   };
 
-  const CountryCheckbox = () => {
-    return (
-      <TouchableOpacity
-        style={AddPostPageStyleSheet.postCountryContainer}
-        onPress={() => {
-          {
-            focusInput;
-          }
-          Keyboard.dismiss();
-          IonNeverDialog.show({
-            dialogHeight: 600,
-            component: () => {
-              const [localCountry, setLocalCountry] = useState<string>(country);
-              const [localCode, setLocalCode] = useState<string>(code);
-              const [search, setSearch] = useState("");
-              const [countryList, setCountryList] = useState(countriesListData);
-              const [matchedCountryList, setMatchedCountryList] =
-                useState(countriesListData);
-              useEffect(() => {
-                setMatchedCountryList(
-                  countryList.filter((country) =>
-                    country.name
-                      .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase())
-                  )
-                );
-              }, [search, countryList]);
-              const updateSearch = (search: string) => {
-                setSearch(search);
-              };
-              type CountryProps = { name: string; code: string };
-              const Country = ({ name, code }: CountryProps) => (
-                <View>
-                  <CheckBox
-                    title={name}
-                    containerStyle={{
-                      backgroundColor: "transparent",
-                      borderWidth: 0,
-                      padding: 3,
-                    }}
-                    textStyle={{ fontWeight: "normal" }}
-                    checkedIcon="dot-circle-o"
-                    uncheckedIcon="circle-o"
-                    checked={localCountry === name}
-                    onPress={() => {
-                      if (localCountry === name) {
-                        setCountry("");
-                        setCode("");
-                        setLocalCountry("");
-                        setLocalCode("");
-                      } else {
-                        setCountry(name);
-                        setCode(code);
-                        setLocalCountry(name);
-                        setLocalCode(code);
-                      }
-                    }}
-                  />
-                </View>
-              );
-              return (
-                <>
-                  <SearchBar
-                    placeholder="Search..."
-                    onChangeText={updateSearch}
-                    value={search}
-                    containerStyle={{
-                      backgroundColor: "transparent",
-                      borderTopColor: "transparent",
-                      borderBottomColor: "transparent",
-                      height: 50,
-                    }}
-                    inputContainerStyle={{
-                      backgroundColor: "white",
-                      borderColor: "black",
-                      height: 40,
-                      borderRadius: 10,
-                      borderBottomWidth: 1,
-                      borderWidth: 1,
-                    }}
-                    inputStyle={{ fontSize: 14, color: "black" }}
-                    placeholderTextColor="#BFBFC1"
-                    searchIcon={false}
-                    lightTheme
-                  />
-                  <FlatList
-                    data={matchedCountryList}
-                    renderItem={({ item }) => (
-                      <Country name={item.name} code={item.code} />
-                    )}
-                  />
-                  <View style={AddPostPageStyleSheet.ModalButtonContainer}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        localCountry
-                          ? setSelectedCountry(localCountry)
-                          : setSelectedCountry("Destination Country *");
-                        IonNeverDialog.dismiss();
-                        setState({ ...state, country });
-                      }}
-                    >
-                      <Text style={AddPostPageStyleSheet.ModalText}>OK</Text>
-                    </TouchableOpacity>
-                  </View>
-                </>
-              );
-            },
-          });
-        }}
-      >
-        <Text ref={inputRef}>{selectedCountry}</Text>
-        <MaterialIcons name="edit" size={16} />
-      </TouchableOpacity>
-    );
-  };
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
       <LinearGradient
@@ -335,20 +208,29 @@ export function AddScheduleForm(props: {
           </TouchableOpacity>
         </View>
       </View>
-      <TextInput
-        style={PlanningStyleSheet.inputContainer}
-        placeholder="Title"
-        value={state.title}
-        onChangeText={(text) => setState({ ...state, title: text })}
-      />
-      <CountryCheckbox />
-      <TextButton
-        text="Add New Plan"
-        onPress={() => {
-          addPlan(state.title, state.country, imageFile);
-        }}
-      ></TextButton>
+      <View
+        style={{ width: "90%", justifyContent: center, alignItems: center }}
+      >
+        <TextInput
+          style={PlanningStyleSheet.formInputContainer}
+          placeholder="Title"
+          value={planTitle}
+          onChangeText={(text) => {
+            setPlanTitle(text);
+            console.log(planTitle);
+          }}
+        />
+      </View>
+
       <View style={PlanningStyleSheet.cancelButtonDiv}>
+        <TouchableOpacity
+          style={PlanningStyleSheet.addButton}
+          onPress={() => {
+            addPlan(planTitle, imageFile);
+          }}
+        >
+          <Text style={PlanningStyleSheet.addButtonText}>Add New Plan</Text>
+        </TouchableOpacity>
         <TouchableOpacity
           style={PlanningStyleSheet.cancelButton}
           onPress={closeModal}

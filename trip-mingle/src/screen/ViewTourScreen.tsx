@@ -115,7 +115,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
         `/blog/close/${id}`,
         { id },
         closePostParser,
-        token,
+        token
       );
       if (result.result === true) {
         dispatchCloseEvent("Close");
@@ -137,7 +137,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
     try {
       let result = await api.get(
         `/application/closeStatus/${id}`,
-        closePostParser,
+        closePostParser
       );
       setCloseStatus(result.result);
       if (result.result === true) {
@@ -152,8 +152,9 @@ export default function ViewTourScreen({ route }: { route: any }) {
   }, []);
 
   // Params
-  const { id, post_user_id } = route.params || {
+  const { id, title, post_user_id } = route.params || {
     id: 0,
+    title: "",
     post_user_id: 0,
   };
 
@@ -169,7 +170,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
     id: number,
     username: string,
     post_id: string,
-    post_user_id?: string,
+    post_user_id?: string
   ) => {
     navigation.navigate("Other Profile", {
       id,
@@ -188,7 +189,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
         `/application/confirm/${id}/${user_id}`,
         { username },
         confirmStatusParser,
-        token,
+        token
       );
       setIsConfirm(!isConfirm);
       dispatchConfirmEvent("Confirm");
@@ -212,7 +213,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
         `/application/reject/${id}/${user_id}`,
         { username },
         confirmStatusParser,
-        token,
+        token
       );
       setIsConfirm(null);
       dispatchRejectEvent("Reject");
@@ -233,7 +234,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
       let result = await api.get(
         `/application/tour/${id}/${post_user_id}`,
         confirmedUserParser,
-        token,
+        token
       );
       if (result) {
         for (let user of result) {
@@ -255,7 +256,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
     try {
       let allConfirmStatus = await api.get(
         `/application/all/${id}`,
-        allConfirmStatusParser,
+        allConfirmStatusParser
       );
       setAllConfirm(allConfirmStatus?.result);
     } catch (err) {
@@ -269,11 +270,13 @@ export default function ViewTourScreen({ route }: { route: any }) {
   // Get plan status
   const [startPlan, setStartPlan] = useState<boolean>(false);
   const checkPlanStatus = async () => {
+    console.log(title);
+
     try {
       let result = await api.get(
         `/application/plan/${id}/${post_user_id}`,
         closePostParser,
-        token,
+        token
       );
       setStartPlan(result.result);
     } catch (err) {
@@ -301,7 +304,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
         `/rating/${id}`,
         { rating, user_id },
         closePostParser,
-        token,
+        token
       );
       if (ratingResult.result === true) {
         dispatchRatingEvent("Rating");
@@ -329,7 +332,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
                     item.user_id,
                     item.username,
                     id,
-                    post_user_id,
+                    post_user_id
                   )
                 }
               >
@@ -440,7 +443,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
           )}
         </View>
       ),
-    [closeStatus],
+    [closeStatus]
   );
 
   return (
@@ -494,12 +497,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
                       ],
                     },
                   ]}
-                >
-                  <AddScheduleForm
-                    closeModal={closeModal}
-                    addNewScheduleCard={addNewScheduleCard}
-                  />
-                </Animated.View>
+                ></Animated.View>
               </>
             ) : (
               <TouchableOpacity
@@ -561,11 +559,12 @@ export default function ViewTourScreen({ route }: { route: any }) {
           },
         ]}
       >
-        {/* <AddScheduleForm
+        <AddScheduleForm
           closeModal={closeModal}
           addNewScheduleCard={addNewScheduleCard}
           confirmedUsersList={confirmedUsersList}
-        /> */}
+          title={title}
+        />
       </Animated.View>
     </>
   );

@@ -265,6 +265,17 @@ export default function NewSnapScreen() {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView>
+          <LinearGradient
+            // Background Linear Gradient
+            colors={["#FFFFFF", theme.background]}
+            style={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              top: 0,
+              height: "100%",
+            }}
+          />
           <View style={NewSnapScreenStyleSheet.center}>
             <View style={NewSnapScreenStyleSheet.uploadContainerSquare}>
               {imageFile && (

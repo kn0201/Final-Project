@@ -21,6 +21,7 @@ import providerStyleSheet, {
   dialogDivPositioning,
 } from "./utils/NotificationProviderStyleSheet";
 import useButton from "./utils/useButton";
+import { theme } from "../../theme/variables";
 
 const NotificationContext = createContext<NotificationContextInfo>({} as any);
 export const useIonNeverNotification = () => {
@@ -30,7 +31,7 @@ export const useIonNeverNotification = () => {
 function IonNeverNotificationRoot(props: { children: ReactNode }) {
   const defaultValues = {
     backgroundColor: "#F8FAFC",
-    leftButtonColor: "#2FD0FD",
+    leftButtonColor: theme.button,
     rightButtonColor: "#FD0050",
     displayTime: 2500,
     dialogHeight: 300,

@@ -220,23 +220,6 @@ export default function HomePage() {
                 </ImageBackground>
               </View>
             </View>
-            <View>
-              <Text style={HomePageStyleSheet.planText}>My Plan</Text>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("SampleSchedule")}
-              >
-                <Card>
-                  <Card.Title>Kyoto</Card.Title>
-                  <Card.Divider />
-                  <Card.Image
-                    style={{ padding: 0, height: 200 }}
-                    source={{
-                      uri: "https://www.budgetdirect.com.au/blog/wp-content/uploads/2018/03/Japan-Travel-Guide.jpg",
-                    }}
-                  />
-                </Card>
-              </TouchableOpacity>
-            </View>
           </View>
         </ScrollView>
       </View>

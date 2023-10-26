@@ -4,4 +4,5 @@ export let theme = {
   primaryColor: "#0E7AFE",
   primaryTextColor: "#FFFFFF",
   background: "rgba(225,255,237,0.8)",
+  button: "#85DBA8",
 };

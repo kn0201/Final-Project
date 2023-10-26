@@ -1,6 +1,7 @@
 // Buffer Line
 import { StyleSheet } from "react-native";
 import { center, column, flex, full, iosBlue, row } from "./StyleSheetHelper";
+import { theme } from "../theme/variables";
 
 const LoginScreenStyleSheet = StyleSheet.create({
   container: {
@@ -66,13 +67,20 @@ const LoginScreenStyleSheet = StyleSheet.create({
     justifyContent: center,
     borderWidth: 1,
     borderRadius: 10,
-    borderColor: iosBlue,
-    backgroundColor: iosBlue,
+    borderColor: theme.button,
+    backgroundColor: theme.button,
   },
   loginText: {
     fontSize: 16,
     color: "#ffffff",
     textAlign: center,
+    fontWeight: "bold",
+    textShadowColor: "#8E8E8E",
+    textShadowRadius: 1,
+    textShadowOffset: {
+      width: 0.9,
+      height: 0.9,
+    },
   },
 });
 

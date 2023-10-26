@@ -12,14 +12,10 @@ import {
   Text,
   RefreshControl,
 } from "react-native";
-import { Card, Header } from "@rneui/themed";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { Card } from "@rneui/themed";
+
 import Ionicons from "react-native-vector-icons/Ionicons";
-import {
-  RegisInfo,
-  ScheduleCardInfo,
-  ScheduleCardInputInfo,
-} from "../utils/types";
+
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import { Entypo } from "@expo/vector-icons";
 import AddScheduleForm from "../components/AddScheduleForm";
@@ -39,6 +35,7 @@ import { HomePageStyleSheet } from "../StyleSheet/HomePageCss";
 import { navigate } from "../tabs/RootNavigation";
 import { LinearGradient } from "expo-linear-gradient";
 import { theme } from "../theme/variables";
+import MyPostScreenScreenStyleSheet from "../StyleSheet/MemoryScreenCss";
 
 const Stack = createStackNavigator();
 
@@ -103,12 +100,19 @@ const Schedule = () => {
 
   const myPlanListResult = useGet("/planning/my-plans", getMyPlanListParser);
 
+  const groupPlanListResult = useGet(
+    "/planning/group-plans",
+    getMyPlanListParser
+  );
+
   const addNewScheduleCard = (newScheduleInfo: PlanListItem) => {
     myPlanListResult.setState((state) => ({
       planList: [...state!.planList, newScheduleInfo],
     }));
   };
 
+  const [isUse, setInUse] = useState(true);
+  const [showPersonalPlan, setShowPersonalPlan] = useState(true);
   return (
     <SafeAreaView>
       <LinearGradient
@@ -125,33 +129,87 @@ const Schedule = () => {
       <View
         style={{ height: Dimensions.get("screen").height - 180, zIndex: 0.9 }}
       >
-        {myPlanListResult.render((json) => {
-          return (
-            <>
-              {json.planList.length === 0 ? (
-                <View>
-                  <Text style={HomePageStyleSheet.planText}>My Plan</Text>
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate("SampleSchedule")}
-                  >
-                    <Card>
-                      <Card.Title>Sample Plan</Card.Title>
-                      <Card.Divider />
-                      <Card.Image
-                        style={{ padding: 0, height: 200 }}
-                        source={{
-                          uri: "https://www.budgetdirect.com.au/blog/wp-content/uploads/2018/03/Japan-Travel-Guide.jpg",
-                        }}
-                      />
-                    </Card>
-                  </TouchableOpacity>
-                </View>
-              ) : (
-                <FlatList data={json.planList} renderItem={renderItem} />
-              )}
-            </>
-          );
-        })}
+        <View style={MyPostScreenScreenStyleSheet.selectButtonContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              setInUse(true);
+              setShowPersonalPlan(true);
+            }}
+            style={
+              isUse
+                ? MyPostScreenScreenStyleSheet.inUseButton
+                : MyPostScreenScreenStyleSheet.nonUseButton
+            }
+          >
+            <Text
+              style={
+                isUse
+                  ? MyPostScreenScreenStyleSheet.inUseText
+                  : MyPostScreenScreenStyleSheet.nonUseText
+              }
+            >
+              Personal
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setInUse(false);
+              setShowPersonalPlan(false);
+            }}
+            style={
+              isUse
+                ? MyPostScreenScreenStyleSheet.nonUseButton
+                : MyPostScreenScreenStyleSheet.inUseButton
+            }
+          >
+            <Text
+              style={
+                isUse
+                  ? MyPostScreenScreenStyleSheet.nonUseText
+                  : MyPostScreenScreenStyleSheet.inUseText
+              }
+            >
+              Group
+            </Text>
+          </TouchableOpacity>
+        </View>
+        {showPersonalPlan ? (
+          <>
+            {myPlanListResult.render((json) => {
+              return (
+                <>
+                  {json.planList.length === 0 ? (
+                    <View>
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate("SampleSchedule")}
+                      >
+                        <Card>
+                          <Card.Title>Sample Plan</Card.Title>
+                          <Card.Divider />
+                          <Card.Image
+                            style={{ padding: 0, height: 200 }}
+                            source={{
+                              uri: "https:www.budgetdirect.com.au/blog/wp-content/uploads/2018/03/Japan-Travel-Guide.jpg",
+                            }}
+                          />
+                        </Card>
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
+                    <FlatList data={json.planList} renderItem={renderItem} />
+                  )}
+                </>
+              );
+            })}
+          </>
+        ) : (
+          <>
+            {groupPlanListResult.render((json) => {
+              return <FlatList data={json.planList} renderItem={renderItem} />;
+            })}
+          </>
+        )}
+
         <Ionicons
           name="add-circle"
           size={60}

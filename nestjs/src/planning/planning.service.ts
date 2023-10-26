@@ -15,7 +15,6 @@ export class PlanningService {
       image_path: string;
     };
 
-    // let tour_plan_id = await this.
     let planList: Row[] = await this.knex
       .from('plan')
       .innerJoin('image', 'image.id', 'plan.image_id')
@@ -24,29 +23,42 @@ export class PlanningService {
         'plan.title as plan_title',
         'image.path as image_path',
       )
-      .where({ 'plan.user_id': user_id });
-    // .orWhere('tour_plan');
-    console.log({ planList: planList });
-    if ((planList = [])) {
-      let result = await this.knex
-        .select('plan_id')
-        .from('tour_plan')
-        .where('user_id', user_id);
+      .where({ 'plan.user_id': user_id })
+      .andWhere({ privacy: false });
 
-      for (let plan_id of result) {
-        let tourPlanList: Row[] = await this.knex
-          .from('plan')
-          .innerJoin('image', 'image.id', 'plan.image_id')
-          .select(
-            'plan.id as plan_id',
-            'plan.title as plan_title',
-            'image.path as image_path',
-          )
-          .where({ 'plan.id': plan_id.plan_id });
-        planList.push(tourPlanList[0]);
-      }
+    return { planList };
+  }
+
+  async getGroupPlanList(user_id?: number) {
+    console.log('Get Group');
+
+    let result = await this.knex
+      .select('plan_id')
+      .from('tour_plan')
+      .where('user_id', user_id);
+    console.log(result);
+
+    type Row = {
+      plan_id: number;
+      plan_title: string;
+      image_path: string;
+    };
+    let planList: Row[] = [];
+    for (let plan_id of result) {
+      let tourPlan = await this.knex
+        .from('plan')
+        .innerJoin('image', 'image.id', 'plan.image_id')
+        .select(
+          'plan.id as plan_id',
+          'plan.title as plan_title',
+          'image.path as image_path',
+        )
+        .where({ 'plan.id': plan_id.plan_id })
+        .andWhere({ privacy: true })
+        .first();
+      planList.push(tourPlan);
     }
-    console.log({ planList });
+    console.log(planList);
     return { planList };
   }
 
@@ -103,8 +115,7 @@ export class PlanningService {
       .insert({
         title: input.title,
         user_id: input.user_id,
-        // country,
-        privacy: false,
+        privacy: true,
         image_id,
       })
       .returning('id');

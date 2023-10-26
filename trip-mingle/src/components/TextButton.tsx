@@ -11,13 +11,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderWidth: 1,
     borderRadius: 10,
-    borderColor: theme.primaryColor,
-    backgroundColor: theme.primaryColor,
+    borderColor: theme.button,
+    backgroundColor: theme.button,
   },
   text: {
     fontSize: 16,
     color: theme.primaryTextColor,
     textAlign: "center",
+    fontWeight: "bold",
+    textShadowColor: "#8E8E8E",
+    textShadowRadius: 1,
+    textShadowOffset: {
+      width: 0.9,
+      height: 0.9,
+    },
   },
 });
 

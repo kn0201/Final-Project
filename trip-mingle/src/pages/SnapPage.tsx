@@ -4,6 +4,7 @@ import SnapScreen from "../screen/SnapScreen";
 import NewSnapScreen from "../screen/NewSnapScreen";
 import CommentScreen from "../screen/CommentScreen";
 import OtherProfileScreen from "../screen/OtherProfileScreen";
+import { theme } from "../theme/variables";
 
 const Stack = createStackNavigator();
 
@@ -22,7 +23,7 @@ export default function SnapPage() {
           options={{
             presentation: "modal",
             cardStyle: {
-              backgroundColor: "white",
+              backgroundColor: "#E1FFED",
             },
           }}
         />
