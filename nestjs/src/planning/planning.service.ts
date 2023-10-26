@@ -24,8 +24,8 @@ export class PlanningService {
         'image.path as image_path',
       )
       .where({ 'plan.user_id': user_id })
-      .andWhere({ privacy: false });
-
+      .andWhere('privacy', false)
+      .orderBy('created_at', 'desc');
     return { planList };
   }
 
@@ -56,7 +56,7 @@ export class PlanningService {
         .where({ 'plan.id': plan_id.plan_id })
         .andWhere({ privacy: true })
         .first();
-      planList.push(tourPlan);
+      planList.unshift(tourPlan);
     }
     console.log(planList);
     return { planList };
@@ -116,7 +116,6 @@ export class PlanningService {
       .insert({
         title: input.title,
         user_id: input.user_id,
-        post_id: input.post_id,
         privacy: true,
         image_id,
       })
@@ -127,6 +126,7 @@ export class PlanningService {
       await this.knex('tour_plan').insert({
         user_id: user,
         plan_id: plan_id,
+        post_id: input.post_id,
       });
     }
     return { plan_id, image_path: input.image_file };
