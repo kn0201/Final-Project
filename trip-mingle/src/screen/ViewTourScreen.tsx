@@ -58,6 +58,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
       useNativeDriver: true,
     }).start();
   };
+
   const closeModal = () => {
     Animated.timing(translateAnim, {
       duration: 500,
@@ -129,6 +130,26 @@ export default function ViewTourScreen({ route }: { route: any }) {
     checkCloseStatus();
   });
 
+  // Get close status
+  const [closeStatus, setCloseStatus] = useState<boolean>(false);
+  const checkCloseStatus = async () => {
+    try {
+      let result = await api.get(
+        `/application/closeStatus/${id}`,
+        closePostParser,
+      );
+      setCloseStatus(result.result);
+      if (result.result === true) {
+        dispatchCloseEvent("Close");
+      }
+    } catch (err) {
+      console.log({ err });
+    }
+  };
+  useEffect(() => {
+    checkCloseStatus();
+  }, []);
+
   // Params
   const { id, post_user_id } = route.params || {
     id: 0,
@@ -138,10 +159,9 @@ export default function ViewTourScreen({ route }: { route: any }) {
   // Header
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: "My Tour",
-    }),
-      [];
-  });
+      headerTitle: closeStatus === true ? "Rating" : "My Tour",
+    });
+  }, [closeStatus]);
 
   // Select avatar
   const handleAvatarClick = (
@@ -183,26 +203,6 @@ export default function ViewTourScreen({ route }: { route: any }) {
     getConfirmedUsersList();
   });
 
-  // Get close status
-  const [closeStatus, setCloseStatus] = useState<boolean>(false);
-  const checkCloseStatus = async () => {
-    try {
-      let result = await api.get(
-        `/application/closeStatus/${id}`,
-        closePostParser,
-      );
-      setCloseStatus(result.result);
-      if (result.result === true) {
-        dispatchCloseEvent("Close");
-      }
-    } catch (err) {
-      console.log({ err });
-    }
-  };
-  useEffect(() => {
-    checkCloseStatus();
-  }, []);
-
   // Reject
   const dispatchRejectEvent = useEvent<RejectEvent>("Reject");
   const reject = async (user_id: number, username: string) => {
@@ -240,7 +240,6 @@ export default function ViewTourScreen({ route }: { route: any }) {
         }
       }
       setConfirmedUsers(result);
-      console.log(confirmedUsersList);
     } catch (err) {
       console.log(err);
     }
@@ -294,19 +293,65 @@ export default function ViewTourScreen({ route }: { route: any }) {
   });
 
   // Rating
-  const [ratings, setRatings] = useState(Array(confirmedUsers.length).fill(0));
-  const handleRatingChange = (newRating: number, index: number) => {
-    const newRatings = [...ratings];
-    newRatings[index] = newRating;
-    setRatings(newRatings);
-  };
-  const handleSubmitRating = () => {
-    console.log("Submitting rating:", ratings);
+  const [rating, setRating] = useState(0);
+  const handleRatingChange = (newRating: number, user_id: number) => {
+    console.log(`Submitting rating : ${newRating}, ${user_id}`);
   };
 
   const ItemView = useCallback(
-    ({ item, index }: ListRenderItemInfo<ConfirmedUserItem>) => (
-      <>
+    ({ item, index }: ListRenderItemInfo<ConfirmedUserItem>) =>
+      closeStatus === true ? (
+        login_user_id === item.user_id ? (
+          <></>
+        ) : (
+          <View style={ManageTourScreenStyleSheet.postDetailContainer}>
+            <View style={{ flexDirection: "row" }}>
+              <TouchableWithoutFeedback
+                key={item.user_id}
+                onPress={() =>
+                  handleAvatarClick(
+                    item.user_id,
+                    item.username,
+                    id,
+                    post_user_id,
+                  )
+                }
+              >
+                <Image
+                  style={ManageTourScreenStyleSheet.avatar}
+                  source={{
+                    uri: `${apiOrigin}/${item.avatar_path}`,
+                  }}
+                />
+              </TouchableWithoutFeedback>
+              <View style={{ justifyContent: "center" }}>
+                <Text style={{ fontWeight: "800" }}>#{index + 1} Member</Text>
+                <View>
+                  <Text
+                    style={{
+                      marginRight: 5,
+                      fontWeight: "600",
+                    }}
+                  >
+                    {item.username}
+                  </Text>
+                  <View>
+                    <AirbnbRating
+                      count={5}
+                      defaultRating={0}
+                      size={13}
+                      showRating={false}
+                      onFinishRating={(newRating) =>
+                        handleRatingChange(newRating, item.user_id)
+                      }
+                    />
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        )
+      ) : (
         <View style={ManageTourScreenStyleSheet.postDetailContainer}>
           <View style={{ flexDirection: "row" }}>
             <TouchableWithoutFeedback
@@ -324,58 +369,22 @@ export default function ViewTourScreen({ route }: { route: any }) {
             </TouchableWithoutFeedback>
             <View style={{ justifyContent: "center" }}>
               <Text style={{ fontWeight: "800" }}>#{index + 1} Member</Text>
-              {closeStatus === true && item.user_id !== login_user_id ? (
-                <>
-                  <View>
-                    <Text
-                      style={{
-                        marginRight: 5,
-                        fontWeight: "600",
-                      }}
-                    >
-                      {item.username}
-                    </Text>
-                  </View>
-                  <View>
-                    <AirbnbRating
-                      count={5}
-                      defaultRating={ratings[index]}
-                      size={13}
-                      showRating={false}
-                      onFinishRating={(newRating) =>
-                        handleRatingChange(newRating, index)
-                      }
-                    />
-                  </View>
-                </>
-              ) : (
-                <View style={{ flexDirection: "row" }}>
-                  <Text
-                    style={{
-                      marginRight: 5,
-                      fontWeight: "600",
-                    }}
-                  >
-                    {item.username}
-                  </Text>
-                  {setStarRating(item.rating)}
-                  <Text> ({item.number_of_rating})</Text>
-                </View>
-              )}
+              <View style={{ flexDirection: "row" }}>
+                <Text
+                  style={{
+                    marginRight: 5,
+                    fontWeight: "600",
+                  }}
+                >
+                  {item.username}
+                </Text>
+                {setStarRating(item.rating)}
+                <Text> ({item.number_of_rating})</Text>
+              </View>
             </View>
           </View>
-          {item.user_id === post_user_id ? (
-            closeStatus === false ? (
-              <></>
-            ) : (
-              <TouchableOpacity
-                style={ManageTourScreenStyleSheet.button}
-                onPress={handleSubmitRating}
-              >
-                <Text style={ManageTourScreenStyleSheet.text}>Rating</Text>
-              </TouchableOpacity>
-            )
-          ) : login_user_id === item.user_id ? (
+          {item.user_id === post_user_id ? null : login_user_id ===
+            item.user_id ? (
             <View style={{ flexDirection: "row" }}>
               {item.confirm_status === false ? (
                 <>
@@ -396,35 +405,25 @@ export default function ViewTourScreen({ route }: { route: any }) {
                     <Text style={ManageTourScreenStyleSheet.text}>Reject</Text>
                   </TouchableOpacity>
                 </>
-              ) : closeStatus === false ? (
+              ) : item.user_id == post_user_id ? (
+                <></>
+              ) : (
                 <Text style={ManageTourScreenStyleSheet.statusText}>
                   Confirmed
                 </Text>
-              ) : (
-                <></>
               )}
             </View>
-          ) : closeStatus === false ? (
+          ) : (
             <Text style={ManageTourScreenStyleSheet.statusText}>
               {item.user_id == post_user_id
-                ? ""
+                ? null
                 : item.confirm_status === false
                 ? "Pending"
                 : "Confirmed"}
             </Text>
-          ) : (
-            <TouchableOpacity
-              style={ManageTourScreenStyleSheet.button}
-              onPress={() => {
-                handleSubmitRating;
-              }}
-            >
-              <Text style={ManageTourScreenStyleSheet.text}>Rating</Text>
-            </TouchableOpacity>
           )}
         </View>
-      </>
-    ),
+      ),
     [closeStatus],
   );
 
@@ -447,16 +446,45 @@ export default function ViewTourScreen({ route }: { route: any }) {
             }}
           >
             {startPlan === false ? (
-              <TouchableOpacity
-                style={ManageTourScreenStyleSheet.planButton}
-                onPress={() => {
-                  openModal();
-                }}
-              >
-                <Text style={ManageTourScreenStyleSheet.planButtonText}>
-                  Start Tour Planning
-                </Text>
-              </TouchableOpacity>
+              <>
+                <TouchableOpacity
+                  style={ManageTourScreenStyleSheet.planButton}
+                  onPress={() => {
+                    openModal();
+                  }}
+                >
+                  <Text style={ManageTourScreenStyleSheet.planButtonText}>
+                    Start Tour Planning
+                  </Text>
+                </TouchableOpacity>
+                <Animated.View
+                  style={[
+                    {
+                      width,
+                      height: height * 0.9,
+                      position: "absolute",
+                      top: height,
+                      zIndex: 1,
+                      backgroundColor: "white",
+                    },
+                    {
+                      transform: [
+                        {
+                          translateY: translateAnim.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [0, -height],
+                          }),
+                        },
+                      ],
+                    },
+                  ]}
+                >
+                  <AddScheduleForm
+                    closeModal={closeModal}
+                    addNewScheduleCard={addNewScheduleCard}
+                  />
+                </Animated.View>
+              </>
             ) : (
               <TouchableOpacity
                 style={ManageTourScreenStyleSheet.planButton}
@@ -480,7 +508,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
                 paddingBottom: 13,
                 paddingLeft: 10,
                 paddingRight: 10,
-                paddingTop: 5,
+                paddingTop: 0,
               }}
             >
               <TouchableOpacity
