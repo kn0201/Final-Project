@@ -424,7 +424,7 @@ const TourDetailScreen = ({
       console.log({ e });
     }
   };
-  useEvent<AddCommentEvent>("AddComment", (event) => {
+  useEvent<ApplyTourEvent>("ApplyTour", (event) => {
     getApplicationStatus();
     getApplicationList();
   });
@@ -491,6 +491,7 @@ const TourDetailScreen = ({
   useEvent<RejectEvent>("Reject", (event) => {
     getApplicationList();
     getPostDetail();
+    getApplicationStatus();
   });
   useEvent<ConfirmEvent>("Confirm", (event) => {
     getAllConfirmStatus();

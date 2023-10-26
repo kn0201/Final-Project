@@ -461,6 +461,7 @@ export class ApplicationService {
           user_id: user_id,
           post_id: id,
           status: false,
+          confirm: null,
         });
         return { result: true };
       } else {
