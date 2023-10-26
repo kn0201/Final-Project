@@ -65,6 +65,12 @@ export interface AppParamList {
       status: string;
     };
   };
+  SchedulePage: {
+    screen: string;
+    params?: {
+      planId: number;
+    };
+  };
   NewSnap: undefined;
   Comment: { post_id: number };
   "Other Profile": {
@@ -83,7 +89,8 @@ export function useAppNavigation() {
 }
 
 export function useAppRoute<
-  RouteName extends keyof AppParamList
+  RouteName extends keyof AppParamList,
 >(): AppParamList[RouteName] {
+  //@ts-ignore
   return useRoute<RouteProp<AppParamList, RouteName>>().params;
 }

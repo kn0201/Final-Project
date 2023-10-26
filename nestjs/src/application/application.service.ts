@@ -162,7 +162,6 @@ export class ApplicationService {
         .where('user2_id', login_user_id)
         .where('post_id', id)
         .first();
-      console.log({ PostratingStatus: ratingStatus });
       confirmedUsersInfo.push({
         user_id: postUser.user_id,
         username: postUser.username,
@@ -198,8 +197,6 @@ export class ApplicationService {
           .where('user2_id', login_user_id)
           .where('post_id', id)
           .first();
-        console.log({ ratingStatus });
-
         confirmedUsersInfo.push({
           user_id: +confirmedUser.user_id,
           username: confirmedUser.username,
@@ -241,13 +238,16 @@ export class ApplicationService {
       );
       const login_user_id = payload.user_id;
       const result = await this.knex('tour_plan')
-        .select('id')
+        .select('plan_id')
         .where('post_id', id)
+        .groupBy('plan_id')
         .first();
+      console.log({ result });
+
       if (result) {
-        return { result: true };
+        return { result: true, plan_id: result.plan_id };
       } else {
-        return { result: false };
+        return { result: false, plan_id: null };
       }
     } catch (err) {
       console.log(err);

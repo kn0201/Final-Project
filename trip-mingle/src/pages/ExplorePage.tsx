@@ -11,6 +11,7 @@ import BlogDetailScreen from "../screen/BlogDetailScreen";
 import ViewTourScreen from "../screen/ViewTourScreen";
 import Schedule from "../screen/MySchedule";
 import EnquireDetailScreen from "../screen/EnquireDetailScreen";
+import SchedulePage from "./SchedulePage";
 
 const Stack = createStackNavigator();
 
@@ -111,6 +112,7 @@ export default function ExplorePage() {
             },
           }}
         />
+        <Stack.Screen name="SchedulePage" component={SchedulePage} />
       </Stack.Navigator>
     </>
   );

@@ -66,3 +66,7 @@ export type CloseEvent = {
 export type RatingEvent = {
   type: "Rating";
 };
+
+export type AddPlanEvent = {
+  type: "AddPlan";
+};
