@@ -115,7 +115,13 @@ export default function ExplorePage() {
         <Stack.Screen
           name="SchedulePage"
           component={SchedulePage}
-          options={{ headerShown: false }}
+          options={{
+            presentation: "modal",
+            cardStyle: {
+              backgroundColor: "white",
+            },
+            headerShown: false,
+          }}
         />
       </Stack.Navigator>
     </>
