@@ -21,8 +21,10 @@ import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useToken } from "../hooks/useToken";
 import { api, api2 } from "../apis/api";
-import { id, object, string } from "cast.ts";
+import { boolean, id, object, string } from "cast.ts";
 import TextButton from "./TextButton";
+import { useAppRoute } from "../../navigators";
+import DateInput from "./DateInput";
 
 type ImageFile = {
   uri: string;
@@ -50,9 +52,11 @@ export function AddScheduleForm(props: {
   const { token, payload, setToken } = useToken();
   const [country, setCountry] = useState("");
   const [code, setCode] = useState("");
-
+  const [startDate, setStartDate] = useState<string>();
+  const [endDate, setEndDate] = useState<string>();
+  const params = useAppRoute<"AddSchedule">();
+  // const { planId } = params;
   const [selectedCountry, setSelectedCountry] = useState(
-    "Destination Country *"
     "Destination Country *"
   );
 
@@ -61,10 +65,10 @@ export function AddScheduleForm(props: {
     country: "",
   });
 
-  function reset() {
-    setState({ title: "", country: "" });
-    setImageFile(null);
-  }
+  // function reset() {
+  //   setState({ title: "", country: "" });
+  //   setImageFile(null);
+  // }
 
   const addImage = async () => {
     let imagePickerResult = await ImagePicker.launchImageLibraryAsync({
@@ -102,6 +106,48 @@ export function AddScheduleForm(props: {
     });
   };
 
+  // async function addMarkDate() {
+  //   if (!startDate) {
+  //     IonNeverToast.show({
+  //       type: "warning",
+  //       title: "Please input start date",
+  //     });
+  //     if (!endDate)
+  //       IonNeverToast.show({
+  //         type: "warning",
+  //         title: "Please input end date",
+  //       });
+  //     return;
+  //   }=
+  //   try {
+  //     let data = {
+  //       start_date: startDate,
+  //       end_date: endDate,
+  //     };
+
+  //     let res = await api.post(
+  //       `/planning/${planId}/mark`,
+  //       data,
+  //       object({ result: boolean() }),
+  //       token
+  //     );
+  //     if (res.result) {
+  //       IonNeverDialog.show({
+  //         type: "success",
+  //         title: "Add a new mark",
+  //         firstButtonVisible: true,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     let message = String(error);
+  //     IonNeverDialog.show({
+  //       type: "warning",
+  //       title: "Failed to add a mark",
+  //       message,
+  //       firstButtonVisible: true,
+  //     });
+  //   }
+  // }
   async function addPlan(
     title: string,
     country: string,
@@ -163,8 +209,6 @@ export function AddScheduleForm(props: {
         endDate: "",
       });
       closeModal();
-
-      // reset();
     } catch (error) {
       let message = String(error);
       IonNeverDialog.show({
@@ -175,8 +219,6 @@ export function AddScheduleForm(props: {
       });
     }
   }
-
-  // Autofocus
   const inputRef = useRef<TextInput | null>(null);
   const focusInput = () => {
     if (inputRef.current) {
@@ -329,7 +371,29 @@ export function AddScheduleForm(props: {
         value={state.title}
         onChangeText={(text) => setState({ ...state, title: text })}
       />
-      <CountryCheckbox />
+      {/* <CountryCheckbox /> */}
+      <Text>Starting Date</Text>
+      <TextInput
+        style={PlanningStyleSheet.inputContainer}
+        value={
+          startDate?.split("T")[0] || new Date(Date.now()).toLocaleDateString()
+        }
+        onChangeText={setStartDate}
+        keyboardType="numeric"
+        onEndEditing={() => Keyboard.dismiss()}
+        placeholder="Input your start travel date"
+      ></TextInput>
+      <Text>Ending Date</Text>
+      <TextInput
+        style={PlanningStyleSheet.inputContainer}
+        value={
+          endDate?.split("T")[0] || new Date(Date.now()).toLocaleDateString()
+        }
+        onChangeText={setEndDate}
+        keyboardType="numeric"
+        onEndEditing={() => Keyboard.dismiss()}
+        placeholder="Input your end travel date"
+      ></TextInput>
       <TextButton
         text="Add New Plan"
         onPress={() => {

@@ -328,4 +328,42 @@ function nextDate(dateStr: string): string {
   return `${y}-${m}-${d}`;
 }
 
+function calcCanPress(text: string): string {
+  if (text.length == 0) {
+    return "2";
+  }
+  if (text.length == 1) {
+    return "0";
+  }
+  if (text.length == 2) {
+    return "2" && "3";
+  }
+  if (text.length == 5) {
+    return "0" && "1";
+  }
+  if (text.length == 6) {
+    if (text[5] == "1") {
+      return "0" && "2";
+    }
+    if (text[5] == "0") {
+      return "1";
+    }
+  }
+  if (text.length == 8) {
+    return "0" && "3";
+  }
+  if (text.length == 9) {
+    if (text[8] == "3") {
+      return "0" && "1";
+    }
+    if (text[8] == "0") {
+      return "1";
+    }
+  }
+  if (text.length == 10) {
+    return text.slice(0, 1);
+  }
+  return text.slice(0, 10);
+}
+
 export default AddSchedule;

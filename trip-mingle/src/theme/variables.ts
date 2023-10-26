@@ -3,4 +3,5 @@ export let theme = {
   textColor: "#313432",
   primaryColor: "#0E7AFE",
   primaryTextColor: "#FFFFFF",
+  mediumColor: "#888888",
 };
