@@ -21,7 +21,7 @@ const SchedulePage = () => {
         screenOptions={{
           presentation: "modal",
           cardStyle: {
-            backgroundColor: "white",
+            backgroundColor: "#e1ffed",
           },
         }}
       >

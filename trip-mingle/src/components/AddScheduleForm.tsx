@@ -23,6 +23,8 @@ import { useToken } from "../hooks/useToken";
 import { api, api2 } from "../apis/api";
 import { boolean, id, object, string } from "cast.ts";
 import TextButton from "./TextButton";
+import { LinearGradient } from "expo-linear-gradient";
+import { theme } from "../theme/variables";
 import { useAppRoute } from "../../navigators";
 import DateInput from "./DateInput";
 
@@ -342,7 +344,18 @@ export function AddScheduleForm(props: {
     );
   };
   return (
-    <View style={{ flex: 1, alignItems: "center", backgroundColor: "white" }}>
+    <View style={{ flex: 1, alignItems: "center" }}>
+      <LinearGradient
+        // Background Linear Gradient
+        colors={["#FFFFFF", theme.background]}
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: 0,
+          height: "100%",
+        }}
+      />
       <View style={PlanningStyleSheet.uploadContainerSquare}>
         {imageFile && (
           <Image

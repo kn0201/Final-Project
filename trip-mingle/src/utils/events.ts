@@ -62,3 +62,7 @@ export type RejectEvent = {
 export type CloseEvent = {
   type: "Close";
 };
+
+export type RatingEvent = {
+  type: "Rating";
+};

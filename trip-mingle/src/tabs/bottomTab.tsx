@@ -12,6 +12,7 @@ import { useToken } from "../hooks/useToken";
 import MapPage from "../pages/MapPage";
 import SnapPage from "../pages/SnapPage";
 import { iosBlue, white } from "../StyleSheet/StyleSheetHelper";
+import { theme } from "../theme/variables";
 
 const Tab = createBottomTabNavigator();
 const black = "#777777";
@@ -22,7 +23,7 @@ function MyTab() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarStyle: { backgroundColor: "rgba(195,214,246,0.8)" },
+        tabBarStyle: { backgroundColor: theme.background },
         tabBarActiveTintColor: iosBlue,
         tabBarInactiveTintColor: black,
       }}

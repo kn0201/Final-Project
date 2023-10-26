@@ -20,7 +20,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import multer, { Multer, Field } from 'multer';
 import { randomUUID } from 'crypto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { getJWTPayload } from 'src/jwt';
+import { getJWTPayload, maybeGetJWTPayload } from 'src/jwt';
 import { id, object, string } from 'cast.ts';
 import { env } from 'src/env';
 import { storage } from 'src/uploads';
@@ -32,7 +32,11 @@ export class PlanningController {
 
   @Get('my-plans')
   getMyPlans(@Headers() headers: {}) {
-    let jwt = getJWTPayload(headers);
+    let jwt = maybeGetJWTPayload(headers);
+    console.log(jwt);
+    if (!jwt) {
+      return { planList: [] };
+    }
     return this.planningService.getMyPlanList(jwt.user_id);
   }
 

@@ -127,3 +127,8 @@ export const addSnapParser = object({
 export const acceptParser = object({
   username: string(),
 });
+
+export const ratingParser = object({
+  rating: number(),
+  user_id: number(),
+});

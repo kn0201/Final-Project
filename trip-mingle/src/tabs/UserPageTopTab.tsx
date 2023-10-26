@@ -33,7 +33,7 @@ export default function UserPageTopTab() {
       <Tab.Screen
         name="OwnPost"
         component={MyPostScreen}
-        options={{ tabBarLabel: "Own Post" }}
+        options={{ tabBarLabel: "MY Post" }}
       />
       <Tab.Screen
         name="Bookmark"

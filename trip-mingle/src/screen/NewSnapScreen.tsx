@@ -32,6 +32,7 @@ import { boolean, object } from "cast.ts";
 import { LinearGradient } from "expo-linear-gradient";
 import useEvent from "react-use-event";
 import { AddSnapEvent } from "../utils/events";
+import { theme } from "../theme/variables";
 
 type ImageFile = {
   uri: string;
@@ -148,6 +149,17 @@ export default function NewSnapScreen() {
           }}
         >
           <>
+            <LinearGradient
+              // Background Linear Gradient
+              colors={["#FFFFFF", theme.background]}
+              style={{
+                position: "absolute",
+                left: 0,
+                right: 0,
+                top: 0,
+                height: "100%",
+              }}
+            />
             <View style={NewSnapScreenStyleSheet.spotContainer}>
               <GooglePlacesAutocomplete
                 ref={autocompleteRef}

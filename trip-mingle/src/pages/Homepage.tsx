@@ -6,7 +6,7 @@ import {
   ScrollView,
   Image,
 } from "react-native";
-import * as React from "react";
+
 import { Card, Header } from "@rneui/themed";
 import { useToken } from "../hooks/useToken";
 
@@ -21,8 +21,14 @@ import useEvent from "react-use-event";
 import { MapEvent, MapPositionEvent } from "../utils/events";
 import { useAppNavigation } from "../../navigators";
 import { LinearGradient } from "expo-linear-gradient";
+import { api, api2 } from "../apis/api";
+import { object } from "cast.ts";
+import { useEffect } from "react";
+import { newParser } from "../utils/parser";
+import { theme } from "../theme/variables";
 
 export default function HomePage() {
+  const { token } = useToken();
   const navigation = useAppNavigation();
   const handleMapClick = (latitude: number, longitude: number) => {
     const center = { latitude, longitude };
@@ -37,11 +43,20 @@ export default function HomePage() {
     });
   };
   const dispatchMapEvent = useEvent<MapPositionEvent>("MapPosition");
+
+  // const getNewPost = async () => {
+  //   let res = await api.get("/user/new", newParser);
+  //   console.log(res);
+  // };
+
+  // useEffect(() => {
+  //   getNewPost();
+  // }, [token]);
   return (
     <>
       <LinearGradient
         // Background Linear Gradient
-        colors={["#FFFFFF", "rgba(195,214,246,0.8)"]}
+        colors={["#FFFFFF", theme.background]}
         style={{
           position: "absolute",
           left: 0,

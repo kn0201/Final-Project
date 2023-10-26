@@ -26,7 +26,7 @@ export const getProfileResultParser = object({
   language: nullable(array(object({ name: string(), id: string() }))),
   hobby: nullable(array(object({ name: string(), id: string() }))),
   countries_travelled: nullable(
-    array(object({ name: string(), id: string() }))
+    array(object({ name: string(), id: string() })),
   ),
 });
 
@@ -38,7 +38,7 @@ export const countryListParser = array(
   object({
     id: string(),
     name: string(),
-  })
+  }),
 );
 
 export const languageListParser = countryListParser;
@@ -67,8 +67,8 @@ export const postInfoParser = array(
           address: string(),
           latitude: string(),
           longitude: string(),
-        })
-      )
+        }),
+      ),
     ),
     username: string(),
     avatar_path: string(),
@@ -76,7 +76,7 @@ export const postInfoParser = array(
     number_of_rating: number(),
     number_of_like: number(),
     number_of_reply: number(),
-  })
+  }),
 );
 
 export const enquireInfoParser = array(
@@ -91,7 +91,7 @@ export const enquireInfoParser = array(
     number_of_rating: number(),
     number_of_like: number(),
     number_of_reply: number(),
-  })
+  }),
 );
 
 export const postDetailParser = object({
@@ -116,8 +116,8 @@ export const postDetailParser = object({
         address: string(),
         latitude: string(),
         longitude: string(),
-      })
-    )
+      }),
+    ),
   ),
   user_id: number(),
   username: string(),
@@ -145,8 +145,8 @@ export const commentInfoParser = nullable(
       hobby: nullable(array(string())),
       countries_travelled: nullable(array(string())),
       number_of_rating: number(),
-    })
-  )
+    }),
+  ),
 );
 
 export const addPostCountryListParser = array(
@@ -154,7 +154,7 @@ export const addPostCountryListParser = array(
     id: string(),
     name: string(),
     code: string(),
-  })
+  }),
 );
 
 export const getPostResultListParser = array(object({}));
@@ -178,7 +178,7 @@ export const markerParser = array(
     longitude: number(),
     place_id: string(),
     name: string(),
-  })
+  }),
 );
 
 export const likeParser = object({ number_of_like: number() });
@@ -214,8 +214,8 @@ export const applicationInfoParser = nullable(
       status: boolean(),
       confirm_status: nullable(boolean()),
       created_at: string(),
-    })
-  )
+    }),
+  ),
 );
 
 export const applyTourParser = object({ result: boolean() });
@@ -240,7 +240,7 @@ export const bookmarkInfoParser = array(
     number_of_like: nullable(number()),
     number_of_reply: nullable(number()),
     result: nullable(boolean()),
-  })
+  }),
 );
 
 export const appliedUserParser = nullable(
@@ -255,8 +255,8 @@ export const appliedUserParser = nullable(
       status: boolean(),
       confirm_status: nullable(boolean()),
       created_at: string(),
-    })
-  )
+    }),
+  ),
 );
 
 export const acceptStatusParser = object({
@@ -276,7 +276,7 @@ export const confirmedUserParser = array(
     rating: number(),
     number_of_rating: number(),
     confirm_status: boolean(),
-  })
+  }),
 );
 
 export const snapListParser = array(
@@ -292,7 +292,7 @@ export const snapListParser = array(
     avatar_path: string(),
     likeCount: number(),
     isLike: boolean(),
-  })
+  }),
 );
 
 export const confirmStatusParser = object({
@@ -311,7 +311,7 @@ export const getMyPlanListParser = object({
       image_path: string(),
       startDate: optional(string()),
       endDate: optional(string()),
-    })
+    }),
   ),
 });
 export type PlanListItem = ParseResult<
@@ -321,3 +321,5 @@ export type PlanListItem = ParseResult<
 export const closePostParser = object({
   result: boolean(),
 });
+
+export const newParser = snapListParser || postInfoParser || enquireInfoParser;

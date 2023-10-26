@@ -63,6 +63,8 @@ import {
   UpdateProfileEvent,
 } from "../utils/events";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { LinearGradient } from "expo-linear-gradient";
+import { theme } from "../theme/variables";
 
 const TourDetailScreen = ({
   route,
@@ -171,7 +173,7 @@ const TourDetailScreen = ({
         `/bookmark/${id}`,
         { id },
         bookmarkParser,
-        token,
+        token
       );
       setIsBookmark(!isBookmark);
       dispatchBookmarkEvent("Bookmark");
@@ -189,7 +191,7 @@ const TourDetailScreen = ({
       let result = await api.get(
         `/bookmark/${id}`,
         bookmarkStatusParser,
-        token,
+        token
       );
       setIsBookmark(result.isBookmark);
     } catch (err) {
@@ -232,7 +234,7 @@ const TourDetailScreen = ({
         `/blog/${id}`,
         { id },
         deletePostParser,
-        token,
+        token
       );
       if (result.result === true) {
         dispatchDeleteEvent("Delete");
@@ -305,7 +307,7 @@ const TourDetailScreen = ({
           `/comment/${id}/add`,
           commentInfo,
           addCommentParser,
-          token,
+          token
         );
       } else {
         throw new Error("Missing content");
@@ -348,7 +350,7 @@ const TourDetailScreen = ({
     id: number,
     username: string,
     post_id: string,
-    post_user_id?: string,
+    post_user_id?: string
   ) => {
     navigation.navigate("Other Profile", {
       id,
@@ -381,7 +383,7 @@ const TourDetailScreen = ({
         `/application/${id}`,
         { id },
         applyTourParser,
-        token,
+        token
       );
       dispatchApplyTourEvent("ApplyTour");
       if (applicationStatus?.status === null) {
@@ -432,7 +434,7 @@ const TourDetailScreen = ({
       let applicationStatus = await api.get(
         `/application/status/${id}`,
         applicationStatusParser,
-        token,
+        token
       );
       setApplicationStatus(applicationStatus);
     } catch (err) {
@@ -450,12 +452,10 @@ const TourDetailScreen = ({
     ApplicationInfoItem[] | null
   >([]);
   const getApplicationList = async () => {
-    console.log("get Application");
-
     try {
       let applicationList = await api.get(
         `/application/${id}`,
-        applicationInfoParser,
+        applicationInfoParser
       );
       setApplications(applicationList);
     } catch (err) {
@@ -472,7 +472,7 @@ const TourDetailScreen = ({
     try {
       let allConfirmStatus = await api.get(
         `/application/all/${id}`,
-        allConfirmStatusParser
+        allConfirmStatusParser,
       );
       setAllConfirm(allConfirmStatus?.result);
     } catch (err) {
@@ -529,7 +529,7 @@ const TourDetailScreen = ({
                           application.user_id,
                           application.username,
                           id,
-                          post?.user_id.toString(),
+                          post?.user_id.toString()
                         );
                       }}
                     >
@@ -626,7 +626,7 @@ const TourDetailScreen = ({
                   item.user_id,
                   item.username,
                   id,
-                  post?.user_id.toString(),
+                  post?.user_id.toString()
                 )
               }
             >
@@ -666,12 +666,23 @@ const TourDetailScreen = ({
         </Card>
       </>
     ),
-    [],
+    []
   );
 
   // Display
   return (
     <>
+      <LinearGradient
+        // Background Linear Gradient
+        colors={["#FFFFFF", theme.background]}
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: 0,
+          height: "100%",
+        }}
+      />
       <TouchableWithoutFeedback
         style={{ flex: 1 }}
         onPress={() => {
@@ -706,7 +717,7 @@ const TourDetailScreen = ({
                             post.user_id,
                             post.username,
                             id,
-                            post?.user_id.toString(),
+                            post?.user_id.toString()
                           );
                         } else {
                           return;
@@ -797,11 +808,13 @@ const TourDetailScreen = ({
                 </View>
                 <View style={TourDetailScreenStyleSheet.rowContainer}>
                   <Text style={TourDetailScreenStyleSheet.titleKey}>
-                    {new Date(post?.created_at).toLocaleString("zh-CN", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                    })}
+                    {post?.created_at
+                      ? new Date(post.created_at).toLocaleString("zh-CN", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                        })
+                      : null}
                   </Text>
                 </View>
                 {post?.trip_period ? (

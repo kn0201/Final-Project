@@ -143,7 +143,7 @@ const RegisterPageStyleSheet = StyleSheet.create({
     elevation: 2,
     height: 150,
     width: 150,
-    backgroundColor: "#efefef",
+    backgroundColor: "#eeffef",
     position: "relative",
     borderRadius: 999,
     overflow: "hidden",

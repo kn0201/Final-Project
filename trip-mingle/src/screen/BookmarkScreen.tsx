@@ -29,6 +29,7 @@ import {
 import { useAppNavigation } from "../../navigators";
 import { useToken } from "../hooks/useToken";
 import { LinearGradient } from "expo-linear-gradient";
+import { theme } from "../theme/variables";
 
 // Star rating
 export const setStarRating = (rating: number) => {
@@ -191,7 +192,7 @@ export default function BookmarkScreen() {
       <View style={BuddiesPageStyleSheet.container}>
         <LinearGradient
           // Background Linear Gradient
-          colors={["#FFFFFF", "rgba(195,214,246,0.8)"]}
+          colors={["#FFFFFF", theme.background]}
           style={{
             position: "absolute",
             left: 0,

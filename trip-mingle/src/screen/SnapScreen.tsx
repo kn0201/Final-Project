@@ -28,6 +28,7 @@ import { likeParser, snapListParser } from "../utils/parser";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Snap } from "../utils/types";
 import { useGet } from "../hooks/useGet";
+import { theme } from "../theme/variables";
 
 export default function SnapScreen() {
   const { token, payload } = useToken();
@@ -79,7 +80,7 @@ export default function SnapScreen() {
     <>
       <LinearGradient
         // Background Linear Gradient
-        colors={["#FFFFFF", "rgba(195,214,246,0.8)"]}
+        colors={["#FFFFFF", theme.background]}
         style={{
           position: "absolute",
           left: 0,

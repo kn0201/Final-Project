@@ -37,13 +37,12 @@ import React from "react";
 import SampleSchedule from "./SampleSchedule";
 import { HomePageStyleSheet } from "../StyleSheet/HomePageCss";
 import { navigate } from "../tabs/RootNavigation";
+import { LinearGradient } from "expo-linear-gradient";
+import { theme } from "../theme/variables";
 
 const Stack = createStackNavigator();
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   fonts: {
     marginBottom: 8,
   },
@@ -112,6 +111,17 @@ const Schedule = () => {
 
   return (
     <SafeAreaView>
+      <LinearGradient
+        // Background Linear Gradient
+        colors={["#FFFFFF", theme.background]}
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: 0,
+          height: "100%",
+        }}
+      />
       <View
         style={{ height: Dimensions.get("screen").height - 180, zIndex: 0.9 }}
       >
@@ -125,7 +135,7 @@ const Schedule = () => {
                     onPress={() => navigation.navigate("SampleSchedule")}
                   >
                     <Card>
-                      <Card.Title>Kyoto</Card.Title>
+                      <Card.Title>Sample Plan</Card.Title>
                       <Card.Divider />
                       <Card.Image
                         style={{ padding: 0, height: 200 }}
@@ -199,6 +209,17 @@ function ScheduleCard(props: { item: PlanListItem }) {
         navigation.navigate("AddSchedule", { planId: item.plan_id })
       }
     >
+      <LinearGradient
+        // Background Linear Gradient
+        colors={["#FFFFFF", theme.background]}
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: 0,
+          height: "100%",
+        }}
+      />
       <Card>
         <Card.Title>
           <Text>{item.plan_title}</Text>
