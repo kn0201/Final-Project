@@ -32,6 +32,8 @@ import { apiOrigin } from "../utils/apiOrigin";
 import { useGet } from "../hooks/useGet";
 import useEvent from "react-use-event";
 import { LoginEvent } from "../utils/events";
+import { LinearGradient } from "expo-linear-gradient";
+import { theme } from "../theme/variables";
 
 // @ts-ignore
 export default function RegisterScreen({ navigation }) {
@@ -196,6 +198,17 @@ export default function RegisterScreen({ navigation }) {
       }}
     >
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <LinearGradient
+          // Background Linear Gradient
+          colors={["#FFFFFF", theme.background]}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: 0,
+            height: "100%",
+          }}
+        />
         <View style={RegisterScreenStyleSheet.uploadContainer}>
           {image && (
             <Image

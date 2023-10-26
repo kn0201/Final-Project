@@ -39,6 +39,8 @@ import { api } from "../apis/api";
 import TourDetailScreenStyleSheet from "../StyleSheet/TourDetailScreenCss";
 import { setStarRating } from "./BookmarkScreen";
 import { ItemSeparatorView } from "./PostScreen";
+import { LinearGradient } from "expo-linear-gradient";
+import { theme } from "../theme/variables";
 
 export default function CommentScreen() {
   const { token, payload, setToken } = useToken();
@@ -201,6 +203,17 @@ export default function CommentScreen() {
   return (
     <TouchableWithoutFeedback>
       <>
+        <LinearGradient
+          // Background Linear Gradient
+          colors={["#FFFFFF", theme.background]}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: 0,
+            height: "100%",
+          }}
+        />
         <FlatList
           ref={flatListRef}
           data={comments}

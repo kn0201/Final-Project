@@ -11,6 +11,8 @@ import { iosBlue } from "../StyleSheet/StyleSheetHelper";
 import UserPageStyleSheet from "../StyleSheet/UserPageCss";
 import BuddiesPageStyleSheet from "../StyleSheet/BuddiesPageCss";
 import { useToken } from "../hooks/useToken";
+import { LinearGradient } from "expo-linear-gradient";
+import { theme } from "../theme/variables";
 
 const Tab = createMaterialTopTabNavigator();
 

@@ -30,6 +30,8 @@ import {
   RejectEvent,
   UpdateProfileEvent,
 } from "../utils/events";
+import { LinearGradient } from "expo-linear-gradient";
+import { theme } from "../theme/variables";
 
 // Star rating
 export const setStarRating = (rating: number) => {
@@ -160,6 +162,17 @@ export default function TourScreen({ navigation }) {
           selectedPostID === item.id ? { backgroundColor: "#E7FFF0" } : null,
         ]}
       >
+        <LinearGradient
+          // Background Linear Gradient
+          colors={["#FFFFFF", theme.background]}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: 0,
+            height: "100%",
+          }}
+        />
         <View style={TourDetailScreenStyleSheet.postContainer}>
           <View
             style={{
@@ -246,6 +259,17 @@ export default function TourScreen({ navigation }) {
   // Display
   return (
     <>
+      <LinearGradient
+        // Background Linear Gradient
+        colors={["#FFFFFF", theme.background]}
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: 0,
+          height: "100%",
+        }}
+      />
       <TextInput
         style={BuddiesPageStyleSheet.textInputStyle}
         onChangeText={(text) => searchFilterFunction(text)}

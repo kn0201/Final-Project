@@ -19,6 +19,8 @@ import decode from "jwt-decode";
 import { JWTPayload, useToken } from "../hooks/useToken";
 import useEvent from "react-use-event";
 import { LoginEvent } from "../utils/events";
+import { LinearGradient } from "expo-linear-gradient";
+import { theme } from "../theme/variables";
 
 //@ts-ignore
 export default function LoginScreen({ navigation }) {
@@ -80,6 +82,17 @@ export default function LoginScreen({ navigation }) {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={LoginScreenStyleSheet.container}>
+        <LinearGradient
+          // Background Linear Gradient
+          colors={["#FFFFFF", theme.background]}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: 0,
+            height: "100%",
+          }}
+        />
         <View style={LoginScreenStyleSheet.center}>
           <Avatar
             size={150}

@@ -30,6 +30,7 @@ import useBoolean from "../hooks/useBoolean";
 import useEvent from "react-use-event";
 import { UpdateProfileEvent } from "../utils/events";
 import { LinearGradient } from "expo-linear-gradient";
+import { theme } from "../theme/variables";
 
 export default function ProfileScreen(props: {
   //@ts-ignore
@@ -145,7 +146,7 @@ export default function ProfileScreen(props: {
     <>
       <LinearGradient
         // Background Linear Gradient
-        colors={["#FFFFFF", "rgba(195,214,246,0.8)"]}
+        colors={["#FFFFFF", theme.background]}
         style={{
           position: "absolute",
           left: 0,

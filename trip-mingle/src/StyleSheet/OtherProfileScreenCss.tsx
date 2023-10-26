@@ -4,7 +4,6 @@ import { theme } from "../theme/variables";
 
 const OtherProfileScreenStyleSheet = StyleSheet.create({
   container: {
-    backgroundColor: "#c4ffdb",
     alignItems: "center",
     paddingBottom: 10,
   },

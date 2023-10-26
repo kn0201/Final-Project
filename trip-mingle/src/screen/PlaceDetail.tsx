@@ -30,6 +30,7 @@ import useEvent from "react-use-event";
 import { SaveLocationEvent } from "../utils/events";
 import Entypo from "react-native-vector-icons/Entypo";
 import { LinearGradient } from "expo-linear-gradient";
+import { theme } from "../theme/variables";
 
 const { width, height } = Dimensions.get("window");
 const aspect_ratio = width / height;
@@ -218,7 +219,7 @@ export default function PlaceDetail({ navigation }) {
     >
       <LinearGradient
         // Background Linear Gradient
-        colors={["#FFFFFF", "rgba(195,214,246,0.8)"]}
+        colors={["#FFFFFF", theme.background]}
         style={{
           position: "absolute",
           left: 0,

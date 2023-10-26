@@ -6,7 +6,9 @@ import { InjectKnex } from 'nestjs-knex';
 export class PlanningService {
   constructor(@InjectKnex() private readonly knex: Knex) {}
 
-  async getMyPlanList(user_id: number) {
+  async getMyPlanList(user_id?: number) {
+    console.log('Get My Plan');
+
     type Row = {
       plan_id: number;
       plan_title: string;
@@ -22,21 +24,28 @@ export class PlanningService {
         'plan.title as plan_title',
         'image.path as image_path',
       )
-      .where({ 'plan.user_id': user_id })
-      .orWhere('tour');
-    console.log(planList);
-    if ((planList = [])) {
-      let plan_id = await this.knex.select('plan_id').from('tour_');
-    }
-    let tourPlanList: Row[] = await this.knex
-      .from('plan')
-      .innerJoin('image', 'image.id', 'plan.image_id')
-      .select(
-        'plan.id as plan_id',
-        'plan.title as plan_title',
-        'image.path as image_path',
-      )
       .where({ 'plan.user_id': user_id });
+    // .orWhere('tour_plan');
+    console.log({ planList: planList });
+    if ((planList = [])) {
+      let result = await this.knex
+        .select('plan_id')
+        .from('tour_plan')
+        .where('user_id', user_id);
+
+      for (let plan_id of result) {
+        let tourPlanList: Row[] = await this.knex
+          .from('plan')
+          .innerJoin('image', 'image.id', 'plan.image_id')
+          .select(
+            'plan.id as plan_id',
+            'plan.title as plan_title',
+            'image.path as image_path',
+          )
+          .where({ 'plan.id': plan_id.plan_id });
+        planList.push(tourPlanList[0]);
+      }
+    }
     console.log({ planList });
     return { planList };
   }

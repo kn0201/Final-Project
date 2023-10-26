@@ -322,3 +322,5 @@ export type PlanListItem = ParseResult<
 export const closePostParser = object({
   result: boolean(),
 });
+
+export const newParser = snapListParser || postInfoParser || enquireInfoParser;
