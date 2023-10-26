@@ -36,6 +36,8 @@ import { navigate } from "../tabs/RootNavigation";
 import { LinearGradient } from "expo-linear-gradient";
 import { theme } from "../theme/variables";
 import MyPostScreenScreenStyleSheet from "../StyleSheet/MemoryScreenCss";
+import useEvent from "react-use-event";
+import { AddPlanEvent } from "../utils/events";
 
 const Stack = createStackNavigator();
 
@@ -104,7 +106,10 @@ const Schedule = () => {
     "/planning/group-plans",
     getMyPlanListParser
   );
-
+  useEvent<AddPlanEvent>("AddPlan", (event) => {
+    myPlanListResult.reload();
+    groupPlanListResult.reload();
+  });
   const addNewScheduleCard = (newScheduleInfo: PlanListItem) => {
     myPlanListResult.setState((state) => ({
       planList: [...state!.planList, newScheduleInfo],
