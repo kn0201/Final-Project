@@ -24,7 +24,6 @@ import useEvent from "react-use-event";
 import {
   AcceptEvent,
   AddCommentEvent,
-  AddEnquireEvent,
   AddPostEvent,
   DeleteEvent,
   LikeEvent,
@@ -115,9 +114,6 @@ export default function EnquireScreen({ navigation }) {
     getPostInfo();
   });
   useEvent<RatingEvent>("Rating", (event) => {
-    getPostInfo();
-  });
-  useEvent<AddEnquireEvent>("AddEnquire", (event) => {
     getPostInfo();
   });
 
