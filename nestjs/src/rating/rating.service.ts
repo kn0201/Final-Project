@@ -20,7 +20,6 @@ export class RatingService {
         .from('users')
         .where('id', body.user_id)
         .first();
-      console.log({ userRating });
       const existingRating = await this.knex
         .select('user1_id', 'user2_id', 'post_id')
         .from('rating')
@@ -28,7 +27,6 @@ export class RatingService {
         .andWhere('user2_id', user_id)
         .andWhere('post_id', post_id)
         .first();
-      console.log({ existingRating });
       if (existingRating) {
         return {
           result: false,
@@ -42,12 +40,10 @@ export class RatingService {
             value: body.rating,
           })
           .returning('id');
-        console.log({ result });
         const ratingValues = await this.knex
           .select('value')
           .from('rating')
           .where('user1_id', body.user_id);
-        console.log({ ratingValues });
         const values = ratingValues.map((rating) => rating.value);
         const totalRatingValue = values.reduce((sum, value) => sum + value, 0);
         const number_of_rating = ratingValues.length;
@@ -56,9 +52,7 @@ export class RatingService {
           .where({ id: body.user_id })
           .update({ rating: averageRatingValue });
         if (result !== undefined) {
-          console.log('insert');
           if (updateUser !== undefined) {
-            console.log('update');
             return { result: true };
           }
         } else {

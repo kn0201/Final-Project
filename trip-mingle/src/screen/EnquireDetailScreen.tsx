@@ -60,6 +60,7 @@ import {
   DeleteEvent,
   LikeEvent,
   LoginEvent,
+  RatingEvent,
   RejectEvent,
   UpdateProfileEvent,
 } from "../utils/events";
@@ -160,7 +161,7 @@ const EnquireDetailScreen = ({
         `/bookmark/${id}`,
         { id },
         bookmarkParser,
-        token
+        token,
       );
       setIsBookmark(!isBookmark);
       dispatchBookmarkEvent("Bookmark");
@@ -178,7 +179,7 @@ const EnquireDetailScreen = ({
       let result = await api.get(
         `/bookmark/${id}`,
         bookmarkStatusParser,
-        token
+        token,
       );
       setIsBookmark(result.isBookmark);
     } catch (err) {
@@ -205,6 +206,9 @@ const EnquireDetailScreen = ({
   useEffect(() => {
     getPostDetail();
   }, []);
+  useEvent<RatingEvent>("Rating", (event) => {
+    getPostDetail();
+  });
 
   // Delete post
   const dispatchDeleteEvent = useEvent<DeleteEvent>("Delete");
@@ -215,7 +219,7 @@ const EnquireDetailScreen = ({
         `/blog/${id}`,
         { id },
         deletePostParser,
-        token
+        token,
       );
       if (result.result === true) {
         dispatchDeleteEvent("Delete");
@@ -291,7 +295,7 @@ const EnquireDetailScreen = ({
           `/comment/${id}/add`,
           commentInfo,
           addCommentParser,
-          token
+          token,
         );
       } else {
         throw new Error("Missing content");
@@ -334,7 +338,7 @@ const EnquireDetailScreen = ({
     id: number,
     username: string,
     post_id: string,
-    post_user_id?: string
+    post_user_id?: string,
   ) => {
     navigation.navigate("Other Profile", {
       id,
@@ -375,7 +379,7 @@ const EnquireDetailScreen = ({
                   item.user_id,
                   item.username,
                   id,
-                  post?.user_id.toString()
+                  post?.user_id.toString(),
                 )
               }
             >
@@ -415,7 +419,7 @@ const EnquireDetailScreen = ({
         </Card>
       </>
     ),
-    []
+    [],
   );
 
   // Display
@@ -455,7 +459,7 @@ const EnquireDetailScreen = ({
                             post.user_id,
                             post.username,
                             id,
-                            post?.user_id.toString()
+                            post?.user_id.toString(),
                           );
                         } else {
                           return;
@@ -546,11 +550,13 @@ const EnquireDetailScreen = ({
                 </View>
                 <View style={TourDetailScreenStyleSheet.rowContainer}>
                   <Text style={TourDetailScreenStyleSheet.titleKey}>
-                    {new Date(post?.created_at).toLocaleString("zh-CN", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                    })}
+                    {post?.created_at
+                      ? new Date(post?.created_at).toLocaleString("zh-CN", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                        })
+                      : null}
                   </Text>
                 </View>
 

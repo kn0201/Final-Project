@@ -18,6 +18,7 @@ import { api } from "../apis/api";
 import {
   PlanListItem,
   allConfirmStatusParser,
+  checkPlanParser,
   closePostParser,
   confirmStatusParser,
   confirmedUserParser,
@@ -34,13 +35,13 @@ import {
   UpdateProfileEvent,
   CloseEvent,
   RatingEvent,
+  AddPlanEvent,
 } from "../utils/events";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import { useGet } from "../hooks/useGet";
 import AddScheduleForm from "../components/AddScheduleForm";
 import { useAppNavigation } from "../../navigators";
-import { Avatar } from "@rneui/themed";
-import { Rating, AirbnbRating } from "react-native-ratings";
+import { AirbnbRating } from "react-native-ratings";
 
 export default function ViewTourScreen({ route }: { route: any }) {
   const { token, payload, setToken } = useToken();
@@ -59,7 +60,6 @@ export default function ViewTourScreen({ route }: { route: any }) {
       useNativeDriver: true,
     }).start();
   };
-
   const closeModal = () => {
     Animated.timing(translateAnim, {
       duration: 500,
@@ -162,7 +162,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
   // Header
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: closeStatus === true ? "Rating" : "My Tour",
+      headerTitle: closeStatus === true ? "Tour Record" : "My Tour",
     });
   }, [closeStatus]);
 
@@ -270,23 +270,35 @@ export default function ViewTourScreen({ route }: { route: any }) {
 
   // Get plan status
   const [startPlan, setStartPlan] = useState<boolean>(false);
+  const [planID, setPlanID] = useState<number | null>();
   const checkPlanStatus = async () => {
     console.log(title);
 
     try {
       let result = await api.get(
         `/application/plan/${id}/${post_user_id}`,
-        closePostParser,
+        checkPlanParser,
         token
       );
       setStartPlan(result.result);
+      setPlanID(result.plan_id);
     } catch (err) {
       console.log({ err });
     }
   };
   useEffect(() => {
     checkPlanStatus();
+    console.log(startPlan);
   }, []);
+  useEvent<AddPlanEvent>("AddPlan", (event) => {
+    checkPlanStatus();
+    if (planID !== null && planID !== undefined) {
+      navigation.navigate("SchedulePage", {
+        screen: "AddSchedule",
+        params: { planId: planID },
+      });
+    }
+  });
 
   useEvent<UpdateProfileEvent>("UpdateProfile", (event) => {
     getConfirmedUsersList();
@@ -299,7 +311,11 @@ export default function ViewTourScreen({ route }: { route: any }) {
 
   // Rating
   const dispatchRatingEvent = useEvent<RatingEvent>("Rating");
-  const handleRatingChange = async (rating: number, user_id: number) => {
+  const handleRatingChange = async (
+    rating: number,
+    user_id: number,
+    username: string
+  ) => {
     try {
       let ratingResult = await api.post(
         `/rating/${id}`,
@@ -308,10 +324,27 @@ export default function ViewTourScreen({ route }: { route: any }) {
         token
       );
       if (ratingResult.result === true) {
+        IonNeverDialog.show({
+          type: "success",
+          title: `Success`,
+          message: `Submitted rating to user ${username}`,
+          firstButtonVisible: true,
+          firstButtonFunction: () => {
+            IonNeverDialog.dismiss();
+          },
+        });
         dispatchRatingEvent("Rating");
       }
     } catch (err) {
-      console.log({ err });
+      IonNeverDialog.show({
+        type: "warning",
+        title: "Error",
+        message: `${err}`,
+        firstButtonVisible: true,
+        firstButtonFunction: () => {
+          IonNeverDialog.dismiss();
+        },
+      });
     }
   };
   useEvent<RatingEvent>("Rating", (event) => {
@@ -323,7 +356,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
       closeStatus === true ? (
         login_user_id === item.user_id ? (
           <></>
-        ) : (
+        ) : item.ratingStatus === false ? (
           <View style={ManageTourScreenStyleSheet.postDetailContainer}>
             <View style={{ flexDirection: "row" }}>
               <TouchableWithoutFeedback
@@ -362,10 +395,52 @@ export default function ViewTourScreen({ route }: { route: any }) {
                       size={13}
                       showRating={false}
                       onFinishRating={(newRating) =>
-                        handleRatingChange(newRating, item.user_id)
+                        handleRatingChange(
+                          newRating,
+                          item.user_id,
+                          item.username
+                        )
                       }
                     />
                   </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        ) : (
+          <View style={ManageTourScreenStyleSheet.postDetailContainer}>
+            <View style={{ flexDirection: "row" }}>
+              <TouchableWithoutFeedback
+                key={item.user_id}
+                onPress={() =>
+                  handleAvatarClick(
+                    item.user_id,
+                    item.username,
+                    id,
+                    post_user_id
+                  )
+                }
+              >
+                <Image
+                  style={ManageTourScreenStyleSheet.avatar}
+                  source={{
+                    uri: `${apiOrigin}/${item.avatar_path}`,
+                  }}
+                />
+              </TouchableWithoutFeedback>
+              <View style={{ justifyContent: "center" }}>
+                <Text style={{ fontWeight: "800" }}>#{index + 1} Member</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text
+                    style={{
+                      marginRight: 5,
+                      fontWeight: "600",
+                    }}
+                  >
+                    {item.username}
+                  </Text>
+                  {setStarRating(item.rating)}
+                  <Text> ({item.number_of_rating})</Text>
                 </View>
               </View>
             </View>
@@ -504,7 +579,12 @@ export default function ViewTourScreen({ route }: { route: any }) {
               <TouchableOpacity
                 style={ManageTourScreenStyleSheet.planButton}
                 onPress={() => {
-                  openModal();
+                  if (planID !== null && planID !== undefined) {
+                    navigation.navigate("SchedulePage", {
+                      screen: "AddSchedule",
+                      params: { planId: planID },
+                    });
+                  }
                 }}
               >
                 <Text style={ManageTourScreenStyleSheet.planButtonText}>
@@ -542,7 +622,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
         style={[
           {
             width,
-            height: height * 0.9,
+            height: "100%",
             position: "absolute",
             top: height,
             zIndex: 1,

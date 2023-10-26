@@ -276,6 +276,7 @@ export const confirmedUserParser = array(
     rating: number(),
     number_of_rating: number(),
     confirm_status: boolean(),
+    ratingStatus: boolean(),
   }),
 );
 
@@ -323,3 +324,8 @@ export const closePostParser = object({
 });
 
 export const newParser = snapListParser || postInfoParser || enquireInfoParser;
+
+export const checkPlanParser = object({
+  result: boolean(),
+  plan_id: nullable(number()),
+});

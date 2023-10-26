@@ -25,6 +25,8 @@ import { id, object, string } from "cast.ts";
 import TextButton from "./TextButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { theme } from "../theme/variables";
+import useEvent from "react-use-event";
+import { AddPlanEvent } from "../utils/events";
 
 type ImageFile = {
   uri: string;
@@ -94,8 +96,13 @@ export function AddScheduleForm(props: {
       file: file as unknown as File,
     });
   };
+  const dispatchAddPlanEvent = useEvent<AddPlanEvent>("AddPlan");
 
-  async function addPlan(title: string, imageFile?: ImageFile | null) {
+  async function addPlan(
+    title: string,
+
+    imageFile?: ImageFile | null
+  ) {
     let user_id_array = [];
     if (!title) {
       IonNeverToast.show({
@@ -129,6 +136,7 @@ export function AddScheduleForm(props: {
           }),
           token
         );
+        dispatchAddPlanEvent("AddPlan");
       }
 
       let json = await api2.upload(

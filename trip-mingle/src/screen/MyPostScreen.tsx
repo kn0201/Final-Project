@@ -31,6 +31,7 @@ import {
   AddSnapEvent,
   BookmarkEvent,
   LikeEvent,
+  RatingEvent,
 } from "../utils/events";
 import { useAppNavigation } from "../../navigators";
 import { useToken } from "../hooks/useToken";
@@ -98,7 +99,7 @@ export default function MyPostScreen() {
       let postInfoData = await api.get(
         "/user/ownPost",
         bookmarkInfoParser,
-        token
+        token,
       );
       if (postInfoData) {
         setPosts(postInfoData);
@@ -117,6 +118,9 @@ export default function MyPostScreen() {
   useEffect(() => {
     getPostInfo();
   }, []);
+  useEvent<RatingEvent>("Rating", (event) => {
+    getPostInfo();
+  });
 
   //Snap
 
@@ -241,7 +245,7 @@ export default function MyPostScreen() {
         </View>
       </TouchableOpacity>
     ),
-    []
+    [],
   );
   const [isUse, setInUse] = useState(true);
   const [showSnap, setShowSnap] = useState(true);

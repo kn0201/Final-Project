@@ -278,6 +278,7 @@ export type ConfirmedUserItem = {
   rating: number;
   number_of_rating: number;
   confirm_status: boolean;
+  ratingStatus: boolean;
 };
 
 export type UserAcceptStatus = {
