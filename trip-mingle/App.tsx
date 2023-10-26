@@ -25,6 +25,7 @@ import PlaceDetail from "./src/screen/PlaceDetail";
 // const Stack = createNativeStackNavigator();
 LogBox.ignoreLogs([
   "Sending `onAnimatedValueUpdate` with no listeners registered",
+  "Non-serializable values were found in the navigation state",
 ]);
 const Stack = createStackNavigator();
 

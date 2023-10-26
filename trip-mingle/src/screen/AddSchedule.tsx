@@ -1,17 +1,15 @@
-import { useEffect, useRef, useState } from "react";
-import { Input, SpeedDial } from "@rneui/themed";
+import { useEffect, useState } from "react";
+import { SpeedDial } from "@rneui/themed";
 import { View, Text, StyleSheet, Keyboard } from "react-native";
-import { Button, Card } from "react-native-paper";
+import { Card } from "react-native-paper";
 import { Agenda, AgendaEntry } from "react-native-calendars";
 import { TextInput } from "react-native-gesture-handler";
 import { MarkedDates } from "react-native-calendars/src/types";
 import { DAY } from "@beenotung/tslib/time";
 import { format_2_digit } from "@beenotung/tslib/format";
-import AgendaListItem from "../components/AgendaLIstItem";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import {
   ScheduleData,
-  ScheduleDate,
   ScheduleItem,
   ScheduleItemInfo,
   ScheduleMark,
@@ -23,8 +21,6 @@ import { useToken } from "../hooks/useToken";
 import TextButton from "../components/TextButton";
 import { AppParamList, useAppNavigation, useAppRoute } from "../../navigators";
 import { textColor } from "../StyleSheet/StyleSheetHelper";
-import { LinearGradient } from "expo-linear-gradient";
-import { theme } from "../theme/variables";
 
 function Space(props: { height: number }) {
   return (
@@ -72,7 +68,7 @@ const AddSchedule = () => {
         `/planning/${planId}/mark`,
         data,
         object({ result: boolean() }),
-        token
+        token,
       );
       if (res.result) {
         IonNeverDialog.show({
@@ -101,10 +97,10 @@ const AddSchedule = () => {
             id: id(),
             startDate: string(),
             endDate: string(),
-          })
+          }),
         ),
       }),
-      token
+      token,
     );
     setStartDate(result?.marks?.startDate);
     setEndDate(result?.marks?.endDate);
@@ -121,9 +117,9 @@ const AddSchedule = () => {
           endTime: string(),
           location: string(),
           remark: string(),
-        })
+        }),
       ),
-      token
+      token,
     );
     console.log("event result:", result);
 
@@ -153,11 +149,11 @@ const AddSchedule = () => {
   }, [scheduleItems]);
 
   const markedDates: MarkedDates = {
-    [startDate || new Date(Date.now()).toLocaleDateString()]: {
+    [startDate || new Date(Date.now()).toISOString()]: {
       startingDay: true,
       color: "lightgreen",
     },
-    [endDate || new Date(Date.now()).toLocaleDateString()]: {
+    [endDate || new Date(Date.now()).toISOString()]: {
       endingDay: true,
       color: "lightgreen",
     },
@@ -204,17 +200,6 @@ const AddSchedule = () => {
   return (
     <>
       <View>
-        <LinearGradient
-          // Background Linear Gradient
-          colors={["#FFFFFF", theme.background]}
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            top: 0,
-            height: "100%",
-          }}
-        />
         <Space height={10}></Space>
         <Text>plan id: {planId}</Text>
         <Text>Starting Date</Text>
@@ -222,9 +207,10 @@ const AddSchedule = () => {
           style={PlanningStyleSheet.inputContainer}
           value={
             startDate?.split("T")[0] ||
-            new Date(Date.now()).toLocaleDateString()
+            new Date(Date.now()).toISOString().split("T")[0]
           }
           onChangeText={setStartDate}
+          keyboardType="numeric"
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input your start travel date"
         ></TextInput>
@@ -232,9 +218,11 @@ const AddSchedule = () => {
         <TextInput
           style={PlanningStyleSheet.inputContainer}
           value={
-            endDate?.split("T")[0] || new Date(Date.now()).toLocaleDateString()
+            endDate?.split("T")[0] ||
+            new Date(Date.now()).toISOString().split("T")[0]
           }
           onChangeText={setEndDate}
+          keyboardType="numeric"
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input your end travel date"
         ></TextInput>
@@ -339,6 +327,44 @@ function nextDate(dateStr: string): string {
   let m = format_2_digit(date.getMonth() + 1);
   let d = format_2_digit(date.getDate());
   return `${y}-${m}-${d}`;
+}
+
+function calcCanPress(text: string): string {
+  if (text.length == 0) {
+    return "2";
+  }
+  if (text.length == 1) {
+    return "0";
+  }
+  if (text.length == 2) {
+    return "2" && "3";
+  }
+  if (text.length == 5) {
+    return "0" && "1";
+  }
+  if (text.length == 6) {
+    if (text[5] == "1") {
+      return "0" && "2";
+    }
+    if (text[5] == "0") {
+      return "1";
+    }
+  }
+  if (text.length == 8) {
+    return "0" && "3";
+  }
+  if (text.length == 9) {
+    if (text[8] == "3") {
+      return "0" && "1";
+    }
+    if (text[8] == "0") {
+      return "1";
+    }
+  }
+  if (text.length == 10) {
+    return text.slice(0, 1);
+  }
+  return text.slice(0, 10);
 }
 
 export default AddSchedule;
