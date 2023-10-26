@@ -107,7 +107,6 @@ export class PlanningService {
         .insert({
           user_id: input.user_id,
           path: input.image_file,
-          post_id: input.post_id,
           is_delete: false,
         })
         .returning('id');
@@ -117,6 +116,7 @@ export class PlanningService {
       .insert({
         title: input.title,
         user_id: input.user_id,
+        post_id: input.post_id,
         privacy: true,
         image_id,
       })

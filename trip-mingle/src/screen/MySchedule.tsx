@@ -175,10 +175,10 @@ const Schedule = () => {
         </View>
         {showPersonalPlan ? (
           <>
-            {myPlanListResult.render((json) => {
+            {myPlanListResult.render((myPlan) => {
               return (
                 <>
-                  {json.planList.length === 0 ? (
+                  {myPlan.planList.length === 0 ? (
                     <View>
                       <TouchableOpacity
                         onPress={() => navigation.navigate("SampleSchedule")}
@@ -196,7 +196,7 @@ const Schedule = () => {
                       </TouchableOpacity>
                     </View>
                   ) : (
-                    <FlatList data={json.planList} renderItem={renderItem} />
+                    <FlatList data={myPlan.planList} renderItem={renderItem} />
                   )}
                 </>
               );
@@ -204,8 +204,21 @@ const Schedule = () => {
           </>
         ) : (
           <>
-            {groupPlanListResult.render((json) => {
-              return <FlatList data={json.planList} renderItem={renderItem} />;
+            {groupPlanListResult.render((tourPlan) => {
+              return (
+                <>
+                  {tourPlan.planList.length === 0 ? (
+                    <View>
+                      <Text>你還沒加入</Text>
+                    </View>
+                  ) : (
+                    <FlatList
+                      data={tourPlan.planList}
+                      renderItem={renderItem}
+                    />
+                  )}
+                </>
+              );
             })}
           </>
         )}
