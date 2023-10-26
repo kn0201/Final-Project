@@ -20,6 +20,7 @@ import {
   AcceptEvent,
   ConfirmEvent,
   LoginEvent,
+  RatingEvent,
   RejectEvent,
   UpdateProfileEvent,
 } from "../utils/events";
@@ -132,6 +133,9 @@ export default function OtherProfileScreen({
     getApplicationList();
   });
   useEvent<CloseEvent>("Close", (event) => {
+    getApplicationList();
+  });
+  useEvent<RatingEvent>("Rating", (event) => {
     getApplicationList();
   });
 

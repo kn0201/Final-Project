@@ -18,6 +18,7 @@ import { api } from "../apis/api";
 import {
   PlanListItem,
   allConfirmStatusParser,
+  checkPlanParser,
   closePostParser,
   confirmStatusParser,
   confirmedUserParser,
@@ -34,13 +35,13 @@ import {
   UpdateProfileEvent,
   CloseEvent,
   RatingEvent,
+  AddPlanEvent,
 } from "../utils/events";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import { useGet } from "../hooks/useGet";
 import AddScheduleForm from "../components/AddScheduleForm";
 import { useAppNavigation } from "../../navigators";
-import { Avatar } from "@rneui/themed";
-import { Rating, AirbnbRating } from "react-native-ratings";
+import { AirbnbRating } from "react-native-ratings";
 
 export default function ViewTourScreen({ route }: { route: any }) {
   const { token, payload, setToken } = useToken();
@@ -59,7 +60,6 @@ export default function ViewTourScreen({ route }: { route: any }) {
       useNativeDriver: true,
     }).start();
   };
-
   const closeModal = () => {
     Animated.timing(translateAnim, {
       duration: 500,
@@ -268,21 +268,38 @@ export default function ViewTourScreen({ route }: { route: any }) {
 
   // Get plan status
   const [startPlan, setStartPlan] = useState<boolean>(false);
+  const [planID, setPlanID] = useState<number | null>();
   const checkPlanStatus = async () => {
     try {
       let result = await api.get(
         `/application/plan/${id}/${post_user_id}`,
+<<<<<<< HEAD
         closePostParser,
         token
+=======
+        checkPlanParser,
+        token,
+>>>>>>> refs/remotes/origin/main
       );
       setStartPlan(result.result);
+      setPlanID(result.plan_id);
     } catch (err) {
       console.log({ err });
     }
   };
   useEffect(() => {
     checkPlanStatus();
+    console.log(startPlan);
   }, []);
+  useEvent<AddPlanEvent>("AddPlan", (event) => {
+    checkPlanStatus();
+    if (planID !== null && planID !== undefined) {
+      navigation.navigate("SchedulePage", {
+        screen: "AddSchedule",
+        params: { planId: planID },
+      });
+    }
+  });
 
   useEvent<UpdateProfileEvent>("UpdateProfile", (event) => {
     getConfirmedUsersList();
@@ -568,7 +585,12 @@ export default function ViewTourScreen({ route }: { route: any }) {
               <TouchableOpacity
                 style={ManageTourScreenStyleSheet.planButton}
                 onPress={() => {
-                  openModal();
+                  if (planID !== null && planID !== undefined) {
+                    navigation.navigate("SchedulePage", {
+                      screen: "AddSchedule",
+                      params: { planId: planID },
+                    });
+                  }
                 }}
               >
                 <Text style={ManageTourScreenStyleSheet.planButtonText}>
@@ -606,7 +628,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
         style={[
           {
             width,
-            height: height * 0.9,
+            height: "100%",
             position: "absolute",
             top: height,
             zIndex: 1,

@@ -324,3 +324,8 @@ export const closePostParser = object({
 });
 
 export const newParser = snapListParser || postInfoParser || enquireInfoParser;
+
+export const checkPlanParser = object({
+  result: boolean(),
+  plan_id: nullable(number()),
+});

@@ -33,7 +33,7 @@ import { useIonNeverNotification } from "../components/IonNeverNotification/Noti
 import { useAppNavigation, useAppRoute } from "../../navigators";
 import { CommentInfo, ReplyInfoItem } from "../utils/types";
 import useEvent from "react-use-event";
-import { AddCommentEvent } from "../utils/events";
+import { AddCommentEvent, RatingEvent } from "../utils/events";
 import { id } from "cast.ts";
 import { api } from "../apis/api";
 import TourDetailScreenStyleSheet from "../StyleSheet/TourDetailScreenCss";
@@ -66,7 +66,7 @@ export default function CommentScreen() {
     try {
       let commentInfoData = await api.get(
         `/comment/${params.post_id}`,
-        commentInfoParser
+        commentInfoParser,
       );
       setComments(commentInfoData);
     } catch (err) {
@@ -77,6 +77,9 @@ export default function CommentScreen() {
     getCommentInfo();
   }, []);
   useEvent<AddCommentEvent>("AddComment", (event) => {
+    getCommentInfo();
+  });
+  useEvent<RatingEvent>("Rating", (event) => {
     getCommentInfo();
   });
 
@@ -101,7 +104,7 @@ export default function CommentScreen() {
         `/comment/${params.post_id}/add`,
         commentInfo,
         addCommentParser,
-        token
+        token,
       );
       dispatchAddCommentEvent("AddComment");
       inputRef?.current?.clear();
@@ -162,7 +165,7 @@ export default function CommentScreen() {
                 handleAvatarClick(
                   item.user_id,
                   item.username,
-                  params.post_id.toString()
+                  params.post_id.toString(),
                 )
               }
             >
@@ -198,7 +201,7 @@ export default function CommentScreen() {
         </Card>
       </>
     ),
-    []
+    [],
   );
   return (
     <TouchableWithoutFeedback>

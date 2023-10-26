@@ -20,12 +20,28 @@ export class PlanningService {
         'plan.id as plan_id',
         'plan.title as plan_title',
         'image.path as image_path',
-        // 'plan_detail.start_date as startDate',
-        // 'plan_detail.end_date as endDate',
       )
       .where({ 'plan.user_id': user_id });
     console.log({ planList });
     return { planList };
+  }
+
+  async getGroupPlan(user_id: number) {
+    type Row = {
+      plan_id: number;
+      plan_title: string;
+      image_path: string;
+    };
+    let tourPlanList: Row[] = await this.knex
+      .from('plan')
+      .innerJoin('image', 'image.id', 'plan.image_id')
+      .select(
+        'plan.id as plan_id',
+        'plan.title as plan_title',
+        'image.path as image_path',
+      )
+      .where({ 'plan.user_id': user_id, 'plan.privacy': true });
+    return { tourPlanList };
   }
 
   async addNewPlan(input: {
@@ -80,8 +96,7 @@ export class PlanningService {
       .insert({
         title: input.title,
         user_id: input.user_id,
-        // country,
-        privacy: false,
+        privacy: true,
         image_id,
       })
       .returning('id');

@@ -11,6 +11,7 @@ import BlogDetailScreen from "../screen/BlogDetailScreen";
 import ViewTourScreen from "../screen/ViewTourScreen";
 import Schedule from "../screen/MySchedule";
 import EnquireDetailScreen from "../screen/EnquireDetailScreen";
+import SchedulePage from "./SchedulePage";
 
 const Stack = createStackNavigator();
 
@@ -109,6 +110,17 @@ export default function ExplorePage() {
             cardStyle: {
               backgroundColor: "white",
             },
+          }}
+        />
+        <Stack.Screen
+          name="SchedulePage"
+          component={SchedulePage}
+          options={{
+            presentation: "modal",
+            cardStyle: {
+              backgroundColor: "white",
+            },
+            headerShown: false,
           }}
         />
       </Stack.Navigator>

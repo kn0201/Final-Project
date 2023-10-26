@@ -40,6 +40,16 @@ export class PlanningController {
     return this.planningService.getMyPlanList(jwt.user_id);
   }
 
+  @Get('tour-plan')
+  getGroupPlan(@Headers() headers: {}) {
+    let jwt = maybeGetJWTPayload(headers);
+    console.log(jwt);
+    if (!jwt) {
+      return { planList: [] };
+    }
+    return this.planningService.getMyPlanList(jwt.user_id);
+  }
+
   @Post('tour_plan')
   @UseInterceptors(FileInterceptor('image', { storage: storage }))
   addNewTourPlan(

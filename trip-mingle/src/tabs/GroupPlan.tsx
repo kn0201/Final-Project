@@ -30,7 +30,7 @@ const addNewScheduleCard = (newScheduleInfo: PlanListItem) => {
   }));
 };
 
-const Schedule = () => {
+const GroupSchedule = () => {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const translateAnim = useRef(new Animated.Value(0)).current;
   const { width, height } = Dimensions.get("screen");
@@ -56,7 +56,7 @@ const Schedule = () => {
     }).start();
   };
 
-  const myPlanListResult = useGet("/planning/my-plans", getMyPlanListParser);
+  const myPlanListResult = useGet("/planning/tour-plan", getMyPlanListParser);
 
   const addNewScheduleCard = (newScheduleInfo: PlanListItem) => {
     myPlanListResult.setState((state) => ({
@@ -210,4 +210,4 @@ function GroupPlanSchedule(props: { item: PlanListItem }) {
   );
 }
 
-export default GroupPlanSchedule;
+export default GroupSchedule;

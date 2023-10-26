@@ -25,8 +25,13 @@ import { boolean, id, object, string } from "cast.ts";
 import TextButton from "./TextButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { theme } from "../theme/variables";
+<<<<<<< HEAD
 import { useAppRoute } from "../../navigators";
 import DateInput from "./DateInput";
+=======
+import useEvent from "react-use-event";
+import { AddPlanEvent } from "../utils/events";
+>>>>>>> refs/remotes/origin/main
 
 type ImageFile = {
   uri: string;
@@ -59,7 +64,7 @@ export function AddScheduleForm(props: {
   const params = useAppRoute<"AddSchedule">();
   // const { planId } = params;
   const [selectedCountry, setSelectedCountry] = useState(
-    "Destination Country *"
+    "Destination Country *",
   );
 
   const [state, setState] = useState({
@@ -108,6 +113,7 @@ export function AddScheduleForm(props: {
     });
   };
 
+<<<<<<< HEAD
   // async function addMarkDate() {
   //   if (!startDate) {
   //     IonNeverToast.show({
@@ -150,10 +156,13 @@ export function AddScheduleForm(props: {
   //     });
   //   }
   // }
+=======
+  const dispatchAddPlanEvent = useEvent<AddPlanEvent>("AddPlan");
+>>>>>>> refs/remotes/origin/main
   async function addPlan(
     title: string,
     country: string,
-    imageFile?: ImageFile | null
+    imageFile?: ImageFile | null,
   ) {
     let user_id_array = [];
     if (!title) {
@@ -184,8 +193,9 @@ export function AddScheduleForm(props: {
             plan_id: id(),
             image_path: string(),
           }),
-          token
+          token,
         );
+        dispatchAddPlanEvent("AddPlan");
       }
 
       let json = await api2.upload(
@@ -195,7 +205,7 @@ export function AddScheduleForm(props: {
           plan_id: id(),
           image_path: string(),
         }),
-        token
+        token,
       );
       console.log("add plan result:", json);
       IonNeverDialog.show({
@@ -251,8 +261,8 @@ export function AddScheduleForm(props: {
                   countryList.filter((country) =>
                     country.name
                       .toLocaleLowerCase()
-                      .includes(search.toLocaleLowerCase())
-                  )
+                      .includes(search.toLocaleLowerCase()),
+                  ),
                 );
               }, [search, countryList]);
               const updateSearch = (search: string) => {
