@@ -1,17 +1,15 @@
-import { useEffect, useRef, useState } from "react";
-import { Input, SpeedDial } from "@rneui/themed";
+import { useEffect, useState } from "react";
+import { SpeedDial } from "@rneui/themed";
 import { View, Text, StyleSheet, Keyboard } from "react-native";
-import { Button, Card } from "react-native-paper";
+import { Card } from "react-native-paper";
 import { Agenda, AgendaEntry } from "react-native-calendars";
 import { TextInput } from "react-native-gesture-handler";
 import { MarkedDates } from "react-native-calendars/src/types";
 import { DAY } from "@beenotung/tslib/time";
 import { format_2_digit } from "@beenotung/tslib/format";
-import AgendaListItem from "../components/AgendaLIstItem";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import {
   ScheduleData,
-  ScheduleDate,
   ScheduleItem,
   ScheduleItemInfo,
   ScheduleMark,

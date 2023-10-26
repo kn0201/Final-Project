@@ -68,7 +68,7 @@ let getMyPlanListParser = object({
       image_path: string(),
       startDate: optional(string()),
       endDate: optional(string()),
-    })
+    }),
   ),
 });
 type PlanListItem = ParseResult<typeof getMyPlanListParser>["planList"][number];
@@ -104,7 +104,7 @@ const Schedule = () => {
 
   const groupPlanListResult = useGet(
     "/planning/group-plans",
-    getMyPlanListParser
+    getMyPlanListParser,
   );
   useEvent<AddPlanEvent>("AddPlan", (event) => {
     myPlanListResult.reload();
@@ -214,7 +214,7 @@ const Schedule = () => {
                 <>
                   {tourPlan.planList.length === 0 ? (
                     <View>
-                      <Text>你還沒加入</Text>
+                      <Text>You have not joined any tour yet</Text>
                     </View>
                   ) : (
                     <FlatList

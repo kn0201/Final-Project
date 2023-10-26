@@ -65,6 +65,7 @@ import {
   UpdateProfileEvent,
 } from "../utils/events";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import moment from "moment";
 
 const EnquireDetailScreen = ({
   route,
@@ -404,11 +405,7 @@ const EnquireDetailScreen = ({
           <View style={TourDetailScreenStyleSheet.row}>
             <Text style={{ fontWeight: "800" }}>#{index + 1}</Text>
             <Text style={TourDetailScreenStyleSheet.titleKey}>
-              {new Date(item.created_at).toLocaleString("zh-CN", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              })}
+              {moment(new Date(item.created_at)).fromNow()}
             </Text>
           </View>
         </View>
@@ -551,11 +548,7 @@ const EnquireDetailScreen = ({
                 <View style={TourDetailScreenStyleSheet.rowContainer}>
                   <Text style={TourDetailScreenStyleSheet.titleKey}>
                     {post?.created_at
-                      ? new Date(post?.created_at).toLocaleString("zh-CN", {
-                          year: "numeric",
-                          month: "2-digit",
-                          day: "2-digit",
-                        })
+                      ? moment(new Date(post.created_at)).fromNow()
                       : null}
                   </Text>
                 </View>
