@@ -24,6 +24,7 @@ import useEvent from "react-use-event";
 import {
   AcceptEvent,
   AddCommentEvent,
+  AddEnquireEvent,
   AddPostEvent,
   DeleteEvent,
   LikeEvent,
@@ -33,6 +34,7 @@ import {
 } from "../utils/events";
 import { LinearGradient } from "expo-linear-gradient";
 import { theme } from "../theme/variables";
+import moment from "moment";
 
 // Star rating
 export const setStarRating = (rating: number) => {
@@ -90,7 +92,7 @@ export default function EnquireScreen({ navigation }) {
 
   // Update post list
   useEvent<AddPostEvent>("AddPost", (event) => {
-    if (event.post_type == "tour") {
+    if (event.post_type == "enquire") {
       getPostInfo();
     }
   });
@@ -113,6 +115,9 @@ export default function EnquireScreen({ navigation }) {
     getPostInfo();
   });
   useEvent<RatingEvent>("Rating", (event) => {
+    getPostInfo();
+  });
+  useEvent<AddEnquireEvent>("AddEnquire", (event) => {
     getPostInfo();
   });
 
@@ -187,11 +192,7 @@ export default function EnquireScreen({ navigation }) {
           <View style={TourDetailScreenStyleSheet.row}>
             <Text style={{ fontWeight: "800" }}>#{item.id}</Text>
             <Text style={TourDetailScreenStyleSheet.titleKey}>
-              {new Date(item.created_at).toLocaleString("zh-CN", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              })}
+              {moment(new Date(item.created_at)).fromNow()}
             </Text>
           </View>
         </View>
