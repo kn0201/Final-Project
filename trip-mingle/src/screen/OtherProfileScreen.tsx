@@ -9,7 +9,12 @@ import { Avatar } from "@rneui/themed";
 import { apiOrigin } from "../utils/apiOrigin";
 import { setStarRating } from "./PostScreen";
 import { useToken } from "../hooks/useToken";
-import { AcceptEvent, LoginEvent, UpdateProfileEvent } from "../utils/events";
+import {
+  AcceptEvent,
+  LoginEvent,
+  RatingEvent,
+  UpdateProfileEvent,
+} from "../utils/events";
 import useEvent from "react-use-event";
 import { LinearGradient } from "expo-linear-gradient";
 import { theme } from "../theme/variables";
@@ -55,7 +60,7 @@ export default function OtherProfileScreen({
         `/application/${post_id}/${id}`,
         { username },
         acceptStatusParser,
-        token
+        token,
       );
       if (isAccept !== null) {
         setIsAccept(!isAccept);
@@ -74,7 +79,7 @@ export default function OtherProfileScreen({
   const getProfile = async () => {
     let profile = await api.get(
       `/user/${post_id}/${id}/${post_user_id}`,
-      getOtherProfileParser
+      getOtherProfileParser,
     );
     setProfileInfo(profile);
   };
@@ -82,6 +87,9 @@ export default function OtherProfileScreen({
     getProfile();
   }, []);
   useEvent<UpdateProfileEvent>("UpdateProfile", (event) => {
+    getProfile();
+  });
+  useEvent<RatingEvent>("Rating", (event) => {
     getProfile();
   });
   useEvent<LoginEvent>("Login", (event) => {

@@ -160,7 +160,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
   // Header
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: closeStatus === true ? "Rating" : "My Tour",
+      headerTitle: closeStatus === true ? "Tour Record" : "My Tour",
     });
   }, [closeStatus]);
 
@@ -624,11 +624,11 @@ export default function ViewTourScreen({ route }: { route: any }) {
           },
         ]}
       >
-        {/* <AddScheduleForm
+        <AddScheduleForm
           closeModal={closeModal}
           addNewScheduleCard={addNewScheduleCard}
           confirmedUsersList={confirmedUsersList}
-        /> */}
+        />
       </Animated.View>
     </>
   );
