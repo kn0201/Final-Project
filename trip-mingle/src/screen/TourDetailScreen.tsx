@@ -452,8 +452,6 @@ const TourDetailScreen = ({
     ApplicationInfoItem[] | null
   >([]);
   const getApplicationList = async () => {
-    console.log("get Application");
-
     try {
       let applicationList = await api.get(
         `/application/${id}`,
@@ -474,7 +472,7 @@ const TourDetailScreen = ({
     try {
       let allConfirmStatus = await api.get(
         `/application/all/${id}`,
-        allConfirmStatusParser
+        allConfirmStatusParser,
       );
       setAllConfirm(allConfirmStatus?.result);
     } catch (err) {
@@ -810,11 +808,13 @@ const TourDetailScreen = ({
                 </View>
                 <View style={TourDetailScreenStyleSheet.rowContainer}>
                   <Text style={TourDetailScreenStyleSheet.titleKey}>
-                    {new Date(post?.created_at).toLocaleString("zh-CN", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                    })}
+                    {post?.created_at
+                      ? new Date(post.created_at).toLocaleString("zh-CN", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                        })
+                      : null}
                   </Text>
                 </View>
                 {post?.trip_period ? (
