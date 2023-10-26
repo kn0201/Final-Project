@@ -155,6 +155,14 @@ export class ApplicationService {
         .from('rating')
         .where('user1_id', postUser.user_id)
         .first();
+      let ratingStatus = await this.knex
+        .count('id')
+        .from('rating')
+        .where('user1_id', postUser.user_id)
+        .where('user2_id', login_user_id)
+        .where('post_id', id)
+        .first();
+      console.log({ PostratingStatus: ratingStatus });
       confirmedUsersInfo.push({
         user_id: postUser.user_id,
         username: postUser.username,
@@ -162,6 +170,7 @@ export class ApplicationService {
         rating: postUser.rating,
         number_of_rating: +number_of_rating_postUser.count,
         confirm_status: true,
+        ratingStatus: ratingStatus.count > 0 ? true : false,
       });
       let confirmedUsers = await this.knex('users')
         .leftJoin('image', { 'users.avatar_id': 'image.id' })
@@ -182,6 +191,15 @@ export class ApplicationService {
           .from('rating')
           .where('user1_id', confirmedUser.user_id)
           .first();
+        let ratingStatus = await this.knex
+          .count('id')
+          .from('rating')
+          .where('user1_id', confirmedUser.user_id)
+          .where('user2_id', login_user_id)
+          .where('post_id', id)
+          .first();
+        console.log({ ratingStatus });
+
         confirmedUsersInfo.push({
           user_id: +confirmedUser.user_id,
           username: confirmedUser.username,
@@ -189,6 +207,7 @@ export class ApplicationService {
           rating: +confirmedUser.rating,
           number_of_rating: +number_of_rating_confirmedUser.count,
           confirm_status: confirmedUser.confirm_status,
+          ratingStatus: ratingStatus.count > 0 ? true : false,
         });
       }
       return confirmedUsersInfo;

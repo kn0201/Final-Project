@@ -276,6 +276,7 @@ export const confirmedUserParser = array(
     rating: number(),
     number_of_rating: number(),
     confirm_status: boolean(),
+    ratingStatus: boolean(),
   }),
 );
 
