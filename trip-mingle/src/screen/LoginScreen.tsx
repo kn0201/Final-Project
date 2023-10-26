@@ -162,9 +162,9 @@ export default function LoginScreen({ navigation }) {
             onPress={password}
           />
         </View>
-        <View style={{ width: "100%" }}>
+        {/* <View style={{ width: "100%" }}>
           <Text style={LoginScreenStyleSheet.forgotPW}>Forgot Password?</Text>
-        </View>
+        </View> */}
 
         <View style={LoginScreenStyleSheet.center}>
           <TouchableOpacity style={LoginScreenStyleSheet.login} onPress={login}>

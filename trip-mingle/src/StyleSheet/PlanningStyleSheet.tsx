@@ -8,6 +8,7 @@ import {
   row,
   white,
 } from "./StyleSheetHelper";
+import { theme } from "../theme/variables";
 
 const PlanningStyleSheet = StyleSheet.create({
   center: {
@@ -47,13 +48,14 @@ const PlanningStyleSheet = StyleSheet.create({
     textDecorationLine: "none",
   },
   uploadContainerSquare: {
+    marginTop: 90,
     elevation: 2,
     height: 300,
-    width: 400,
-    backgroundColor: "#efefef",
+    width: "90%",
+    backgroundColor: "transparent",
     position: "relative",
     overflow: "hidden",
-    marginBottom: 12,
+    marginBottom: 16,
     justifyContent: center,
   },
   uploadBtnContainerSquare: {
@@ -61,7 +63,7 @@ const PlanningStyleSheet = StyleSheet.create({
     position: "absolute",
     right: 0,
     bottom: 0,
-    backgroundColor: "lightgrey",
+    backgroundColor: "#eeeeee",
     width: "100%",
     height: "15%",
     color: "red",
@@ -129,23 +131,64 @@ const PlanningStyleSheet = StyleSheet.create({
     textAlign: center,
   },
   cancelButtonDiv: {
-    width: full,
+    width: "90%",
     display: flex,
     flexDirection: row,
-    justifyContent: flexEnd,
-    padding: 10,
+    justifyContent: "space-between",
+    marginTop: 16,
   },
   cancelButton: {
-    width: "45%",
-    height: 60,
+    width: "47%",
+    height: 50,
     backgroundColor: "#DC3545",
     display: flex,
     justifyContent: center,
     alignItems: center,
     borderRadius: 10,
-    margin: 12,
   },
-  cancelButtonText: { fontSize: 16, color: "#FFFFFF", textAlign: "center" },
+  cancelButtonText: {
+    fontSize: 16,
+    color: "#FFFFFF",
+    textAlign: "center",
+    fontWeight: "bold",
+    textShadowColor: "#8E8E8E",
+    textShadowRadius: 1,
+    textShadowOffset: {
+      width: 0.9,
+      height: 0.9,
+    },
+  },
+
+  addButton: {
+    width: "47%",
+    height: 50,
+    backgroundColor: iosBlue,
+    display: flex,
+    justifyContent: center,
+    alignItems: center,
+    borderRadius: 10,
+  },
+  addButtonText: {
+    fontSize: 16,
+    color: "#FFFFFF",
+    textAlign: "center",
+    fontWeight: "bold",
+    textShadowColor: "#8E8E8E",
+    textShadowRadius: 1,
+    textShadowOffset: {
+      width: 0.9,
+      height: 0.9,
+    },
+  },
+  formInputContainer: {
+    width: full,
+    height: 50,
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
+    fontSize: 16,
+    marginVertical: 16,
+  },
 });
 
 export default PlanningStyleSheet;

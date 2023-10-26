@@ -12,6 +12,7 @@ export class PlanningService {
       plan_title: string;
       image_path: string;
     };
+
     let planList: Row[] = await this.knex
       .from('plan')
       .innerJoin('image', 'image.id', 'plan.image_id')
@@ -21,27 +22,43 @@ export class PlanningService {
         'plan.title as plan_title',
         'image.path as image_path',
       )
-      .where({ 'plan.user_id': user_id });
-    console.log({ planList });
+      .where({ 'plan.user_id': user_id })
+      .andWhere({ privacy: false });
+
     return { planList };
   }
 
-  async getGroupPlan(user_id: number) {
+  async getGroupPlanList(user_id?: number) {
+    console.log('Get Group');
+
+    let result = await this.knex
+      .select('plan_id')
+      .from('tour_plan')
+      .where('user_id', user_id);
+    console.log(result);
+
     type Row = {
       plan_id: number;
       plan_title: string;
       image_path: string;
     };
-    let tourPlanList: Row[] = await this.knex
-      .from('plan')
-      .innerJoin('image', 'image.id', 'plan.image_id')
-      .select(
-        'plan.id as plan_id',
-        'plan.title as plan_title',
-        'image.path as image_path',
-      )
-      .where({ 'plan.user_id': user_id, 'plan.privacy': true });
-    return { tourPlanList };
+    let planList: Row[] = [];
+    for (let plan_id of result) {
+      let tourPlan = await this.knex
+        .from('plan')
+        .innerJoin('image', 'image.id', 'plan.image_id')
+        .select(
+          'plan.id as plan_id',
+          'plan.title as plan_title',
+          'image.path as image_path',
+        )
+        .where({ 'plan.id': plan_id.plan_id })
+        .andWhere({ privacy: true })
+        .first();
+      planList.push(tourPlan);
+    }
+    console.log(planList);
+    return { planList };
   }
 
   async addNewPlan(input: {
@@ -80,6 +97,7 @@ export class PlanningService {
     title: string;
     user_list: string;
     image_file: string | undefined;
+    post_id: number;
   }) {
     let image_id: number | null = null;
     if (input.image_file) {
@@ -96,6 +114,7 @@ export class PlanningService {
       .insert({
         title: input.title,
         user_id: input.user_id,
+        post_id: input.post_id,
         privacy: true,
         image_id,
       })

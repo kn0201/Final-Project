@@ -21,7 +21,7 @@ import multer, { Multer, Field } from 'multer';
 import { randomUUID } from 'crypto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { getJWTPayload, maybeGetJWTPayload } from 'src/jwt';
-import { id, object, string } from 'cast.ts';
+import { id, number, object, string } from 'cast.ts';
 import { env } from 'src/env';
 import { storage } from 'src/uploads';
 
@@ -40,14 +40,14 @@ export class PlanningController {
     return this.planningService.getMyPlanList(jwt.user_id);
   }
 
-  @Get('tour-plan')
-  getGroupPlan(@Headers() headers: {}) {
+  @Get('group-plans')
+  getGroupPlans(@Headers() headers: {}) {
     let jwt = maybeGetJWTPayload(headers);
     console.log(jwt);
     if (!jwt) {
       return { planList: [] };
     }
-    return this.planningService.getMyPlanList(jwt.user_id);
+    return this.planningService.getGroupPlanList(jwt.user_id);
   }
 
   @Post('tour_plan')
@@ -62,7 +62,7 @@ export class PlanningController {
     let input = object({
       body: object({
         title: string(),
-        country: string(),
+        post_id: number(),
         user_list: string(),
       }),
     }).parse({ body });
@@ -72,6 +72,7 @@ export class PlanningController {
       title: input.body.title,
       user_list: input.body.user_list,
       image_file: image?.filename,
+      post_id: input.body.post_id,
     });
   }
 

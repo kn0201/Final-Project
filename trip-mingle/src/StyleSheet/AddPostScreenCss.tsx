@@ -1,6 +1,7 @@
 //Buffer Line
 import { StyleSheet } from "react-native";
 import { flex, center, row, iosBlue } from "./StyleSheetHelper";
+import { theme } from "../theme/variables";
 
 const AddPostPageStyleSheet = StyleSheet.create({
   postInputContainer: {
@@ -115,13 +116,20 @@ const AddPostPageStyleSheet = StyleSheet.create({
     justifyContent: center,
     borderWidth: 1,
     borderRadius: 10,
-    borderColor: iosBlue,
-    backgroundColor: iosBlue,
+    borderColor: theme.button,
+    backgroundColor: theme.button,
   },
   addPostText: {
     fontSize: 16,
     color: "#ffffff",
     textAlign: center,
+    fontWeight: "bold",
+    textShadowColor: "#8E8E8E",
+    textShadowRadius: 1,
+    textShadowOffset: {
+      width: 0.9,
+      height: 0.9,
+    },
   },
   center: {
     display: flex,

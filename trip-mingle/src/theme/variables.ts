@@ -5,4 +5,5 @@ export let theme = {
   primaryTextColor: "#FFFFFF",
   mediumColor: "#888888",
   background: "rgba(225,255,237,0.8)",
+  button: "#85DBA8",
 };

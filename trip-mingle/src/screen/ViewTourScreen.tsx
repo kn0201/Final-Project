@@ -152,9 +152,11 @@ export default function ViewTourScreen({ route }: { route: any }) {
   }, []);
 
   // Params
-  const { id, post_user_id } = route.params || {
+  const { id, title, post_user_id, post_id } = route.params || {
     id: 0,
+    title: "",
     post_user_id: 0,
+    post_id: 0,
   };
 
   // Header
@@ -270,6 +272,8 @@ export default function ViewTourScreen({ route }: { route: any }) {
   const [startPlan, setStartPlan] = useState<boolean>(false);
   const [planID, setPlanID] = useState<number | null>();
   const checkPlanStatus = async () => {
+    console.log(title);
+
     try {
       let result = await api.get(
         `/application/plan/${id}/${post_user_id}`,
@@ -278,8 +282,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
         token
 =======
         checkPlanParser,
-        token,
->>>>>>> refs/remotes/origin/main
+        token
       );
       setStartPlan(result.result);
       setPlanID(result.plan_id);
@@ -315,7 +318,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
   const handleRatingChange = async (
     rating: number,
     user_id: number,
-    username: string,
+    username: string
   ) => {
     try {
       let ratingResult = await api.post(
@@ -399,7 +402,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
                         handleRatingChange(
                           newRating,
                           item.user_id,
-                          item.username,
+                          item.username
                         )
                       }
                     />
@@ -418,7 +421,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
                     item.user_id,
                     item.username,
                     id,
-                    post_user_id,
+                    post_user_id
                   )
                 }
               >
@@ -574,12 +577,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
                       ],
                     },
                   ]}
-                >
-                  <AddScheduleForm
-                    closeModal={closeModal}
-                    addNewScheduleCard={addNewScheduleCard}
-                  />
-                </Animated.View>
+                ></Animated.View>
               </>
             ) : (
               <TouchableOpacity
@@ -650,6 +648,8 @@ export default function ViewTourScreen({ route }: { route: any }) {
           closeModal={closeModal}
           addNewScheduleCard={addNewScheduleCard}
           confirmedUsersList={confirmedUsersList}
+          title={title}
+          post_id={post_id}
         />
       </Animated.View>
     </>
