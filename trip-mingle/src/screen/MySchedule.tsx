@@ -67,8 +67,8 @@ let getMyPlanListParser = object({
       plan_id: number(),
       plan_title: string(),
       image_path: string(),
-      startDate: optional(string()),
-      endDate: optional(string()),
+      // startDate: optional(string()),
+      // endDate: optional(string()),
     })
   ),
 });
@@ -231,7 +231,7 @@ function ScheduleCard(props: { item: PlanListItem }) {
             flexDirection: "row",
           }}
         >
-          <View
+          {/* <View
             style={{
               display: flex,
               flexDirection: row,
@@ -263,7 +263,7 @@ function ScheduleCard(props: { item: PlanListItem }) {
                 <Text>{item.endDate.split("T")[0]}</Text>
               </>
             ) : null}
-          </View>
+          </View> */}
         </View>
         <Card.Divider />
         <Card.Image

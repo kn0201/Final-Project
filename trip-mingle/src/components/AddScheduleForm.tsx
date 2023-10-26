@@ -384,29 +384,7 @@ export function AddScheduleForm(props: {
         value={state.title}
         onChangeText={(text) => setState({ ...state, title: text })}
       />
-      <CountryCheckbox />
-      {/* <Text>Starting Date</Text>
-      <TextInput
-        style={PlanningStyleSheet.inputContainer}
-        value={
-          startDate?.split("T")[0] || new Date(Date.now()).toLocaleDateString()
-        }
-        onChangeText={setStartDate}
-        keyboardType="numeric"
-        onEndEditing={() => Keyboard.dismiss()}
-        placeholder="Input your start travel date"
-      ></TextInput>
-      <Text>Ending Date</Text>
-      <TextInput
-        style={PlanningStyleSheet.inputContainer}
-        value={
-          endDate?.split("T")[0] || new Date(Date.now()).toLocaleDateString()
-        }
-        onChangeText={setEndDate}
-        keyboardType="numeric"
-        onEndEditing={() => Keyboard.dismiss()}
-        placeholder="Input your end travel date"
-      ></TextInput> */}
+
       <TextButton
         text="Add New Plan"
         onPress={() => {

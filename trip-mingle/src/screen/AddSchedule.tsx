@@ -23,12 +23,6 @@ import { useToken } from "../hooks/useToken";
 import TextButton from "../components/TextButton";
 import { AppParamList, useAppNavigation, useAppRoute } from "../../navigators";
 import { textColor } from "../StyleSheet/StyleSheetHelper";
-<<<<<<< HEAD
-import Entypo from "react-native-vector-icons/Entypo";
-=======
-import { LinearGradient } from "expo-linear-gradient";
-import { theme } from "../theme/variables";
->>>>>>> refs/remotes/origin/main
 
 function Space(props: { height: number }) {
   return (
@@ -208,26 +202,9 @@ const AddSchedule = () => {
   return (
     <>
       <View>
-        <LinearGradient
-          // Background Linear Gradient
-          colors={["#FFFFFF", theme.background]}
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            top: 0,
-            height: "100%",
-          }}
-        />
         <Space height={10}></Space>
-        {/* <Text>plan id: {planId}</Text> */}
-        <View>
-          <Entypo name="aircraft-take-off" size={24} color="black" />
-          <View style={{ display: "flex", flexDirection: "row", margin: 10 }}>
-            <Text> Starting Date</Text>
-            <Entypo name="aircraft-take-off" size={24} color="black" />
-          </View>
-        </View>
+        <Text>plan id: {planId}</Text>
+        <Text>Starting Date</Text>
         <TextInput
           style={PlanningStyleSheet.inputContainer}
           value={
@@ -235,19 +212,18 @@ const AddSchedule = () => {
             new Date(Date.now()).toLocaleDateString()
           }
           onChangeText={setStartDate}
+          keyboardType="numeric"
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input your start travel date"
         ></TextInput>
-        <View style={{ display: "flex", flexDirection: "row" }}>
-          <Text>Ending Date</Text>
-          <Entypo name="aircraft-landing" size={24} color="black" />
-        </View>{" "}
+        <Text>Ending Date</Text>
         <TextInput
           style={PlanningStyleSheet.inputContainer}
           value={
             endDate?.split("T")[0] || new Date(Date.now()).toLocaleDateString()
           }
           onChangeText={setEndDate}
+          keyboardType="numeric"
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input your end travel date"
         ></TextInput>
