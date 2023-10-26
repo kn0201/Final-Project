@@ -112,7 +112,11 @@ export default function ExplorePage() {
             },
           }}
         />
-        <Stack.Screen name="SchedulePage" component={SchedulePage} />
+        <Stack.Screen
+          name="SchedulePage"
+          component={SchedulePage}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </>
   );
