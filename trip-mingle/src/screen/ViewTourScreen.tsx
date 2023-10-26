@@ -33,6 +33,7 @@ import {
   RejectEvent,
   UpdateProfileEvent,
   CloseEvent,
+  RatingEvent,
 } from "../utils/events";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import { useGet } from "../hooks/useGet";
@@ -293,10 +294,25 @@ export default function ViewTourScreen({ route }: { route: any }) {
   });
 
   // Rating
-  const [rating, setRating] = useState(0);
-  const handleRatingChange = (newRating: number, user_id: number) => {
-    console.log(`Submitting rating : ${newRating}, ${user_id}`);
+  const dispatchRatingEvent = useEvent<RatingEvent>("Rating");
+  const handleRatingChange = async (rating: number, user_id: number) => {
+    try {
+      let ratingResult = await api.post(
+        `/bookmark/${id}`,
+        { rating, user_id },
+        closePostParser,
+        token,
+      );
+      if (ratingResult.result === true) {
+        dispatchRatingEvent("Rating");
+      }
+    } catch (err) {
+      console.log({ err });
+    }
   };
+  useEvent<RatingEvent>("Rating", (event) => {
+    getConfirmedUsersList();
+  });
 
   const ItemView = useCallback(
     ({ item, index }: ListRenderItemInfo<ConfirmedUserItem>) =>
