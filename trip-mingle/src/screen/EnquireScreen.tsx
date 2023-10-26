@@ -27,6 +27,7 @@ import {
   AddPostEvent,
   DeleteEvent,
   LikeEvent,
+  RatingEvent,
   RejectEvent,
   UpdateProfileEvent,
 } from "../utils/events";
@@ -109,6 +110,9 @@ export default function EnquireScreen({ navigation }) {
     getPostInfo();
   });
   useEvent<RejectEvent>("Reject", (event) => {
+    getPostInfo();
+  });
+  useEvent<RatingEvent>("Rating", (event) => {
     getPostInfo();
   });
 
@@ -208,7 +212,7 @@ export default function EnquireScreen({ navigation }) {
         </View>
       </TouchableOpacity>
     ),
-    []
+    [],
   );
 
   const [refreshing, setRefreshing] = React.useState(false);

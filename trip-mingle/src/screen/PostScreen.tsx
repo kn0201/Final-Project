@@ -27,6 +27,7 @@ import {
   AddPostEvent,
   DeleteEvent,
   LikeEvent,
+  RatingEvent,
   RejectEvent,
   UpdateProfileEvent,
 } from "../utils/events";
@@ -114,6 +115,9 @@ export default function TourScreen({ navigation }) {
   useEvent<CloseEvent>("Close", (event) => {
     getPostInfo();
   });
+  useEvent<RatingEvent>("Rating", (event) => {
+    getPostInfo();
+  });
 
   // Search bar
   const [search, setSearch] = useState("");
@@ -135,11 +139,11 @@ export default function TourScreen({ navigation }) {
               item.trip_country.toUpperCase().includes(textData)) ||
             (item.trip_location &&
               item.trip_location.some((location) =>
-                location.name.toUpperCase().includes(textData)
+                location.name.toUpperCase().includes(textData),
               )) ||
             (item.trip_location &&
               item.trip_location.some((location) =>
-                location.address.toUpperCase().includes(textData)
+                location.address.toUpperCase().includes(textData),
               )) ||
             (item.preferred_hobby &&
               item.preferred_hobby.toUpperCase().includes(textData))
@@ -243,7 +247,7 @@ export default function TourScreen({ navigation }) {
         </View>
       </TouchableOpacity>
     ),
-    []
+    [],
   );
 
   const [refreshing, setRefreshing] = React.useState(false);
