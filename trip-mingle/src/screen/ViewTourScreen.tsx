@@ -277,10 +277,6 @@ export default function ViewTourScreen({ route }: { route: any }) {
     try {
       let result = await api.get(
         `/application/plan/${id}/${post_user_id}`,
-<<<<<<< HEAD
-        closePostParser,
-        token
-=======
         checkPlanParser,
         token
       );

@@ -151,11 +151,11 @@ const AddSchedule = () => {
   }, [scheduleItems]);
 
   const markedDates: MarkedDates = {
-    [startDate || new Date(Date.now()).toLocaleDateString()]: {
+    [startDate || new Date(Date.now()).toISOString()]: {
       startingDay: true,
       color: "lightgreen",
     },
-    [endDate || new Date(Date.now()).toLocaleDateString()]: {
+    [endDate || new Date(Date.now()).toISOString()]: {
       endingDay: true,
       color: "lightgreen",
     },
@@ -209,7 +209,7 @@ const AddSchedule = () => {
           style={PlanningStyleSheet.inputContainer}
           value={
             startDate?.split("T")[0] ||
-            new Date(Date.now()).toLocaleDateString()
+            new Date(Date.now()).toISOString().split("T")[0]
           }
           onChangeText={setStartDate}
           keyboardType="numeric"
@@ -220,7 +220,8 @@ const AddSchedule = () => {
         <TextInput
           style={PlanningStyleSheet.inputContainer}
           value={
-            endDate?.split("T")[0] || new Date(Date.now()).toLocaleDateString()
+            endDate?.split("T")[0] ||
+            new Date(Date.now()).toISOString().split("T")[0]
           }
           onChangeText={setEndDate}
           keyboardType="numeric"

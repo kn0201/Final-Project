@@ -137,30 +137,31 @@ export function AddScheduleForm(props: {
           token
         );
         dispatchAddPlanEvent("AddPlan");
+      } else {
+        let json = await api2.upload(
+          "/planning/plan",
+          formData,
+          object({
+            plan_id: id(),
+            image_path: string(),
+          }),
+          token
+        );
+        dispatchAddPlanEvent("AddPlan");
       }
 
-      let json = await api2.upload(
-        "/planning/plan",
-        formData,
-        object({
-          plan_id: id(),
-          image_path: string(),
-        }),
-        token
-      );
-      console.log("add plan result:", json);
       IonNeverDialog.show({
         type: "success",
         title: "Add a new plan",
         firstButtonVisible: true,
       });
-      addNewScheduleCard({
-        plan_id: json.plan_id,
-        plan_title: planTitle,
-        image_path: json.image_path || "",
-        startDate: "",
-        endDate: "",
-      });
+      // addNewScheduleCard({
+      //   plan_id: json.plan_id,
+      //   plan_title: planTitle,
+      //   image_path: json.image_path || "",
+      //   startDate: "",
+      //   endDate: "",
+      // });
       closeModal();
 
       reset();
