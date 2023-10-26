@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { theme } from "../theme/variables";
+import { center, flex, iosBlue, row, white } from "./StyleSheetHelper";
 
 const ManageTourScreenStyleSheet = StyleSheet.create({
   postDetailContainer: {
@@ -104,6 +105,36 @@ const ManageTourScreenStyleSheet = StyleSheet.create({
     top: 150,
     right: 20,
     zIndex: 1,
+  },
+  ModalButtonContainer: {
+    display: flex,
+    flexDirection: row,
+    width: "100%",
+    height: "10%",
+    justifyContent: "space-evenly",
+    alignItems: center,
+  },
+  ModalText: {
+    paddingHorizontal: "30%",
+    color: iosBlue,
+    fontWeight: "bold",
+    fontSize: 22,
+    textAlign: center,
+    alignItems: center,
+    justifyContent: center,
+  },
+  container: {
+    alignItems: "center",
+    paddingBottom: 5,
+  },
+  AvatarContainer: {
+    position: "relative",
+    marginBottom: 5,
+  },
+  TitleText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 5,
   },
 });
 

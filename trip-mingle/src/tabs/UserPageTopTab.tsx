@@ -1,10 +1,11 @@
 //Buffer Line
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import SavedLocationScreen from "../screen/SavedLocationScreen";
-import MemoryScreen from "../screen/MemoryScreen";
+
 import ProfileScreen from "../screen/ProfileScreen";
 
 import BookmarkScreen from "../screen/BookmarkScreen";
+import MyPostScreen from "../screen/MyPostScreen";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -30,9 +31,9 @@ export default function UserPageTopTab() {
         options={{ tabBarLabel: "Saved Location" }}
       />
       <Tab.Screen
-        name="Memory"
-        component={MemoryScreen}
-        options={{ tabBarLabel: "Memory" }}
+        name="OwnPost"
+        component={MyPostScreen}
+        options={{ tabBarLabel: "Own Post" }}
       />
       <Tab.Screen
         name="Bookmark"

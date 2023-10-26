@@ -23,9 +23,9 @@ import { ApplicationModule } from './application/application.module';
 import { SnapModule } from './snap/snap.module';
 @Module({
   imports: [
-    ServeStaticModule.forRoot({
-      rootPath: resolve('uploads'),
-    }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: resolve('uploads'),
+    // }),
     KnexModule.forRoot({
       config: {
         client: 'postgresql',

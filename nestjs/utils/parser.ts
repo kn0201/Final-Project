@@ -5,7 +5,6 @@ import {
   nullable,
   number,
   object,
-  optional,
   string,
 } from 'cast.ts';
 

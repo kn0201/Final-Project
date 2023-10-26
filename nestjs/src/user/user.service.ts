@@ -379,4 +379,63 @@ export class UserService {
 
     return postInfo;
   }
+
+  async getOwnPost(input: { user_id: number }) {
+    let postInfo = [];
+
+    let posts = await this.knex
+      .select(
+        'id',
+        'user_id',
+        'title',
+        'country as trip_country',
+        'time as trip_period',
+        'status',
+        'created_at',
+      )
+      .from('post')
+      .where('user_id', input.user_id)
+      .andWhere('is_delete', false);
+
+    for (let post of posts) {
+      let user = await this.knex('users')
+        .leftJoin('image', { 'users.avatar_id': 'image.id' })
+        .select('users.username', 'image.path as avatar_path', 'users.rating')
+        .where('users.id', post.user_id)
+        .first();
+      let number_of_rating = await this.knex
+        .count('id')
+        .from('rating')
+        .where('user1_id', post.user_id)
+        .first();
+      let number_of_like = await this.knex
+        .count('id')
+        .from('like')
+        .where('post_id', post.id)
+        .first();
+      let number_of_reply = await this.knex
+        .count('id')
+        .from('comment')
+        .where('post_id', post.id)
+        .first();
+      await postInfo.push({
+        id: post.id,
+        title: post.title,
+        trip_country: post.trip_country,
+        trip_period: post.trip_period,
+        status: post.status,
+        created_at: post.created_at,
+        username: user.username,
+        avatar_path: user.avatar_path ? user.avatar_path : 'yukimin.png',
+        rating: +user.rating,
+        number_of_rating: +number_of_rating.count,
+        number_of_like: +number_of_like.count,
+        number_of_reply: +number_of_reply.count,
+        result: true,
+      });
+    }
+    // console.log(postInfo);
+
+    return postInfo;
+  }
 }

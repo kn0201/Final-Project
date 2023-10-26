@@ -302,6 +302,61 @@ export class BlogService {
     }
   }
 
+  async getEnquirePostInfo() {
+    try {
+      let postInfo = [];
+      let post_results = await this.knex
+        .select('id', 'user_id', 'title', 'content', 'created_at')
+        .from('post')
+        .where('type', 'enquire')
+        .andWhere('is_delete', false)
+        .orderBy('created_at', 'desc');
+      if (post_results.length > 0) {
+        for (let post of post_results) {
+          let user = await this.knex('users')
+            .leftJoin('image', { 'users.avatar_id': 'image.id' })
+            .select(
+              'users.username',
+              'image.path as avatar_path',
+              'users.rating',
+            )
+            .where('users.id', post.user_id)
+            .first();
+          let number_of_rating = await this.knex
+            .count('id')
+            .from('rating')
+            .where('user1_id', post.user_id)
+            .first();
+          let number_of_like = await this.knex
+            .count('id')
+            .from('like')
+            .where('post_id', post.id)
+            .first();
+          let number_of_reply = await this.knex
+            .count('id')
+            .from('comment')
+            .where('post_id', post.id)
+            .first();
+          await postInfo.push({
+            id: post.id,
+            title: post.title,
+            content: post.content,
+            created_at: post.created_at,
+            username: user.username,
+            avatar_path: user.avatar_path ? user.avatar_path : 'yukimin.png',
+            rating: +user.rating,
+            number_of_rating: +number_of_rating.count,
+            number_of_like: +number_of_like.count,
+            number_of_reply: +number_of_reply.count,
+          });
+        }
+      }
+      return postInfo;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   async deletePost(id, req) {
     try {
       const payload = this.jwtService.decode(

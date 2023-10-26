@@ -10,6 +10,7 @@ import ManageTourScreen from "../screen/ManageTourScreen";
 import BlogDetailScreen from "../screen/BlogDetailScreen";
 import ViewTourScreen from "../screen/ViewTourScreen";
 import Schedule from "../screen/MySchedule";
+import EnquireDetailScreen from "../screen/EnquireDetailScreen";
 
 const Stack = createStackNavigator();
 
@@ -53,6 +54,16 @@ export default function ExplorePage() {
         <Stack.Screen
           name="Tour Detail"
           component={TourDetailScreen}
+          options={{
+            presentation: "modal",
+            cardStyle: {
+              backgroundColor: "white",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Enquire Detail"
+          component={EnquireDetailScreen}
           options={{
             presentation: "modal",
             cardStyle: {

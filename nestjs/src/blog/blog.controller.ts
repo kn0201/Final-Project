@@ -31,6 +31,11 @@ export class BlogController {
     return this.blogService.getTourPostInfo();
   }
 
+  @Get('enquire')
+  getEnquirePostInfo() {
+    return this.blogService.getEnquirePostInfo();
+  }
+
   @Get(':id')
   getTourPostDetail(@Param('id') id: string) {
     return this.blogService.getTourPostDetail(+id);

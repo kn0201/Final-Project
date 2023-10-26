@@ -23,17 +23,18 @@ import { useIonNeverNotification } from "../components/IonNeverNotification/Noti
 
 import useEvent from "react-use-event";
 
-import { api } from "../apis/api";
+import { api, api2 } from "../apis/api";
 import { likeParser, snapListParser } from "../utils/parser";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { Snap } from "../utils/types";
+import { useGet } from "../hooks/useGet";
 
 export default function SnapScreen() {
-  const { token } = useToken();
+  const { token, payload } = useToken();
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useAppNavigation();
+  const [guestSnapList, setGuestSnapList] = useState<Snap[]>([]);
   const { IonNeverDialog } = useIonNeverNotification();
-  const [snapList, setSnapList] = useState<Snap[]>([]);
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
@@ -41,21 +42,10 @@ export default function SnapScreen() {
     }, 2000);
   }, []);
 
-  const getSnapList = async () => {
-    if (token) {
-      let json = await api.get("/snap", snapListParser, token);
-      setSnapList(json);
-    } else {
-      let json = await api.get("/snap", snapListParser);
-      setSnapList(json);
-    }
-  };
-  useEffect(() => {
-    getSnapList();
-  }, []);
+  const snapList = useGet("/snap", snapListParser);
 
   useEvent<AddSnapEvent>("AddSnap", (event) => {
-    getSnapList();
+    snapList.reload();
   });
 
   // Likes
@@ -82,7 +72,7 @@ export default function SnapScreen() {
     }
   };
   useEvent<LikeEvent>("Like", (event) => {
-    getSnapList();
+    snapList.reload();
   });
 
   return (
@@ -129,117 +119,122 @@ export default function SnapScreen() {
         placement="center"
       />
 
-      <FlatList
-        data={snapList}
-        renderItem={({ item }) => {
-          const {
-            post_id,
-            username,
-            content,
-            created_at,
-            location_name,
-            image_path,
-            avatar_path,
-            likeCount,
-            isLike,
-          } = item;
-          return (
-            <View style={SnapScreenStyleSheet.center}>
-              <View style={SnapScreenStyleSheet.outerContainer}>
-                <View style={SnapScreenStyleSheet.userContainer}>
-                  <Avatar
-                    size={30}
-                    rounded
-                    source={{
-                      uri: `${apiOrigin}/${avatar_path}`,
-                    }}
-                  />
-                  <Text>{username}</Text>
-                </View>
-                <View style={SnapScreenStyleSheet.imageContainer}>
-                  <Image
-                    source={{ uri: `${apiOrigin}/${image_path}` }}
-                    style={{
-                      width: "100%",
-                      height: 350,
-                      borderRadius: 10,
-                    }}
-                  />
-                </View>
+      {snapList.render((snapList) => (
+        <FlatList
+          data={snapList}
+          renderItem={({ item }) => {
+            const {
+              post_id,
+              username,
+              content,
+              created_at,
+              location_name,
+              image_path,
+              avatar_path,
+              likeCount,
+              isLike,
+            } = item;
+            return (
+              <View style={SnapScreenStyleSheet.center}>
+                <View style={SnapScreenStyleSheet.outerContainer}>
+                  <View style={SnapScreenStyleSheet.userContainer}>
+                    <Avatar
+                      size={30}
+                      rounded
+                      source={{
+                        uri: `${apiOrigin}/${avatar_path}`,
+                      }}
+                    />
+                    <Text>{username}</Text>
+                  </View>
+                  <View style={SnapScreenStyleSheet.imageContainer}>
+                    <Image
+                      source={{ uri: `${apiOrigin}/${image_path}` }}
+                      style={{
+                        width: "100%",
+                        height: 350,
+                        borderRadius: 10,
+                      }}
+                    />
+                  </View>
 
-                <View
-                  style={{
-                    flexDirection: row,
-                    justifyContent: "space-between",
-                  }}
-                >
-                  {token ? (
-                    <View style={SnapScreenStyleSheet.buttonContainer}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          like(post_id);
-                        }}
-                        style={SnapScreenStyleSheet.likeContainer}
-                      >
-                        <AntDesign
-                          name={isLike ? "like1" : "like2"}
-                          size={20}
-                        />
-                        <Text>{likeCount}</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={{
-                          flexDirection: row,
-                          alignItems: center,
-                          gap: 5,
-                        }}
-                        onPress={() => {
-                          navigation.navigate("Comment", { post_id });
-                        }}
-                      >
-                        <MaterialCommunityIcons name="comment-plus" size={22} />
-                        <Text>Comment</Text>
-                      </TouchableOpacity>
+                  <View
+                    style={{
+                      flexDirection: row,
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    {token ? (
+                      <View style={SnapScreenStyleSheet.buttonContainer}>
+                        <TouchableOpacity
+                          onPress={() => {
+                            like(post_id);
+                          }}
+                          style={SnapScreenStyleSheet.likeContainer}
+                        >
+                          <AntDesign
+                            name={isLike ? "like1" : "like2"}
+                            size={20}
+                          />
+                          <Text>{likeCount}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={{
+                            flexDirection: row,
+                            alignItems: center,
+                            gap: 5,
+                          }}
+                          onPress={() => {
+                            navigation.navigate("Comment", { post_id });
+                          }}
+                        >
+                          <MaterialCommunityIcons
+                            name="comment-plus"
+                            size={22}
+                          />
+                          <Text>Comment</Text>
+                        </TouchableOpacity>
+                      </View>
+                    ) : (
+                      <></>
+                    )}
+                    <View style={SnapScreenStyleSheet.timeContainer}>
+                      <Text>
+                        {new Date(created_at).toLocaleString("zh-CN", {
+                          minute: "2-digit",
+                          hour: "2-digit",
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                          hour12: false,
+                        })}
+                      </Text>
                     </View>
-                  ) : (
-                    <></>
-                  )}
-                  <View style={SnapScreenStyleSheet.timeContainer}>
-                    <Text>
-                      {new Date(created_at).toLocaleString("zh-CN", {
-                        minute: "2-digit",
-                        hour: "2-digit",
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                        hour12: false,
-                      })}
+                  </View>
+                  <View style={SnapScreenStyleSheet.spotContainer}>
+                    <Icon
+                      name="location-pin"
+                      type="materialIcons"
+                      size={16}
+                    ></Icon>
+                    <Text style={SnapScreenStyleSheet.spotText}>
+                      {location_name}
+                    </Text>
+                  </View>
+                  <View style={SnapScreenStyleSheet.contentContainer}>
+                    <Text style={SnapScreenStyleSheet.contentText}>
+                      {content}
                     </Text>
                   </View>
                 </View>
-                <View style={SnapScreenStyleSheet.spotContainer}>
-                  <Icon
-                    name="location-pin"
-                    type="materialIcons"
-                    size={16}
-                  ></Icon>
-                  <Text style={SnapScreenStyleSheet.spotText}>
-                    {location_name}
-                  </Text>
-                </View>
-                <View style={SnapScreenStyleSheet.contentContainer}>
-                  <Text style={SnapScreenStyleSheet.contentText}>
-                    {content}
-                  </Text>
-                </View>
               </View>
-            </View>
-          );
-        }}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      />
+            );
+          }}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        />
+      ))}
     </>
   );
 }

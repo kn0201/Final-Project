@@ -88,4 +88,11 @@ export class UserController {
       user_id: jwt.user_id,
     });
   }
+  @Get('ownPost')
+  async getOwnPost(@Headers() headers: {}) {
+    let jwt = getJWTPayload(headers);
+    return this.userService.getOwnPost({
+      user_id: jwt.user_id,
+    });
+  }
 }

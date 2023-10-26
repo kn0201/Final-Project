@@ -12,16 +12,29 @@ export class PlanningService {
       plan_title: string;
       image_path: string;
     };
+
+    // let tour_plan_id = await this.
     let planList: Row[] = await this.knex
       .from('plan')
       .innerJoin('image', 'image.id', 'plan.image_id')
-      .innerJoin('plan_detail', { 'plan.id': 'plan_detail.plan_id' })
       .select(
         'plan.id as plan_id',
         'plan.title as plan_title',
         'image.path as image_path',
-        'plan_detail.start_date as startDate',
-        'plan_detail.end_date as endDate',
+      )
+      .where({ 'plan.user_id': user_id })
+      .orWhere('tour');
+    console.log(planList);
+    if ((planList = [])) {
+      let plan_id = await this.knex.select('plan_id').from('tour_');
+    }
+    let tourPlanList: Row[] = await this.knex
+      .from('plan')
+      .innerJoin('image', 'image.id', 'plan.image_id')
+      .select(
+        'plan.id as plan_id',
+        'plan.title as plan_title',
+        'image.path as image_path',
       )
       .where({ 'plan.user_id': user_id });
     console.log({ planList });
@@ -66,6 +79,7 @@ export class PlanningService {
     image_file: string | undefined;
   }) {
     let image_id: number | null = null;
+    let userList = input.user_list.split('');
     if (input.image_file) {
       let [{ id }] = await this.knex('image')
         .insert({
@@ -87,7 +101,12 @@ export class PlanningService {
       .returning('id');
 
     let plan_id = addPlan[0].id;
-
+    for (let user of userList) {
+      await this.knex('tour_plan').insert({
+        user_id: user,
+        plan_id: plan_id,
+      });
+    }
     return { plan_id, image_path: input.image_file };
   }
 

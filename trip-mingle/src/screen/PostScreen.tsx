@@ -133,11 +133,11 @@ export default function TourScreen({ navigation }) {
               item.trip_country.toUpperCase().includes(textData)) ||
             (item.trip_location &&
               item.trip_location.some((location) =>
-                location.name.toUpperCase().includes(textData),
+                location.name.toUpperCase().includes(textData)
               )) ||
             (item.trip_location &&
               item.trip_location.some((location) =>
-                location.address.toUpperCase().includes(textData),
+                location.address.toUpperCase().includes(textData)
               )) ||
             (item.preferred_hobby &&
               item.preferred_hobby.toUpperCase().includes(textData))
@@ -198,7 +198,11 @@ export default function TourScreen({ navigation }) {
               <Fontisto name="close" color="red" size={16} />
             )}
             <Text style={TourDetailScreenStyleSheet.titleKey}>
-              {item.created_at?.substring(0, 10)}
+              {new Date(item.created_at).toLocaleString("zh-CN", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })}
             </Text>
           </View>
         </View>
@@ -226,7 +230,7 @@ export default function TourScreen({ navigation }) {
         </View>
       </TouchableOpacity>
     ),
-    [],
+    []
   );
 
   const [refreshing, setRefreshing] = React.useState(false);

@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -45,15 +46,15 @@ export class LoginController {
     return this.loginService.register(input, image);
   }
 
-  @Post('check_username')
-  async checkUsername(@Body() body: Body) {
-    let input = checkUsernameParser.parse(body);
+  @Get('check_username')
+  async checkUsername(@Query() query: {}) {
+    let input = checkUsernameParser.parse(query);
     return this.loginService.checkUsername(input);
   }
 
-  @Post('check_email')
-  async checkEmail(@Body() body: Body) {
-    let input = checkEmailParser.parse(body);
+  @Get('check_email')
+  async checkEmail(@Query() query: {}) {
+    let input = checkEmailParser.parse(query);
     return this.loginService.checkEmail(input);
   }
 }
