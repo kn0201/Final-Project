@@ -108,7 +108,7 @@ export function AddPostScreen1({ navigation }) {
   const languagesList = useGet("/languages", languageListParser);
   const countriesListData = countriesList.state || [];
   const languagesListData = languagesList.state || [];
-  const [checkType, setCheckType] = useState<"blog" | "tour" | "enquire">();
+  const [checkType, setCheckType] = useState<"tour" | "enquire">("tour");
 
   const dispatchAddPostEvent = useEvent<AddPostEvent>("AddPost");
 

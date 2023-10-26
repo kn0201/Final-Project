@@ -219,17 +219,17 @@ const SampleSchedule = () => {
     <>
       <View>
         <Space height={10}></Space>
-        <Text>Starting Date</Text>
+        <Text style={PlanningStyleSheet.inputTitle}>Starting Date</Text>
         <TextInput
-          style={PlanningStyleSheet.inputContainer}
+          style={PlanningStyleSheet.dateInputContainer}
           value={startDate}
           onChangeText={setStartDate}
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input your start travel date"
         ></TextInput>
-        <Text>Ending Date</Text>
+        <Text style={PlanningStyleSheet.inputTitle}>Ending Date</Text>
         <TextInput
-          style={PlanningStyleSheet.inputContainer}
+          style={PlanningStyleSheet.dateInputContainer}
           value={endDate}
           onChangeText={setEndDate}
           onEndEditing={() => Keyboard.dismiss()}

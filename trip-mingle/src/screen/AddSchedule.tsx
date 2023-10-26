@@ -22,9 +22,7 @@ import { array, boolean, color, id, object, optional, string } from "cast.ts";
 import { useToken } from "../hooks/useToken";
 import TextButton from "../components/TextButton";
 import { AppParamList, useAppNavigation, useAppRoute } from "../../navigators";
-import { textColor } from "../StyleSheet/StyleSheetHelper";
-import { LinearGradient } from "expo-linear-gradient";
-import { theme } from "../theme/variables";
+import { center, flex, textColor } from "../StyleSheet/StyleSheetHelper";
 
 function Space(props: { height: number }) {
   return (
@@ -125,7 +123,6 @@ const AddSchedule = () => {
       ),
       token
     );
-    console.log("event result:", result);
 
     let dataObject: ScheduleData = {};
     result.map((event) => {
@@ -148,16 +145,12 @@ const AddSchedule = () => {
     getEvent();
   }, []);
 
-  useEffect(() => {
-    console.log({ scheduleItems });
-  }, [scheduleItems]);
-
   const markedDates: MarkedDates = {
-    [startDate || new Date(Date.now()).toLocaleDateString()]: {
+    [startDate || new Date(Date.now()).toISOString()]: {
       startingDay: true,
       color: "lightgreen",
     },
-    [endDate || new Date(Date.now()).toLocaleDateString()]: {
+    [endDate || new Date(Date.now()).toISOString()]: {
       endingDay: true,
       color: "lightgreen",
     },
@@ -204,37 +197,29 @@ const AddSchedule = () => {
   return (
     <>
       <View>
-        <LinearGradient
-          // Background Linear Gradient
-          colors={["#FFFFFF", theme.background]}
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            top: 0,
-            height: "100%",
-          }}
-        />
         <Space height={10}></Space>
-        <Text>plan id: {planId}</Text>
-        <Text>Starting Date</Text>
+
+        <Text style={PlanningStyleSheet.inputTitle}>Starting Date</Text>
         <TextInput
-          style={PlanningStyleSheet.inputContainer}
+          style={PlanningStyleSheet.dateInputContainer}
           value={
             startDate?.split("T")[0] ||
-            new Date(Date.now()).toLocaleDateString()
+            new Date(Date.now()).toISOString().split("T")[0]
           }
           onChangeText={setStartDate}
+          keyboardType="numeric"
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input your start travel date"
         ></TextInput>
-        <Text>Ending Date</Text>
+        <Text style={PlanningStyleSheet.inputTitle}>Ending Date</Text>
         <TextInput
-          style={PlanningStyleSheet.inputContainer}
+          style={PlanningStyleSheet.dateInputContainer}
           value={
-            endDate?.split("T")[0] || new Date(Date.now()).toLocaleDateString()
+            endDate?.split("T")[0] ||
+            new Date(Date.now()).toISOString().split("T")[0]
           }
           onChangeText={setEndDate}
+          keyboardType="numeric"
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input your end travel date"
         ></TextInput>
@@ -255,13 +240,27 @@ const AddSchedule = () => {
           pastScrollRange={1}
           futureScrollRange={12}
           renderEmptyData={() => (
-            <View>
-              <Text>empty data</Text>
+            <View
+              style={{
+                height: "100%",
+                display: flex,
+                justifyContent: center,
+                alignItems: center,
+              }}
+            >
+              <Text>No Daily Event</Text>
             </View>
           )}
           renderEmptyDate={(date) => (
-            <View>
-              <Text>empty date</Text>
+            <View
+              style={{
+                height: "100%",
+                display: flex,
+                justifyContent: center,
+                alignItems: center,
+              }}
+            >
+              <Text>No Daily Event Now</Text>
             </View>
           )}
           renderItem={(reservation: AgendaEntry, isFirst: boolean) => {
@@ -339,6 +338,44 @@ function nextDate(dateStr: string): string {
   let m = format_2_digit(date.getMonth() + 1);
   let d = format_2_digit(date.getDate());
   return `${y}-${m}-${d}`;
+}
+
+function calcCanPress(text: string): string {
+  if (text.length == 0) {
+    return "2";
+  }
+  if (text.length == 1) {
+    return "0";
+  }
+  if (text.length == 2) {
+    return "2" && "3";
+  }
+  if (text.length == 5) {
+    return "0" && "1";
+  }
+  if (text.length == 6) {
+    if (text[5] == "1") {
+      return "0" && "2";
+    }
+    if (text[5] == "0") {
+      return "1";
+    }
+  }
+  if (text.length == 8) {
+    return "0" && "3";
+  }
+  if (text.length == 9) {
+    if (text[8] == "3") {
+      return "0" && "1";
+    }
+    if (text[8] == "0") {
+      return "1";
+    }
+  }
+  if (text.length == 10) {
+    return text.slice(0, 1);
+  }
+  return text.slice(0, 10);
 }
 
 export default AddSchedule;
