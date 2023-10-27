@@ -360,6 +360,9 @@ const EnquireDetailScreen = ({
     getUserIcon();
     getCommentInfo();
   });
+  useEffect(() => {
+    getUserIcon();
+  }, []);
 
   // Display comments list
   const flatListRef = useRef(null);

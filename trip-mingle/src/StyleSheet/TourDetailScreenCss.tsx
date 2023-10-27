@@ -36,6 +36,11 @@ const TourDetailScreenStyleSheet = StyleSheet.create({
     gap: 6,
     flexWrap: "wrap",
   },
+  rowIcon: {
+    flexDirection: "row",
+    marginRight: 10,
+    gap: 6,
+  },
   rowContent: {
     flexDirection: "row",
     marginRight: 10,

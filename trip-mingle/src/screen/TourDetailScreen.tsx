@@ -291,6 +291,9 @@ const TourDetailScreen = ({
       setAvatar(avatar.path);
     }
   };
+  useEffect(() => {
+    getUserIcon();
+  }, []);
 
   // Add comment
   const [content, setContent] = useState<string>("");
@@ -750,7 +753,7 @@ const TourDetailScreen = ({
                   </View>
                   {token ? (
                     <>
-                      <View style={TourDetailScreenStyleSheet.row}>
+                      <View style={TourDetailScreenStyleSheet.rowIcon}>
                         <TouchableOpacity
                           onPress={like}
                           style={{
