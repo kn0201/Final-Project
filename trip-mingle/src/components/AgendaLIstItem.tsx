@@ -9,8 +9,8 @@ import {
   Keyboard,
   StyleSheet,
   Dimensions,
+  TextInput,
 } from "react-native";
-import { Avatar, Card, TextInput } from "react-native-paper";
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
 import { ScheduleItemInfo, UserLocation } from "../utils/types";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
@@ -21,17 +21,7 @@ import { boolean, object } from "cast.ts";
 import { useToken } from "../hooks/useToken";
 import { useAppRoute } from "../../navigators";
 import TextButton from "./TextButton";
-import { Modal } from "./Modal";
 
-function Space(props: { height: number }) {
-  return (
-    <View
-      style={{
-        height: props.height,
-      }}
-    ></View>
-  );
-}
 export default function AgendaListItem(props: {}) {
   const { selectedDate, updateScheduleList, planId } =
     useAppRoute<"Add Agenda">();
@@ -104,7 +94,7 @@ export default function AgendaListItem(props: {}) {
 
   return (
     <View>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={Keyboard.dismiss}>
         <Text style={[PlanningStyleSheet.inputTitle, { marginTop: 6 }]}>
           Staring Time
         </Text>

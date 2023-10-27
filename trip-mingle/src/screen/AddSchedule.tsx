@@ -228,7 +228,13 @@ const AddSchedule = () => {
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input your end travel date"
         ></TextInput>
-        <TextButton text="Add New Mark" onPress={addMarkDate}></TextButton>
+        <TextButton
+          text="Add New Mark"
+          onPress={() => {
+            addMarkDate();
+            Keyboard.dismiss();
+          }}
+        ></TextButton>
       </View>
       <Space height={10}></Space>
       <View style={{ flex: 1 }}>
@@ -246,11 +252,17 @@ const AddSchedule = () => {
           futureScrollRange={12}
           renderEmptyData={() => (
             <View>
-              <Text>empty data</Text>
+              <Text>Start to plan your travel schedule!!!</Text>
             </View>
           )}
           renderEmptyDate={(date) => (
-            <View>
+            <View
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <Text>empty date</Text>
             </View>
           )}
