@@ -51,9 +51,9 @@ confirm boolean NULL
 image
 -----
 id integer PK
+comment_id integer NULL FK >- comment.id
 post_id integer NULL FK >- post.id
 user_id integer FK >- users.id
-comment_id integer NULL FK >- comment.id
 path text
 is_delete boolean
 
@@ -62,6 +62,7 @@ post
 ----
 id integer PK
 user_id integer FK >- users.id
+system_location_id integer NULL FK - system_location.id
 type varchar(255)
 title varchar(255) NULL
 content text
@@ -74,18 +75,16 @@ gender boolean NULL
 language varchar(255) NULL
 hobby varchar(255) NULL
 country varchar(255) NULL
-system_location_id integer NULL FK - system_location.id
-view integer
 is_delete boolean
 
 
 rating
 ------
 id integer PK
+post_id integer FK >- post.id
 user1_id integer FK >- users.id
 user2_id integer FK >- users.id
-application_id integer FK >- application.id
-plan_id integer NULL FK >- plan.id
+value integer
 
 
 like
@@ -132,10 +131,10 @@ remark varchar(255)
 user_location
 -------------
 id integer PK
-user_id integer FK >- users.id
 post_id integer NULL FK >- post.id
-image_id integer NULL FK >- image.id
+user_id integer FK >- users.id
 system_location_id integer NULL FK >- system_location.id
+image_id integer NULL FK >- image.id
 place_id varchar(255) NULL
 name varchar(255) NULL
 address varchar(255) NULL
@@ -198,36 +197,39 @@ name varchar(255)
 tour_plan
 ---------
 id integer PK
+post_id integer NULL FK >- post.id
 user_id integer FK >- users.id
 plan_id integer FK >- plan.id
-post_id integer NULL FK >- post.id
+     
 
 
-# zoom: 0.954
-# view: (-19, -172)
+# zoom: 0.850
+# view: (91, 293)
 # text-bg: #6495ed
 # text-color: #000000
 # diagram-bg: #f5f5f5
 # diagram-text: #f5f5f5
 # table-bg: #ffffff
 # table-text: #000000
-# users (726, 631, #1e260b)
-# comment (1384, 380, #2b2823)
-# application (670, 1024, #1b4b0a)
-# image (1828, 377, #1c1b37)
-# post (693, 85, #535b0a)
-# rating (955, 997, #5d0717)
-# like (367, 42, #140801)
-# bookmark (260, 212, #351c20)
-# plan (1343, 807, #331915)
-# plan_detail (1821, 751, #4f1c5f)
-# daily_event (1809, 977, #49142f)
-# user_location (1308, -11, #116248)
-# system_location (1871, -22, #4a4e23)
-# language (56, 421, #256248)
-# user_language (299, 427, #2f5757)
-# country_list (48, 807, #193832)
-# countries_travelled (339, 876, #01112c)
-# hobby (320, 603, #325459)
-# hobby_list (57, 618, #0b3a1b)
-# tour_plan (1268, 642, #1c360c)
+# users (813, 544, #544842)
+# comment (1298, 142, #365b2a)
+# application (237, 175, #181c00)
+# image (1687, 235, #1d1743)
+# post (748, 38, #275f4b)
+# rating (1327, 336, #0362)
+# tour_plan (1399, 537)
+# rating (1315, 312, #27370e)
+# like (333, -152, #600b1f)
+# bookmark (261, 27, #1b1503)
+# plan (1347, 725, #134f28)
+# plan_detail (1734, 574, #4b4b58)
+# daily_event (1727, 718, #083b1d)
+# user_location (1266, -177, #536226)
+# system_location (899, -195, #283e0d)
+# language (76, 362, #2d5b50)
+# user_language (318, 384, #4c5625)
+# country_list (462, 723, #511248)
+# countries_travelled (75, 677, #004302)
+# hobby (361, 539, #191955)
+# hobby_list (70, 519, #18312e)
+# tour_plan (1374, 552, #48125e)
