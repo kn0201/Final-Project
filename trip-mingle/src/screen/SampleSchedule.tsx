@@ -220,23 +220,17 @@ const SampleSchedule = () => {
     <>
       <View>
         <Space height={10}></Space>
-        <View style={{ display: "flex", flexDirection: "row", margin: 3 }}>
-          <Text> Starting Date</Text>
-          <Entypo name="aircraft-take-off" size={24} color="black" />
-        </View>
+        <Text style={PlanningStyleSheet.inputTitle}>Starting Date</Text>
         <TextInput
-          style={PlanningStyleSheet.inputContainer}
+          style={PlanningStyleSheet.dateInputContainer}
           value={startDate}
           onChangeText={setStartDate}
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input your start travel date"
         ></TextInput>
-        <View style={{ display: "flex", flexDirection: "row", margin: 3 }}>
-          <Text>Ending Date</Text>
-          <Entypo name="aircraft-landing" size={24} color="black" />
-        </View>
+        <Text style={PlanningStyleSheet.inputTitle}>Ending Date</Text>
         <TextInput
-          style={PlanningStyleSheet.inputContainer}
+          style={PlanningStyleSheet.dateInputContainer}
           value={endDate}
           onChangeText={setEndDate}
           onEndEditing={() => Keyboard.dismiss()}

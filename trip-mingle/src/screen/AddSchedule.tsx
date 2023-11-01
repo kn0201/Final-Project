@@ -1,17 +1,15 @@
-import { useEffect, useRef, useState } from "react";
-import { Input, SpeedDial } from "@rneui/themed";
+import { useEffect, useState } from "react";
+import { SpeedDial } from "@rneui/themed";
 import { View, Text, StyleSheet, Keyboard } from "react-native";
-import { Button, Card } from "react-native-paper";
+import { Card } from "react-native-paper";
 import { Agenda, AgendaEntry } from "react-native-calendars";
 import { TextInput } from "react-native-gesture-handler";
 import { MarkedDates } from "react-native-calendars/src/types";
 import { DAY } from "@beenotung/tslib/time";
 import { format_2_digit } from "@beenotung/tslib/format";
-import AgendaListItem from "../components/AgendaLIstItem";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import {
   ScheduleData,
-  ScheduleDate,
   ScheduleItem,
   ScheduleItemInfo,
   ScheduleMark,
@@ -22,7 +20,7 @@ import { array, boolean, color, id, object, optional, string } from "cast.ts";
 import { useToken } from "../hooks/useToken";
 import TextButton from "../components/TextButton";
 import { AppParamList, useAppNavigation, useAppRoute } from "../../navigators";
-import { textColor } from "../StyleSheet/StyleSheetHelper";
+import { center, flex, textColor } from "../StyleSheet/StyleSheetHelper";
 
 function Space(props: { height: number }) {
   return (
@@ -123,7 +121,6 @@ const AddSchedule = () => {
       ),
       token
     );
-    console.log("event result:", result);
 
     let dataObject: ScheduleData = {};
     result.map((event) => {
@@ -145,10 +142,6 @@ const AddSchedule = () => {
     getMarks();
     getEvent();
   }, []);
-
-  useEffect(() => {
-    console.log({ scheduleItems });
-  }, [scheduleItems]);
 
   const markedDates: MarkedDates = {
     [startDate || new Date(Date.now()).toISOString()]: {
@@ -203,10 +196,10 @@ const AddSchedule = () => {
     <>
       <View>
         <Space height={10}></Space>
-        <Text>plan id: {planId}</Text>
-        <Text>Starting Date</Text>
+
+        <Text style={PlanningStyleSheet.inputTitle}>Starting Date</Text>
         <TextInput
-          style={PlanningStyleSheet.inputContainer}
+          style={PlanningStyleSheet.dateInputContainer}
           value={
             startDate?.split("T")[0] ||
             new Date(Date.now()).toISOString().split("T")[0]
@@ -216,9 +209,9 @@ const AddSchedule = () => {
           onEndEditing={() => Keyboard.dismiss()}
           placeholder="Input your start travel date"
         ></TextInput>
-        <Text>Ending Date</Text>
+        <Text style={PlanningStyleSheet.inputTitle}>Ending Date</Text>
         <TextInput
-          style={PlanningStyleSheet.inputContainer}
+          style={PlanningStyleSheet.dateInputContainer}
           value={
             endDate?.split("T")[0] ||
             new Date(Date.now()).toISOString().split("T")[0]
@@ -251,19 +244,27 @@ const AddSchedule = () => {
           pastScrollRange={1}
           futureScrollRange={12}
           renderEmptyData={() => (
-            <View>
-              <Text>Start to plan your travel schedule!!!</Text>
+            <View
+              style={{
+                height: "100%",
+                display: flex,
+                justifyContent: center,
+                alignItems: center,
+              }}
+            >
+              <Text>No Daily Event</Text>
             </View>
           )}
           renderEmptyDate={(date) => (
             <View
               style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                height: "100%",
+                display: flex,
+                justifyContent: center,
+                alignItems: center,
               }}
             >
-              <Text>empty date</Text>
+              <Text>No Daily Event Now</Text>
             </View>
           )}
           renderItem={(reservation: AgendaEntry, isFirst: boolean) => {

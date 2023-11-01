@@ -66,6 +66,7 @@ import {
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { LinearGradient } from "expo-linear-gradient";
 import { theme } from "../theme/variables";
+import moment from "moment";
 
 const TourDetailScreen = ({
   route,
@@ -290,6 +291,9 @@ const TourDetailScreen = ({
       setAvatar(avatar.path);
     }
   };
+  useEffect(() => {
+    getUserIcon();
+  }, []);
 
   // Add comment
   const [content, setContent] = useState<string>("");
@@ -371,7 +375,7 @@ const TourDetailScreen = ({
     id: number,
     title: string,
     post_id: number,
-    post_user_id?: string
+    post_user_id?: string,
   ) => {
     navigation.navigate("Tour Member", { id, title, post_id, post_user_id });
   };
@@ -431,7 +435,6 @@ const TourDetailScreen = ({
   };
   useEvent<ApplyTourEvent>("ApplyTour", (event) => {
     getApplicationStatus();
-    getApplicationList();
   });
 
   // Get applications status
@@ -478,7 +481,7 @@ const TourDetailScreen = ({
     try {
       let allConfirmStatus = await api.get(
         `/application/all/${id}`,
-        allConfirmStatusParser
+        allConfirmStatusParser,
       );
       setAllConfirm(allConfirmStatus?.result);
     } catch (err) {
@@ -661,11 +664,7 @@ const TourDetailScreen = ({
           <View style={TourDetailScreenStyleSheet.row}>
             <Text style={{ fontWeight: "800" }}>#{index + 1}</Text>
             <Text style={TourDetailScreenStyleSheet.titleKey}>
-              {new Date(item.created_at).toLocaleString("zh-CN", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              })}
+              {moment(new Date(item.created_at)).fromNow()}
             </Text>
           </View>
         </View>
@@ -754,7 +753,7 @@ const TourDetailScreen = ({
                   </View>
                   {token ? (
                     <>
-                      <View style={TourDetailScreenStyleSheet.row}>
+                      <View style={TourDetailScreenStyleSheet.rowIcon}>
                         <TouchableOpacity
                           onPress={like}
                           style={{
@@ -819,11 +818,7 @@ const TourDetailScreen = ({
                 <View style={TourDetailScreenStyleSheet.rowContainer}>
                   <Text style={TourDetailScreenStyleSheet.titleKey}>
                     {post?.created_at
-                      ? new Date(post.created_at).toLocaleString("zh-CN", {
-                          year: "numeric",
-                          month: "2-digit",
-                          day: "2-digit",
-                        })
+                      ? moment(new Date(post.created_at)).fromNow()
                       : null}
                   </Text>
                 </View>

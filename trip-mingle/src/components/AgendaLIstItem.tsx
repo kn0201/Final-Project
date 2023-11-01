@@ -1,16 +1,16 @@
 // Buffer Line
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import {
   View,
   Text,
-  FlatList,
-  ListRenderItemInfo,
   TouchableOpacity,
   Keyboard,
   StyleSheet,
   Dimensions,
   TextInput,
+  TouchableWithoutFeedback,
 } from "react-native";
+
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
 import { ScheduleItemInfo, UserLocation } from "../utils/types";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
@@ -21,10 +21,22 @@ import { boolean, object } from "cast.ts";
 import { useToken } from "../hooks/useToken";
 import { useAppRoute } from "../../navigators";
 import TextButton from "./TextButton";
+import { Modal } from "./Modal";
+import { center, flex } from "../StyleSheet/StyleSheetHelper";
 
+function Space(props: { height: number }) {
+  return (
+    <View
+      style={{
+        height: props.height,
+      }}
+    ></View>
+  );
+}
 export default function AgendaListItem(props: {}) {
   const { selectedDate, updateScheduleList, planId } =
     useAppRoute<"Add Agenda">();
+
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const { token, payload, setToken } = useToken();
 
@@ -94,76 +106,104 @@ export default function AgendaListItem(props: {}) {
 
   return (
     <View>
-      <TouchableOpacity onPress={Keyboard.dismiss}>
-        <Text style={[PlanningStyleSheet.inputTitle, { marginTop: 6 }]}>
-          Staring Time
-        </Text>
-        <TextInput
-          style={PlanningStyleSheet.inputContainer}
-          value={scheduleInfo.startTime}
-          onChangeText={(text) =>
-            updateScheduleInfo("startTime", checkTime(text))
-          }
-          keyboardType="numeric"
-          onEndEditing={() => Keyboard.dismiss()}
-          placeholder="Input Start time (e.g. 13:44)"
-          placeholderTextColor="gray"
-        ></TextInput>
-        <Text style={PlanningStyleSheet.inputTitle}>End Time</Text>
-        <TextInput
-          style={PlanningStyleSheet.inputContainer}
-          value={scheduleInfo.endTime}
-          onChangeText={(text) =>
-            updateScheduleInfo("endTime", checkTime(text))
-          }
-          keyboardType="numeric"
-          onEndEditing={() => Keyboard.dismiss()}
-          placeholder="Input End time (e.g. 15:55)"
-          placeholderTextColor="gray"
-        ></TextInput>
-        <Text style={PlanningStyleSheet.inputTitle}>Location</Text>
-        <View style={{ height: 250 }}>
-          <GooglePlacesAutocomplete
-            ref={(elem) => {
-              clearInputRef.clearInput = () => elem?.clear();
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <>
+          <Text style={[PlanningStyleSheet.inputTitle, { marginTop: 6 }]}>
+            Staring Time
+          </Text>
+          <View
+            style={{
+              display: flex,
+              justifyContent: center,
+              alignItems: center,
             }}
-            styles={{
-              textInput: styles.search,
-              listView: styles.list,
+          >
+            <View style={PlanningStyleSheet.inputOuterContainer}>
+              <TextInput
+                style={PlanningStyleSheet.inputContainer}
+                value={scheduleInfo.startTime}
+                onChangeText={(text) =>
+                  updateScheduleInfo("startTime", checkTime(text))
+                }
+                keyboardType="numeric"
+                placeholder="Input Start time (e.g. 13:44)"
+              />
+            </View>
+          </View>
+
+          <Text style={PlanningStyleSheet.inputTitle}>End Time</Text>
+          <View
+            style={{
+              display: flex,
+              justifyContent: center,
+              alignItems: center,
             }}
-            placeholder="Search..."
-            fetchDetails
-            onPress={(_data, details) => {
-              if (details) {
-                updateScheduleInfo("location", details.formatted_address);
-              }
-              clearInputRef.clearInput();
+          >
+            <View style={PlanningStyleSheet.inputOuterContainer}>
+              <TextInput
+                style={PlanningStyleSheet.inputContainer}
+                value={scheduleInfo.endTime}
+                onChangeText={(text) =>
+                  updateScheduleInfo("endTime", checkTime(text))
+                }
+                keyboardType="numeric"
+                placeholder="Input End time (e.g. 15:55)"
+              ></TextInput>
+            </View>
+          </View>
+          <Text style={PlanningStyleSheet.inputTitle}>Location</Text>
+
+          <View
+            style={{
+              height: 250,
+              width: "100%",
+              display: flex,
+              justifyContent: center,
             }}
-            query={query}
-            onFail={(error) => console.log(error)}
-          />
-        </View>
-        <TouchableOpacity
-          style={PlanningStyleSheet.buttonStyle}
-          onPress={() => {
-            if (!scheduleInfo.location) {
-              IonNeverToast.show({
-                type: "warning",
-                title: "Please Input Location",
-              });
-              return;
-            }
-            Keyboard.dismiss();
-          }}
-        >
-          <TextButton
-            text="Add New Event"
+          >
+            <GooglePlacesAutocomplete
+              ref={(elem) => {
+                clearInputRef.clearInput = () => elem?.clear();
+              }}
+              styles={{
+                textInput: styles.search,
+                listView: styles.list,
+              }}
+              placeholder="Search..."
+              fetchDetails
+              onPress={(_data, details) => {
+                if (details) {
+                  updateScheduleInfo("location", details.formatted_address);
+                }
+                clearInputRef.clearInput();
+              }}
+              query={query}
+              onFail={(error) => console.log(error)}
+            />
+          </View>
+          <TouchableOpacity
+            style={PlanningStyleSheet.buttonStyle}
             onPress={() => {
-              addNewEvent(), Keyboard.dismiss();
+              if (!scheduleInfo.location) {
+                IonNeverToast.show({
+                  type: "warning",
+                  title: "Please Input Location",
+                });
+                return;
+              }
+              // addNewEvent(scheduleItem);
+              Keyboard.dismiss();
             }}
-          ></TextButton>
-        </TouchableOpacity>
-      </TouchableOpacity>
+          >
+            <TextButton
+              text="Add New Event"
+              onPress={() => {
+                addNewEvent(), Keyboard.dismiss();
+              }}
+            ></TextButton>
+          </TouchableOpacity>
+        </>
+      </TouchableWithoutFeedback>
     </View>
   );
 }

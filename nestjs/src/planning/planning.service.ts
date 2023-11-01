@@ -24,8 +24,8 @@ export class PlanningService {
         'image.path as image_path',
       )
       .where({ 'plan.user_id': user_id })
-      .andWhere('privacy', false);
-
+      .andWhere('plan.privacy', false)
+      .orderBy('plan.created_at', 'desc');
     return { planList };
   }
 
@@ -54,9 +54,9 @@ export class PlanningService {
           'image.path as image_path',
         )
         .where({ 'plan.id': plan_id.plan_id })
-        .andWhere('privacy', true)
+        .andWhere({ 'plan.privacy': true })
         .first();
-      planList.push(tourPlan);
+      planList.unshift(tourPlan);
     }
     console.log(planList);
     return { planList };

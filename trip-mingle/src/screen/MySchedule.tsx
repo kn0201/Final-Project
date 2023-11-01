@@ -36,6 +36,8 @@ import { navigate } from "../tabs/RootNavigation";
 import { LinearGradient } from "expo-linear-gradient";
 import { theme } from "../theme/variables";
 import MyPostScreenScreenStyleSheet from "../StyleSheet/MemoryScreenCss";
+import useEvent from "react-use-event";
+import { AddPlanEvent } from "../utils/events";
 
 const Stack = createStackNavigator();
 
@@ -64,8 +66,8 @@ let getMyPlanListParser = object({
       plan_id: number(),
       plan_title: string(),
       image_path: string(),
-      // startDate: optional(string()),
-      // endDate: optional(string()),
+      startDate: optional(string()),
+      endDate: optional(string()),
     })
   ),
 });
@@ -104,7 +106,10 @@ const Schedule = () => {
     "/planning/group-plans",
     getMyPlanListParser
   );
-
+  useEvent<AddPlanEvent>("AddPlan", (event) => {
+    myPlanListResult.reload();
+    groupPlanListResult.reload();
+  });
   const addNewScheduleCard = (newScheduleInfo: PlanListItem) => {
     myPlanListResult.setState((state) => ({
       planList: [...state!.planList, newScheduleInfo],
@@ -209,7 +214,7 @@ const Schedule = () => {
                 <>
                   {tourPlan.planList.length === 0 ? (
                     <View>
-                      <Text>你還沒加入</Text>
+                      <Text>You have not joined any tour yet</Text>
                     </View>
                   ) : (
                     <FlatList
