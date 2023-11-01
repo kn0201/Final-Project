@@ -100,6 +100,18 @@ const Schedule = () => {
     myPlanListResult.reload();
     groupPlanListResult.reload();
   });
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    myPlanListResult.reload();
+    groupPlanListResult.reload();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
+  }, []);
+
   const addNewScheduleCard = (newScheduleInfo: PlanListItem) => {
     myPlanListResult.setState((state) => ({
       planList: [...state!.planList, newScheduleInfo],
@@ -191,7 +203,16 @@ const Schedule = () => {
                       </TouchableOpacity>
                     </View>
                   ) : (
-                    <FlatList data={myPlan.planList} renderItem={renderItem} />
+                    <FlatList
+                      data={myPlan.planList}
+                      renderItem={renderItem}
+                      refreshControl={
+                        <RefreshControl
+                          refreshing={refreshing}
+                          onRefresh={onRefresh}
+                        />
+                      }
+                    />
                   )}
                 </>
               );
@@ -210,6 +231,12 @@ const Schedule = () => {
                     <FlatList
                       data={tourPlan.planList}
                       renderItem={renderItem}
+                      refreshControl={
+                        <RefreshControl
+                          refreshing={refreshing}
+                          onRefresh={onRefresh}
+                        />
+                      }
                     />
                   )}
                 </>

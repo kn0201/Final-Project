@@ -38,9 +38,10 @@ export default function SnapScreen() {
   const { IonNeverDialog } = useIonNeverNotification();
   const onRefresh = useCallback(() => {
     setRefreshing(true);
+    snapList.reload();
     setTimeout(() => {
       setRefreshing(false);
-    }, 2000);
+    }, 1000);
   }, []);
 
   const snapList = useGet("/snap", snapListParser);
