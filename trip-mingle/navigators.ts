@@ -24,7 +24,8 @@ export interface AppParamList {
         planId: number;
         selectedDate: string;
         updateScheduleList: (scheduleInfo: ScheduleItemInfo) => void;
-      };
+      }
+    | undefined;
   "Add Agenda": {
     planId: number;
     selectedDate: string;
@@ -89,7 +90,7 @@ export function useAppNavigation() {
 }
 
 export function useAppRoute<
-  RouteName extends keyof AppParamList,
+  RouteName extends keyof AppParamList
 >(): AppParamList[RouteName] {
   //@ts-ignore
   return useRoute<RouteProp<AppParamList, RouteName>>().params;

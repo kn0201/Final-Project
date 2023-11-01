@@ -19,7 +19,7 @@ import PlanningStyleSheet from "../StyleSheet/PlanningStyleSheet";
 import { api, api2 } from "../apis/api";
 import { boolean, object } from "cast.ts";
 import { useToken } from "../hooks/useToken";
-import { useAppRoute } from "../../navigators";
+import { useAppNavigation, useAppRoute } from "../../navigators";
 import TextButton from "./TextButton";
 import { Modal } from "./Modal";
 import { center, flex } from "../StyleSheet/StyleSheetHelper";
@@ -36,7 +36,7 @@ function Space(props: { height: number }) {
 export default function AgendaListItem(props: {}) {
   const { selectedDate, updateScheduleList, planId } =
     useAppRoute<"Add Agenda">();
-
+  const navigation = useAppNavigation();
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
   const { token, payload, setToken } = useToken();
 
@@ -92,6 +92,7 @@ export default function AgendaListItem(props: {}) {
           title: "Add a new event",
           firstButtonVisible: true,
         });
+        navigation.navigate("AddSchedule");
       }
     } catch (error) {
       let message = String(error);
@@ -130,7 +131,6 @@ export default function AgendaListItem(props: {}) {
               />
             </View>
           </View>
-
           <Text style={PlanningStyleSheet.inputTitle}>End Time</Text>
           <View
             style={{
@@ -152,7 +152,6 @@ export default function AgendaListItem(props: {}) {
             </View>
           </View>
           <Text style={PlanningStyleSheet.inputTitle}>Location</Text>
-
           <View
             style={{
               height: 250,
@@ -174,15 +173,17 @@ export default function AgendaListItem(props: {}) {
               onPress={(_data, details) => {
                 if (details) {
                   updateScheduleInfo("location", details.formatted_address);
+                } else {
+                  clearInputRef.clearInput();
                 }
-                clearInputRef.clearInput();
               }}
               query={query}
               onFail={(error) => console.log(error)}
             />
           </View>
-          <TouchableOpacity
-            style={PlanningStyleSheet.buttonStyle}
+
+          <TextButton
+            text="Add New Event"
             onPress={() => {
               if (!scheduleInfo.location) {
                 IonNeverToast.show({
@@ -190,18 +191,12 @@ export default function AgendaListItem(props: {}) {
                   title: "Please Input Location",
                 });
                 return;
+              } else {
+                addNewEvent();
               }
-              // addNewEvent(scheduleItem);
               Keyboard.dismiss();
             }}
-          >
-            <TextButton
-              text="Add New Event"
-              onPress={() => {
-                addNewEvent(), Keyboard.dismiss();
-              }}
-            ></TextButton>
-          </TouchableOpacity>
+          ></TextButton>
         </>
       </TouchableWithoutFeedback>
     </View>

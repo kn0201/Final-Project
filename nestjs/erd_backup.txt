@@ -1,0 +1,233 @@
+# Visualize on https://erd.surge.sh
+# or https://quick-erd.surge.sh
+#
+# Relationship Types
+#  -    - one to one
+#  -<   - one to many
+#  >-   - many to one
+#  >-<  - many to many
+#  -0   - one to zero or one
+#  0-   - zero or one to one
+#  0-0  - zero or one to zero or one
+#  -0<  - one to zero or many
+#  >0-  - zero or many to one
+#
+////////////////////////////////////
+
+
+users
+-----
+id integer PK
+username varchar(255) unique
+email varchar(255) unique
+password varchar(255)
+gender boolean
+age varchar(255)
+country_id integer FK >- country_list.id
+rating numeric
+intro text NULL
+role varchar(255)
+avatar_id integer NULL FK >- image.id
+is_delete boolean
+
+
+comment
+-------
+id integer PK
+post_id integer FK >- post.id
+user_id integer FK >- users.id
+content text
+is_delete boolean
+
+
+application
+-----------
+id integer PK
+post_id integer FK >- post.id
+user_id integer FK >- users.id
+status boolean
+confirm boolean NULL
+
+image
+-----
+id integer PK
+post_id integer NULL FK >- post.id
+user_id integer FK >- users.id
+comment_id integer NULL FK >- comment.id
+path text
+is_delete boolean
+
+
+post
+----
+id integer PK
+user_id integer FK >- users.id
+type varchar(255)
+title varchar(255) NULL
+content text
+time varchar(255) NULL
+headcount varchar(255) NULL
+budget varchar(255) NULL
+status varchar(255) NULL
+age varchar(255) NULL
+gender boolean NULL
+language varchar(255) NULL
+hobby varchar(255) NULL
+country varchar(255) NULL
+system_location_id integer NULL FK - system_location.id
+view integer
+is_delete boolean
+
+
+rating
+------
+id integer PK
+user1_id integer FK >- users.id
+user2_id integer FK >- users.id
+application_id integer FK >- application.id
+plan_id integer NULL FK >- plan.id
+
+
+like
+----
+id integer PK
+post_id integer FK >- post.id
+user_id integer FK >- users.id
+
+
+bookmark
+--------
+id integer PK
+post_id integer FK >- post.id
+user_id integer FK >- users.id
+
+plan
+----
+id integer PK
+user_id integer FK >- users.id
+image_id integer NULL FK >- image.id
+privacy boolean
+title varchar(255)
+
+
+plan_detail
+-----------
+id integer PK
+plan_id integer FK >- plan.id
+start_date timestamp
+end_date timestamp
+
+
+daily_event
+-----------
+id integer PK
+plan_id integer FK >- plan.id
+selected_date timestamp
+start_time timestamp
+end_time timestamp
+location varchar(255)
+remark varchar(255)
+
+
+user_location
+-------------
+id integer PK
+user_id integer FK >- users.id
+post_id integer NULL FK >- post.id
+image_id integer NULL FK >- image.id
+system_location_id integer NULL FK >- system_location.id
+place_id varchar(255) NULL
+name varchar(255) NULL
+address varchar(255) NULL
+latitude real NULL
+longitude real NULL
+is_delete boolean
+
+
+system_location
+---------------
+id integer PK
+place_id varchar(255) unique
+name varchar(255)
+address varchar(255)
+latitude real
+longitude real
+
+
+language
+--------
+id integer PK
+code varchar(255)
+name varchar(255)
+
+
+user_language
+-------------
+id integer PK
+user_id integer FK >- users.id
+language_id integer FK >- language.id
+
+
+country_list
+------------
+id integer PK
+code varchar(255)
+name varchar(255)
+
+
+countries_travelled
+-------------------
+id integer PK
+user_id integer FK >- users.id
+country_id integer FK >- country_list.id
+
+
+hobby
+-----
+id integer PK
+user_id integer FK >- users.id
+hobby_id integer FK >- hobby_list.id
+
+
+hobby_list
+----------
+id integer PK
+name varchar(255)
+
+
+tour_plan
+---------
+id integer PK
+user_id integer FK >- users.id
+plan_id integer FK >- plan.id
+post_id integer NULL FK >- post.id
+
+
+# zoom: 0.954
+# view: (-19, -172)
+# text-bg: #6495ed
+# text-color: #000000
+# diagram-bg: #f5f5f5
+# diagram-text: #f5f5f5
+# table-bg: #ffffff
+# table-text: #000000
+# users (726, 631, #1e260b)
+# comment (1384, 380, #2b2823)
+# application (670, 1024, #1b4b0a)
+# image (1828, 377, #1c1b37)
+# post (693, 85, #535b0a)
+# rating (955, 997, #5d0717)
+# like (367, 42, #140801)
+# bookmark (260, 212, #351c20)
+# plan (1343, 807, #331915)
+# plan_detail (1821, 751, #4f1c5f)
+# daily_event (1809, 977, #49142f)
+# user_location (1308, -11, #116248)
+# system_location (1871, -22, #4a4e23)
+# language (56, 421, #256248)
+# user_language (299, 427, #2f5757)
+# country_list (48, 807, #193832)
+# countries_travelled (339, 876, #01112c)
+# hobby (320, 603, #325459)
+# hobby_list (57, 618, #0b3a1b)
+# tour_plan (1268, 642, #1c360c)
