@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Agenda, AgendaSchedule } from "react-native-calendars";
+import { AgendaSchedule } from "react-native-calendars";
 import {
   View,
   Text,
@@ -7,7 +7,6 @@ import {
   ListRenderItemInfo,
   TouchableOpacity,
 } from "react-native";
-
 import { Avatar, Card } from "react-native-paper";
 import { AgendaEventListItem, NewType } from "../utils/types";
 

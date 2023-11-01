@@ -21,17 +21,10 @@ import * as ImagePicker from "expo-image-picker";
 import { api, api2 } from "../apis/api";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import SelectCountry from "../components/selectCountry";
-import {
-  checkResultParser,
-  countryListParser,
-  signUpResultParser,
-} from "../utils/parser";
+import { checkResultParser } from "../utils/parser";
 import { JWTPayload, useToken } from "../hooks/useToken";
 import decode from "jwt-decode";
 import { apiOrigin } from "../utils/apiOrigin";
-import { useGet } from "../hooks/useGet";
-import useEvent from "react-use-event";
-import { LoginEvent } from "../utils/events";
 import { LinearGradient } from "expo-linear-gradient";
 import { theme } from "../theme/variables";
 

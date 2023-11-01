@@ -1,8 +1,6 @@
 import { CheckBox, SearchBar } from "@rneui/themed";
 import { useState, useEffect } from "react";
 import { TouchableOpacity, Keyboard, View, FlatList, Text } from "react-native";
-
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import { api } from "../apis/api";
 import { countryListParser } from "../utils/parser";
@@ -25,7 +23,7 @@ export default function MultipleCountryCheckbox({
   const [matchedCountryList, setMatchedCountryList] = useState<CountryList[]>(
     []
   );
-  const [code, setCode] = useState<string[]>([]);
+  const [code] = useState<string[]>([]);
   const [localCode, setLocalCode] = useState<string[]>(code);
 
   const getList = async () => {
@@ -33,7 +31,6 @@ export default function MultipleCountryCheckbox({
     setCountryList(json);
     setMatchedCountryList(json);
   };
-  // const countriesListData = countriesList;
   useEffect(() => {
     getList();
   }, []);

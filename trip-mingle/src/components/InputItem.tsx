@@ -1,5 +1,4 @@
 import { View, TextInput, Keyboard, StyleSheet } from "react-native";
-import { Icon } from "react-native-vector-icons/Icon";
 
 const styles = StyleSheet.create({
   inputContainer: {
@@ -27,15 +26,6 @@ export default function InputItem(props: {
 }) {
   return (
     <View style={styles.inputContainer}>
-      {/* <Icon
-        style={{
-          display: flex,
-          justifyContent: "flex-start",
-          marginEnd: 4,
-        }}
-        name="account-outline"
-        size={20}
-      /> */}
       <TextInput
         value={props.value}
         onChangeText={props.onChangeText}
@@ -44,12 +34,6 @@ export default function InputItem(props: {
         autoCapitalize={props.autoCapitalize}
         placeholder={props.placeholder}
       ></TextInput>
-      {/* <Icon
-        style={{ display: flex, justifyContent: "flex-end" }}
-        name="close"
-        size={20}
-        onPress={() => clearInputs.username()}
-      /> */}
     </View>
   );
 }

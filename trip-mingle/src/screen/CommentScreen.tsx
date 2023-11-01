@@ -27,14 +27,12 @@ import { Card } from "react-native-paper";
 import CommentScreenStyleSheet from "../StyleSheet/CommentScreenCss";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { apiOrigin } from "../utils/apiOrigin";
-import useBoolean from "../hooks/useBoolean";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import { useAppNavigation, useAppRoute } from "../../navigators";
 import { CommentInfo, ReplyInfoItem } from "../utils/types";
 import useEvent from "react-use-event";
 import { AddCommentEvent, RatingEvent } from "../utils/events";
-import { id } from "cast.ts";
 import { api } from "../apis/api";
 import TourDetailScreenStyleSheet from "../StyleSheet/TourDetailScreenCss";
 import { setStarRating } from "./BookmarkScreen";
@@ -43,8 +41,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { theme } from "../theme/variables";
 
 export default function CommentScreen() {
-  const { token, payload, setToken } = useToken();
-  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
+  const { token } = useToken();
+  const { IonNeverDialog } = useIonNeverNotification();
   const params = useAppRoute<"Comment">();
   const [keyboardShow, setKeyboardShow] = useState(false);
   const navigation = useAppNavigation();
@@ -66,7 +64,7 @@ export default function CommentScreen() {
     try {
       let commentInfoData = await api.get(
         `/comment/${params.post_id}`,
-        commentInfoParser,
+        commentInfoParser
       );
       setComments(commentInfoData);
     } catch (err) {
@@ -104,7 +102,7 @@ export default function CommentScreen() {
         `/comment/${params.post_id}/add`,
         commentInfo,
         addCommentParser,
-        token,
+        token
       );
       dispatchAddCommentEvent("AddComment");
       inputRef?.current?.clear();
@@ -165,7 +163,7 @@ export default function CommentScreen() {
                 handleAvatarClick(
                   item.user_id,
                   item.username,
-                  params.post_id.toString(),
+                  params.post_id.toString()
                 )
               }
             >
@@ -201,7 +199,7 @@ export default function CommentScreen() {
         </Card>
       </>
     ),
-    [],
+    []
   );
   return (
     <TouchableWithoutFeedback>
@@ -235,7 +233,6 @@ export default function CommentScreen() {
             <Avatar
               size={35}
               rounded
-              //   containerStyle={UserPageStyleSheet.AvatarContainer}
               source={{
                 uri: `${apiOrigin}/${result}`,
               }}

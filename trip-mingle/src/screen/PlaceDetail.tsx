@@ -24,7 +24,6 @@ import {
 } from "cast.ts";
 import { api } from "../apis/api";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import Foundation from "react-native-vector-icons/Foundation";
 import { useToken } from "../hooks/useToken";
 import useEvent from "react-use-event";
 import { SaveLocationEvent } from "../utils/events";

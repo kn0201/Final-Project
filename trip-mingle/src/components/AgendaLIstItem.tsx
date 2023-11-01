@@ -10,35 +10,24 @@ import {
   TextInput,
   TouchableWithoutFeedback,
 } from "react-native";
-
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
-import { ScheduleItemInfo, UserLocation } from "../utils/types";
+import { ScheduleItemInfo } from "../utils/types";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import query from "../utils/googleAPIQuery";
 import PlanningStyleSheet from "../StyleSheet/PlanningStyleSheet";
-import { api, api2 } from "../apis/api";
+import { api } from "../apis/api";
 import { boolean, object } from "cast.ts";
 import { useToken } from "../hooks/useToken";
 import { useAppRoute } from "../../navigators";
 import TextButton from "./TextButton";
-import { Modal } from "./Modal";
 import { center, flex } from "../StyleSheet/StyleSheetHelper";
 
-function Space(props: { height: number }) {
-  return (
-    <View
-      style={{
-        height: props.height,
-      }}
-    ></View>
-  );
-}
-export default function AgendaListItem(props: {}) {
+export default function AgendaListItem() {
   const { selectedDate, updateScheduleList, planId } =
     useAppRoute<"Add Agenda">();
 
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
-  const { token, payload, setToken } = useToken();
+  const { token } = useToken();
 
   const [scheduleInfo, setScheduleInfo] = useState<ScheduleItemInfo>({
     selectedDate: selectedDate,

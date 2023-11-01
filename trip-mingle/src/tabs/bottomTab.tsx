@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Fontisto from "react-native-vector-icons/Fontisto";
@@ -11,7 +11,7 @@ import SchedulePage from "../pages/SchedulePage";
 import { useToken } from "../hooks/useToken";
 import MapPage from "../pages/MapPage";
 import SnapPage from "../pages/SnapPage";
-import { iosBlue, white } from "../StyleSheet/StyleSheetHelper";
+import { iosBlue } from "../StyleSheet/StyleSheetHelper";
 import { theme } from "../theme/variables";
 
 const Tab = createBottomTabNavigator();

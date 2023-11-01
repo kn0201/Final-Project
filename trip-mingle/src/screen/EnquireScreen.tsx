@@ -9,12 +9,10 @@ import {
   RefreshControl,
 } from "react-native";
 import { useCallback, useEffect, useState } from "react";
-import Fontisto from "react-native-vector-icons/Fontisto";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import BuddiesPageStyleSheet from "../StyleSheet/BuddiesPageCss";
-import { enquireInfoParser, postInfoParser } from "../utils/parser";
-import { EnquireInfoItem, PostInfoItem } from "../utils/types";
+import { enquireInfoParser } from "../utils/parser";
+import { EnquireInfoItem } from "../utils/types";
 import { api } from "../apis/api";
 import { apiOrigin } from "../utils/apiOrigin";
 import TourDetailScreenStyleSheet from "../StyleSheet/TourDetailScreenCss";
@@ -209,7 +207,7 @@ export default function EnquireScreen({ navigation }) {
         </View>
       </TouchableOpacity>
     ),
-    [],
+    []
   );
 
   const [refreshing, setRefreshing] = React.useState(false);
@@ -254,12 +252,6 @@ export default function EnquireScreen({ navigation }) {
           }
         />
       </View>
-      {/* <MaterialIcons
-        name="add-circle"
-        size={60}
-        style={{ position: "absolute", bottom: 10, right: 10 }}
-        onPress={() => navigation.navigate("Add Post")}
-      /> */}
     </>
   );
 }

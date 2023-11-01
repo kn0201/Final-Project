@@ -1,13 +1,9 @@
 //Buffer Line
-
 import { CheckBox, SearchBar } from "@rneui/themed";
 import { useState, useEffect } from "react";
 import { TouchableOpacity, View, FlatList, Text } from "react-native";
-
 import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
-
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
-
 import { api } from "../apis/api";
 import { countryListParser } from "../utils/parser";
 import { LanguageList } from "../utils/types";
@@ -37,7 +33,6 @@ export default function MultipleLanguagesCheckbox({
     setLanguagesList(json);
     setMatchedLanguagesList(json);
   };
-  // const countriesListData = countriesList;
   useEffect(() => {
     getList();
   }, []);

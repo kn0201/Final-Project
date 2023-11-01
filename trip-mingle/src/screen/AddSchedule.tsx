@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { SpeedDial } from "@rneui/themed";
-import { View, Text, StyleSheet, Keyboard } from "react-native";
+import { View, Text, Keyboard } from "react-native";
 import { Card } from "react-native-paper";
 import { Agenda, AgendaEntry } from "react-native-calendars";
 import { TextInput } from "react-native-gesture-handler";
@@ -15,12 +15,12 @@ import {
   ScheduleMark,
 } from "../utils/types";
 import PlanningStyleSheet from "../StyleSheet/PlanningStyleSheet";
-import { api, api2 } from "../apis/api";
-import { array, boolean, color, id, object, optional, string } from "cast.ts";
+import { api } from "../apis/api";
+import { array, boolean, id, object, optional, string } from "cast.ts";
 import { useToken } from "../hooks/useToken";
 import TextButton from "../components/TextButton";
-import { AppParamList, useAppNavigation, useAppRoute } from "../../navigators";
-import { center, flex, textColor } from "../StyleSheet/StyleSheetHelper";
+import { useAppNavigation, useAppRoute } from "../../navigators";
+import { center, flex } from "../StyleSheet/StyleSheetHelper";
 
 function Space(props: { height: number }) {
   return (

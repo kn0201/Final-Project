@@ -7,11 +7,7 @@ import MapView, {
   PROVIDER_GOOGLE,
   Region,
 } from "react-native-maps";
-import {
-  GooglePlacesAutocomplete,
-  GooglePlaceDetail,
-  Geometry,
-} from "react-native-google-places-autocomplete";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import {
   StyleSheet,
   View,
@@ -21,21 +17,11 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   SafeAreaView,
-  TouchableOpacity,
 } from "react-native";
 import * as Location from "expo-location";
-
-import { LocationObject } from "expo-location";
 import Constants from "expo-constants";
-import useEvent from "react-use-event";
-import { MapEvent } from "../utils/events";
-
 import { api } from "../apis/api";
-
-import { markerParser } from "../utils/parser";
 import { useAppNavigation, useAppRoute } from "../../navigators";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { center, row } from "../StyleSheet/StyleSheetHelper";
 import MarkerDetail from "../components/markerDetail";
 import { array, float, object, optional, string } from "cast.ts";
 import { useToken } from "../hooks/useToken";
@@ -79,9 +65,6 @@ export default function MapScreen({ route }: { route: any }) {
   useEffect(() => {
     console.log("MapScreen, params:", params);
   }, [params?.center]);
-  //   useEffect(() => {
-  //     console.log(params);
-  //   }, [params]);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [center, setCenter] = useState(params?.center || defaultCenter);
   const [mapData, setMapData] = useState();
@@ -106,12 +89,10 @@ export default function MapScreen({ route }: { route: any }) {
       let location = await Location.getCurrentPositionAsync({});
       setCenter(location.coords);
       moveTo(location.coords);
-      // setLocation(location.coords);
     })();
   }, [params?.center]);
 
   // Custom Marker
-  // const [state, setState] = useState({});
   const [markerCoordinate, setMarkerCoordinate] = useState(center);
 
   // Move to search place
@@ -154,15 +135,6 @@ export default function MapScreen({ route }: { route: any }) {
     animatedMoveTo(map, position);
   };
 
-  // const onPlaceSelected = (details: GooglePlaceDetail | null) => {
-  //   const position = {
-  //     latitude: details?.geometry?.location.lat || 0,
-  //     longitude: details?.geometry?.location.lng || 0,
-  //   };
-  //   setBookmark([...bookmark, position]);
-  //   moveTo(position);
-  // };
-
   //marker on Change
   const onRegionChange = (region: Region) => {
     setMarkerCoordinate(region);
@@ -170,7 +142,6 @@ export default function MapScreen({ route }: { route: any }) {
   const onRegionChangeComplete = async (region: Region, details: Details) => {
     setCenter(region);
     setMarkerCoordinate(region);
-    // fetchPlacesFormDB();
   };
 
   const getSavedLocation = async () => {
@@ -259,21 +230,6 @@ export default function MapScreen({ route }: { route: any }) {
               </Callout>
             </Marker>
           ))}
-          {/* {markersList.map((marker) => {
-            return (
-              <Marker
-                key={marker.id}
-                coordinate={{
-                  latitude: marker.latitude,
-                  longitude: marker.longitude,
-                }}
-                title={marker.title ? marker.title : undefined}
-                description={
-                  marker.description ? marker.description : undefined
-                }
-              />
-            );
-          })} */}
           <Marker coordinate={markerCoordinate}>
             <MyCustomMarkerView />
             <Callout>
@@ -319,7 +275,6 @@ function sleep(ms: number) {
 }
 
 const fetchPlacesFromGoogleMaps = async (center: LatLng): Promise<Place[]> => {
-  // console.log("fetchPlacesFromGoogleMaps:", center);
   let radius = 20 * 1000;
   const url =
     `https://maps.googleapis.com/maps/api/place/nearbysearch/json?` +
@@ -370,45 +325,6 @@ const fetchPlacesFromGoogleMaps = async (center: LatLng): Promise<Place[]> => {
       rating: place.rating,
     })
   );
-
-  //   const places = data.results.map(
-  //     (googlePlace: {
-  //       geometry: Geometry;
-  //       name: string;
-  //       opening_hours: "";
-  //       photos: any;
-  //       place_id: string;
-  //       rating: number;
-  //       vicinity: string;
-  //     }) => {
-  //       const width = 200;
-  //       const url =
-  //         `https://maps.googleapis.com/maps/api/place/photo?` +
-  //         new URLSearchParams({
-  //           maxwidth: width.toString(),
-  //           photo_reference: googlePlace.photos[0].photo_reference,
-  //           key: GOOGLE_API_KEY,
-  //         });
-  //       const { lat, lng } = googlePlace.geometry.location;
-  //       const coordinate = {
-  //         latitude: lat,
-  //         longitude: lng,
-  //       };
-
-  //       return {
-  //         coordinate,
-  //         opening_hours: googlePlace.opening_hours,
-  //         photos: url,
-  //         placeId: googlePlace.place_id,
-  //         placeName: googlePlace.name,
-  //         address: googlePlace.vicinity,
-  //         rating: googlePlace.rating,
-  //       };
-  //     }
-  //   );
-
-  //   return places;
-
   return [];
 };
 

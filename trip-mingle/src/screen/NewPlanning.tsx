@@ -9,10 +9,9 @@ import {
   Keyboard,
   Image,
   FlatList,
-  Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { RegisInfo, ScheduleCardInputInfo } from "../utils/types";
+import { ScheduleCardInputInfo } from "../utils/types";
 import { countriesList } from "../source/countries";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import { center, flex } from "../StyleSheet/StyleSheetHelper";
@@ -24,7 +23,7 @@ import { useToken } from "../hooks/useToken";
 import PlanningStyleSheet from "../StyleSheet/PlanningStyleSheet";
 
 const NewPlanning = () => {
-  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
+  const { IonNeverDialog } = useIonNeverNotification();
   const [title, onChangeTitle] = useState("");
   const [setTitle, setSelectedTitle] = useState("Add Title");
   const [selectedCountry, setSelectedCountry] = useState("Country");

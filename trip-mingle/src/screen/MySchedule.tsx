@@ -1,5 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -10,29 +10,19 @@ import {
   Animated,
   SafeAreaView,
   Text,
-  RefreshControl,
 } from "react-native";
 import { Card } from "@rneui/themed";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
-import { Entypo } from "@expo/vector-icons";
 import AddScheduleForm from "../components/AddScheduleForm";
-import { useNavigation } from "@react-navigation/native";
 import { useAppNavigation } from "../../navigators";
 import { useGet } from "../hooks/useGet";
 import { ParseResult, array, number, object, optional, string } from "cast.ts";
-import { apiOrigin } from "../utils/apiOrigin";
-import { api, api2 } from "../apis/api";
-import UserPageStyleSheet from "../StyleSheet/UserPageCss";
-import useBoolean from "../hooks/useBoolean";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { flex, row } from "../StyleSheet/StyleSheetHelper";
+import { api2 } from "../apis/api";
+import { flex } from "../StyleSheet/StyleSheetHelper";
 import React from "react";
-import SampleSchedule from "./SampleSchedule";
-import { HomePageStyleSheet } from "../StyleSheet/HomePageCss";
-import { navigate } from "../tabs/RootNavigation";
 import { LinearGradient } from "expo-linear-gradient";
 import { theme } from "../theme/variables";
 import MyPostScreenScreenStyleSheet from "../StyleSheet/MemoryScreenCss";

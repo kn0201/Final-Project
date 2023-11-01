@@ -17,7 +17,6 @@ export default function SelectCountry({ setSelectedCountry, updateInputText }) {
     setCountryList(json);
     setMatchedCountryList(json);
   };
-  // const countriesListData = countriesList;
   useEffect(() => {
     getList();
   }, []);
@@ -29,14 +28,14 @@ export default function SelectCountry({ setSelectedCountry, updateInputText }) {
   const [countryList, setCountryList] = useState<CountryList[]>([]);
   const [countryID, setCountryID] = useState("");
   const [matchedCountryList, setMatchedCountryList] = useState<CountryList[]>(
-    [],
+    []
   );
 
   useEffect(() => {
     setMatchedCountryList(
       countryList.filter((country) =>
-        country.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
-      ),
+        country.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+      )
     );
   }, [search, countryList]);
 
