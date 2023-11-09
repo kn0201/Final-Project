@@ -44,6 +44,11 @@ const AddSchedule = () => {
   const params = useAppRoute<"AddSchedule">() as { planId: number } | undefined;
   const [startDate, setStartDate] = useState<string>();
   const [endDate, setEndDate] = useState<string>();
+
+  function addEightHours(date: Date) {
+    return new Date(date.getTime() + 8 * 3600000);
+  }
+
   async function addMarkDate() {
     if (!startDate) {
       IonNeverToast.show({
@@ -105,8 +110,15 @@ const AddSchedule = () => {
         }),
         token,
       );
-      setStartDate(result?.marks?.startDate);
-      setEndDate(result?.marks?.endDate);
+
+      console.log(result?.marks?.startDate);
+
+      if (result.marks && result.marks.startDate)
+        setStartDate(
+          addEightHours(new Date(result.marks.startDate)).toISOString(),
+        );
+      if (result.marks && result.marks.endDate)
+        setEndDate(addEightHours(new Date(result.marks.endDate)).toISOString());
     }
   }
 
@@ -130,14 +142,29 @@ const AddSchedule = () => {
 
       let dataObject: ScheduleData = {};
       result.map((event) => {
-        const current = dataObject[event.selectedDate as string];
+        const newStartTime = addEightHours(
+          new Date(event.startTime),
+        ).toISOString();
+        const newEndTime = addEightHours(new Date(event.endTime)).toISOString();
+        const newSelectedDate = addEightHours(new Date(event.selectedDate))
+          .toISOString()
+          .split("T")[0];
+
+        const newEvent = {
+          ...event,
+          startTime: newStartTime,
+          endTime: newEndTime,
+          selectedDate: newSelectedDate,
+        };
+
+        const current = dataObject[newSelectedDate as string];
         if (current) {
-          dataObject[event.selectedDate.split("T")[0] as string] = [
+          dataObject[newSelectedDate.split("T")[0] as string] = [
             ...current,
-            event,
+            newEvent,
           ];
         } else {
-          dataObject[event.selectedDate.split("T")[0] as string] = [event];
+          dataObject[newSelectedDate.split("T")[0] as string] = [newEvent];
         }
       });
 
