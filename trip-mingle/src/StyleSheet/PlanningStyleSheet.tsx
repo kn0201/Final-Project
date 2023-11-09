@@ -59,7 +59,7 @@ const PlanningStyleSheet = StyleSheet.create({
     elevation: 2,
     height: 300,
     width: "90%",
-    backgroundColor: "transparent",
+    backgroundColor: "#CBE9CE",
     position: "relative",
     overflow: "hidden",
     marginBottom: 16,

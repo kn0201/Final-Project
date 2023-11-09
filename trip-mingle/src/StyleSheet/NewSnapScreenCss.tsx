@@ -12,7 +12,7 @@ export const NewSnapScreenStyleSheet = StyleSheet.create({
     elevation: 2,
     minHeight: 450,
     width: "90%",
-    backgroundColor: "transparent",
+    backgroundColor: "#CBE9CE",
     position: "relative",
     overflow: "hidden",
     marginBottom: 8,
