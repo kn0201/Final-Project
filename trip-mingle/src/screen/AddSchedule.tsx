@@ -41,8 +41,7 @@ const AddSchedule = () => {
   const { token, payload, setToken } = useToken();
   const navigation = useAppNavigation();
   const routeState = navigation.getState();
-  const params = useAppRoute<"AddSchedule">();
-  const { planId } = params;
+  const params = useAppRoute<"AddSchedule">() as { planId: number } | undefined;
   const [startDate, setStartDate] = useState<string>();
   const [endDate, setEndDate] = useState<string>();
   async function addMarkDate() {
@@ -63,19 +62,21 @@ const AddSchedule = () => {
         start_date: startDate,
         end_date: endDate,
       };
-
-      let res = await api.post(
-        `/planning/${planId}/mark`,
-        data,
-        object({ result: boolean() }),
-        token
-      );
-      if (res.result) {
-        IonNeverDialog.show({
-          type: "success",
-          title: "Add a new mark",
-          firstButtonVisible: true,
-        });
+      if (params) {
+        const { planId } = params;
+        let res = await api.post(
+          `/planning/${planId}/mark`,
+          data,
+          object({ result: boolean() }),
+          token,
+        );
+        if (res.result) {
+          IonNeverDialog.show({
+            type: "success",
+            title: "Add a new mark",
+            firstButtonVisible: true,
+          });
+        }
       }
     } catch (error) {
       let message = String(error);
@@ -89,53 +90,59 @@ const AddSchedule = () => {
   }
 
   async function getMarks() {
-    let result = await api.get(
-      `/planning/${planId}/mark`,
-      object({
-        marks: optional(
-          object({
-            id: id(),
-            startDate: string(),
-            endDate: string(),
-          })
-        ),
-      }),
-      token
-    );
-    setStartDate(result?.marks?.startDate);
-    setEndDate(result?.marks?.endDate);
+    if (params) {
+      const { planId } = params;
+      let result = await api.get(
+        `/planning/${planId}/mark`,
+        object({
+          marks: optional(
+            object({
+              id: id(),
+              startDate: string(),
+              endDate: string(),
+            }),
+          ),
+        }),
+        token,
+      );
+      setStartDate(result?.marks?.startDate);
+      setEndDate(result?.marks?.endDate);
+    }
   }
 
   async function getEvent() {
-    let result = await api.get(
-      `/planning/${planId}/event`,
-      array(
-        object({
-          id: id(),
-          selectedDate: string(),
-          startTime: string(),
-          endTime: string(),
-          location: string(),
-          remark: string(),
-        })
-      ),
-      token
-    );
+    if (params) {
+      const { planId } = params;
+      let result = await api.get(
+        `/planning/${planId}/event`,
+        array(
+          object({
+            id: id(),
+            selectedDate: string(),
+            startTime: string(),
+            endTime: string(),
+            location: string(),
+            remark: string(),
+          }),
+        ),
+        token,
+      );
 
-    let dataObject: ScheduleData = {};
-    result.map((event) => {
-      const current = dataObject[event.selectedDate as string];
-      if (current) {
-        dataObject[event.selectedDate.split("T")[0] as string] = [
-          ...current,
-          event,
-        ];
-      } else {
-        dataObject[event.selectedDate.split("T")[0] as string] = [event];
-      }
-    });
+      let dataObject: ScheduleData = {};
+      result.map((event) => {
+        const current = dataObject[event.selectedDate as string];
+        if (current) {
+          dataObject[event.selectedDate.split("T")[0] as string] = [
+            ...current,
+            event,
+          ];
+        } else {
+          dataObject[event.selectedDate.split("T")[0] as string] = [event];
+        }
+      });
 
-    setScheduleItems(dataObject);
+      setScheduleItems(dataObject);
+    }
   }
 
   useEffect(() => {
@@ -310,11 +317,14 @@ const AddSchedule = () => {
           icon={{ name: "add", color: "#fff" }}
           title="Add"
           onPress={() => {
-            navigation.navigate("Add Agenda", {
-              selectedDate,
-              updateScheduleList,
-              planId,
-            });
+            if (params) {
+              const { planId } = params;
+              navigation.navigate("Add Agenda", {
+                selectedDate,
+                updateScheduleList,
+                planId,
+              });
+            }
           }}
         />
         <SpeedDial.Action

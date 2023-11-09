@@ -31,7 +31,6 @@ export class PlanningController {
   @Get('my-plans')
   getMyPlans(@Headers() headers: {}) {
     let jwt = maybeGetJWTPayload(headers);
-    console.log(jwt);
     if (!jwt) {
       return { planList: [] };
     }
@@ -135,7 +134,6 @@ export class PlanningController {
     @Param('plan_id') plan_id: string,
     // @Param('mark') mark: string,
   ) {
-    console.log('mark backend!!!!!!!!!!');
     return this.planningService.getMarks(+plan_id);
   }
 

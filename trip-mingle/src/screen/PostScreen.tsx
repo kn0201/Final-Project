@@ -202,7 +202,7 @@ export default function TourScreen({ navigation }) {
             {setStarRating(item.rating)}
             <Text> ({item.number_of_rating})</Text>
           </View>
-          <View style={TourDetailScreenStyleSheet.row}>
+          <View style={TourDetailScreenStyleSheet.rowIcon}>
             <Text style={{ fontWeight: "800" }}>#{item.id}</Text>
             {item.status === "open" ? (
               <Fontisto name="radio-btn-active" color="#0CD320" size={16} />
