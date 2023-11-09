@@ -49,6 +49,22 @@ const AddSchedule = () => {
     return new Date(date.getTime() + 8 * 3600000);
   }
 
+  const getDefaultSelectedDate = () => {
+    if (scheduleItems) {
+      const firstEventDate = Object.keys(scheduleItems).find(
+        (date) => scheduleItems[date]?.length > 0,
+      );
+      if (firstEventDate) {
+        return firstEventDate;
+      }
+    }
+    return new Date().toISOString().split("T")[0];
+  };
+
+  useEffect(() => {
+    setSelectedDate(getDefaultSelectedDate());
+  }, [scheduleItems]);
+
   async function addMarkDate() {
     if (!startDate) {
       IonNeverToast.show({
