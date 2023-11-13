@@ -7,8 +7,6 @@ export class PlanningService {
   constructor(@InjectKnex() private readonly knex: Knex) {}
 
   async getMyPlanList(user_id?: number) {
-    console.log('Get My Plan');
-
     type Row = {
       plan_id: number;
       plan_title: string;
@@ -24,20 +22,15 @@ export class PlanningService {
         'image.path as image_path',
       )
       .where({ 'plan.user_id': user_id })
-      .andWhere('plan.privacy', false)
       .orderBy('plan.created_at', 'desc');
     return { planList };
   }
 
   async getGroupPlanList(user_id?: number) {
-    console.log('Get Group');
-
     let result = await this.knex
       .select('plan_id')
       .from('tour_plan')
       .where('user_id', user_id);
-    console.log(result);
-
     type Row = {
       plan_id: number;
       plan_title: string;
@@ -54,11 +47,10 @@ export class PlanningService {
           'image.path as image_path',
         )
         .where({ 'plan.id': plan_id.plan_id })
-        .andWhere({ 'plan.privacy': true })
+        .andWhere({ 'plan.privacy': false })
         .first();
       planList.unshift(tourPlan);
     }
-    console.log(planList);
     return { planList };
   }
 
@@ -115,7 +107,7 @@ export class PlanningService {
       .insert({
         title: input.title,
         user_id: input.user_id,
-        privacy: true,
+        privacy: false,
         image_id,
       })
       .returning('id');
@@ -137,12 +129,9 @@ export class PlanningService {
       .from('image')
       .where('user_id', user_id)
       .first();
-
-    console.log(result);
     if (result === undefined) {
       return { path: null };
     }
-    console.log(result);
   }
 
   async addNewMark(
@@ -177,15 +166,12 @@ export class PlanningService {
       start_date: string;
       end_date: string;
     };
-    console.log({ plan_id });
-
     let marks: Row = await this.knex
       .from('plan_detail')
       .leftJoin('plan', { 'plan.id': 'plan_detail.plan_id' })
       .select('plan_id as id', 'start_date as startDate', 'end_date as endDate')
       .where({ 'plan.id': plan_id })
       .first();
-    console.log({ marks });
     return { marks };
   }
 
@@ -241,8 +227,6 @@ export class PlanningService {
         'remark as remark',
       )
       .where('plan.id', plan_id);
-    console.log('backend event:', events);
-
     return events;
   }
 }

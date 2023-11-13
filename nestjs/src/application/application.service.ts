@@ -242,8 +242,6 @@ export class ApplicationService {
         .where('post_id', id)
         .groupBy('plan_id')
         .first();
-      console.log({ result });
-
       if (result) {
         return { result: true, plan_id: result.plan_id };
       } else {

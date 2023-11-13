@@ -21,7 +21,6 @@ export class PlanningController {
   @Get('my-plans')
   getMyPlans(@Headers() headers: {}) {
     let jwt = maybeGetJWTPayload(headers);
-    console.log(jwt);
     if (!jwt) {
       return { planList: [] };
     }
@@ -119,8 +118,10 @@ export class PlanningController {
   }
 
   @Get(':plan_id/mark')
-  async getMarks(@Param('plan_id') plan_id: string) {
-    console.log('mark backend!!!!!!!!!!');
+  async getMarks(
+    @Param('plan_id') plan_id: string,
+    // @Param('mark') mark: string,
+  ) {
     return this.planningService.getMarks(+plan_id);
   }
 
