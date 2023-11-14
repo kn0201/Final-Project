@@ -22,6 +22,7 @@ export class PlanningService {
         'image.path as image_path',
       )
       .where({ 'plan.user_id': user_id })
+      .andWhere('plan.privacy', false)
       .orderBy('plan.created_at', 'desc');
     return { planList };
   }
@@ -107,7 +108,7 @@ export class PlanningService {
       .insert({
         title: input.title,
         user_id: input.user_id,
-        privacy: false,
+        privacy: true,
         image_id,
       })
       .returning('id');
