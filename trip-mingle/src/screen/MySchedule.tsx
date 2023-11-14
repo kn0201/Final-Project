@@ -1,5 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -10,18 +10,20 @@ import {
   Animated,
   SafeAreaView,
   Text,
+  RefreshControl,
 } from "react-native";
 import { Card } from "@rneui/themed";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
+import { Entypo } from "@expo/vector-icons";
 import AddScheduleForm from "../components/AddScheduleForm";
 import { useAppNavigation } from "../../navigators";
 import { useGet } from "../hooks/useGet";
 import { ParseResult, array, number, object, optional, string } from "cast.ts";
 import { api2 } from "../apis/api";
-import { flex } from "../StyleSheet/StyleSheetHelper";
+import { flex, row } from "../StyleSheet/StyleSheetHelper";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { theme } from "../theme/variables";
@@ -252,8 +254,6 @@ const Schedule = () => {
             position: "absolute",
             bottom: 10,
             right: 10,
-            // backgroundColor: "white",
-            // color: "white",
             borderRadius: 32,
             zIndex: 0.95,
           }}
@@ -324,7 +324,7 @@ function ScheduleCard(props: { item: PlanListItem }) {
             flexDirection: "row",
           }}
         >
-          {/* <View
+          <View
             style={{
               display: flex,
               flexDirection: row,
@@ -356,7 +356,7 @@ function ScheduleCard(props: { item: PlanListItem }) {
                 <Text>{item.endDate.split("T")[0]}</Text>
               </>
             ) : null}
-          </View> */}
+          </View>
         </View>
         <Card.Divider />
         <Card.Image

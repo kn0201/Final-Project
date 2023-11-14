@@ -100,31 +100,36 @@ const EnquireDetailScreen = ({
 
   // Likes
   const [isLike, setIsLike] = useState(false);
-  const [likeNumber, setLikeNumber] = useState(0);
+  // const [likeNumber, setLikeNumber] = useState(0);
+
+  function setLikeNumber(number_of_like: number) {
+    setPost((post) => {
+      if (post) {
+        return { ...post, number_of_like };
+      }
+    });
+  }
+
   const dispatchLikeEvent = useEvent<LikeEvent>("Like");
   const like = async () => {
     try {
       let likeResult = await api.post(`/like/${id}`, { id }, likeParser, token);
       setLikeNumber(likeResult.number_of_like);
       setIsLike(!isLike);
-      dispatchLikeEvent("Like");
+      dispatchLikeEvent({
+        post_id: id,
+        number_of_like: likeResult.number_of_like,
+      });
     } catch (err) {
       console.log({ err });
     }
   };
   useEvent<LikeEvent>("Like", (event) => {
-    getLikeNumber();
+    if (event.post_id == id) {
+      setLikeNumber(event.number_of_like);
+    }
   });
 
-  // Get like number
-  const getLikeNumber = async () => {
-    try {
-      let result = await api.get(`/like/${id}`, likeParser);
-      setLikeNumber(result.number_of_like);
-    } catch (err) {
-      console.log({ err });
-    }
-  };
   const getUserLikeStatus = async () => {
     try {
       let result = await api.get(`/like/status/${id}`, likeStatusParser, token);
@@ -134,11 +139,11 @@ const EnquireDetailScreen = ({
     }
   };
   useEffect(() => {
-    getLikeNumber();
+    // getLikeNumber();
     if (token) {
       getUserLikeStatus();
     }
-  }, []);
+  }, [token]);
 
   // Bookmarks
   const [isBookmark, setIsBookmark] = useState(false);
@@ -186,7 +191,7 @@ const EnquireDetailScreen = ({
     try {
       let postDetailData = await api.get(`/blog/${id}`, postDetailParser);
       setPost(postDetailData);
-      setLikeNumber(postDetailData.number_of_like);
+      // setLikeNumber(postDetailData.number_of_like);
     } catch (err) {
       console.log({ err });
     }
@@ -486,7 +491,7 @@ const EnquireDetailScreen = ({
                             name={isLike ? "like1" : "like2"}
                             size={20}
                           />
-                          <Text>{likeNumber}</Text>
+                          <Text>{post?.number_of_like}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                           style={{ marginTop: 2 }}

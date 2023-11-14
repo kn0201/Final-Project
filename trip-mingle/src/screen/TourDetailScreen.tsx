@@ -126,31 +126,49 @@ const TourDetailScreen = ({
 
   // Likes
   const [isLike, setIsLike] = useState(false);
-  const [likeNumber, setLikeNumber] = useState(0);
+  // const [likeNumber, setLikeNumber] = useState(0);
+
+  function setLikeNumber(number_of_like: number) {
+    setPost((post) => {
+      if (post) {
+        return { ...post, number_of_like };
+      }
+    });
+  }
+
   const dispatchLikeEvent = useEvent<LikeEvent>("Like");
+
   const like = async () => {
     try {
       let likeResult = await api.post(`/like/${id}`, { id }, likeParser, token);
       setLikeNumber(likeResult.number_of_like);
       setIsLike(!isLike);
-      dispatchLikeEvent("Like");
+      dispatchLikeEvent({
+        post_id: id,
+        number_of_like: likeResult.number_of_like,
+      });
     } catch (err) {
       console.log({ err });
     }
   };
-  useEvent<LikeEvent>("Like", (event) => {
-    getLikeNumber();
-  });
+  useEvent<LikeEvent>(
+    "Like",
+    useCallback((event: LikeEvent) => {
+      if (event.post_id == id) {
+        setLikeNumber(event.number_of_like);
+      }
+    }, [])
+  );
 
   // Get like number
-  const getLikeNumber = async () => {
-    try {
-      let result = await api.get(`/like/${id}`, likeParser);
-      setLikeNumber(result.number_of_like);
-    } catch (err) {
-      console.log({ err });
-    }
-  };
+  // const getLikeNumber = async () => {
+  //   try {
+  //     let result = await api.get(`/like/${id}`, likeParser);
+  //     setLikeNumber(result.number_of_like);
+  //   } catch (err) {
+  //     console.log({ err });
+  //   }
+  // };
   const getUserLikeStatus = async () => {
     try {
       let result = await api.get(`/like/status/${id}`, likeStatusParser, token);
@@ -160,11 +178,10 @@ const TourDetailScreen = ({
     }
   };
   useEffect(() => {
-    getLikeNumber();
     if (token) {
       getUserLikeStatus();
     }
-  }, []);
+  }, [token]);
 
   // Bookmarks
   const [isBookmark, setIsBookmark] = useState(false);
@@ -175,7 +192,7 @@ const TourDetailScreen = ({
         `/bookmark/${id}`,
         { id },
         bookmarkParser,
-        token,
+        token
       );
       setIsBookmark(!isBookmark);
       dispatchBookmarkEvent("Bookmark");
@@ -193,7 +210,7 @@ const TourDetailScreen = ({
       let result = await api.get(
         `/bookmark/${id}`,
         bookmarkStatusParser,
-        token,
+        token
       );
       setIsBookmark(result.isBookmark);
     } catch (err) {
@@ -236,7 +253,7 @@ const TourDetailScreen = ({
         `/blog/${id}`,
         { id },
         deletePostParser,
-        token,
+        token
       );
       if (result.result === true) {
         dispatchDeleteEvent("Delete");
@@ -312,7 +329,7 @@ const TourDetailScreen = ({
           `/comment/${id}/add`,
           commentInfo,
           addCommentParser,
-          token,
+          token
         );
       } else {
         throw new Error("Missing content");
@@ -355,7 +372,7 @@ const TourDetailScreen = ({
     id: number,
     username: string,
     post_id: string,
-    post_user_id?: string,
+    post_user_id?: string
   ) => {
     navigation.navigate("Other Profile", {
       id,
@@ -375,7 +392,7 @@ const TourDetailScreen = ({
     id: number,
     title: string,
     post_id: number,
-    post_user_id?: string,
+    post_user_id?: string
   ) => {
     navigation.navigate("Tour Member", { id, title, post_id, post_user_id });
   };
@@ -393,7 +410,7 @@ const TourDetailScreen = ({
         `/application/${id}`,
         { id },
         applyTourParser,
-        token,
+        token
       );
       dispatchApplyTourEvent("ApplyTour");
       if (applicationStatus?.status === null) {
@@ -443,7 +460,7 @@ const TourDetailScreen = ({
       let applicationStatus = await api.get(
         `/application/status/${id}`,
         applicationStatusParser,
-        token,
+        token
       );
       setApplicationStatus(applicationStatus);
     } catch (err) {
@@ -464,7 +481,7 @@ const TourDetailScreen = ({
     try {
       let applicationList = await api.get(
         `/application/${id}`,
-        applicationInfoParser,
+        applicationInfoParser
       );
       setApplications(applicationList);
     } catch (err) {
@@ -481,7 +498,7 @@ const TourDetailScreen = ({
     try {
       let allConfirmStatus = await api.get(
         `/application/all/${id}`,
-        allConfirmStatusParser,
+        allConfirmStatusParser
       );
       setAllConfirm(allConfirmStatus?.result);
     } catch (err) {
@@ -542,7 +559,7 @@ const TourDetailScreen = ({
                           application.user_id,
                           application.username,
                           id,
-                          post?.user_id.toString(),
+                          post?.user_id.toString()
                         );
                       }}
                     >
@@ -639,7 +656,7 @@ const TourDetailScreen = ({
                   item.user_id,
                   item.username,
                   id,
-                  post?.user_id.toString(),
+                  post?.user_id.toString()
                 )
               }
             >
@@ -675,7 +692,7 @@ const TourDetailScreen = ({
         </Card>
       </>
     ),
-    [],
+    []
   );
 
   // Display
@@ -726,7 +743,7 @@ const TourDetailScreen = ({
                             post.user_id,
                             post.username,
                             id,
-                            post?.user_id.toString(),
+                            post?.user_id.toString()
                           );
                         } else {
                           return;
@@ -766,7 +783,7 @@ const TourDetailScreen = ({
                             name={isLike ? "like1" : "like2"}
                             size={20}
                           />
-                          <Text>{likeNumber}</Text>
+                          <Text>{post?.number_of_like}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                           style={{ marginTop: 2 }}

@@ -21,6 +21,9 @@ import { LogBox } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import MapScreen from "./src/screen/MapScreen";
 import PlaceDetail from "./src/screen/PlaceDetail";
+import useEvent from "react-use-event";
+import { LikeEvent } from "./src/utils/events";
+import { socket } from "./src/apis/api";
 
 // const Stack = createNativeStackNavigator();
 LogBox.ignoreLogs([
@@ -30,6 +33,18 @@ LogBox.ignoreLogs([
 const Stack = createStackNavigator();
 
 function Root() {
+  const dispatchLikeEvent = useEvent<LikeEvent>("Like");
+  useEffect(() => {
+    console.log("socket add event listener");
+    let fn = (event: LikeEvent) => {
+      console.log("socket received like:", event);
+      dispatchLikeEvent(event);
+    };
+    socket.on("like", fn);
+    return () => {
+      socket.off("like", fn);
+    };
+  }, [socket]);
   return (
     <TokenProvider>
       <ModalRoot />
@@ -45,9 +60,9 @@ function Root() {
 
 export default function App() {
   const { token, payload, setToken } = useToken();
-  useEffect(() => {
-    Root();
-  }, [token]);
+  // useEffect(() => {
+  //   Root();
+  // }, [token]);
   return (
     <Fragment>
       {Platform.OS === "ios" ? (

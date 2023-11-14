@@ -8,7 +8,7 @@ import {
   ListRenderItemInfo,
   RefreshControl,
 } from "react-native";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import BuddiesPageStyleSheet from "../StyleSheet/BuddiesPageCss";
 import { enquireInfoParser } from "../utils/parser";
@@ -32,6 +32,8 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { theme } from "../theme/variables";
 import moment from "moment";
+import { useNavigation } from "@react-navigation/native";
+import { useAppNavigation } from "../../navigators";
 
 // Star rating
 export const setStarRating = (rating: number) => {
@@ -65,8 +67,10 @@ export const ItemSeparatorView = () => {
   );
 };
 
-//@ts-ignore
-export default function EnquireScreen({ navigation }) {
+// @xts-ignore
+export default function EnquireScreen({}) {
+  const navigation = useAppNavigation();
+
   // Select post
   const [selectedPostID, setSelectedPostIDs] = useState(0);
   const handlePostClick = (id: number, title: string) => {
@@ -81,7 +85,6 @@ export default function EnquireScreen({ navigation }) {
     try {
       let postInfoData = await api.get("/blog/enquire", enquireInfoParser);
       setPosts(postInfoData);
-      setFilteredPosts(postInfoData);
     } catch (err) {
       console.log(err);
     }
@@ -94,7 +97,13 @@ export default function EnquireScreen({ navigation }) {
     }
   });
   useEvent<LikeEvent>("Like", (event) => {
-    getPostInfo();
+    setPosts((posts) =>
+      posts.map((post) =>
+        post.id == event.post_id
+          ? { ...post, number_of_like: event.number_of_like }
+          : post
+      )
+    );
   });
   useEvent<AddCommentEvent>("AddComment", (event) => {
     getPostInfo();
@@ -116,27 +125,27 @@ export default function EnquireScreen({ navigation }) {
   });
 
   // Search bar
-  const [search, setSearch] = useState("");
-  const [filteredPosts, setFilteredPosts] = useState<EnquireInfoItem[]>([]);
+  const [searchText, setSearchText] = useState("");
+  // const [filteredPosts, setFilteredPosts] = useState<EnquireInfoItem[]>([]);
   const [posts, setPosts] = useState<EnquireInfoItem[]>([]);
 
   useEffect(() => {
     getPostInfo();
   }, []);
 
-  const searchFilterFunction = (text: string) => {
-    const newData = text
-      ? posts.filter((item) => {
-          const textData = text.toUpperCase();
-          return (
-            (item.title && item.title.toUpperCase().includes(textData)) ||
-            (item.content && item.content.toUpperCase().includes(textData))
-          );
-        })
-      : posts;
-    setFilteredPosts(newData);
-    setSearch(text);
-  };
+  const filteredPosts = useMemo(
+    () =>
+      searchText
+        ? posts.filter((item) => {
+            const textData = searchText.toUpperCase();
+            return (
+              (item.title && item.title.toUpperCase().includes(textData)) ||
+              (item.content && item.content.toUpperCase().includes(textData))
+            );
+          })
+        : posts,
+    [searchText, posts]
+  );
 
   const ItemView = useCallback(
     ({ item }: ListRenderItemInfo<EnquireInfoItem>) => (
@@ -236,8 +245,8 @@ export default function EnquireScreen({ navigation }) {
       />
       <TextInput
         style={BuddiesPageStyleSheet.textInputStyle}
-        onChangeText={(text) => searchFilterFunction(text)}
-        value={search}
+        onChangeText={(text) => setSearchText(text)}
+        value={searchText}
         underlineColorAndroid="transparent"
         placeholder="Search..."
       />

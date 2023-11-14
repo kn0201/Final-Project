@@ -37,11 +37,11 @@ import { useGet } from "../hooks/useGet";
 import { theme } from "../theme/variables";
 import useEvent from "react-use-event";
 import { AddPostEvent } from "../utils/events";
-import {
-  RichEditor,
-  RichToolbar,
-  actions,
-} from "react-native-pell-rich-editor";
+// import {
+//   RichEditor,
+//   RichToolbar,
+//   actions,
+// } from "react-native-pell-rich-editor";
 import { boolean, object } from "cast.ts";
 
 //@ts-ignore
@@ -718,126 +718,86 @@ export function AddPostScreen1({ navigation }) {
   };
 
   // Blog Editor
-  const richText = useRef<RichEditor>(null);
-  const [imageFile, setImageFile] = useState<ImageFile | null>(null);
-  const [descHTML, setDescHTML] = useState("");
-  const [showDescError, setShowDescError] = useState(false);
+  // const richText = useRef<RichEditor>(null);
+  // const [imageFile, setImageFile] = useState<ImageFile | null>(null);
+  // const [descHTML, setDescHTML] = useState("");
+  // const [showDescError, setShowDescError] = useState(false);
 
-  const richTextHandle = (descriptionText: string) => {
-    if (descriptionText) {
-      setShowDescError(false);
-      setBlogContent(descriptionText);
-      console.log(blogContent);
-      // updateInputText("content", descriptionText);
-    } else {
-      setShowDescError(true);
-      setDescHTML("");
-    }
-  };
+  // const richTextHandle = (descriptionText: string) => {
+  //   if (descriptionText) {
+  //     setShowDescError(false);
+  //     setBlogContent(descriptionText);
+  //     console.log(blogContent);
+  //     // updateInputText("content", descriptionText);
+  //   } else {
+  //     setShowDescError(true);
+  //     setDescHTML("");
+  //   }
+  // };
 
-  const pressAddImage = async () => {
-    console.log("add image");
-  };
+  // const pressAddImage = async () => {
+  //   console.log("add image");
+  // };
 
-  const addImage = async () => {
-    let imagePickerResult = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-    if (imagePickerResult.canceled) return;
-    let imageAsset = imagePickerResult.assets?.[0];
-    if (!imageAsset) return;
-    let type = imageAsset.uri.endsWith(".png")
-      ? "image/png"
-      : imageAsset.uri.endsWith(".jpg") || imageAsset.uri.endsWith(".jpeg")
-      ? "image/jpeg"
-      : null;
-    if (!type) {
-      IonNeverDialog.show({
-        type: "warning",
-        title: "unknown image type: " + imageAsset.uri,
-        firstButtonVisible: true,
-      });
-      return;
-    }
-    let filename = imageAsset.uri.split("/").pop();
-    let file = {
-      uri: imageAsset.uri,
-      type,
-      name: filename,
-    };
-    try {
-      let formData = new FormData();
+  // const addImage = async () => {
+  //   let imagePickerResult = await ImagePicker.launchImageLibraryAsync({
+  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  //     allowsEditing: true,
+  //     aspect: [4, 3],
+  //     quality: 1,
+  //   });
+  //   if (imagePickerResult.canceled) return;
+  //   let imageAsset = imagePickerResult.assets?.[0];
+  //   if (!imageAsset) return;
+  //   let type = imageAsset.uri.endsWith(".png")
+  //     ? "image/png"
+  //     : imageAsset.uri.endsWith(".jpg") || imageAsset.uri.endsWith(".jpeg")
+  //     ? "image/jpeg"
+  //     : null;
+  //   if (!type) {
+  //     IonNeverDialog.show({
+  //       type: "warning",
+  //       title: "unknown image type: " + imageAsset.uri,
+  //       firstButtonVisible: true,
+  //     });
+  //     return;
+  //   }
+  //   let filename = imageAsset.uri.split("/").pop();
+  //   let file = {
+  //     uri: imageAsset.uri,
+  //     type,
+  //     name: filename,
+  //   };
+  //   try {
+  //     let formData = new FormData();
 
-      formData.append("image", file as any);
+  //     formData.append("image", file as any);
 
-      let json = await api2.upload(
-        "/snap",
-        formData,
-        object({
-          result: boolean(),
-        }),
-        token
-      );
-      if (json.result == true) {
-        IonNeverDialog.show({
-          type: "success",
-          title: "Add New Snap",
-          firstButtonVisible: true,
-        });
-      }
-    } catch (error) {
-      let message = String(error);
-      IonNeverDialog.show({
-        type: "warning",
-        title: "Failed Snap",
-        message,
-        firstButtonVisible: true,
-      });
-    }
-  };
-
-  const BlogEditorScreen = () => {
-    return (
-      <View style={AddPostPageStyleSheet.container}>
-        <View style={AddPostPageStyleSheet.richTextContainer}>
-          <RichEditor
-            ref={richText}
-            onChange={richTextHandle}
-            placeholder="Write your cool content here :)"
-            style={AddPostPageStyleSheet.richTextEditorStyle}
-            initialHeight={250}
-          />
-          <RichToolbar
-            editor={richText}
-            selectedIconTint="#873c1e"
-            iconTint="#312921"
-            actions={[
-              actions.insertImage,
-              actions.setBold,
-              actions.setItalic,
-              actions.insertBulletsList,
-              actions.insertOrderedList,
-              actions.insertLink,
-              actions.setStrikethrough,
-              actions.setUnderline,
-            ]}
-            style={AddPostPageStyleSheet.richTextToolbarStyle}
-            onPressAddImage={() => {
-              addImage();
-            }}
-          />
-        </View>
-        {showDescError && (
-          <Text style={AddPostPageStyleSheet.errorTextStyle}>
-            Your content shouldn't be empty 🤔
-          </Text>
-        )}
-      </View>
-    );
-  };
+  //     let json = await api2.upload(
+  //       "/snap",
+  //       formData,
+  //       object({
+  //         result: boolean(),
+  //       }),
+  //       token
+  //     );
+  //     if (json.result == true) {
+  //       IonNeverDialog.show({
+  //         type: "success",
+  //         title: "Add New Snap",
+  //         firstButtonVisible: true,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     let message = String(error);
+  //     IonNeverDialog.show({
+  //       type: "warning",
+  //       title: "Failed Snap",
+  //       message,
+  //       firstButtonVisible: true,
+  //     });
+  //   }
+  // };
 
   // Display
   return (
@@ -845,7 +805,7 @@ export function AddPostScreen1({ navigation }) {
       <TouchableWithoutFeedback
         onPress={() => {
           Keyboard.dismiss();
-          richText.current?.dismissKeyboard();
+          // richText.current?.dismissKeyboard();
         }}
       >
         <KeyboardAvoidingView
@@ -966,6 +926,46 @@ export function AddPostScreen1({ navigation }) {
 //     </>
 //   );
 // }
+
+// const BlogEditorScreen = () => {
+//   return (
+//     <View style={AddPostPageStyleSheet.container}>
+//       <View style={AddPostPageStyleSheet.richTextContainer}>
+//         <RichEditor
+//           ref={richText}
+//           onChange={richTextHandle}
+//           placeholder="Write your cool content here :)"
+//           style={AddPostPageStyleSheet.richTextEditorStyle}
+//           initialHeight={250}
+//         />
+//         <RichToolbar
+//           editor={richText}
+//           selectedIconTint="#873c1e"
+//           iconTint="#312921"
+//           actions={[
+//             actions.insertImage,
+//             actions.setBold,
+//             actions.setItalic,
+//             actions.insertBulletsList,
+//             actions.insertOrderedList,
+//             actions.insertLink,
+//             actions.setStrikethrough,
+//             actions.setUnderline,
+//           ]}
+//           style={AddPostPageStyleSheet.richTextToolbarStyle}
+//           onPressAddImage={() => {
+//             addImage();
+//           }}
+//         />
+//       </View>
+//       {showDescError && (
+//         <Text style={AddPostPageStyleSheet.errorTextStyle}>
+//           Your content shouldn't be empty 🤔
+//         </Text>
+//       )}
+//     </View>
+//   );
+// };
 
 let styles = StyleSheet.create({
   checkboxItem: {

@@ -23,8 +23,6 @@ function Space(props: { height: number }) {
 }
 
 const SampleSchedule = () => {
-  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
-  const [selectedDate, setSelectedDate] = useState<any>("2023-10-27");
   const { IonNeverDialog } = useIonNeverNotification();
   const [selectedDate, setSelectedDate] = useState<any>();
   const [open, setOpen] = useState(false);

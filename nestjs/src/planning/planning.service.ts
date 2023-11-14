@@ -47,7 +47,7 @@ export class PlanningService {
           'image.path as image_path',
         )
         .where({ 'plan.id': plan_id.plan_id })
-        .andWhere({ 'plan.privacy': false })
+        .andWhere({ 'plan.privacy': true })
         .first();
       planList.unshift(tourPlan);
     }
