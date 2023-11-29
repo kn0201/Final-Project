@@ -43,7 +43,6 @@ export default function MarkerDetail({ place }) {
             {setStarRating(place.rating)}
           </View>
         </View>
-
         <MaterialCommunityIcons name="chevron-right" size={20} />
       </View>
     </>

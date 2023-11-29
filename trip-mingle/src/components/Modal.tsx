@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { View, Text, SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import { View, SafeAreaView, ScrollView, StyleSheet } from "react-native";
 import { useEvent } from "react-use-event";
-import TextButton from "./TextButton";
 import { BooleanState } from "../hooks/useBoolean";
-import { theme } from "../theme/variables";
 
 type ModalEvent = {
   type: "modal";
@@ -16,11 +14,8 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
     zIndex: 1,
-    // backgroundColor: theme.white,
     backgroundColor: "#F8FAFCAA",
     display: "flex",
-    // alignItems: "center",
-    // flexDirection: "row",
   },
   container: {
     margin: "auto",

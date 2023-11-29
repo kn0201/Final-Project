@@ -29,19 +29,10 @@ import {
   likeStatusParser,
   postDetailParser,
 } from "../utils/parser";
-import {
-  ApplicationInfoItem,
-  CommentInfo,
-  EnquireDetailItem,
-  PostDetailItem,
-  ReplyInfoItem,
-  UserAcceptStatus,
-} from "../utils/types";
+import { CommentInfo, EnquireDetailItem, ReplyInfoItem } from "../utils/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { apiOrigin } from "../utils/apiOrigin";
-import Fontisto from "react-native-vector-icons/Fontisto";
 import { ItemSeparatorView, setStarRating } from "./PostScreen";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import TourDetailScreenStyleSheet from "../StyleSheet/TourDetailScreenCss";
 import CommentScreenStyleSheet from "../StyleSheet/CommentScreenCss";
 import { Avatar } from "@rneui/themed";
@@ -52,16 +43,12 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import { Card } from "react-native-paper";
 import useEvent from "react-use-event";
 import {
-  AcceptEvent,
   AddCommentEvent,
-  ApplyTourEvent,
   BookmarkEvent,
-  ConfirmEvent,
   DeleteEvent,
   LikeEvent,
   LoginEvent,
   RatingEvent,
-  RejectEvent,
   UpdateProfileEvent,
 } from "../utils/events";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -74,7 +61,7 @@ const EnquireDetailScreen = ({
   route: any;
   navigation: any;
 }) => {
-  const { token, payload, setToken } = useToken();
+  const { token, payload } = useToken();
   let login_user_id = payload?.user_id;
   const { IonNeverDialog } = useIonNeverNotification();
   const [keyboardShow, setKeyboardShow] = useState(false);
@@ -113,31 +100,36 @@ const EnquireDetailScreen = ({
 
   // Likes
   const [isLike, setIsLike] = useState(false);
-  const [likeNumber, setLikeNumber] = useState(0);
+  // const [likeNumber, setLikeNumber] = useState(0);
+
+  function setLikeNumber(number_of_like: number) {
+    setPost((post) => {
+      if (post) {
+        return { ...post, number_of_like };
+      }
+    });
+  }
+
   const dispatchLikeEvent = useEvent<LikeEvent>("Like");
   const like = async () => {
     try {
       let likeResult = await api.post(`/like/${id}`, { id }, likeParser, token);
       setLikeNumber(likeResult.number_of_like);
       setIsLike(!isLike);
-      dispatchLikeEvent("Like");
+      dispatchLikeEvent({
+        post_id: id,
+        number_of_like: likeResult.number_of_like,
+      });
     } catch (err) {
       console.log({ err });
     }
   };
   useEvent<LikeEvent>("Like", (event) => {
-    getLikeNumber();
+    if (event.post_id == id) {
+      setLikeNumber(event.number_of_like);
+    }
   });
 
-  // Get like number
-  const getLikeNumber = async () => {
-    try {
-      let result = await api.get(`/like/${id}`, likeParser);
-      setLikeNumber(result.number_of_like);
-    } catch (err) {
-      console.log({ err });
-    }
-  };
   const getUserLikeStatus = async () => {
     try {
       let result = await api.get(`/like/status/${id}`, likeStatusParser, token);
@@ -147,11 +139,11 @@ const EnquireDetailScreen = ({
     }
   };
   useEffect(() => {
-    getLikeNumber();
+    // getLikeNumber();
     if (token) {
       getUserLikeStatus();
     }
-  }, []);
+  }, [token]);
 
   // Bookmarks
   const [isBookmark, setIsBookmark] = useState(false);
@@ -162,7 +154,7 @@ const EnquireDetailScreen = ({
         `/bookmark/${id}`,
         { id },
         bookmarkParser,
-        token,
+        token
       );
       setIsBookmark(!isBookmark);
       dispatchBookmarkEvent("Bookmark");
@@ -180,7 +172,7 @@ const EnquireDetailScreen = ({
       let result = await api.get(
         `/bookmark/${id}`,
         bookmarkStatusParser,
-        token,
+        token
       );
       setIsBookmark(result.isBookmark);
     } catch (err) {
@@ -199,7 +191,7 @@ const EnquireDetailScreen = ({
     try {
       let postDetailData = await api.get(`/blog/${id}`, postDetailParser);
       setPost(postDetailData);
-      setLikeNumber(postDetailData.number_of_like);
+      // setLikeNumber(postDetailData.number_of_like);
     } catch (err) {
       console.log({ err });
     }
@@ -220,7 +212,7 @@ const EnquireDetailScreen = ({
         `/blog/${id}`,
         { id },
         deletePostParser,
-        token,
+        token
       );
       if (result.result === true) {
         dispatchDeleteEvent("Delete");
@@ -296,7 +288,7 @@ const EnquireDetailScreen = ({
           `/comment/${id}/add`,
           commentInfo,
           addCommentParser,
-          token,
+          token
         );
       } else {
         throw new Error("Missing content");
@@ -339,7 +331,7 @@ const EnquireDetailScreen = ({
     id: number,
     username: string,
     post_id: string,
-    post_user_id?: string,
+    post_user_id?: string
   ) => {
     navigation.navigate("Other Profile", {
       id,
@@ -383,7 +375,7 @@ const EnquireDetailScreen = ({
                   item.user_id,
                   item.username,
                   id,
-                  post?.user_id.toString(),
+                  post?.user_id.toString()
                 )
               }
             >
@@ -419,7 +411,7 @@ const EnquireDetailScreen = ({
         </Card>
       </>
     ),
-    [],
+    []
   );
 
   // Display
@@ -459,7 +451,7 @@ const EnquireDetailScreen = ({
                             post.user_id,
                             post.username,
                             id,
-                            post?.user_id.toString(),
+                            post?.user_id.toString()
                           );
                         } else {
                           return;
@@ -499,7 +491,7 @@ const EnquireDetailScreen = ({
                             name={isLike ? "like1" : "like2"}
                             size={20}
                           />
-                          <Text>{likeNumber}</Text>
+                          <Text>{post?.number_of_like}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                           style={{ marginTop: 2 }}

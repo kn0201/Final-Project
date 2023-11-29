@@ -1,8 +1,6 @@
 import { CheckBox, SearchBar } from "@rneui/themed";
 import { useState, useEffect } from "react";
-import { TouchableOpacity, Keyboard, View, FlatList, Text } from "react-native";
-
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { TouchableOpacity, View, FlatList, Text } from "react-native";
 import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
 import { api } from "../apis/api";
 import { countryListParser } from "../utils/parser";

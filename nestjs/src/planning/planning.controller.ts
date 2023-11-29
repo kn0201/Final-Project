@@ -2,27 +2,17 @@ import {
   Body,
   Controller,
   Get,
-  Header,
   Headers,
-  NotImplementedException,
   Param,
   Post,
-  Req,
-  Request,
-  UnauthorizedException,
   UploadedFile,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-
 import { PlanningService } from './planning.service';
-
 import { FileInterceptor } from '@nestjs/platform-express';
 import { getJWTPayload, maybeGetJWTPayload } from 'src/jwt';
 import { id, number, object, string } from 'cast.ts';
-
 import { storage } from 'src/uploads';
-
 // @UseGuards(AuthGuard)
 @Controller('planning')
 export class PlanningController {
@@ -85,7 +75,6 @@ export class PlanningController {
     let input = object({
       body: object({
         title: string(),
-        // country: string(),
       }),
     }).parse({ body });
 
@@ -126,7 +115,6 @@ export class PlanningController {
       start_date: input.body.start_date,
       end_date: input.body.end_date,
     });
-    // throw new UnauthorizedException('Wrong Username/Password');
   }
 
   @Get(':plan_id/mark')
@@ -138,11 +126,7 @@ export class PlanningController {
   }
 
   @Get(':plan_id/event')
-  async getEvent(
-    @Param('plan_id') plan_id: string,
-    // @Param('event') event: string,
-  ) {
-    //   this.planningService.getEvent(+plan_id),
+  async getEvent(@Param('plan_id') plan_id: string) {
     return this.planningService.getEvent(+plan_id);
   }
 

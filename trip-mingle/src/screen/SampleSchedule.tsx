@@ -1,22 +1,16 @@
-import { useEffect, useRef, useState } from "react";
-import { Input, SpeedDial } from "@rneui/themed";
-import { View, Text, StyleSheet, Keyboard } from "react-native";
-import { Button, Card } from "react-native-paper";
+import { useEffect, useState } from "react";
+import { View, Text, Keyboard } from "react-native";
+import { Card } from "react-native-paper";
 import { Agenda, AgendaEntry } from "react-native-calendars";
 import { TextInput } from "react-native-gesture-handler";
 import { MarkedDates } from "react-native-calendars/src/types";
 import { DAY } from "@beenotung/tslib/time";
 import { format_2_digit } from "@beenotung/tslib/format";
-
-import { useRoute } from "@react-navigation/native";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import { ScheduleItem, ScheduleItemInfo } from "../utils/types";
 import { useToken } from "../hooks/useToken";
 import { useAppNavigation, useAppRoute } from "../../navigators";
-import { api } from "../apis/api";
-import { boolean, object } from "cast.ts";
 import PlanningStyleSheet from "../StyleSheet/PlanningStyleSheet";
-import TextButton from "../components/TextButton";
 
 function Space(props: { height: number }) {
   return (
@@ -29,8 +23,8 @@ function Space(props: { height: number }) {
 }
 
 const SampleSchedule = () => {
-  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
-  const [selectedDate, setSelectedDate] = useState<any>("2023-10-27");
+  const { IonNeverDialog } = useIonNeverNotification();
+  const [selectedDate, setSelectedDate] = useState<any>();
   const [open, setOpen] = useState(false);
   const [scheduleItems, setScheduleItems] = useState<ScheduleItem[]>([]);
   const { token, payload, setToken } = useToken();
@@ -184,10 +178,6 @@ const SampleSchedule = () => {
 
   const [startDate, setStartDate] = useState<string>("2023-10-27");
   const [endDate, setEndDate] = useState<string>("2023-10-31");
-
-  // const function addNewMarkDate() {
-
-  // }
 
   const markedDates: MarkedDates = {
     [startDate]: { startingDay: true, color: "lightgreen" },

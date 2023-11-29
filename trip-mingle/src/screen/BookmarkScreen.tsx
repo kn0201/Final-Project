@@ -2,7 +2,6 @@ import {
   View,
   Text,
   Image,
-  TextInput,
   TouchableOpacity,
   FlatList,
   ListRenderItemInfo,
@@ -20,12 +19,7 @@ import TourDetailScreenStyleSheet from "../StyleSheet/TourDetailScreenCss";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import React from "react";
 import useEvent from "react-use-event";
-import {
-  AddCommentEvent,
-  AddPostEvent,
-  BookmarkEvent,
-  LikeEvent,
-} from "../utils/events";
+import { BookmarkEvent } from "../utils/events";
 import { useAppNavigation } from "../../navigators";
 import { useToken } from "../hooks/useToken";
 import { LinearGradient } from "expo-linear-gradient";
@@ -186,12 +180,10 @@ export default function BookmarkScreen() {
     []
   );
 
-  // Display
   return (
     <>
       <View style={BuddiesPageStyleSheet.container}>
         <LinearGradient
-          // Background Linear Gradient
           colors={["#FFFFFF", theme.background]}
           style={{
             position: "absolute",

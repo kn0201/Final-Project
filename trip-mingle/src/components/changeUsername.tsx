@@ -10,16 +10,15 @@ import { ChangeUsernameStyleSheet } from "../StyleSheet/ChangeUsernameCss";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
-import { flex } from "../StyleSheet/StyleSheetHelper";
 import { api, api2 } from "../apis/api";
 import { useToken } from "../hooks/useToken";
 import { checkResultParser, updateUsernameResultParser } from "../utils/parser";
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
 
 //@ts-ignore
-export default function ChangeUsername({ username, navigation }) {
-  const { token, payload, setToken } = useToken();
-  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
+export default function ChangeUsername({ username }) {
+  const { token, setToken } = useToken();
+  const { IonNeverDialog } = useIonNeverNotification();
 
   const [newUsername, setNewUsername] = useState<string>();
 

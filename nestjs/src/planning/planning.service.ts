@@ -75,7 +75,6 @@ export class PlanningService {
       .insert({
         title: input.title,
         user_id: input.user_id,
-        // country,
         privacy: false,
         image_id,
       })

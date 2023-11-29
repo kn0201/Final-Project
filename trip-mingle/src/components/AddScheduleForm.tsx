@@ -6,23 +6,16 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
-  FlatList,
   Keyboard,
-  TouchableWithoutFeedback,
 } from "react-native";
 import { useIonNeverNotification } from "./IonNeverNotification/NotificationProvider";
 import { AntDesign } from "@expo/vector-icons";
-import { CheckBox, SearchBar } from "@rneui/base";
 import * as ImagePicker from "expo-image-picker";
-import { countriesList } from "../source/countries";
 import { center } from "../StyleSheet/StyleSheetHelper";
 import PlanningStyleSheet from "../StyleSheet/PlanningStyleSheet";
-import AddPostPageStyleSheet from "../StyleSheet/AddPostScreenCss";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useToken } from "../hooks/useToken";
-import { api, api2 } from "../apis/api";
+import { api2 } from "../apis/api";
 import { id, object, string } from "cast.ts";
-import TextButton from "./TextButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { theme } from "../theme/variables";
 import useEvent from "react-use-event";
@@ -155,13 +148,7 @@ export function AddScheduleForm(props: {
         title: "Add a new plan",
         firstButtonVisible: true,
       });
-      // addNewScheduleCard({
-      //   plan_id: json.plan_id,
-      //   plan_title: planTitle,
-      //   image_path: json.image_path || "",
-      //   startDate: "",
-      //   endDate: "",
-      // });
+
       closeModal();
 
       reset();
@@ -176,7 +163,6 @@ export function AddScheduleForm(props: {
     }
   }
 
-  // Autofocus
   const inputRef = useRef<TextInput | null>(null);
   const focusInput = () => {
     if (inputRef.current) {
@@ -187,7 +173,6 @@ export function AddScheduleForm(props: {
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
       <LinearGradient
-        // Background Linear Gradient
         colors={["#FFFFFF", theme.background]}
         style={{
           position: "absolute",

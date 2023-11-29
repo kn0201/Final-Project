@@ -19,6 +19,8 @@ export type AddCommentEvent = {
 
 export type LikeEvent = {
   type: "Like";
+  post_id: number;
+  number_of_like: number;
 };
 
 export type BookmarkEvent = {

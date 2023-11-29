@@ -19,20 +19,12 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { useIonNeverNotification } from "../components/IonNeverNotification/NotificationProvider";
 import { Entypo } from "@expo/vector-icons";
 import AddScheduleForm from "../components/AddScheduleForm";
-import { useNavigation } from "@react-navigation/native";
 import { useAppNavigation } from "../../navigators";
 import { useGet } from "../hooks/useGet";
 import { ParseResult, array, number, object, optional, string } from "cast.ts";
-import { apiOrigin } from "../utils/apiOrigin";
-import { api, api2 } from "../apis/api";
-import UserPageStyleSheet from "../StyleSheet/UserPageCss";
-import useBoolean from "../hooks/useBoolean";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { api2 } from "../apis/api";
 import { flex, row } from "../StyleSheet/StyleSheetHelper";
 import React from "react";
-import SampleSchedule from "./SampleSchedule";
-import { HomePageStyleSheet } from "../StyleSheet/HomePageCss";
-import { navigate } from "../tabs/RootNavigation";
 import { LinearGradient } from "expo-linear-gradient";
 import { theme } from "../theme/variables";
 import MyPostScreenScreenStyleSheet from "../StyleSheet/MemoryScreenCss";
@@ -262,8 +254,6 @@ const Schedule = () => {
             position: "absolute",
             bottom: 10,
             right: 10,
-            // backgroundColor: "white",
-            // color: "white",
             borderRadius: 32,
             zIndex: 0.95,
           }}

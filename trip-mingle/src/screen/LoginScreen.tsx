@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   View,
   Text,
@@ -24,8 +24,8 @@ import { theme } from "../theme/variables";
 
 //@ts-ignore
 export default function LoginScreen({ navigation }) {
-  const { token, payload, setToken } = useToken();
-  const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
+  const { setToken } = useToken();
+  const { IonNeverDialog } = useIonNeverNotification();
   const dispatchLoginEvent = useEvent<LoginEvent>("Login");
   const [showPassword, setPassword] = useState(true);
   const password = () => {
@@ -162,9 +162,6 @@ export default function LoginScreen({ navigation }) {
             onPress={password}
           />
         </View>
-        {/* <View style={{ width: "100%" }}>
-          <Text style={LoginScreenStyleSheet.forgotPW}>Forgot Password?</Text>
-        </View> */}
 
         <View style={LoginScreenStyleSheet.center}>
           <TouchableOpacity style={LoginScreenStyleSheet.login} onPress={login}>

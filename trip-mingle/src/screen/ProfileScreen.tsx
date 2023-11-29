@@ -37,7 +37,7 @@ export default function ProfileScreen(props: {
   navigation;
 }) {
   const { IonNeverToast, IonNeverDialog } = useIonNeverNotification();
-  const { token, payload, setToken } = useToken();
+  const { token } = useToken();
   const dispatchUpdateProfileEvent =
     useEvent<UpdateProfileEvent>("UpdateProfile");
   const profileInfo = useRef<ProfileInfo>({

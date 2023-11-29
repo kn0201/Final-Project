@@ -1,18 +1,13 @@
 import * as React from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Header } from "@rneui/base";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import BlogScreen from "../screen/BlogScreen";
 import TourScreen from "../screen/PostScreen";
 import EnquireScreen from "../screen/EnquireScreen";
 import { TouchableOpacity, View, Text, TextInput } from "react-native";
 import { Icon } from "@rneui/themed";
 import { iosBlue } from "../StyleSheet/StyleSheetHelper";
 import UserPageStyleSheet from "../StyleSheet/UserPageCss";
-import BuddiesPageStyleSheet from "../StyleSheet/BuddiesPageCss";
 import { useToken } from "../hooks/useToken";
-import { LinearGradient } from "expo-linear-gradient";
-import { theme } from "../theme/variables";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -60,29 +55,11 @@ function ExplorePageTopTab({ navigation }) {
           tabBarStyle: { backgroundColor: "#c4ffdb" },
         }}
       >
-        {/* <Tab.Screen
-          name="Blog"
-          component={BlogScreen}
-          options={{
-            tabBarLabel: "Blog",
-            // tabBarIcon: ({ color }) => (
-            //   <MaterialCommunityIcons name="post" color={color} size={26} />
-            // ),
-          }}
-        /> */}
         <Tab.Screen
           name="Tour"
           component={TourScreen}
           options={{
             tabBarLabel: "Tour",
-
-            // tabBarIcon: ({ color }) => (
-            //   <MaterialCommunityIcons
-            //     name="transit-detour"
-            //     color={color}
-            //     size={26}
-            //   />
-            // ),
           }}
         />
         <Tab.Screen
@@ -90,13 +67,6 @@ function ExplorePageTopTab({ navigation }) {
           component={EnquireScreen}
           options={{
             tabBarLabel: "Enquire",
-            // tabBarIcon: ({ color }) => (
-            //   <MaterialCommunityIcons
-            //     name="chat-question"
-            //     color={color}
-            //     size={26}
-            //   />
-            // ),
           }}
         />
       </Tab.Navigator>

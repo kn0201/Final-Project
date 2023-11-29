@@ -1,6 +1,7 @@
 import { Parser } from "cast.ts";
 import { getToken } from "../utils/jwtToken";
-import { apiOrigin } from "../utils/apiOrigin";
+import { apiOrigin, wsOrigin } from "../utils/apiOrigin";
+import io from "socket.io-client";
 
 async function handleFetch<T>(
   path: string,
@@ -109,7 +110,13 @@ export class ApiService {
         Authorization: "Bearer " + token,
       },
     });
-    let json = await res.json();
+    // let json = await res.json();
+    // console.log("=".repeat(32));
+    let text = await res.text();
+    // console.log("GET", path);
+    // console.log(text);
+    // console.log("=".repeat(32));
+    let json = JSON.parse(text);
 
     if (json.error) {
       //   this.alertService.showError(json.error)
@@ -207,3 +214,21 @@ export class ApiService {
 }
 
 export let api = new ApiService();
+
+console.log("connecting socket.io:", wsOrigin);
+
+export let socket = io(wsOrigin);
+
+socket.on("connect", () => {
+  console.log("socket.io connect");
+});
+
+socket.on("connected", () => {
+  console.log("socket.io connected");
+});
+
+socket.on("error", (error) => {
+  console.log("socket.io error:", error);
+});
+
+socket.connect();

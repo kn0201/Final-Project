@@ -14,6 +14,10 @@ const styles = StyleSheet.create({
     borderColor: theme.button,
     backgroundColor: theme.button,
   },
+  buttonDisabled: {
+    borderColor: theme.mediumColor,
+    backgroundColor: theme.mediumColor,
+  },
   text: {
     fontSize: 16,
     color: theme.primaryTextColor,
@@ -31,9 +35,19 @@ const styles = StyleSheet.create({
 export default function TextButton(props: {
   text: string;
   onPress: () => void;
+  style?: { width?: string };
+  disabled?: boolean;
 }) {
   return (
-    <TouchableOpacity style={styles.button} onPress={props.onPress}>
+    <TouchableOpacity
+      disabled={props.disabled}
+      style={[
+        styles.button,
+        props.style as any,
+        props.disabled ? [styles.buttonDisabled] : [],
+      ]}
+      onPress={props.onPress}
+    >
       <Text style={styles.text}>{props.text}</Text>
     </TouchableOpacity>
   );

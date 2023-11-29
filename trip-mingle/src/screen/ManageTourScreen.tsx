@@ -33,7 +33,7 @@ export default function OtherProfileScreen({
   route: any;
   navigation: any;
 }) {
-  const { token, payload, setToken } = useToken();
+  const { token, payload } = useToken();
   let login_user_id = payload?.user_id;
   const { IonNeverDialog } = useIonNeverNotification();
 
@@ -55,7 +55,7 @@ export default function OtherProfileScreen({
     id: number,
     username: string,
     post_id: string,
-    post_user_id?: string,
+    post_user_id?: string
   ) => {
     navigation.navigate("Other Profile", {
       id,
@@ -74,7 +74,7 @@ export default function OtherProfileScreen({
         `/application/${id}/${user_id}`,
         { username },
         acceptStatusParser,
-        token,
+        token
       );
       if (updatedStatus.status !== true && updatedStatus.status !== false) {
         throw new Error();
@@ -102,14 +102,14 @@ export default function OtherProfileScreen({
 
   // Get application list
   const [applications, setApplications] = useState<AppliedUserItem[] | null>(
-    [],
+    []
   );
   const getApplicationList = async () => {
     try {
       let applicationList = await api.get(
         `/application/users/${id}`,
         appliedUserParser,
-        token,
+        token
       );
       setApplications(applicationList);
     } catch (err) {
@@ -190,7 +190,7 @@ export default function OtherProfileScreen({
         </View>
       </>
     ),
-    [],
+    []
   );
 
   return (
