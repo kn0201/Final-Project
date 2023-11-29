@@ -57,7 +57,7 @@ export class LocationController {
   @UseGuards(AuthGuard)
   @Post('bookmark')
   async bookmark(@Body() body: Body, @Headers() headers: {}) {
-    console.log('add');
+    // console.log('add');
 
     let jwt = getJWTPayload(headers);
     let input = addBookmarkParser.parse(body);
@@ -73,7 +73,7 @@ export class LocationController {
   @UseGuards(AuthGuard)
   @Patch('bookmark')
   async deleteBookmark(@Body() body: Body, @Headers() headers: {}) {
-    console.log('delete');
+    // console.log('delete');
 
     let jwt = getJWTPayload(headers);
     let input = addBookmarkParser.parse(body);

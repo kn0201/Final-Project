@@ -57,7 +57,7 @@ export default function UserPage({ navigation }) {
       type,
       name: filename,
     };
-    console.log("fileUri:", file);
+    // console.log("fileUri:", file);
 
     if (!imagePickerResult.canceled) {
       setImage(imagePickerResult.assets[0].uri);

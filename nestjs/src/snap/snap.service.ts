@@ -146,7 +146,7 @@ export class SnapService {
     image;
   }) {
     let filename = input.image.filename;
-    console.log(filename);
+    // console.log(filename);
     let body = input.body;
 
     let system_location_id = await this.knex

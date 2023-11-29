@@ -40,7 +40,7 @@ export class PlanningController {
   @Get('group-plans')
   getGroupPlans(@Headers() headers: {}) {
     let jwt = maybeGetJWTPayload(headers);
-    console.log(jwt);
+    // console.log(jwt);
     if (!jwt) {
       return { planList: [] };
     }
@@ -99,7 +99,7 @@ export class PlanningController {
   @Post('image')
   @UseInterceptors(FileInterceptor('image', { storage: storage }))
   async uploadImage(@UploadedFile() image) {
-    console.log('image:', image);
+    // console.log('image:', image);
     return;
   }
 

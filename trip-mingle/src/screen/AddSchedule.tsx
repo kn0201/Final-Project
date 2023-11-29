@@ -52,7 +52,7 @@ const AddSchedule = () => {
   const getDefaultSelectedDate = () => {
     if (scheduleItems) {
       const firstEventDate = Object.keys(scheduleItems).find(
-        (date) => scheduleItems[date]?.length > 0,
+        (date) => scheduleItems[date]?.length > 0
       );
       if (firstEventDate) {
         return firstEventDate;
@@ -89,7 +89,7 @@ const AddSchedule = () => {
           `/planning/${planId}/mark`,
           data,
           object({ result: boolean() }),
-          token,
+          token
         );
         if (res.result) {
           IonNeverDialog.show({
@@ -121,17 +121,17 @@ const AddSchedule = () => {
               id: id(),
               startDate: string(),
               endDate: string(),
-            }),
+            })
           ),
         }),
-        token,
+        token
       );
 
-      console.log(result?.marks?.startDate);
+      // console.log(result?.marks?.startDate);
 
       if (result.marks && result.marks.startDate)
         setStartDate(
-          addEightHours(new Date(result.marks.startDate)).toISOString(),
+          addEightHours(new Date(result.marks.startDate)).toISOString()
         );
       if (result.marks && result.marks.endDate)
         setEndDate(addEightHours(new Date(result.marks.endDate)).toISOString());
@@ -151,15 +151,15 @@ const AddSchedule = () => {
             endTime: string(),
             location: string(),
             remark: string(),
-          }),
+          })
         ),
-        token,
+        token
       );
 
       let dataObject: ScheduleData = {};
       result.map((event) => {
         const newStartTime = addEightHours(
-          new Date(event.startTime),
+          new Date(event.startTime)
         ).toISOString();
         const newEndTime = addEightHours(new Date(event.endTime)).toISOString();
         const newSelectedDate = addEightHours(new Date(event.selectedDate))
@@ -280,7 +280,7 @@ const AddSchedule = () => {
           items={scheduleItems}
           markedDates={markedDates}
           onDayPress={(day) => {
-            console.log("press day:", day);
+            // console.log("press day:", day);
             setSelectedDate(day.dateString);
           }}
           selected={selectedDate}
@@ -374,7 +374,7 @@ const AddSchedule = () => {
           icon={{ name: "delete", color: "#fff" }}
           title="Delete"
           onPress={() => {
-            console.log("delete");
+            // console.log("delete");
           }}
         />
       </SpeedDial>

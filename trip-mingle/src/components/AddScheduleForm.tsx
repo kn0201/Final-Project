@@ -90,7 +90,7 @@ export function AddScheduleForm(props: {
       type,
       name: filename,
     };
-    console.log("image file:", file);
+    // console.log("image file:", file);
     setImageFile({
       uri: file.uri,
       file: file as unknown as File,
@@ -123,7 +123,7 @@ export function AddScheduleForm(props: {
       }
       formData.append("title", title);
       formData.append("post_id", postId.toString());
-      console.log(formData);
+      // console.log(formData);
 
       if (userList != null) {
         formData.append("user_list", userList.join(""));
@@ -228,7 +228,7 @@ export function AddScheduleForm(props: {
           value={planTitle}
           onChangeText={(text) => {
             setPlanTitle(text);
-            console.log(planTitle);
+            // console.log(planTitle);
           }}
         />
       </View>

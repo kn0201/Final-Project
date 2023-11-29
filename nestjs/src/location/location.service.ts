@@ -40,7 +40,7 @@ export class LocationService {
           latitude: marker.coordinate.latitude,
           longitude: marker.coordinate.longitude,
         });
-        console.log('add Marker : ' + marker.placeName);
+        // console.log('add Marker : ' + marker.placeName);
       }
     }
     return {};
@@ -55,7 +55,7 @@ export class LocationService {
   }
 
   async checkBookmark(input: { user_id: number; place_id: any }) {
-    console.log(input.place_id.id);
+    // console.log(input.place_id.id);
 
     let foundBookmark = await this.knex('user_location')
       .select('id')
@@ -63,7 +63,7 @@ export class LocationService {
       .andWhere('user_id', input.user_id)
       .andWhere('is_delete', false)
       .first();
-    console.log(foundBookmark);
+    // console.log(foundBookmark);
 
     if (foundBookmark == undefined) {
       return { result: false };

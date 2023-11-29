@@ -205,7 +205,7 @@ export function AddPostScreen1({ navigation }) {
         },
         secondButtonVisible: false,
       });
-      console.log(postInfo);
+      // console.log(postInfo);
     } catch (e) {
       IonNeverDialog.show({
         type: "warning",
@@ -727,7 +727,7 @@ export function AddPostScreen1({ navigation }) {
     if (descriptionText) {
       setShowDescError(false);
       setBlogContent(descriptionText);
-      console.log(blogContent);
+      // console.log(blogContent);
       // updateInputText("content", descriptionText);
     } else {
       setShowDescError(true);
@@ -736,7 +736,7 @@ export function AddPostScreen1({ navigation }) {
   };
 
   const pressAddImage = async () => {
-    console.log("add image");
+    // console.log("add image");
   };
 
   const addImage = async () => {

@@ -41,7 +41,7 @@ const NewPlanning = () => {
       quality: 1,
     });
     // @ts-ignore
-    console.log(JSON.stringify(_image.assets[0].uri));
+    // console.log(JSON.stringify(_image.assets[0].uri));
     //@ts-ignore
     if (!_image.canceled) {
       //@ts-ignore
@@ -67,7 +67,7 @@ const NewPlanning = () => {
   };
 
   const addPlan = async () => {
-    console.log("add plan");
+    // console.log("add plan");
     try {
       let formData = new FormData();
       formData.append("image", imageFile as any);
@@ -89,7 +89,7 @@ const NewPlanning = () => {
       const errorObject: any = { ...(error as object) };
       console.log(errorObject);
     }
-    console.log(planInfo);
+    // console.log(planInfo);
   };
   return (
     <TouchableWithoutFeedback

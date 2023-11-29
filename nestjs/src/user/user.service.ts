@@ -196,7 +196,7 @@ export class UserService {
         username: input.username,
       })
       .where('id', input.user_id);
-    console.log(result);
+    // console.log(result);
 
     if (result) {
       return { result: true };
@@ -447,7 +447,7 @@ export class UserService {
       .orderBy('created_at', 'desc')
       .first();
 
-    console.log(type_result);
+    // console.log(type_result);
     if (type_result.type == 'enquire') {
       let postInfo = [];
       let post_results = await this.knex

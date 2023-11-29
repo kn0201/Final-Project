@@ -77,7 +77,7 @@ export default function MapScreen({ route }: { route: any }) {
   const navigation = useAppNavigation();
   const params = useAppRoute<"MapScreen">();
   useEffect(() => {
-    console.log("MapScreen, params:", params);
+    // console.log("MapScreen, params:", params);
   }, [params?.center]);
   //   useEffect(() => {
   //     console.log(params);

@@ -42,8 +42,8 @@ export class SnapController {
     @Headers() headers: {},
     @UploadedFile() image,
   ) {
-    console.log(body);
-    console.log('image', image);
+    // console.log(body);
+    // console.log('image', image);
     let jwt = getJWTPayload(headers);
     let input = addSnapParser.parse(body);
     return this.snapService.postSnap({

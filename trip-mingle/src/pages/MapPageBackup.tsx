@@ -69,7 +69,7 @@ export default function MapPageBackUP({ route }) {
     if (route.params) {
       const { latitude, longitude } = route.params;
       setGivenLocation("given");
-      console.log({ useEffect: givenLocation });
+      // console.log({ useEffect: givenLocation });
       setLatitude(latitude);
       setLongitude(longitude);
     }
@@ -188,8 +188,8 @@ export default function MapPageBackUP({ route }) {
     currentLatitude?: number,
     currentLongitude?: number
   ) => {
-    console.log("fetching");
-    console.log({ givenLocation: givenLocation });
+    // console.log("fetching");
+    // console.log({ givenLocation: givenLocation });
     let radius = givenLocation == "clickIn" ? 2 * 1000 : 20 * 1000;
     const url =
       givenLocation == "current"
@@ -242,7 +242,7 @@ export default function MapPageBackUP({ route }) {
         name: dataBaseMarker.name,
       };
     });
-    console.log(places);
+    // console.log(places);
     setPlaces(places);
   };
 

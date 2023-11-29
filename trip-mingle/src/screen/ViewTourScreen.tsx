@@ -53,7 +53,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
   const navigation = useAppNavigation();
   const { width, height } = Dimensions.get("screen");
   const openModal = () => {
-    console.log("opened modal");
+    // console.log("opened modal");
     Animated.timing(translateAnim, {
       duration: 500,
       toValue: 1,
@@ -115,7 +115,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
         `/blog/close/${id}`,
         { id },
         closePostParser,
-        token,
+        token
       );
       if (result.result === true) {
         dispatchCloseEvent("Close");
@@ -137,7 +137,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
     try {
       let result = await api.get(
         `/application/closeStatus/${id}`,
-        closePostParser,
+        closePostParser
       );
       setCloseStatus(result.result);
       if (result.result === true) {
@@ -171,7 +171,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
     id: number,
     username: string,
     post_id: string,
-    post_user_id?: string,
+    post_user_id?: string
   ) => {
     navigation.navigate("Other Profile", {
       id,
@@ -190,7 +190,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
         `/application/confirm/${id}/${user_id}`,
         { username },
         confirmStatusParser,
-        token,
+        token
       );
       setIsConfirm(!isConfirm);
       dispatchConfirmEvent("Confirm");
@@ -214,7 +214,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
         `/application/reject/${id}/${user_id}`,
         { username },
         confirmStatusParser,
-        token,
+        token
       );
       setIsConfirm(null);
       dispatchRejectEvent("Reject");
@@ -235,7 +235,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
       let result = await api.get(
         `/application/tour/${id}/${post_user_id}`,
         confirmedUserParser,
-        token,
+        token
       );
       if (result) {
         for (let user of result) {
@@ -257,7 +257,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
     try {
       let allConfirmStatus = await api.get(
         `/application/all/${id}`,
-        allConfirmStatusParser,
+        allConfirmStatusParser
       );
       setAllConfirm(allConfirmStatus?.result);
     } catch (err) {
@@ -278,7 +278,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
       let result = await api.get(
         `/application/plan/${id}/${post_user_id}`,
         checkPlanParser,
-        token,
+        token
       );
       setStartPlan(result.result);
       setPlanID(result.plan_id);
@@ -314,14 +314,14 @@ export default function ViewTourScreen({ route }: { route: any }) {
   const handleRatingChange = async (
     rating: number,
     user_id: number,
-    username: string,
+    username: string
   ) => {
     try {
       let ratingResult = await api.post(
         `/rating/${id}`,
         { rating, user_id },
         closePostParser,
-        token,
+        token
       );
       if (ratingResult.result === true) {
         IonNeverDialog.show({
@@ -366,7 +366,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
                     item.user_id,
                     item.username,
                     id,
-                    post_user_id,
+                    post_user_id
                   )
                 }
               >
@@ -398,7 +398,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
                         handleRatingChange(
                           newRating,
                           item.user_id,
-                          item.username,
+                          item.username
                         )
                       }
                     />
@@ -417,7 +417,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
                     item.user_id,
                     item.username,
                     id,
-                    post_user_id,
+                    post_user_id
                   )
                 }
               >
@@ -519,7 +519,7 @@ export default function ViewTourScreen({ route }: { route: any }) {
           )}
         </View>
       ),
-    [closeStatus],
+    [closeStatus]
   );
 
   return (

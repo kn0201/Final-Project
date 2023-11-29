@@ -65,7 +65,7 @@ export default function AgendaListItem(props: {}) {
       return;
     }
     try {
-      console.log("HERE");
+      // console.log("HERE");
       let data = {
         selectedDate: new Date(selectedDate + " 00:00").toISOString(),
         startTime: new Date(
@@ -76,7 +76,7 @@ export default function AgendaListItem(props: {}) {
         ).toISOString(),
         location: scheduleInfo.location,
       };
-      console.log({ data });
+      // console.log({ data });
 
       let res = await api.post(
         `/planning/${planId}/event`,
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
 });
 
 function checkTime(text: string): string {
-  console.log("checkTime:", text);
+  // console.log("checkTime:", text);
   if (text.length == 1) {
     return "0" <= text && text <= "2" ? text : "";
   }

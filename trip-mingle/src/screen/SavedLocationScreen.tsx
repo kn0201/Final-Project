@@ -65,7 +65,7 @@ export default function SavedLocationScreen() {
   const handleMapClick = (latitude: number, longitude: number) => {
     const center = { latitude, longitude };
     const params = { center };
-    console.log("HomePage, go to map:", params);
+    // console.log("HomePage, go to map:", params);
     dispatchMapEvent(params);
     navigation.navigate("MapPage", {
       screen: "MapScreen",

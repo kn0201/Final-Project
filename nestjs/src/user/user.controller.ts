@@ -58,7 +58,7 @@ export class UserController {
   @Patch('update_icon')
   @UseInterceptors(FileInterceptor('image', { storage: storage }))
   async updateIcon(@UploadedFile() image, @Req() req: Request) {
-    console.log('image:', image);
+    // console.log('image:', image);
     return this.userService.updateIcon(image, req);
   }
 

@@ -84,7 +84,7 @@ const Schedule = () => {
   };
 
   const openModal = () => {
-    console.log("opened modal");
+    // console.log("opened modal");
     Animated.timing(translateAnim, {
       duration: 500,
       toValue: 1,

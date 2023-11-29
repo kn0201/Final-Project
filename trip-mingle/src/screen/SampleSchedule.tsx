@@ -243,7 +243,7 @@ const SampleSchedule = () => {
           items={data}
           markedDates={markedDates}
           onDayPress={(day) => {
-            console.log("press day:", day);
+            // console.log("press day:", day);
             setSelectedDate(day.dateString);
           }}
           selected={selectedDate}

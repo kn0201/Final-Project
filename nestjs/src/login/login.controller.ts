@@ -40,8 +40,8 @@ export class LoginController {
   @Post('register')
   @UseInterceptors(FileInterceptor('image', { storage: storage }))
   async register(@Body() body: Body, @UploadedFile() image) {
-    console.log(body);
-    console.log('image:', image);
+    // console.log(body);
+    // console.log('image:', image);
     let input = signUpParser.parse(body);
     return this.loginService.register(input, image);
   }
